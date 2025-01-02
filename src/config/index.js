@@ -1,6 +1,6 @@
 //주소 등 필요한 정보들 선언용 Javascript
 
-const API_HOST_URL = "localhost:8080/";
+const API_HOST_URL = "http://localhost:8080/";
 const USER = "user/";
 const TRIP = "trip/";
 

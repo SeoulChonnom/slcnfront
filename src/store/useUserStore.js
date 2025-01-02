@@ -44,7 +44,7 @@ export const useUserStore = defineStore("user", {
     async loginByRefreshToken() {
       try {
         const res = await axios({
-          url: config.account.getToken(),
+          url: config.account.getAccessToken(),
           method: "GET",
         });
         this.token = res.data.data.accessToken;

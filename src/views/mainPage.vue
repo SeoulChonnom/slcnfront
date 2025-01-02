@@ -38,41 +38,50 @@
   </div>
 </template>
   
-<script>
+
+<script setup>
+import { useUserStore } from "@/store/useUserStore";
+import { onMounted } from "vue";
 import tripList from "@/components/trip/tripList.vue";
 import { globalTrip } from "@/global/global.js";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
-export default {
-  name: "mainPage",
-  methods: {
-    onClickMap(date) {
-      this.$router.push("/map" + date);
-    },
-    onclickShoes() {
-      this.$router.push("shoesRecom");
-    },
-    onclickFilm() {
-      window.open("http://naver.me/52RjLNuT");
-    },
-    onclickClose(id) {
-      if (id == 1) {
-        this.ayo = !this.ayo;
-      } else {
-        this.shoesRecom = !this.shoesRecom;
-      }
-    },
-  },
-  data() {
-    return {
-      trips: globalTrip.trips,
-      ayo: true,
-      shoesRecom: true,
-    };
-  },
-  components: {
-    tripList,
-  },
+const router = useRouter();
+const userStore = useUserStore();
+const trips = globalTrip.trips;
+const ayo = ref(true);
+const shoesRecom = ref(true);
+
+const onclickShoes = () => {
+  router.push("/shoesRecom");
 };
+
+const onclickFilm = () => {
+  window.open("http://naver.me/52RjLNuT");
+};
+
+const onclickClose = (id) => {
+  if (id == 1) {
+    ayo.value = !ayo.value;
+  } else {
+    shoesRecom.value = !shoesRecom.value;
+  }
+};
+
+const isLogined = () => {
+  if (userStore.token) {
+    return true;
+  }
+  return false;
+};
+
+onMounted(() => {
+  if (!isLogined()) {
+    alert("로그인이 필요한 페이지입니다.");
+    router.push("/login");
+  }
+});
 </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -4,6 +4,7 @@ import mainPage from "@/views/mainPage.vue";
 import tripPage from "@/views/tripPage.vue";
 import shoesRecom from "@/views/shoesRecom.vue";
 import shoesInfo from "@/views/shoesInfo.vue";
+import loginPage from "@/views/loginPage.vue";
 
 const routes = [
   {
