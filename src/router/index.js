@@ -10,21 +10,31 @@ const routes = [
     path: "/",
     name: "mainPage",
     component: mainPage,
+    meta: { mainDivClass: "", auth: ["admin"] },
   },
   {
     path: "/map/:date",
     name: "tripPage",
     component: tripPage,
+    meta: { mainDivClass: "", auth: ["admin"] },
   },
   {
     path: "/shoesRecom",
     name: "shoesRecom",
     component: shoesRecom,
+    meta: { mainDivClass: "", auth: ["admin"] },
   },
   {
     path: "/:brand/:shoesName",
     name: "shoesInfo",
     component: shoesInfo,
+    meta: { mainDivClass: "", auth: ["admin"] },
+  },
+  {
+    path: "/login",
+    name: "loginPage",
+    component: loginPage,
+    meta: { mainDivClass: "login-page-body", auth: [] },
   },
 ]; //라우팅 패스, 컴포넌트 등 정의
 
