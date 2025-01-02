@@ -1,0 +1,80 @@
+.map {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+#photoDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#moveButton {
+  font-family: "NotoKR-Medium Medium";
+  font-size: 0.7rem;
+  padding: 0.3rem;
+  color: black;
+  background-color: rgb(241, 214, 208);
+  border: none;
+  border-radius: 10px;
+}
+
+#myboxLink {
+  height: 70%;
+}
+
+#mybox {
+  height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+#myboxDiv {
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  font-family: "NotoKR-Medium Medium";
+  font-size: 0.7rem;
+}
+
+#pwDiv {
+  font-size: 0.6rem;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  #mapDiv {
+    height: 70vh;
+    margin-bottom: 1vh;
+  }
+
+  #photoDiv {
+    height: 7vh;
+  }
+
+  #footer {
+    margin-top: 1vh;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #mapDiv {
+    height: 700px;
+    margin-bottom: 10px;
+  }
+
+  #photoDiv {
+    height: 70px;
+  }
+
+  #footer {
+    margin-top: 10px;
+  }
+}

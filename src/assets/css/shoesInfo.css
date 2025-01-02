@@ -1,0 +1,109 @@
+#warningDiv {
+  font-size: 0.5rem;
+  color: gray;
+  border-bottom: solid 1px rgb(241, 214, 208);
+  padding-bottom: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.shoesOverView {
+  font-family: "NotoKR-Medium Medium";
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+#shoesImgDiv {
+  width: 60%;
+}
+#shoesImg {
+  width: 100%;
+}
+.brandDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+.brandInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.brandDesc {
+  font-size: 0.7rem;
+  color: gray;
+}
+#shoesInfo {
+  font-size: 0.8rem;
+}
+#shoesDesc {
+  border-top: solid 1px rgb(241, 214, 208);
+  margin: 1rem;
+  padding-top: 1rem;
+  font-size: 0.7rem;
+  font-family: "NotoKR-Medium Medium";
+}
+#reviewInfoDiv {
+  font-family: "NotoKR-Medium Medium";
+  border-top: solid 1px rgb(241, 214, 208);
+  padding-top: 0.5rem;
+  margin: 1rem;
+}
+#reviewListDiv {
+  display: flex;
+  margin-bottom: 1rem;
+  border-bottom: solid 1px rgb(241, 214, 208);
+  padding-bottom: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.reviewDiv {
+  font-family: "NotoKR-Medium Medium";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+.reviewImgDiv {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.reviewImg {
+  width: 100%;
+  border-radius: 20px;
+  vertical-align: middle;
+}
+.reviewImgDesc {
+  padding: 0.3rem;
+  font-size: 0.7rem;
+}
+a {
+  text-decoration-line: none;
+  color: gray;
+}
+a:visited {
+  color: gray;
+}
+a:hover {
+  color: black;
+}
+.mjVideoDiv {
+  padding: 0.1rem;
+  font-size: 0.7rem;
+  color: gray;
+  width: 100%;
+}
+.mjVideoDiv div {
+  cursor: pointer;
+}
+#mjVideo {
+  width: 95%;
+}
