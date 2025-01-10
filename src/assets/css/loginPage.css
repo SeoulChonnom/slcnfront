@@ -17,17 +17,17 @@ h1 {
   align-content: center;
 }
 
-.form-group {
+.login-form-group {
   margin-bottom: 15px;
 }
 
-label {
+.login-label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-input {
+.login-input {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -36,7 +36,7 @@ input {
   font-size: 16px;
 }
 
-input:focus {
+.login-input:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);

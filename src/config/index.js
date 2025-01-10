@@ -10,8 +10,8 @@ export default {
     getAccessToken: () => API_HOST_URL + USER + "token",
   },
   trip: {
-    getAllTrip: () => API_HOST_URL + TRIP,
-    addTrip: () => API_HOST_URL + TRIP,
+    getTripList: () => API_HOST_URL + TRIP,
+    registerTrip: () => API_HOST_URL + TRIP,
     getTripInfo: (tripDate) => API_HOST_URL + TRIP + `${tripDate}`,
     getFile: () => API_HOST_URL + TRIP + "file",
   },

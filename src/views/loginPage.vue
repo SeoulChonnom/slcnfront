@@ -2,9 +2,10 @@
   <div class="login-container">
     <h1>SLCN Login</h1>
     <form @submit.prevent="sumbitLoginForm" class="login-form">
-      <div class="form-group">
-        <label for="userName">아이디</label>
+      <div class="login-form-group">
+        <label class="login-label" for="userName">아이디</label>
         <input
+          class="login-input"
           id="userName"
           type="text"
           v-model="userName"
@@ -12,9 +13,10 @@
           placeholder="Enter your id"
         />
       </div>
-      <div class="form-group">
-        <label for="password">비밀번호</label>
+      <div class="login-form-group">
+        <label class="login-label" for="password">비밀번호</label>
         <input
+          class="login-input"
           id="password"
           type="password"
           v-model="password"
@@ -60,7 +62,8 @@ const getAccessTokenByRefreshToken = async () => {
       router.push("/");
     }
   } catch (error) {
-    alert(error.message);
+    //alert(error.message);
+    console.log(error.message);
   }
 };
 

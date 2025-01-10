@@ -40,7 +40,7 @@
   
 
 <script setup>
-import { useUserStore } from "@/store/useUserStore";
+import { useTripStore } from "@/store/useTripStore";
 import { onMounted } from "vue";
 import tripList from "@/components/trip/tripList.vue";
 import { globalTrip } from "@/global/global.js";
@@ -48,7 +48,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
-const userStore = useUserStore();
+const tripStore = useTripStore();
 const trips = globalTrip.trips;
 const ayo = ref(true);
 const shoesRecom = ref(true);
@@ -69,23 +69,19 @@ const onclickClose = (id) => {
   }
 };
 
-const isLogined = () => {
-  if (userStore.token) {
-    return true;
+const getTripList = async () => {
+  try {
+    await tripStore.getTripList();
+  } catch (e) {
+    return;
   }
-  return false;
 };
 
 onMounted(() => {
-  if (!isLogined()) {
-    alert("로그인이 필요한 페이지입니다.");
-    router.push("/login");
-  }
+  getTripList();
 });
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>
 @import "../assets/css/index.css";
 </style>
-  

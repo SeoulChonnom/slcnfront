@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+import { useUserStore } from "@/store/useUserStore";
 
 import mainPage from "@/views/mainPage.vue";
 import tripPage from "@/views/tripPage.vue";
@@ -45,4 +46,23 @@ export const router = createRouter({
   },
   history: createWebHistory(),
   routes: routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.fullPath === "/login") {
+    next();
+  }
+
+  const userStore = useUserStore();
+
+  if (!userStore.token) {
+    next({ path: "/login" });
+  }
+
+  const { auth } = to.meta;
+
+  if (auth.length && !auth.filter((v) => !userStore.userInfo.roleList.includes(v))) {
+    next({ path: "/login" });
+  }
+  next();
 });
