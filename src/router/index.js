@@ -6,12 +6,19 @@ import tripPage from "@/views/tripPage.vue";
 import shoesRecom from "@/views/shoesRecom.vue";
 import shoesInfo from "@/views/shoesInfo.vue";
 import loginPage from "@/views/loginPage.vue";
+import mapPage from "@/views/mapPage.vue";
 
 const routes = [
   {
     path: "/",
     name: "mainPage",
     component: mainPage,
+    meta: { mainDivClass: "", auth: ["admin"] },
+  },
+  {
+    path: "/map",
+    name: "mapPage",
+    component: mapPage,
     meta: { mainDivClass: "", auth: ["admin"] },
   },
   {
@@ -32,6 +39,7 @@ const routes = [
     component: shoesInfo,
     meta: { mainDivClass: "", auth: ["admin"] },
   },
+
   {
     path: "/login",
     name: "loginPage",
