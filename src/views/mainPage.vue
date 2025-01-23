@@ -1,10 +1,6 @@
 <template>
   <div id="content">
     <div id="infoDiv">서울 촌놈 나들이 기록 📷</div>
-    <div id="mapListDiv">
-      <tripList v-for="trip in trips" :key="trip.date" v-bind:trip="trip" />
-    </div>
-    <div id="tobecontinueDiv">서울 촌놈 나들이는 계속 될 예정....🥳</div>
     <div
       class="fixButtonDiv"
       :class="{ fix1: !shoesRecom && ayo, fix2: ayo, fixNone: !ayo }"
@@ -42,14 +38,11 @@
 <script setup>
 import { useTripStore } from "@/store/useTripStore";
 import { onMounted } from "vue";
-import tripList from "@/components/trip/tripList.vue";
-import { globalTrip } from "@/global/global.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
 const tripStore = useTripStore();
-const trips = globalTrip.trips;
 const ayo = ref(true);
 const shoesRecom = ref(true);
 
@@ -58,7 +51,8 @@ const onclickShoes = () => {
 };
 
 const onclickFilm = () => {
-  window.open("http://naver.me/52RjLNuT");
+  //window.open("http://naver.me/52RjLNuT");
+  router.push("/map");
 };
 
 const onclickClose = (id) => {
