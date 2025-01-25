@@ -1,7 +1,7 @@
 <template>
   <div class="mapDiv" @click="onClickMap()">
     <div class="mapImgDiv">
-      <img class="map" :src="trip.logo" />
+      <img class="map" :src="logo" />
     </div>
     <div class="mapDesc">
       {{ trip.info1 }}<br />
@@ -12,13 +12,16 @@
 
 <script setup>
 import swal from "sweetalert2";
-import { defineProps } from "vue";
+import { defineProps, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useTripStore } from "@/store/useTripStore";
 
 const router = useRouter();
+const tripStore = useTripStore();
 const props = defineProps({
   trip: Object,
 });
+const logo = ref(null);
 
 const makeQuizAnswer = () => {
   const quiz = {
@@ -85,6 +88,12 @@ const onClickMap = async () => {
     });
   }
 };
+
+onMounted(() => {
+  tripStore.getFile(props.trip.logo).then((data) => {
+    logo.value = data;
+  });
+});
 </script>
 
 <style>
