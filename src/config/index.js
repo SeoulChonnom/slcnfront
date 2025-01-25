@@ -6,13 +6,13 @@ const TRIP = "trip/";
 
 export default {
   account: {
-    postLogin: () => API_HOST_URL + USER + "login",
-    getAccessToken: () => API_HOST_URL + USER + "token",
+    postLogin: () => encodeURI(API_HOST_URL + USER + "login"),
+    getAccessToken: () => encodeURI(API_HOST_URL + USER + "token"),
   },
   trip: {
-    getTripList: () => API_HOST_URL + TRIP,
-    registerTrip: () => API_HOST_URL + TRIP,
-    getTripInfo: (tripDate) => API_HOST_URL + TRIP + `${tripDate}`,
-    getFile: () => API_HOST_URL + TRIP + "file",
+    getTripList: () => encodeURI(API_HOST_URL + TRIP),
+    registerTrip: () => encodeURI(API_HOST_URL + TRIP),
+    getTripInfo: (tripDate) => encodeURI(API_HOST_URL + TRIP + `${tripDate}`),
+    getFile: (path) => encodeURI(API_HOST_URL + TRIP + "file?path=" + `${path}`),
   },
 };
