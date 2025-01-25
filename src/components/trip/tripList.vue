@@ -12,7 +12,7 @@
 
 <script setup>
 import swal from "sweetalert2";
-import { defineProps, ref, onMounted } from "vue";
+import { defineProps, ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useTripStore } from "@/store/useTripStore";
 
@@ -93,6 +93,12 @@ onMounted(() => {
   tripStore.getFile(props.trip.logo).then((data) => {
     logo.value = data;
   });
+});
+
+onBeforeUnmount(() => {
+  if (logo.value) {
+    URL.revokeObjectURL(logo.value);
+  }
 });
 </script>
 
