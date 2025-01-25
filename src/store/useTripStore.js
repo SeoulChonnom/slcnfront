@@ -71,5 +71,22 @@ export const useTripStore = defineStore("trip", {
         }
       }
     },
+    async getFile(path) {
+      try {
+        const response = await axios({
+          url: config.trip.getFile(path),
+          method: "GET",
+          headers: { "X-AUTH-TOKEN": useUserStore().token },
+          responseType: "blob",
+        });
+        return URL.createObjectURL(response.data);
+      } catch (e) {
+        if (e.response?.status === 400) {
+          throw new Error(e.response.data.message);
+        } else {
+          throw new Error("알 수 없는 오류입니다.");
+        }
+      }
+    },
   },
 });
