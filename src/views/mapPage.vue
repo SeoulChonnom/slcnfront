@@ -2,6 +2,7 @@
   <div id="content">
     <div id="infoDiv">서울 촌놈 나들이 기록 📷</div>
     <div id="mapListDiv">
+      <div id="mapCreateDiv">새 나들이 기록하기</div>
       <tripList v-for="trip in trips" :key="trip.date" v-bind:trip="trip" />
     </div>
     <div id="tobecontinueDiv">서울 촌놈 나들이는 계속 될 예정....🥳</div>
@@ -30,6 +31,6 @@ onMounted(() => {
 });
 </script>
   
-  <style>
-@import "../assets/css/index.css";
+<style>
+@import "../assets/css/mapPage.css";
 </style>
