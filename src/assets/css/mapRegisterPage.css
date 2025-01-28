@@ -1,0 +1,91 @@
+.trip-container {
+  font-family: "NotoKR-Medium Medium";
+  max-width: 400px;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+#main {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.trip-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.trip-form-type {
+  margin: 15px 0;
+}
+
+.trip-type-label {
+  padding: 0 10px;
+}
+
+.trip-form-group {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.trip-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.trip-input {
+  width: 70%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.trip-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+.trip-button {
+  font-family: "NotoKR-Medium Medium";
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.trip-button:hover {
+  background-color: #0056b3;
+}
+
+.trip-multi-map-button {
+  padding: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: solid 1px rgb(241, 214, 208);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trip-multi-map-button {
+    cursor: pointer;
+  }
+  .trip-multi-map-button:hover {
+    background-color: rgb(241, 214, 208);
+  }
+}

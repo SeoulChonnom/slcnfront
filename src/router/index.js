@@ -7,6 +7,7 @@ import shoesRecom from "@/views/shoesRecom.vue";
 import shoesInfo from "@/views/shoesInfo.vue";
 import loginPage from "@/views/loginPage.vue";
 import mapPage from "@/views/mapPage.vue";
+import mapRegisterPage from "@/views/mapRegisterPage.vue";
 
 const routes = [
   {
@@ -45,6 +46,12 @@ const routes = [
     name: "loginPage",
     component: loginPage,
     meta: { mainDivClass: "login-page-body", auth: [] },
+  },
+  {
+    path: "/map/register",
+    name: "mapRegisterPage",
+    component: mapRegisterPage,
+    meta: { mainDivClass: "", auth: ["admin"] },
   },
 ]; //라우팅 패스, 컴포넌트 등 정의
 
