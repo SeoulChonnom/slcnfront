@@ -43,13 +43,6 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .mapDiv {
-    cursor: pointer;
-  }
-  .mapDiv:hover {
-    background-color: rgb(241, 214, 208);
-  }
-
   .fixButtonDiv {
     right: 15px;
   }
