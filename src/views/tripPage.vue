@@ -95,11 +95,10 @@ onMounted(() => {
     tripData.value = data;
     getMap1();
     getMap2();
-    console.log(tripData.value);
   });
 });
 </script>
 
 <style scoped>
-@import "@/assets/css/map.css";
+@import "@/assets/css/tripPage.css";
 </style>
