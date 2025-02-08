@@ -10,7 +10,8 @@
 </template>
     
   
-  <script setup>
+<script setup>
+import { ref } from "vue";
 import { useTripStore } from "@/store/useTripStore";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -18,7 +19,7 @@ import tripList from "@/components/trip/tripList.vue";
 
 const tripStore = useTripStore();
 const router = useRouter();
-const trips = tripStore.tripList;
+const trips = ref([]);
 
 const getTripList = async () => {
   try {
@@ -33,7 +34,7 @@ const createTrip = () => {
 };
 
 onMounted(() => {
-  getTripList();
+  getTripList().then(() => (trips.value = tripStore.tripList));
 });
 </script>
   
