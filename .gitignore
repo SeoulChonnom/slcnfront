@@ -20,9 +20,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-# Image Files
-src/assets/img
-
-# Video Files
-src/assets/video
