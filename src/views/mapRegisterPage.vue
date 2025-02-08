@@ -165,7 +165,7 @@
           <input
             class="trip-input"
             id="quizAnswer"
-            type="text"
+            type="number"
             v-model="formData.quizAnswer"
             required
             placeholder="정답 번호"
@@ -177,7 +177,7 @@
             class="trip-input"
             id="quizAnswer1"
             type="text"
-            v-model="formData.quizRegisterRequestList[0].answer"
+            v-model="quizList.quizRegisterRequestList[0].answer"
             required
             placeholder="정답1"
           />
@@ -188,7 +188,7 @@
             class="trip-input"
             id="quizAnswer2"
             type="text"
-            v-model="formData.quizRegisterRequestList[1].answer"
+            v-model="quizList.quizRegisterRequestList[1].answer"
             required
             placeholder="정답2"
           />
@@ -199,7 +199,7 @@
             class="trip-input"
             id="quizAnswer3"
             type="text"
-            v-model="formData.quizRegisterRequestList[2].answer"
+            v-model="quizList.quizRegisterRequestList[2].answer"
             placeholder="정답3"
           />
         </div>
@@ -209,13 +209,12 @@
             class="trip-input"
             id="quizAnswer4"
             type="text"
-            v-model="formData.quizRegisterRequestList[3].answer"
+            v-model="quizList.quizRegisterRequestList[3].answer"
             placeholder="정답4"
           />
         </div>
         <button type="submit" class="trip-button">저장</button>
       </form>
-      <button @click="test()">TEST</button>
     </div>
   </div>
 </template>
@@ -225,8 +224,10 @@ import { ref } from "vue";
 import swal from "sweetalert2";
 import { useTripStore } from "@/store/useTripStore";
 import dayjs from "dayjs";
+import { useRouter } from "vue-router";
 
 const tripStore = useTripStore();
+const router = useRouter();
 const allowedExtensions = ["jpg", "jpeg", "png", "gif", "svg"];
 const allowedMimeTypes = [
   "image/jpeg",
@@ -242,11 +243,8 @@ const multiMap = ref(false);
 const formData = ref({
   date: "",
   type: "",
-  logo: null,
   info1: "",
   info2: "",
-  map1: null,
-  map2: null,
   button1: "",
   button2: "",
   drive: "",
@@ -256,6 +254,10 @@ const formData = ref({
   quizAnswerText: "",
   quizErrorTitle: "",
   quizErrorText: "",
+  quizRegisterRequestList: [],
+});
+
+const quizList = ref({
   quizRegisterRequestList: [
     { quizIndex: "0", answer: "" },
     { quizIndex: "1", answer: "" },
@@ -263,24 +265,30 @@ const formData = ref({
     { quizIndex: "3", answer: "" },
   ],
 });
-
 const logoImage = ref(null);
 const map1Image = ref(null);
 const map2Image = ref(null);
 
+const imageData = ref({
+  logo: null,
+  map1: null,
+  map2: null,
+});
+
 const validateForm = () => {
   for (const key in formData.value) {
     if (!formData.value[key]) {
-      if (
-        !multiMap.value &&
-        (key == "map2" || key == "button1" || key == "button2")
-      ) {
+      if (!multiMap.value && (key == "button1" || key == "button2")) {
         continue;
       }
       swal.fire("빈칸을 채워주세요.");
       return false;
     }
   }
+
+  formData.value.quizRegisterRequestList =
+    quizList.value.quizRegisterRequestList.filter((data) => data.answer !== "");
+
   return true;
 };
 
@@ -289,16 +297,40 @@ const sumbitTripForm = () => {
     formData.value.info1 = dayjs(date.value).format("YYYY.MM.DD");
     formData.value.date = dayjs(date.value).format("YYYYMMDD");
   }
+
   if (!validateForm()) {
     return;
   }
+
+  formData.value.quizAnswer = formData.value.quizAnswer - 1;
+
   if (!multiMap.value) {
-    formData.value.map2 = null;
+    imageData.value.map2 = null;
     formData.value.button1 = "";
     formData.value.button2 = "";
   }
-  // todo: tripStore API 연결
-  console.log(tripStore.tripList);
+
+  tripStore
+    .registerTrip(
+      formData.value,
+      imageData.value.logo,
+      imageData.value.map1,
+      imageData.value.map2
+    )
+    .then(
+      swal
+        .fire({
+          icon: "success",
+          text: "저장에 성공하였습니다.",
+          timer: 1000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        })
+        .then(() => router.push("/map"))
+    )
+    .catch((e) => {
+      swal.fire(e.message);
+    });
 };
 
 const handleFileUpload = (event, key) => {
@@ -313,7 +345,7 @@ const handleFileUpload = (event, key) => {
       !allowedExtensions.includes(fileExtension) ||
       !allowedMimeTypes.includes(file.type)
     ) {
-      alert(`허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해주세요.`);
+      swal.fire(`허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해주세요.`);
       event.target.value = "";
       return;
     }
@@ -325,7 +357,7 @@ const handleFileUpload = (event, key) => {
       return;
     }
 
-    formData.value[key] = file;
+    imageData.value[key] = file;
   }
 };
 

@@ -20,7 +20,7 @@ export const useTripStore = defineStore("trip", {
           method: "GET",
           headers: { "X-AUTH-TOKEN": useUserStore().token },
         });
-        this.tripList = res.data.data;
+        this.tripList = [...res.data.data];
       } catch (e) {
         if (e.response?.status === 400) {
           throw new Error(e.response.data.message);
@@ -55,14 +55,28 @@ export const useTripStore = defineStore("trip", {
         }
       }
     },
-    async registerTrip(data) {
+    async registerTrip(data, logo, map1, map2) {
+      const form = new FormData();
+
+      const jsonBlob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      form.append("tripRegisterRequest", jsonBlob);
+      // form.append("tripRegisterRequest", JSON.stringify(data));
+
+      if (logo) form.append("logo", logo);
+      if (map1) form.append("map1", map1);
+      if (map2) form.append("map2", map2);
+
       try {
-        await axios({
+        const response = await axios({
           url: config.trip.registerTrip(),
           method: "POST",
-          headers: { "X-AUTH-TOKEN": useUserStore().token },
-          data: data,
+          data: form,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-AUTH-TOKEN": useUserStore().token,
+          },
         });
+        return response;
       } catch (e) {
         if (e.response?.status === 400) {
           throw new Error(e.response.data.message);
@@ -87,6 +101,12 @@ export const useTripStore = defineStore("trip", {
           throw new Error("알 수 없는 오류입니다.");
         }
       }
+    },
+    registerTripTest(data, logo, map1, map2) {
+      console.log(data);
+      console.log(logo);
+      console.log(map1);
+      console.log(map2);
     },
   },
 });
