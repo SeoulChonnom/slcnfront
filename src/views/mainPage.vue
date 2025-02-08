@@ -36,13 +36,10 @@
   
 
 <script setup>
-import { useTripStore } from "@/store/useTripStore";
-import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
-const tripStore = useTripStore();
 const ayo = ref(true);
 const shoesRecom = ref(true);
 
@@ -62,18 +59,6 @@ const onclickClose = (id) => {
     shoesRecom.value = !shoesRecom.value;
   }
 };
-
-const getTripList = async () => {
-  try {
-    await tripStore.getTripList();
-  } catch (e) {
-    return;
-  }
-};
-
-onMounted(() => {
-  getTripList();
-});
 </script>
 
 <style>
