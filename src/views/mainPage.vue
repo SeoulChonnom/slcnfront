@@ -1,6 +1,17 @@
 <template>
   <div id="content">
     <div id="infoDiv">서울 촌놈 나들이 기록 📷</div>
+    <div class="contentListDiv doubleContentList">
+      <ddayComponent></ddayComponent>
+      <calanderComponent></calanderComponent>
+    </div>
+    <div class="contentListDiv">
+      <mapComponent></mapComponent>
+    </div>
+    <div class="contentListDiv doubleContentList">
+      <choiFilmArtComponent></choiFilmArtComponent>
+      <recomComponent></recomComponent>
+    </div>
     <div
       class="fixButtonDiv"
       :class="{ fix1: !shoesRecom && ayo, fix2: ayo, fixNone: !ayo }"
@@ -38,6 +49,11 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import ddayComponent from "@/components/main/ddayComponent.vue";
+import calanderComponent from "@/components/main/calanderComponent.vue";
+import mapComponent from "@/components/main/mapComponent.vue";
+import choiFilmArtComponent from "@/components/main/choiFilmArtComponent.vue";
+import recomComponent from "@/components/main/recomComponent.vue";
 
 const router = useRouter();
 const ayo = ref(true);
@@ -63,4 +79,13 @@ const onclickClose = (id) => {
 
 <style>
 @import "../assets/css/index.css";
+.contentListDiv {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.doubleContentList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
