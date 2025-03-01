@@ -1,11 +1,11 @@
-import axios from "axios";
-import { defineStore } from "pinia";
-import config from "@/config";
+import axios from 'axios';
+import { defineStore } from 'pinia';
+import config from '@/config';
 
-export const useUserStore = defineStore("user", {
+export const useUserStore = defineStore('user', {
   persist: {
     storage: sessionStorage,
-    paths: ["userInfo"],
+    paths: ['userInfo'],
   },
   state: () => ({
     token: null,
@@ -21,7 +21,7 @@ export const useUserStore = defineStore("user", {
       try {
         const res = await axios({
           url: config.account.postLogin(),
-          method: "POST",
+          method: 'POST',
           data: {
             username: userName,
             password: password,
@@ -37,7 +37,7 @@ export const useUserStore = defineStore("user", {
         if (e.response && e.status === 400) {
           throw new Error(e.response.data.message);
         } else {
-          throw new Error("알 수 없는 오류입니다.");
+          throw new Error('알 수 없는 오류입니다.');
         }
       }
     },
@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", {
       try {
         const res = await axios({
           url: config.account.getAccessToken(),
-          method: "GET",
+          method: 'GET',
         });
         this.token = res.data.data.accessToken;
         this.userInfo = {

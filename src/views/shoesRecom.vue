@@ -22,11 +22,11 @@
 </template>
     
 <script>
-import brandList from "@/components/shoe/brandList.vue";
-import { globalShoes } from "@/global/global.js";
+import brandList from '@/components/shoe/brandList.vue';
+import { globalShoes } from '@/global/global.js';
 
 export default {
-  name: "shoesRecomPage",
+  name: 'shoesRecomPage',
   methods: {},
   data() {
     return {
@@ -41,6 +41,6 @@ export default {
     
     <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-@import "@/assets/css/shoesRecom.css";
+@import '@/assets/css/shoesRecom.css';
 </style>
     

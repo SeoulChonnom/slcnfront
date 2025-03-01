@@ -3,12 +3,12 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const onClickRecomDiv = () => {
-  router.push("/shoesRecom");
+  router.push('/shoesRecom');
 };
 </script>
 

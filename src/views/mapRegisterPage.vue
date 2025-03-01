@@ -220,49 +220,49 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import swal from "sweetalert2";
-import { useTripStore } from "@/store/useTripStore";
-import dayjs from "dayjs";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import swal from 'sweetalert2';
+import { useTripStore } from '@/store/useTripStore';
+import dayjs from 'dayjs';
+import { useRouter } from 'vue-router';
 
 const tripStore = useTripStore();
 const router = useRouter();
-const allowedExtensions = ["jpg", "jpeg", "png", "gif", "svg"];
+const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 const allowedMimeTypes = [
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "image/svg+xml",
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/svg+xml',
 ];
 const maxSize = 10 * 1024 * 1024;
 
-const date = ref("");
+const date = ref('');
 const multiMap = ref(false);
 
 const formData = ref({
-  date: "",
-  type: "",
-  info1: "",
-  info2: "",
-  button1: "",
-  button2: "",
-  drive: "",
-  quizTitle: "",
-  quizAnswer: "",
-  quizAnswerTitle: "",
-  quizAnswerText: "",
-  quizErrorTitle: "",
-  quizErrorText: "",
+  date: '',
+  type: '',
+  info1: '',
+  info2: '',
+  button1: '',
+  button2: '',
+  drive: '',
+  quizTitle: '',
+  quizAnswer: '',
+  quizAnswerTitle: '',
+  quizAnswerText: '',
+  quizErrorTitle: '',
+  quizErrorText: '',
   quizRegisterRequestList: [],
 });
 
 const quizList = ref({
   quizRegisterRequestList: [
-    { quizIndex: "0", answer: "" },
-    { quizIndex: "1", answer: "" },
-    { quizIndex: "2", answer: "" },
-    { quizIndex: "3", answer: "" },
+    { quizIndex: '0', answer: '' },
+    { quizIndex: '1', answer: '' },
+    { quizIndex: '2', answer: '' },
+    { quizIndex: '3', answer: '' },
   ],
 });
 const logoImage = ref(null);
@@ -278,24 +278,24 @@ const imageData = ref({
 const validateForm = () => {
   for (const key in formData.value) {
     if (!formData.value[key]) {
-      if (!multiMap.value && (key == "button1" || key == "button2")) {
+      if (!multiMap.value && (key == 'button1' || key == 'button2')) {
         continue;
       }
-      swal.fire("빈칸을 채워주세요.");
+      swal.fire('빈칸을 채워주세요.');
       return false;
     }
   }
 
   formData.value.quizRegisterRequestList =
-    quizList.value.quizRegisterRequestList.filter((data) => data.answer !== "");
+    quizList.value.quizRegisterRequestList.filter((data) => data.answer !== '');
 
   return true;
 };
 
 const sumbitTripForm = () => {
   if (date.value) {
-    formData.value.info1 = dayjs(date.value).format("YYYY.MM.DD");
-    formData.value.date = dayjs(date.value).format("YYYYMMDD");
+    formData.value.info1 = dayjs(date.value).format('YYYY.MM.DD');
+    formData.value.date = dayjs(date.value).format('YYYYMMDD');
   }
 
   if (!validateForm()) {
@@ -306,8 +306,8 @@ const sumbitTripForm = () => {
 
   if (!multiMap.value) {
     imageData.value.map2 = null;
-    formData.value.button1 = "";
-    formData.value.button2 = "";
+    formData.value.button1 = '';
+    formData.value.button2 = '';
   }
 
   tripStore
@@ -320,13 +320,13 @@ const sumbitTripForm = () => {
     .then(
       swal
         .fire({
-          icon: "success",
-          text: "저장에 성공하였습니다.",
+          icon: 'success',
+          text: '저장에 성공하였습니다.',
           timer: 1000,
           timerProgressBar: true,
           showConfirmButton: false,
         })
-        .then(() => router.push("/map"))
+        .then(() => router.push('/map'))
     )
     .catch((e) => {
       swal.fire(e.message);
@@ -338,7 +338,7 @@ const handleFileUpload = (event, key) => {
 
   if (files && files[0]) {
     const file = files[0];
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const fileExtension = file.name.split('.').pop().toLowerCase();
 
     // 이미지 파일 여부 검사
     if (
@@ -346,14 +346,14 @@ const handleFileUpload = (event, key) => {
       !allowedMimeTypes.includes(file.type)
     ) {
       swal.fire(`허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해주세요.`);
-      event.target.value = "";
+      event.target.value = '';
       return;
     }
 
     // 파일 사이즈 검사
     if (file.size > maxSize) {
-      alert("파일 크기는 10MB를 초과할 수 없습니다.");
-      event.target.value = "";
+      alert('파일 크기는 10MB를 초과할 수 없습니다.');
+      event.target.value = '';
       return;
     }
 
@@ -371,12 +371,12 @@ const toggleMultiMap = () => {
 
 const getMultiMapButtonText = () => {
   if (multiMap.value) {
-    return "2번 지도 지우기";
+    return '2번 지도 지우기';
   }
-  return "2번 지도 추가하기";
+  return '2번 지도 추가하기';
 };
 </script>
 
 <style scoped>
-@import "@/assets/css/mapRegisterPage.css";
+@import '@/assets/css/mapRegisterPage.css';
 </style>

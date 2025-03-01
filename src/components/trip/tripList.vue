@@ -11,10 +11,10 @@
 </template>
 
 <script setup>
-import swal from "sweetalert2";
-import { defineProps, ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
-import { useTripStore } from "@/store/useTripStore";
+import swal from 'sweetalert2';
+import { defineProps, ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
+import { useTripStore } from '@/store/useTripStore';
 
 const router = useRouter();
 const tripStore = useTripStore();
@@ -54,20 +54,20 @@ const onClickMap = async () => {
     }, 500);
   });
   const { value: ans } = await swal.fire({
-    icon: "question",
-    title: props.trip.quizTitle.replace("\\n", "\n"),
-    input: "radio",
+    icon: 'question',
+    title: props.trip.quizTitle.replace('\\n', '\n'),
+    input: 'radio',
     inputOptions,
     inputValidator: (value) => {
       if (!value) {
-        return "정답을 선택해주세요!";
+        return '정답을 선택해주세요!';
       }
     },
   });
   if (isCorrect(quiz.answer, ans)) {
     swal
       .fire({
-        icon: "success",
+        icon: 'success',
         title: props.trip.quizAnswerTitle,
         text: props.trip.quizAnswerText,
         timer: 1000,
@@ -75,11 +75,11 @@ const onClickMap = async () => {
         showConfirmButton: false,
       })
       .then(() => {
-        router.push("/map/" + props.trip.date);
+        router.push('/map/' + props.trip.date);
       });
   } else {
     swal.fire({
-      icon: "error",
+      icon: 'error',
       title: props.trip.quizErrorTitle,
       text: props.trip.quizErrorText,
       timer: 1000,
@@ -104,14 +104,14 @@ onBeforeUnmount(() => {
 
 <style>
 div:where(.swal2-container) .swal2-radio label {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 div:where(.swal2-container) .swal2-html-container {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 @media (hover: none) and (pointer: coarse) {
   div:where(.swal2-container) .swal2-radio label {
-    font-family: "NotoKR-Medium Medium";
+    font-family: 'NotoKR-Medium Medium';
     font-size: 1rem;
   }
 }

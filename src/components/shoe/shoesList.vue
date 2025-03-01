@@ -10,11 +10,11 @@
     
 <script>
 export default {
-  name: "shoesList",
+  name: 'shoesList',
   props: { shoe: Object },
   methods: {
     shoesClick() {
-      this.$emit("shoesDivClick", this.shoe);
+      this.$emit('shoesDivClick', this.shoe);
     },
   },
   data() {
@@ -24,5 +24,5 @@ export default {
 </script>
     
 <style>
-@import "@/assets/css/shoesRecom.css";
+@import '@/assets/css/shoesRecom.css';
 </style>

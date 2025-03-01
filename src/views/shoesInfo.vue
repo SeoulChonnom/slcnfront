@@ -62,10 +62,10 @@
 </template>
 
 <script>
-import { globalShoes } from "@/global/global.js";
+import { globalShoes } from '@/global/global.js';
 
 export default {
-  name: "shoesInfoPage",
+  name: 'shoesInfoPage',
   data() {
     return {
       globalShoes,
@@ -84,7 +84,7 @@ export default {
         .shoes.find((item) => item.shoesId === this.shoesName);
     },
     getBrandDivId() {
-      return this.getShoesBrand().brandId + "BrandsDiv";
+      return this.getShoesBrand().brandId + 'BrandsDiv';
     },
     windowOpen(link) {
       window.open(link);
@@ -95,6 +95,6 @@ export default {
       
       <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style>
-@import "@/assets/css/shoesInfo.css";
+@import '@/assets/css/shoesInfo.css';
 </style>
       

@@ -5,37 +5,37 @@
 </template>
 
 <script setup>
-import swal from "sweetalert2";
-import dayjs from "dayjs";
+import swal from 'sweetalert2';
+import dayjs from 'dayjs';
 
 const today = dayjs();
-const d_day = dayjs("2024-11-10");
+const d_day = dayjs('2024-11-10');
 
 const onClickDday = () => {
-  swal.fire("GOOD");
+  swal.fire('GOOD');
 };
 
 const getDday = () => {
-  return today.diff(d_day, "d") + 1;
+  return today.diff(d_day, 'd') + 1;
 };
 </script>
 
 <style scoped>
 div:where(.swal2-container) .swal2-radio label {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 div:where(.swal2-container) .swal2-html-container {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 @media (hover: none) and (pointer: coarse) {
   div:where(.swal2-container) .swal2-radio label {
-    font-family: "NotoKR-Medium Medium";
+    font-family: 'NotoKR-Medium Medium';
     font-size: 1rem;
   }
 }
 #ddayDiv {
   text-align: right;
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
   background-color: rgb(241, 214, 208);
   width: 41%;
   padding: 2%;

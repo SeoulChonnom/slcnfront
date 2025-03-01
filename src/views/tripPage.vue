@@ -23,9 +23,9 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { useTripStore } from "@/store/useTripStore";
+import { ref, onBeforeMount, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useTripStore } from '@/store/useTripStore';
 
 const isMap1 = ref(true);
 const route = useRoute();
@@ -100,5 +100,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import "@/assets/css/tripPage.css";
+@import '@/assets/css/tripPage.css';
 </style>

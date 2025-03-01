@@ -9,19 +9,19 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 const onClickSLCN = () => {
-  router.push("/");
+  router.push('/');
 };
-const mainDivClass = computed(() => route.meta.mainDivClass || "");
+const mainDivClass = computed(() => route.meta.mainDivClass || '');
 </script>
 
 <style>
-@import "./assets/css/common.css";
+@import './assets/css/common.css';
 
 .login-page-body {
   position: absolute;

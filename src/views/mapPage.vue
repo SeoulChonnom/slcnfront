@@ -11,11 +11,11 @@
     
   
 <script setup>
-import { ref } from "vue";
-import { useTripStore } from "@/store/useTripStore";
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-import tripList from "@/components/trip/tripList.vue";
+import { ref } from 'vue';
+import { useTripStore } from '@/store/useTripStore';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import tripList from '@/components/trip/tripList.vue';
 
 const tripStore = useTripStore();
 const router = useRouter();
@@ -30,7 +30,7 @@ const getTripList = async () => {
 };
 
 const createTrip = () => {
-  router.push("/map/register");
+  router.push('/map/register');
 };
 
 onMounted(() => {
@@ -39,5 +39,5 @@ onMounted(() => {
 </script>
   
 <style>
-@import "../assets/css/mapPage.css";
+@import '../assets/css/mapPage.css';
 </style>

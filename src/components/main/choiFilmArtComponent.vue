@@ -4,20 +4,20 @@
 
 <script setup>
 const onclickFilm = () => {
-  window.open("http://naver.me/52RjLNuT");
+  window.open('http://naver.me/52RjLNuT');
 };
 </script>
 
 <style scoped>
 div:where(.swal2-container) .swal2-radio label {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 div:where(.swal2-container) .swal2-html-container {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 @media (hover: none) and (pointer: coarse) {
   div:where(.swal2-container) .swal2-radio label {
-    font-family: "NotoKR-Medium Medium";
+    font-family: 'NotoKR-Medium Medium';
     font-size: 1rem;
   }
 }

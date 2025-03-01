@@ -30,25 +30,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/store/useUserStore";
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/useUserStore';
 
 const router = useRouter();
 const userStore = useUserStore();
 
-const userName = ref("");
-const password = ref("");
+const userName = ref('');
+const password = ref('');
 
 const sumbitLoginForm = async () => {
   if (!userName.value || !password.value) {
-    alert("입력값이 잘못되었습니다.");
+    alert('입력값이 잘못되었습니다.');
     return;
   }
   try {
     await userStore.loginByInput(userName.value, password.value);
     if (userStore.token) {
-      router.push("/");
+      router.push('/');
     }
   } catch (error) {
     alert(error.message);
@@ -59,7 +59,7 @@ const getAccessTokenByRefreshToken = async () => {
   try {
     await userStore.loginByRefreshToken();
     if (userStore.token) {
-      router.push("/");
+      router.push('/');
     }
   } catch (error) {
     //alert(error.message);
@@ -73,5 +73,5 @@ onMounted(() => {
 </script>
 
 <style>
-@import "@/assets/css/loginPage.css";
+@import '@/assets/css/loginPage.css';
 </style>

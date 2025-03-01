@@ -17,14 +17,14 @@
 </template>
   
 <script>
-import shoesList from "./shoesList.vue";
+import shoesList from './shoesList.vue';
 
 export default {
-  name: "brandList",
+  name: 'brandList',
   props: { brand: Object },
   methods: {
     onClickShoesList(shoe) {
-      this.$router.push("/" + this.brand.brandId + "/" + shoe.shoesId);
+      this.$router.push('/' + this.brand.brandId + '/' + shoe.shoesId);
     },
   },
   data() {
@@ -37,5 +37,5 @@ export default {
 </script>
   
 <style>
-@import "@/assets/css/shoesRecom.css";
+@import '@/assets/css/shoesRecom.css';
 </style>
