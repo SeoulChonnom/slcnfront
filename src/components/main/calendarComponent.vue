@@ -1,29 +1,31 @@
 <template>
-  <div id="calanderDiv" @click="onClickCalander()">calander</div>
+  <div id="calendarDiv" @click="onClickCalendar()">calander</div>
 </template>
 
 <script setup>
-import swal from "sweetalert2";
+import { useRouter } from 'vue-router';
 
-const onClickCalander = () => {
-  swal.fire("calender");
+const router = useRouter();
+
+const onClickCalendar = () => {
+  router.push('/calendar');
 };
 </script>
 
 <style scoped>
 div:where(.swal2-container) .swal2-radio label {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 div:where(.swal2-container) .swal2-html-container {
-  font-family: "NotoKR-Medium Medium";
+  font-family: 'NotoKR-Medium Medium';
 }
 @media (hover: none) and (pointer: coarse) {
   div:where(.swal2-container) .swal2-radio label {
-    font-family: "NotoKR-Medium Medium";
+    font-family: 'NotoKR-Medium Medium';
     font-size: 1rem;
   }
 }
-#calanderDiv {
+#calendarDiv {
   background-color: rgb(241, 214, 208);
   width: 41%;
   padding: 2%;

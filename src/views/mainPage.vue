@@ -3,7 +3,7 @@
     <div id="infoDiv">서울 촌놈 나들이 기록 📷</div>
     <div class="contentListDiv doubleContentList">
       <ddayComponent></ddayComponent>
-      <calanderComponent></calanderComponent>
+      <calendarComponent></calendarComponent>
     </div>
     <div class="contentListDiv">
       <mapComponent></mapComponent>
@@ -47,25 +47,25 @@
   
 
 <script setup>
-import { useRouter } from "vue-router";
-import { ref } from "vue";
-import ddayComponent from "@/components/main/ddayComponent.vue";
-import calanderComponent from "@/components/main/calanderComponent.vue";
-import mapComponent from "@/components/main/mapComponent.vue";
-import choiFilmArtComponent from "@/components/main/choiFilmArtComponent.vue";
-import recomComponent from "@/components/main/recomComponent.vue";
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import ddayComponent from '@/components/main/ddayComponent.vue';
+import calendarComponent from '@/components/main/calendarComponent.vue';
+import mapComponent from '@/components/main/mapComponent.vue';
+import choiFilmArtComponent from '@/components/main/choiFilmArtComponent.vue';
+import recomComponent from '@/components/main/recomComponent.vue';
 
 const router = useRouter();
 const ayo = ref(true);
 const shoesRecom = ref(true);
 
 const onclickShoes = () => {
-  router.push("/shoesRecom");
+  router.push('/shoesRecom');
 };
 
 const onclickFilm = () => {
   //window.open("http://naver.me/52RjLNuT");
-  router.push("/map");
+  router.push('/map');
 };
 
 const onclickClose = (id) => {
@@ -78,7 +78,7 @@ const onclickClose = (id) => {
 </script>
 
 <style>
-@import "../assets/css/index.css";
+@import '../assets/css/index.css';
 .contentListDiv {
   margin-bottom: 1rem;
   width: 100%;
