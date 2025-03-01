@@ -1,57 +1,64 @@
-import { createWebHistory, createRouter } from "vue-router";
-import { useUserStore } from "@/store/useUserStore";
+import { createWebHistory, createRouter } from 'vue-router';
+import { useUserStore } from '@/store/useUserStore';
 
-import mainPage from "@/views/mainPage.vue";
-import tripPage from "@/views/tripPage.vue";
-import shoesRecom from "@/views/shoesRecom.vue";
-import shoesInfo from "@/views/shoesInfo.vue";
-import loginPage from "@/views/loginPage.vue";
-import mapPage from "@/views/mapPage.vue";
-import mapRegisterPage from "@/views/mapRegisterPage.vue";
+import mainPage from '@/views/mainPage.vue';
+import tripPage from '@/views/tripPage.vue';
+import shoesRecom from '@/views/shoesRecom.vue';
+import shoesInfo from '@/views/shoesInfo.vue';
+import loginPage from '@/views/loginPage.vue';
+import mapPage from '@/views/mapPage.vue';
+import mapRegisterPage from '@/views/mapRegisterPage.vue';
+import calendarPage from '@/views/calendarPage.vue';
 
 const routes = [
   {
-    path: "/",
-    name: "mainPage",
+    path: '/',
+    name: 'mainPage',
     component: mainPage,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
   {
-    path: "/map",
-    name: "mapPage",
+    path: '/map',
+    name: 'mapPage',
     component: mapPage,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
   {
-    path: "/map/:date",
-    name: "tripPage",
+    path: '/map/:date',
+    name: 'tripPage',
     component: tripPage,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
   {
-    path: "/shoesRecom",
-    name: "shoesRecom",
+    path: '/shoesRecom',
+    name: 'shoesRecom',
     component: shoesRecom,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
   {
-    path: "/:brand/:shoesName",
-    name: "shoesInfo",
+    path: '/:brand/:shoesName',
+    name: 'shoesInfo',
     component: shoesInfo,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
 
   {
-    path: "/login",
-    name: "loginPage",
+    path: '/login',
+    name: 'loginPage',
     component: loginPage,
-    meta: { mainDivClass: "login-page-body", auth: [] },
+    meta: { mainDivClass: 'login-page-body', auth: [] },
   },
   {
-    path: "/map/register",
-    name: "mapRegisterPage",
+    path: '/map/register',
+    name: 'mapRegisterPage',
     component: mapRegisterPage,
-    meta: { mainDivClass: "", auth: ["admin"] },
+    meta: { mainDivClass: '', auth: ['admin'] },
+  },
+  {
+    path: '/calendar',
+    name: 'calendarPage',
+    component: calendarPage,
+    meta: { mainDivClass: '', auth: ['admin'] },
   },
 ]; //라우팅 패스, 컴포넌트 등 정의
 
@@ -64,20 +71,23 @@ export const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.fullPath === "/login") {
+  if (to.fullPath === '/login') {
     next();
   }
 
   const userStore = useUserStore();
 
   if (!userStore.token) {
-    next({ path: "/login" });
+    next({ path: '/login' });
   }
 
   const { auth } = to.meta;
 
-  if (auth.length && !auth.filter((v) => !userStore.userInfo.roleList.includes(v))) {
-    next({ path: "/login" });
+  if (
+    auth.length &&
+    !auth.filter((v) => !userStore.userInfo.roleList.includes(v))
+  ) {
+    next({ path: '/login' });
   }
   next();
 });
