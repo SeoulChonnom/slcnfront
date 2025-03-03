@@ -1,18 +1,20 @@
 <template>
   <div id="content">
-    <div id="infoDiv">서울 촌놈 나들이 기록 📷</div>
-    <div class="contentListDiv doubleContentList">
-      <ddayComponent></ddayComponent>
-      <calendarComponent></calendarComponent>
+    <!-- <div id="infoDiv">서울 촌놈 나들이 기록 📷</div> -->
+    <div id="mainContentDiv">
+      <div class="contentListDiv doubleContentList">
+        <ddayComponent></ddayComponent>
+        <calendarComponent></calendarComponent>
+      </div>
+      <div class="contentListDiv">
+        <mapComponent></mapComponent>
+      </div>
+      <div class="contentListDiv doubleContentList">
+        <choiFilmArtComponent></choiFilmArtComponent>
+        <recomComponent></recomComponent>
+      </div>
     </div>
-    <div class="contentListDiv">
-      <mapComponent></mapComponent>
-    </div>
-    <div class="contentListDiv doubleContentList">
-      <choiFilmArtComponent></choiFilmArtComponent>
-      <recomComponent></recomComponent>
-    </div>
-    <div
+    <!-- <div
       class="fixButtonDiv"
       :class="{ fix1: !shoesRecom && ayo, fix2: ayo, fixNone: !ayo }"
       id="ayoFilmButtonDiv"
@@ -41,46 +43,49 @@
       >
         X
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
   
 
 <script setup>
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+// import { useRouter } from 'vue-router';
+// import { ref } from 'vue';
 import ddayComponent from '@/components/main/ddayComponent.vue';
 import calendarComponent from '@/components/main/calendarComponent.vue';
 import mapComponent from '@/components/main/mapComponent.vue';
 import choiFilmArtComponent from '@/components/main/choiFilmArtComponent.vue';
 import recomComponent from '@/components/main/recomComponent.vue';
 
-const router = useRouter();
-const ayo = ref(true);
-const shoesRecom = ref(true);
+// const router = useRouter();
+// const ayo = ref(true);
+// const shoesRecom = ref(true);
 
-const onclickShoes = () => {
-  router.push('/shoesRecom');
-};
+// const onclickShoes = () => {
+//   router.push('/shoesRecom');
+// };
 
-const onclickFilm = () => {
-  //window.open("http://naver.me/52RjLNuT");
-  router.push('/map');
-};
+// const onclickFilm = () => {
+//   //window.open("http://naver.me/52RjLNuT");
+//   router.push('/map');
+// };
 
-const onclickClose = (id) => {
-  if (id == 1) {
-    ayo.value = !ayo.value;
-  } else {
-    shoesRecom.value = !shoesRecom.value;
-  }
-};
+// const onclickClose = (id) => {
+//   if (id == 1) {
+//     ayo.value = !ayo.value;
+//   } else {
+//     shoesRecom.value = !shoesRecom.value;
+//   }
+// };
 </script>
 
 <style>
 @import '../assets/css/index.css';
+#mainContentDiv {
+  margin-top: 30px;
+}
 .contentListDiv {
-  margin-bottom: 1rem;
+  margin-bottom: 30px;
   width: 100%;
 }
 .doubleContentList {
