@@ -36,12 +36,12 @@ onMounted(() => {
     calendars: [
       {
         id: 'cal1',
-        name: 'type1',
+        name: 'ayo',
         backgroundColor: '#03bd9e',
       },
       {
         id: 'cal2',
-        name: 'type2',
+        name: 'rik',
         backgroundColor: '#00a9ff',
       },
     ],
