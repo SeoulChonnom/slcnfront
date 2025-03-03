@@ -15,12 +15,12 @@ const onClickRecomDiv = () => {
 <style scoped>
 #recomDiv {
   background-color: rgb(241, 214, 208);
-  width: 41%;
+  width: 35%;
   padding: 2%;
-  margin-left: 2%;
-  margin-right: 3%;
-  border-radius: 15px;
-  /* aspect-ratio: 8/7; */
-  height: 190px;
+  margin-left: 3%;
+  margin-right: 8%;
+  border-radius: 25px;
+  aspect-ratio: 1;
+  /* height: 175px; */
 }
 </style>

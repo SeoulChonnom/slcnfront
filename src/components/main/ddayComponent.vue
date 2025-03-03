@@ -12,7 +12,7 @@ const today = dayjs();
 const d_day = dayjs('2024-11-10');
 
 const onClickDday = () => {
-  swal.fire('GOOD');
+  swal.fire('사랑해 💕');
 };
 
 const getDday = () => {
@@ -36,15 +36,15 @@ div:where(.swal2-container) .swal2-html-container {
 #ddayDiv {
   text-align: right;
   font-family: 'NotoKR-Medium Medium';
-  background-color: rgb(241, 214, 208);
-  width: 41%;
-  padding: 2%;
-  margin-right: 2%;
-  margin-left: 3%;
-  border-radius: 15px;
   font-size: 0.85rem;
-  /* aspect-ratio: 8/7; */
-  height: 190px;
+  background-color: rgb(241, 214, 208);
+  width: 35%;
+  padding: 2%;
+  margin-right: 3%;
+  margin-left: 8%;
+  border-radius: 25px;
+  aspect-ratio: 1;
+  /* height: 175px; */
 }
 #ddaySpan {
   font-weight: bold;
