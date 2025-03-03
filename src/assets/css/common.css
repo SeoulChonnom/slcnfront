@@ -41,7 +41,7 @@ body {
   }
 
   #header {
-    height: 10vh;
+    height: 20vh;
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 0.5vh;
@@ -62,7 +62,7 @@ body {
   }
 
   #header {
-    height: 100px;
+    height: 150px;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 5px;
