@@ -12,6 +12,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Calendar from '@toast-ui/calendar';
+import { getCalendarList } from '@/service/scheduleService';
+
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 
@@ -56,23 +58,31 @@ onMounted(() => {
 
   calendar.on('beforeCreateEvent', (data) => {
     data.id = crypto.randomUUID();
-    if (data.isAllday == true) {
-      data.category = 'allday';
-    }
+
+    console.log(data);
+    console.log(data.start.toString());
+    console.log(data.end.getTime());
+
+    data.category = data.isAllday ? 'allday' : 'time';
+
     calendar.createEvents([data]);
     calendar.clearGridSelections();
   });
 
   calendar.on('beforeUpdateEvent', (data) => {
-    if (data.changes.isAllday == true) {
-      data.changes.category = 'allday';
-    }
+    data.changes.category = data.changes.isAllday ? 'allday' : 'time';
+
     calendar.updateEvent(data.event.id, data.event.calendarId, data.changes);
   });
 
   calendar.on('beforeDeleteEvent', (data) => {
     console.log(data);
     calendar.deleteEvent(data.id, data.calendarId);
+  });
+
+  getCalendarList().then((data) => {
+    console.log(data);
+    calendar.createEvents(data);
   });
 });
 </script>
