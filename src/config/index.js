@@ -1,6 +1,6 @@
 //주소 등 필요한 정보들 선언용 Javascript
 
-const API_HOST_URL = 'http://localhost:9090/';
+const API_HOST_URL = process.env.VUE_APP_API_URL;
 const USER = 'user/';
 const TRIP = 'trip/';
 const SCHEDULE = 'schedule/';
