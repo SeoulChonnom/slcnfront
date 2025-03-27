@@ -6,9 +6,9 @@
         <label class="login-label" for="userName">아이디</label>
         <input
           class="login-input"
-          id="userName"
+          id="username"
           type="text"
-          v-model="userName"
+          v-model="username"
           required
           placeholder="Enter your id"
         />
@@ -37,16 +37,16 @@ import { useUserStore } from '@/store/useUserStore';
 const router = useRouter();
 const userStore = useUserStore();
 
-const userName = ref('');
+const username = ref('');
 const password = ref('');
 
 const sumbitLoginForm = async () => {
-  if (!userName.value || !password.value) {
+  if (!username.value || !password.value) {
     alert('입력값이 잘못되었습니다.');
     return;
   }
   try {
-    await userStore.loginByInput(userName.value, password.value);
+    await userStore.loginByInput(username.value, password.value);
     if (userStore.token) {
       router.push('/');
     }
