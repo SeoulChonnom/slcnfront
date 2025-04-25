@@ -19,5 +19,10 @@ export default {
   },
   schedule: {
     getScheduleList: () => encodeURI(API_HOST_URL + SCHEDULE),
+    getScheduleListForYearAndMonth: (year, month) =>
+      encodeURI(
+        API_HOST_URL + SCHEDULE + 'data??year=' + year + '&month=' + month
+      ),
+    registerSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'register'),
   },
 };
