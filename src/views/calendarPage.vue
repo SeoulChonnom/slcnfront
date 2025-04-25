@@ -12,13 +12,21 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Calendar from '@toast-ui/calendar';
-import { getCalendarList } from '@/service/scheduleService';
+import {
+  getSchedulesForNow,
+  registerCalendar,
+} from '@/service/scheduleService';
+import { formattingDate } from '@/utils/dateUtils';
+import { isNullToBlank } from '@/utils/stringUtils';
 
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
+import swal from 'sweetalert2';
 
 const calendarRef = ref(null);
 let calendar = null;
+
+// TODO: 이벤트 RUD 추가, 달 변경시 해당 달 이벤트 조회 추가
 
 onMounted(() => {
   const options = {
@@ -56,14 +64,18 @@ onMounted(() => {
     },
   });
 
-  calendar.on('beforeCreateEvent', (data) => {
-    data.id = crypto.randomUUID();
-
-    console.log(data);
-    console.log(data.start.toString());
-    console.log(data.end.getTime());
-
+  calendar.on('beforeCreateEvent', async (data) => {
+    data.body = isNullToBlank(data.body);
+    data.start = formattingDate(data.start);
+    data.end = formattingDate(data.end);
     data.category = data.isAllday ? 'allday' : 'time';
+
+    try {
+      data.id = await registerCalendar(data);
+    } catch (e) {
+      swal.fire(e.message);
+      return;
+    }
 
     calendar.createEvents([data]);
     calendar.clearGridSelections();
@@ -80,8 +92,7 @@ onMounted(() => {
     calendar.deleteEvent(data.id, data.calendarId);
   });
 
-  getCalendarList().then((data) => {
-    console.log(data);
+  getSchedulesForNow().then((data) => {
     calendar.createEvents(data);
   });
 });
