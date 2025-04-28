@@ -26,7 +26,7 @@ import swal from 'sweetalert2';
 const calendarRef = ref(null);
 let calendar = null;
 
-// TODO: 이벤트 RUD 추가, 달 변경시 해당 달 이벤트 조회 추가
+// TODO: 이벤트 UD 추가, 달 변경시 해당 달 이벤트 조회 추가
 
 onMounted(() => {
   const options = {
@@ -69,6 +69,7 @@ onMounted(() => {
     data.start = formattingDate(data.start);
     data.end = formattingDate(data.end);
     data.category = data.isAllday ? 'allday' : 'time';
+    data.isVisible = true;
 
     try {
       data.id = await registerCalendar(data);
@@ -82,7 +83,9 @@ onMounted(() => {
   });
 
   calendar.on('beforeUpdateEvent', (data) => {
-    data.changes.category = data.changes.isAllday ? 'allday' : 'time';
+    if (data.changes.isAllday) {
+      data.changes.category = data.changes.isAllday ? 'allday' : 'time';
+    }
 
     calendar.updateEvent(data.event.id, data.event.calendarId, data.changes);
   });
