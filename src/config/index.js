@@ -24,5 +24,7 @@ export default {
         API_HOST_URL + SCHEDULE + 'data??year=' + year + '&month=' + month
       ),
     registerSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'register'),
+    updateSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'modify'),
+    removeSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'remove'),
   },
 };

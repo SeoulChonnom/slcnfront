@@ -53,3 +53,20 @@ export const registerSchedule = async (event) => {
     }
   }
 };
+
+export const updateSchedule = async (event) => {
+  try {
+    await axios({
+      url: config.schedule.updateSchedule(),
+      method: 'PUT',
+      data: event,
+      headers: { 'X-AUTH-TOKEN': useUserStore().token },
+    });
+  } catch (e) {
+    if (e.response?.status === 400) {
+      throw new Error(e.response.data.message);
+    } else {
+      throw new Error('알 수 없는 오류입니다.');
+    }
+  }
+};

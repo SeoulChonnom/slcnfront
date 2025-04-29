@@ -15,6 +15,7 @@ import Calendar from '@toast-ui/calendar';
 import {
   getSchedulesForNow,
   registerSchedule,
+  updateSchedule,
 } from '@/service/scheduleService';
 import { formattingDate } from '@/utils/dateUtils';
 import { isNullToBlank } from '@/utils/stringUtils';
@@ -27,6 +28,13 @@ const calendarRef = ref(null);
 let calendar = null;
 
 // TODO: 이벤트 UD 추가, 달 변경시 해당 달 이벤트 조회 추가
+
+const applyChanges = (event, changes) => {
+  Object.keys(changes).forEach((key) => {
+    event[key] = changes[key];
+  });
+  return event;
+};
 
 onMounted(() => {
   const options = {
@@ -82,12 +90,20 @@ onMounted(() => {
     calendar.clearGridSelections();
   });
 
-  calendar.on('beforeUpdateEvent', (data) => {
-    if (data.changes.isAllday) {
-      data.changes.category = data.changes.isAllday ? 'allday' : 'time';
+  calendar.on('beforeUpdateEvent', async ({ event, changes }) => {
+    const changeEvent = calendar.getEvent(event.id, event.calendarId);
+
+    if (changes.isAllday) {
+      changes.category = changes.isAllday ? 'allday' : 'time';
     }
 
-    calendar.updateEvent(data.event.id, data.event.calendarId, data.changes);
+    applyChanges(changeEvent, changes);
+    changeEvent.start = formattingDate(changeEvent.start);
+    changeEvent.end = formattingDate(changeEvent.end);
+
+    await updateSchedule(changeEvent);
+
+    calendar.updateEvent(event.id, event.calendarId, changes);
   });
 
   calendar.on('beforeDeleteEvent', (data) => {
