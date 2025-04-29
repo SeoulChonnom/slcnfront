@@ -14,7 +14,7 @@ import { ref, onMounted } from 'vue';
 import Calendar from '@toast-ui/calendar';
 import {
   getSchedulesForNow,
-  registerCalendar,
+  registerSchedule,
 } from '@/service/scheduleService';
 import { formattingDate } from '@/utils/dateUtils';
 import { isNullToBlank } from '@/utils/stringUtils';
@@ -72,7 +72,7 @@ onMounted(() => {
     data.isVisible = true;
 
     try {
-      data.id = await registerCalendar(data);
+      data.id = await registerSchedule(data);
     } catch (e) {
       swal.fire(e.message);
       return;

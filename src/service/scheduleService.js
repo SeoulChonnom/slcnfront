@@ -36,7 +36,7 @@ export const getSchedulesForYearAndMonth = async (year, month) => {
   }
 };
 
-export const registerCalendar = async (event) => {
+export const registerSchedule = async (event) => {
   try {
     const res = await axios({
       url: config.schedule.registerSchedule(),
