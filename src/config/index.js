@@ -25,6 +25,7 @@ export default {
       ),
     registerSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'register'),
     updateSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'modify'),
-    removeSchedule: () => encodeURI(API_HOST_URL + SCHEDULE + 'remove'),
+    removeSchedule: (scheduleId) =>
+      encodeURI(API_HOST_URL + SCHEDULE + 'remove/' + scheduleId),
   },
 };

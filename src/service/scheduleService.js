@@ -70,3 +70,19 @@ export const updateSchedule = async (event) => {
     }
   }
 };
+
+export const removeSchedule = async (scheduleId) => {
+  try {
+    await axios({
+      url: config.schedule.removeSchedule(scheduleId),
+      method: 'PUT',
+      headers: { 'X-AUTH-TOKEN': useUserStore().token },
+    });
+  } catch (e) {
+    if (e.response?.status === 400) {
+      throw new Error(e.response.data.message);
+    } else {
+      throw new Error('알 수 없는 오류입니다.');
+    }
+  }
+};

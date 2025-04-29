@@ -16,6 +16,7 @@ import {
   getSchedulesForNow,
   registerSchedule,
   updateSchedule,
+  removeSchedule,
 } from '@/service/scheduleService';
 import { formattingDate } from '@/utils/dateUtils';
 import { isNullToBlank } from '@/utils/stringUtils';
@@ -27,7 +28,7 @@ import swal from 'sweetalert2';
 const calendarRef = ref(null);
 let calendar = null;
 
-// TODO: 이벤트 UD 추가, 달 변경시 해당 달 이벤트 조회 추가
+// TODO: 달 변경시 해당 달 이벤트 조회 추가
 
 const applyChanges = (event, changes) => {
   Object.keys(changes).forEach((key) => {
@@ -106,8 +107,8 @@ onMounted(() => {
     calendar.updateEvent(event.id, event.calendarId, changes);
   });
 
-  calendar.on('beforeDeleteEvent', (data) => {
-    console.log(data);
+  calendar.on('beforeDeleteEvent', async (data) => {
+    await removeSchedule(data.id);
     calendar.deleteEvent(data.id, data.calendarId);
   });
 
