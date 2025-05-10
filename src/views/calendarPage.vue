@@ -3,22 +3,26 @@
     <div id="infoDiv">서울촌놈 나들이 일정 🗓️</div>
     <hr id="calendar_hr" />
     <nav class="navbar">
-      <button class="button is-rounded today">Today</button>
-      <button class="button is-rounded prev">
-        <img
-          class="arrow_img"
-          alt="prev"
-          src="../assets/img/calendar/left-arrow.png"
-        />
-      </button>
-      <button class="button is-rounded next">
-        <img
-          class="arrow_img"
-          alt="next"
-          src="../assets/img/calendar/right-arrow.png"
-        />
-      </button>
-      <span class="navbar--range">{{ year }}.{{ month }}</span>
+      <span class="navbar_range">{{ year }}.{{ month }}</span>
+      <div>
+        <button class="button is-rounded today" @click="moveMonth(0)">
+          Today
+        </button>
+        <button class="button is-rounded prev" @click="moveMonth(-1)">
+          <img
+            class="arrow_img"
+            alt="prev"
+            src="../assets/img/calendar/left-arrow.png"
+          />
+        </button>
+        <button class="button is-rounded next" @click="moveMonth(1)">
+          <img
+            class="arrow_img"
+            alt="next"
+            src="../assets/img/calendar/right-arrow.png"
+          />
+        </button>
+      </div>
     </nav>
     <div
       ref="calendarRef"
@@ -32,6 +36,7 @@ import { ref, onMounted } from 'vue';
 import Calendar from '@toast-ui/calendar';
 import {
   getSchedulesForNow,
+  getSchedulesForYearAndMonth,
   registerSchedule,
   updateSchedule,
   removeSchedule,
@@ -58,10 +63,27 @@ const applyChanges = (event, changes) => {
   return event;
 };
 
+const moveMonth = (opt) => {
+  if (opt === 1) {
+    calendar.next();
+  } else if (opt === -1) {
+    calendar.prev();
+  } else {
+    calendar.today();
+  }
+
+  changeToday(calendar.getDate().toDate());
+
+  getSchedulesForYearAndMonth(year.value, month.value);
+};
+
+const changeToday = (date) => {
+  year.value = date.getFullYear();
+  month.value = pad(date.getMonth() + 1);
+};
+
 onMounted(() => {
-  const now = new Date();
-  year.value = now.getFullYear();
-  month.value = pad(now.getMonth() + 1);
+  changeToday(new Date());
   const options = {
     defaultView: 'month',
     usageStatistics: false,
@@ -144,56 +166,5 @@ onMounted(() => {
 
 <style scoped>
 @import '@/assets/css/toastCalendar.css';
-
-#calendar_hr {
-  padding: 0;
-  border: 0;
-  height: 1px;
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0)
-  );
-}
-
-.button {
-  background-color: #fff;
-  border-color: #dbdbdb;
-  border-width: 2px;
-  color: #363636;
-  cursor: pointer;
-  justify-content: center;
-  padding-bottom: calc(0.5em + 0.25rem);
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: calc(0.5em + 0.25rem);
-  text-align: center;
-  white-space: nowrap;
-}
-
-.button.is-rounded {
-  border-radius: 9999px;
-  padding-left: calc(0.5em + 0.25em);
-  padding-right: calc(0.5em + 0.25em);
-}
-
-.button.prev,
-.button.next {
-  padding: 0.8rem;
-}
-
-.navbar .button + .button {
-  margin-left: 0.25rem;
-}
-
-.button.is-rounded {
-  border-radius: 9999px;
-  padding-left: calc(0.5em + 0.25em);
-  padding-right: calc(0.5em + 0.25em);
-}
-
-.arrow_img {
-  width: 15px;
-}
+@import '@/assets/css/calendarPage.css';
 </style>
