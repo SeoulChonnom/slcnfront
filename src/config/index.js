@@ -14,8 +14,7 @@ export default {
     getTripList: () => encodeURI(API_HOST_URL + TRIP),
     registerTrip: () => encodeURI(API_HOST_URL + TRIP),
     getTripInfo: (tripDate) => encodeURI(API_HOST_URL + TRIP + `${tripDate}`),
-    getFile: (path) =>
-      encodeURI(API_HOST_URL + TRIP + 'file?path=' + `${path}`),
+    getFile: (path) => encodeURI(API_HOST_URL + 'depot?path=' + `${path}`),
   },
   schedule: {
     getScheduleList: () => encodeURI(API_HOST_URL + SCHEDULE),

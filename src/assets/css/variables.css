@@ -1,0 +1,97 @@
+/* CSS Custom Properties for consistent theming */
+:root {
+  /* Colors */
+  --primary-color: #007bff;
+  --primary-bg-color: rgb(241, 214, 208);
+  --secondary-bg-color: rgb(252, 242, 242);
+  --text-color: #333;
+  --white: #ffffff;
+  --gray-light: #6c757d;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  
+  /* Typography */
+  --font-family: "NotoKR-Medium Medium", sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Border radius */
+  --border-radius: 4px;
+  --border-radius-lg: 25px;
+  
+  /* Shadows */
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --box-shadow-focus: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  
+  /* Form elements */
+  --input-border-color: #ced4da;
+  --input-focus-border-color: var(--primary-color);
+  --input-padding: 10px;
+  
+  /* File validation */
+  --max-file-size: 10485760; /* 10MB in bytes */
+  
+  /* Layout */
+  --container-max-width: 1200px;
+  --header-height: 60px;
+  --footer-height: 40px;
+}
+
+/* SweetAlert2 font styling - centralized */
+div:where(.swal2-container) .swal2-radio label,
+div:where(.swal2-container) .swal2-html-container,
+div:where(.swal2-container) .swal2-title,
+div:where(.swal2-container) .swal2-input,
+div:where(.swal2-container) .swal2-select,
+div:where(.swal2-container) .swal2-textarea,
+div:where(.swal2-container) .swal2-confirm,
+div:where(.swal2-container) .swal2-cancel {
+  font-family: var(--font-family) !important;
+}
+
+/* Utility classes for common patterns */
+.btn-primary {
+  font-family: var(--font-family);
+  width: 100%;
+  padding: var(--input-padding);
+  font-size: var(--font-size-base);
+  color: var(--white);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.form-input {
+  font-family: var(--font-family);
+  width: 100%;
+  padding: var(--input-padding);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
+  box-shadow: var(--box-shadow-focus);
+}
+
+.swal-font-family {
+  font-family: var(--font-family) !important;
+}

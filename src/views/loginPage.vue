@@ -33,6 +33,9 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/useUserStore';
+import { validateForm } from '@/utils/validationUtils';
+import { showErrorAlert } from '@/utils/alertUtils';
+import { ERROR_MESSAGES } from '@/constants/validation';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -41,17 +44,24 @@ const username = ref('');
 const password = ref('');
 
 const sumbitLoginForm = async () => {
-  if (!username.value || !password.value) {
-    alert('입력값이 잘못되었습니다.');
+  const formData = {
+    username: username.value,
+    password: password.value,
+  };
+
+  const validation = validateForm(formData, ['username', 'password']);
+  if (!validation.isValid) {
+    showErrorAlert(ERROR_MESSAGES.INVALID_INPUT);
     return;
   }
+
   try {
     await userStore.loginByInput(username.value, password.value);
     if (userStore.token) {
       router.push('/');
     }
   } catch (error) {
-    alert(error.message);
+    showErrorAlert(error.message);
   }
 };
 
@@ -62,8 +72,8 @@ const getAccessTokenByRefreshToken = async () => {
       router.push('/');
     }
   } catch (error) {
-    //alert(error.message);
-    console.log(error.message);
+    // Silent fail for refresh token - user can still login manually
+    console.log('Refresh token failed');
   }
 };
 

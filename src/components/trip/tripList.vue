@@ -11,10 +11,10 @@
 </template>
 
 <script setup>
-import swal from 'sweetalert2';
 import { defineProps, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTripStore } from '@/store/useTripStore';
+import { showRadioAlert, showSuccessAlert, showErrorAlert } from '@/utils/alertUtils';
 
 const router = useRouter();
 const tripStore = useTripStore();
@@ -47,45 +47,21 @@ const isCorrect = (answer, idx) => {
 };
 
 const onClickMap = async () => {
-  const quiz = makeQuizAnswer();
-  const inputOptions = new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(quiz.responses);
-    }, 500);
-  });
-  const { value: ans } = await swal.fire({
-    icon: 'question',
-    title: props.trip.quizTitle.replace('\\n', '\n'),
-    input: 'radio',
-    inputOptions,
-    inputValidator: (value) => {
-      if (!value) {
-        return '정답을 선택해주세요!';
-      }
-    },
-  });
-  if (isCorrect(quiz.answer, ans)) {
-    swal
-      .fire({
-        icon: 'success',
-        title: props.trip.quizAnswerTitle,
-        text: props.trip.quizAnswerText,
-        timer: 1000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      })
-      .then(() => {
-        router.push('/map/' + props.trip.date);
-      });
-  } else {
-    swal.fire({
-      icon: 'error',
-      title: props.trip.quizErrorTitle,
-      text: props.trip.quizErrorText,
-      timer: 1000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-    });
+  try {
+    const quiz = makeQuizAnswer();
+    const result = await showRadioAlert(
+      props.trip.quizTitle.replace('\\n', '\n'),
+      quiz.responses
+    );
+    
+    if (result.isConfirmed && isCorrect(quiz.answer, result.value)) {
+      await showSuccessAlert(props.trip.quizAnswerText, props.trip.quizAnswerTitle);
+      router.push('/map/' + props.trip.date);
+    } else if (result.isConfirmed) {
+      await showErrorAlert(props.trip.quizErrorText, props.trip.quizErrorTitle);
+    }
+  } catch (error) {
+    showErrorAlert('퀴즈를 불러오는 중 오류가 발생했습니다.');
   }
 };
 
@@ -103,15 +79,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-div:where(.swal2-container) .swal2-radio label {
-  font-family: 'NotoKR-Medium Medium';
-}
-div:where(.swal2-container) .swal2-html-container {
-  font-family: 'NotoKR-Medium Medium';
-}
+/* SweetAlert2 styling moved to variables.css */
 @media (hover: none) and (pointer: coarse) {
   div:where(.swal2-container) .swal2-radio label {
-    font-family: 'NotoKR-Medium Medium';
     font-size: 1rem;
   }
 }

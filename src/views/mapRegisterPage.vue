@@ -221,21 +221,16 @@
 
 <script setup>
 import { ref } from 'vue';
-import swal from 'sweetalert2';
 import { useTripStore } from '@/store/useTripStore';
 import dayjs from 'dayjs';
 import { useRouter } from 'vue-router';
+import { validateFile } from '@/utils/validationUtils';
+import { showErrorAlert, showSuccessAlert } from '@/utils/alertUtils';
+import { ERROR_MESSAGES } from '@/constants/validation';
 
 const tripStore = useTripStore();
 const router = useRouter();
-const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
-const allowedMimeTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/svg+xml',
-];
-const maxSize = 10 * 1024 * 1024;
+// File validation constants moved to constants/validation.js
 
 const date = ref('');
 const multiMap = ref(false);
@@ -281,7 +276,7 @@ const validateForm = () => {
       if (!multiMap.value && (key == 'button1' || key == 'button2')) {
         continue;
       }
-      swal.fire('빈칸을 채워주세요.');
+      showErrorAlert(ERROR_MESSAGES.REQUIRED_FIELDS);
       return false;
     }
   }
@@ -317,19 +312,12 @@ const sumbitTripForm = () => {
       imageData.value.map1,
       imageData.value.map2
     )
-    .then(
-      swal
-        .fire({
-          icon: 'success',
-          text: '저장에 성공하였습니다.',
-          timer: 1000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-        })
-        .then(() => router.push('/map'))
-    )
+    .then(() => {
+      showSuccessAlert('저장에 성공하였습니다.')
+        .then(() => router.push('/map'));
+    })
     .catch((e) => {
-      swal.fire(e.message);
+      showErrorAlert(e.message);
     });
 };
 
@@ -338,21 +326,10 @@ const handleFileUpload = (event, key) => {
 
   if (files && files[0]) {
     const file = files[0];
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-
-    // 이미지 파일 여부 검사
-    if (
-      !allowedExtensions.includes(fileExtension) ||
-      !allowedMimeTypes.includes(file.type)
-    ) {
-      swal.fire(`허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해주세요.`);
-      event.target.value = '';
-      return;
-    }
-
-    // 파일 사이즈 검사
-    if (file.size > maxSize) {
-      alert('파일 크기는 10MB를 초과할 수 없습니다.');
+    const validation = validateFile(file);
+    
+    if (!validation.isValid) {
+      showErrorAlert(validation.errors.join('\n'));
       event.target.value = '';
       return;
     }

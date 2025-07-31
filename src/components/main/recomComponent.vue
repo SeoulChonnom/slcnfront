@@ -1,25 +1,23 @@
 <template>
-  <div id="recomDiv" @click="onClickRecomDiv()">recom</div>
+  <NavigationCard 
+    card-id="recomDiv" 
+    label="recom" 
+    route-path="/shoesRecom"
+  />
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const onClickRecomDiv = () => {
-  router.push('/shoesRecom');
-};
+import NavigationCard from '@/components/ui/NavigationCard.vue';
 </script>
 
 <style scoped>
 #recomDiv {
-  background-color: rgb(241, 214, 208);
+  background-color: var(--primary-bg-color);
   width: 35%;
   padding: 2%;
   margin-left: 3%;
   margin-right: 8%;
-  border-radius: 25px;
+  border-radius: var(--border-radius-lg);
   aspect-ratio: 1;
   /* height: 175px; */
 }

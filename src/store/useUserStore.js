@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { defineStore } from 'pinia';
+import apiService from '@/utils/apiUtils';
 import config from '@/config';
 
 export const useUserStore = defineStore('user', {
@@ -18,44 +18,25 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     async loginByInput(userName, password) {
-      try {
-        const res = await axios({
-          url: config.account.postLogin(),
-          method: 'POST',
-          data: {
-            username: userName,
-            password: password,
-          },
-        });
-        this.token = res.data.data.accessToken;
-        this.userInfo = {
-          name: res.data.data.name,
-          userName: res.data.data.username,
-          roleList: res.data.data.roleList,
-        };
-      } catch (e) {
-        if (e.response && e.status === 400) {
-          throw new Error(e.response.data.message);
-        } else {
-          throw new Error('알 수 없는 오류입니다.');
-        }
-      }
+      const data = await apiService.post(config.account.postLogin(), {
+        username: userName,
+        password: password,
+      });
+      this.token = data.accessToken;
+      this.userInfo = {
+        name: data.name,
+        userName: data.username,
+        roleList: data.roleList,
+      };
     },
     async loginByRefreshToken() {
-      try {
-        const res = await axios({
-          url: config.account.getAccessToken(),
-          method: 'GET',
-        });
-        this.token = res.data.data.accessToken;
-        this.userInfo = {
-          name: res.data.data.name,
-          userName: res.data.data.username,
-          roleList: res.data.data.roleList,
-        };
-      } catch (e) {
-        throw new Error(e.response.data.message);
-      }
+      const data = await apiService.getSilent(config.account.getAccessToken());
+      this.token = data.accessToken;
+      this.userInfo = {
+        name: data.name,
+        userName: data.username,
+        roleList: data.roleList,
+      };
     },
   },
 });

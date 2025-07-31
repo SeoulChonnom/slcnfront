@@ -1,20 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import url("https://db.onlinewebfonts.com/c/13debb153828720a4378a671f57b0d72?family=NotoKR-Medium+Medium");
 @import url("https://db.onlinewebfonts.com/c/8d989ff4b83af705559067c0fc83d131?family=NotoKR-DemiLight+DemiLight");
+@import "./variables.css";
 
 body {
-  background-color: rgb(241, 214, 208);
+  background-color: var(--primary-bg-color);
 }
 
 #mainDiv {
-  background-color: rgb(252, 242, 242);
+  background-color: var(--secondary-bg-color);
   border-radius: 10px;
   text-align: center;
 }
 
 #header {
   border-radius: 10px;
-  background-color: rgb(252, 242, 242);
+  background-color: var(--secondary-bg-color);
 }
 
 #SLCN {
