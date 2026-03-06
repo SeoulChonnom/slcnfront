@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SLCN - Outing Unlock Quiz</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#FFF0F0",
+                "background-light": "#f8f5f5",
+                "background-dark": "#230f0f",
+                "ink-black": "#000000",
+                "ink-white": "#ffffff",
+                "duo-pink": "#FE9FC8", 
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+              boxShadow: {
+                  'brutal': '6px 6px 0px 0px #1a1a1a',
+                  'brutal-hover': '3px 3px 0px 0px #1a1a1a',
+                  'brutal-sm': '3px 3px 0px 0px #1a1a1a',
+                  'minimal': '0 4px 20px rgba(0,0,0,0.1)',
+                  'hand-drawn': '5px 5px 0px 0px #000000',
+                  'hand-drawn-hover': '2px 2px 0px 0px #000000',
+              }
+            },
+          },
+        }
+    </script>
+<style>.rough-border {
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        }
+        .rough-border-sm {
+            border-radius: 25px 5px 22px 8px / 8px 22px 5px 25px;
+        }
+        .blob-shape {
+            border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;
+        }
+        .blob-shape-2 {
+            border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%;
+        }
+        .hand-drawn-card {
+            border-radius: 2% 98% 1% 99% / 99% 2% 98% 1%;
+            border: 3px solid black;
+        }
+        .hand-drawn-btn {
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        }
+        .slight-tilt {
+            transform: rotate(-1deg);
+        }
+        .slight-tilt-r {
+            transform: rotate(1deg);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-ink-black dark:text-white font-display antialiased overflow-hidden">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<header class="flex items-center justify-between whitespace-nowrap border-b-4 border-ink-black bg-white px-10 py-4 z-20">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-ink-black text-white rounded-lg flex items-center justify-center border-2 border-ink-black shadow-brutal-sm">
+<span class="material-symbols-outlined">photo_library</span>
+</div>
+<h2 class="text-ink-black text-2xl font-black tracking-tight uppercase">SLCN</h2>
+</div>
+<nav class="flex items-center gap-6 hidden md:flex">
+<a class="text-ink-black hover:underline decoration-4 decoration-duo-pink underline-offset-4 text-base font-bold uppercase" href="#">Home</a>
+<a class="text-ink-black underline decoration-4 decoration-duo-pink underline-offset-4 font-black text-base uppercase" href="#">Outings</a>
+<a class="text-ink-black hover:underline decoration-4 decoration-duo-pink underline-offset-4 text-base font-bold uppercase" href="#">Memories</a>
+<a class="text-ink-black hover:underline decoration-4 decoration-duo-pink underline-offset-4 text-base font-bold uppercase" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6">
+<button class="flex items-center justify-center rounded-lg h-10 px-6 bg-ink-black text-white hover:bg-gray-800 transition-transform hover:-translate-y-0.5 active:translate-y-0 text-sm font-bold border-2 border-transparent">
+                Log Out
+            </button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto bg-[#fffdf5] dark:bg-background-dark p-8 relative">
+<div aria-hidden="true" class="layout-container flex flex-col max-w-[1200px] mx-auto gap-10 opacity-20 pointer-events-none filter blur-[2px] select-none">
+<div class="flex flex-col md:flex-row gap-8 items-center bg-white border-4 border-ink-black shadow-brutal p-6 rounded-xl rough-border">
+<div class="w-full md:w-1/2 aspect-video rounded-lg overflow-hidden border-2 border-ink-black bg-gray-200"></div>
+<div class="w-full md:w-1/2 flex flex-col gap-4">
+<h1 class="text-4xl font-black text-ink-black uppercase">Summer Trip 2023</h1>
+<div class="h-4 w-full bg-gray-200 rounded-full border border-ink-black"></div>
+<div class="h-4 w-2/3 bg-gray-200 rounded-full border border-ink-black"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-white rounded-xl p-4 border-4 border-ink-black shadow-brutal rough-border-sm">
+<div class="h-48 w-full bg-gray-100 border-2 border-ink-black rounded-lg mb-4"></div>
+<div class="h-6 w-3/4 bg-gray-200 border border-ink-black rounded mb-2"></div>
+</div>
+<div class="bg-white rounded-xl p-4 border-4 border-ink-black shadow-brutal rough-border-sm">
+<div class="h-48 w-full bg-gray-100 border-2 border-ink-black rounded-lg mb-4"></div>
+<div class="h-6 w-3/4 bg-gray-200 border border-ink-black rounded mb-2"></div>
+</div>
+<div class="bg-white rounded-xl p-4 border-4 border-ink-black shadow-brutal rough-border-sm">
+<div class="h-48 w-full bg-gray-100 border-2 border-ink-black rounded-lg mb-4"></div>
+<div class="h-6 w-3/4 bg-gray-200 border border-ink-black rounded mb-2"></div>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-ink-black/80 backdrop-blur-none transition-all duration-300">
+<div class="relative w-full max-w-[600px] bg-white border-[3px] border-black p-8 sm:p-12 flex flex-col gap-8 hand-drawn-card shadow-hand-drawn rotate-1">
+<div class="absolute -top-6 -left-6 bg-white border-2 border-black p-2 shadow-hand-drawn transform -rotate-12 z-10 rough-border-sm">
+<span class="material-symbols-outlined text-4xl text-black">photo_camera</span>
+</div>
+<button class="absolute -top-4 -right-4 bg-duo-pink text-black border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-white transition-colors shadow-hand-drawn hover:shadow-hand-drawn-hover active:translate-y-[2px] active:shadow-none z-10 rough-border-sm font-black text-xl leading-none">
+                X
+            </button>
+<div class="flex flex-col items-center justify-center relative mt-4">
+<div class="relative z-10 bg-black text-white px-10 py-6 blob-shape transform -rotate-2">
+<h2 class="text-2xl sm:text-3xl font-black tracking-tight text-center whitespace-nowrap">어디에 갔을까요?</h2>
+</div>
+<div class="absolute top-0 right-10 text-duo-pink opacity-50 transform rotate-12 scale-150 -z-0">
+<span class="material-symbols-outlined text-6xl">verified</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full mt-4">
+<button class="group relative w-full bg-white hover:bg-duo-pink text-black border-[3px] border-black py-4 px-2 text-center font-bold text-lg transition-all duration-200 hand-drawn-btn shadow-hand-drawn hover:shadow-hand-drawn-hover hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transform rotate-1 hover:rotate-0">
+<span class="relative z-10">Central Park Zoo</span>
+</button>
+<button class="group relative w-full bg-white hover:bg-duo-pink text-black border-[3px] border-black py-4 px-2 text-center font-bold text-lg transition-all duration-200 hand-drawn-btn shadow-hand-drawn hover:shadow-hand-drawn-hover hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transform -rotate-1 hover:rotate-0">
+<span class="relative z-10">Brooklyn Bridge</span>
+</button>
+<button class="group relative w-full bg-white hover:bg-duo-pink text-black border-[3px] border-black py-4 px-2 text-center font-bold text-lg transition-all duration-200 hand-drawn-btn shadow-hand-drawn hover:shadow-hand-drawn-hover hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transform -rotate-1 hover:rotate-0">
+<span class="relative z-10">The High Line</span>
+</button>
+<button class="group relative w-full bg-white hover:bg-duo-pink text-black border-[3px] border-black py-4 px-2 text-center font-bold text-lg transition-all duration-200 hand-drawn-btn shadow-hand-drawn hover:shadow-hand-drawn-hover hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transform rotate-1 hover:rotate-0">
+<span class="relative z-10">Coney Island</span>
+</button>
+</div>
+<div class="absolute bottom-4 right-4 opacity-10 pointer-events-none transform rotate-45">
+<span class="material-symbols-outlined text-6xl">help</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

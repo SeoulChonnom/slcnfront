@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SLCN - Outing Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FE9FC8", 
+                        "ink-black": "#000000",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FE9FC8;
+            color: #000000;
+        }
+    </style>
+</head>
+<body class="bg-primary font-sans text-ink-black antialiased min-h-screen flex flex-col">
+<header class="w-full px-6 py-8 md:px-12 flex justify-between items-start">
+<div class="space-y-1">
+<h1 class="text-sm font-medium tracking-wide text-ink-black uppercase">Buam-dong Walk</h1>
+<p class="text-xs text-ink-black opacity-80">2024.09.29</p>
+</div>
+<nav class="hidden md:flex gap-8 text-xs font-medium uppercase tracking-wider">
+<a class="hover:underline underline-offset-4" href="#">Home</a>
+<a class="underline underline-offset-4" href="#">Outings</a>
+<a class="hover:underline underline-offset-4" href="#">About</a>
+</nav>
+<a class="text-xs font-medium uppercase tracking-wider underline underline-offset-4 hover:opacity-70" href="#">
+            Log In
+        </a>
+</header>
+<main class="flex-grow w-full max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col justify-center items-center py-12">
+<div class="w-full max-w-5xl relative mb-12">
+<div class="aspect-[16/9] w-full overflow-hidden">
+<img alt="Map of the Buam-dong walking trail starting point showing winding paths" class="h-full w-full object-cover filter grayscale contrast-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAat6LNXIKCu_wnkqpinIJYG5N5jKMMV1EEgKBovEFz4cyYZLM7CLv8Lvt7TXlBh7Txngdix_VNWBeuOZ187JlmNzj8kfb5nOYRExPKGOrEEBrg-j4kqifsbttXmcbs8x8Tgg3CaJvVm6mw_ztOBq0QkGfeuX9R1YbBF4OUSM0MFWThHiSf3oEdoUxMzcMSsUHUZsESp4F9y7f7hbc-Jywhx_kziWP8n-AaFBznJzoGriu9JuSZuLc54hzSEPIoVPMZYKKmeUIPj3F1"/>
+</div>
+<div class="absolute bottom-0 left-0 p-6 md:p-8">
+<p class="text-4xl md:text-6xl font-light leading-tight tracking-tight text-white mix-blend-difference">
+                    Jahamun Gate<br/>to The Peak
+                </p>
+</div>
+</div>
+<div class="w-full max-w-2xl text-center space-y-8">
+<p class="text-lg md:text-xl font-light leading-relaxed">
+                A serene journey through the historical alleys and nature trails of northern Seoul. Just chill vibes and good steps.
+            </p>
+<div class="flex justify-center gap-12 text-sm font-medium border-t border-black pt-8 w-full">
+<div class="text-center">
+<span class="block text-xs uppercase opacity-60 mb-1">Location</span>
+                    Jongno-gu, Seoul
+                </div>
+<div class="text-center">
+<span class="block text-xs uppercase opacity-60 mb-1">Duration</span>
+                    3h 30m
+                </div>
+<div class="text-center">
+<span class="block text-xs uppercase opacity-60 mb-1">Crew</span>
+                    5 Hikers
+                </div>
+</div>
+<div class="pt-8">
+<a class="inline-block text-sm font-medium uppercase tracking-wider underline underline-offset-8 decoration-1 hover:opacity-60 transition-opacity" href="#">
+                    View Photo Album
+                </a>
+</div>
+</div>
+</main>
+<footer class="w-full px-6 py-8 md:px-12 border-t border-black mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium uppercase tracking-wider text-ink-black">
+<div class="flex gap-4">
+<a class="hover:underline" href="#">Contact</a>
+<span>.</span>
+<a class="hover:underline" href="#">Terms</a>
+<span>.</span>
+<a class="hover:underline" href="#">Privacy</a>
+</div>
+<div class="flex items-center text-center md:text-right">
+<span>© 2024 SLCN. Hand-crafted with love in Seoul.</span>
+</div>
+</div>
+</footer>
+</body></html>
