@@ -22,7 +22,7 @@
 - **UI/UX**: AI 생성 리디자인(10개 화면)을 기반으로 "Duo-tone (핑크 + 블랙)" 디자인 시스템 확립
 - **기술 전환**: Vue 3 + Composition API → React 18 + TypeScript + Vite 스택으로 전환
 - **접근성**: 현행 전무 수준의 A11y를 WCAG 2.1 AA 수준으로 향상
-- **반응형**: PC(1280px) / Tablet(768px) / Mobile(375px) 3-tier 대응
+- **반응형**: PC(1920px) / Tablet(1280px) / Mobile(375px) 3-tier 대응
 - **상태 품질**: 모든 화면에 Loading / Empty / Error 상태 UX 구현
 - **공통 컴포넌트 체계**: 반복 패턴을 추출하여 재사용 가능한 컴포넌트 라이브러리 구축
 
