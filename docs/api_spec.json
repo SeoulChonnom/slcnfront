@@ -1,0 +1,938 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SLCN API Test",
+    "description": "SLCN API description",
+    "version": "1.0.o"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "일정 정보 API",
+      "description": "일정 정보 조회"
+    },
+    {
+      "name": "Depot API",
+      "description": "파일 관련 API"
+    },
+    {
+      "name": "나들이 정보 API",
+      "description": "나들이 상세정보 및 전체 정보 조회"
+    },
+    {
+      "name": "회원 관리 API",
+      "description": "회원 가입 및 로그인"
+    }
+  ],
+  "paths": {
+    "/schedule/remove/{scheduleId}": {
+      "put": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 삭제(숨김)",
+        "description": "일정 목록 삭제 API",
+        "operationId": "hideSchedule",
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/modify": {
+      "put": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 수정",
+        "description": "일정 수정 API",
+        "operationId": "modifySchedule",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleModifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "회원 가입",
+        "description": "회원 가입 API",
+        "operationId": "registerUser",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "로그인",
+        "description": "로그인 API",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trip/": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "전체 나들이 조회",
+        "description": "메인페이지 리스트 생성용 API",
+        "operationId": "getTrips",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 추가용 API",
+        "operationId": "createTrip",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/register": {
+      "post": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 등록",
+        "description": "일정 등록 API",
+        "operationId": "registerSchedule",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/depot": {
+      "get": {
+        "tags": ["Depot API"],
+        "summary": "파일 조회 API",
+        "description": "파일 경로를 통해 파일을 조회합니다.",
+        "operationId": "getFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "파일 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Depot API"],
+        "summary": "파일 업로드 API",
+        "description": "파일을 업로드합니다.",
+        "operationId": "uploadFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "파일 업로드 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/token": {
+      "get": {
+        "tags": ["회원 관리 API"],
+        "summary": "토큰 갱신",
+        "description": "RefreshToken 갱신",
+        "operationId": "reissueToken",
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trip/{tripDate}": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 상세정보 조회",
+        "description": "나들이 상세페이지용 API",
+        "operationId": "getTripByDate",
+        "parameters": [
+          {
+            "name": "tripDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/date": {
+      "get": {
+        "tags": ["일정 정보 API"],
+        "summary": "특정 달 일정 조회",
+        "description": "달력 이동 시 해당 달의 일정 조회 API",
+        "operationId": "getSchedulesForYearAndMonth",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ScheduleSearchRequest"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/": {
+      "get": {
+        "tags": ["일정 정보 API"],
+        "summary": "이번달 일정 조회",
+        "description": "달력페이지 진입시 이번달 일정 조회 API",
+        "operationId": "getSchedulesForNow",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/delete/{scheduleId}": {
+      "delete": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 완전 삭제",
+        "description": "일정 데이터 삭제 API",
+        "operationId": "deleteSchedule",
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ScheduleModifyRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "스케쥴 ID"
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "캘린더 ID",
+            "example": "cal1"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "title"
+          },
+          "body": {
+            "type": "string",
+            "description": "설명",
+            "example": "body"
+          },
+          "isAllday": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "start": {
+            "type": "string",
+            "description": "시작 일시",
+            "example": "2025-03-01 00:00:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "종료 일시",
+            "example": "2025-03-01 01:00:00"
+          },
+          "goingDuration": {
+            "type": "integer",
+            "description": "일정 장소 이동시간",
+            "format": "int64",
+            "example": 1000
+          },
+          "comingDuration": {
+            "type": "integer",
+            "description": "다음 일정 장소 이동시간",
+            "format": "int64",
+            "example": 1000
+          },
+          "location": {
+            "type": "string",
+            "description": "장소",
+            "example": "location"
+          },
+          "category": {
+            "type": "string",
+            "description": "종류(milestone, task, allday, time)",
+            "example": "time",
+            "enum": ["milestone", "task", "allday", "time"]
+          },
+          "dueDateClass": {
+            "type": "string",
+            "description": "task 일정 카테고리",
+            "example": "dueDateClass"
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "description": "task 일정 카테고리",
+            "example": "일정 반복 규칙"
+          },
+          "state": {
+            "type": "string",
+            "description": "일정 상태(Busy, Free)",
+            "example": "Busy",
+            "enum": ["Busy", "Free"]
+          },
+          "isVisible": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isPending": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isFocused": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isReadOnly": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "color": {
+            "type": "string",
+            "description": "일정 색 설정",
+            "example": "#03bd9e"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "일정 배경 색 설정",
+            "example": "#03bd9e"
+          },
+          "dragBackgroundColor": {
+            "type": "string",
+            "description": "드래그 시 배경 색 설정",
+            "example": "#03bd9e"
+          },
+          "borderColor": {
+            "type": "string",
+            "description": "테두리 색 설정",
+            "example": "#03bd9e"
+          },
+          "customStyle": {
+            "type": "string",
+            "description": "커스텀 색 설정(CSS)",
+            "example": "{}"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "allday": {
+            "type": "boolean"
+          },
+          "pending": {
+            "type": "boolean"
+          },
+          "focused": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "QuizRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "quizIndex": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "TripRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "info1": {
+            "type": "string"
+          },
+          "info2": {
+            "type": "string"
+          },
+          "button1": {
+            "type": "string"
+          },
+          "button2": {
+            "type": "string"
+          },
+          "drive": {
+            "type": "string"
+          },
+          "quizTitle": {
+            "type": "string"
+          },
+          "quizAnswer": {
+            "type": "string"
+          },
+          "quizAnswerTitle": {
+            "type": "string"
+          },
+          "quizAnswerText": {
+            "type": "string"
+          },
+          "quizErrorTitle": {
+            "type": "string"
+          },
+          "quizErrorText": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "map1": {
+            "type": "string"
+          },
+          "map2": {
+            "type": "string"
+          },
+          "quizRegisterRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizRegisterRequest"
+            }
+          }
+        }
+      },
+      "ScheduleRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "calendarId": {
+            "type": "string",
+            "description": "캘린더 ID",
+            "example": "cal1"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "title"
+          },
+          "body": {
+            "type": "string",
+            "description": "설명",
+            "example": "body"
+          },
+          "isAllday": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "start": {
+            "type": "string",
+            "description": "시작 일시",
+            "example": "2025-03-01 00:00:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "종료 일시",
+            "example": "2025-03-01 01:00:00"
+          },
+          "goingDuration": {
+            "type": "integer",
+            "description": "일정 장소 이동시간",
+            "format": "int64",
+            "example": 1000
+          },
+          "comingDuration": {
+            "type": "integer",
+            "description": "다음 일정 장소 이동시간",
+            "format": "int64",
+            "example": 1000
+          },
+          "location": {
+            "type": "string",
+            "description": "장소",
+            "example": "location"
+          },
+          "category": {
+            "type": "string",
+            "description": "종류(milestone, task, allday, time)",
+            "example": "time",
+            "enum": ["milestone", "task", "allday", "time"]
+          },
+          "dueDateClass": {
+            "type": "string",
+            "description": "task 일정 카테고리",
+            "example": "dueDateClass"
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "description": "task 일정 카테고리",
+            "example": "일정 반복 규칙"
+          },
+          "state": {
+            "type": "string",
+            "description": "일정 상태(Busy, Free)",
+            "example": "Busy",
+            "enum": ["Busy", "Free"]
+          },
+          "isVisible": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isPending": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isFocused": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isReadOnly": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "color": {
+            "type": "string",
+            "description": "일정 색 설정",
+            "example": "#03bd9e"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "일정 배경 색 설정",
+            "example": "#03bd9e"
+          },
+          "dragBackgroundColor": {
+            "type": "string",
+            "description": "드래그 시 배경 색 설정",
+            "example": "#03bd9e"
+          },
+          "borderColor": {
+            "type": "string",
+            "description": "테두리 색 설정",
+            "example": "#03bd9e"
+          },
+          "customStyle": {
+            "type": "string",
+            "description": "커스텀 색 설정(CSS)",
+            "example": "{}"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "allday": {
+            "type": "boolean"
+          },
+          "pending": {
+            "type": "boolean"
+          },
+          "focused": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ScheduleSearchRequest": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "검색 년도",
+            "format": "int32",
+            "example": 2025
+          },
+          "month": {
+            "type": "integer",
+            "description": "검색 달",
+            "format": "int32",
+            "example": 3
+          }
+        },
+        "description": "알림 송신 DTO"
+      }
+    }
+  }
+}
