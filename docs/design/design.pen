@@ -338,7 +338,7 @@
                           "id": "Djb7G",
                           "name": "headerNav1",
                           "fill": "#000000",
-                          "content": "Records",
+                          "content": "나들이 기록",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -348,7 +348,7 @@
                           "id": "d5zor",
                           "name": "headerNav2",
                           "fill": "#000000",
-                          "content": "Schedule",
+                          "content": "일정",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -358,7 +358,7 @@
                           "id": "Dbt6d",
                           "name": "headerNav3",
                           "fill": "#000000",
-                          "content": "Shoe List",
+                          "content": "신발 추천",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -368,7 +368,7 @@
                           "id": "zNuap",
                           "name": "headerNav4",
                           "fill": "#000000",
-                          "content": "Gallery",
+                          "content": "필름",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -425,7 +425,7 @@
                       "id": "Q9zwN",
                       "name": "sectionTitle",
                       "fill": "#000000",
-                      "content": "Outing Records",
+                      "content": "서울 촌놈 나들이 기록 📷",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 46,
                       "fontWeight": "700"
@@ -435,7 +435,7 @@
                       "id": "kCJf4",
                       "name": "sectionAction",
                       "fill": "#000000",
-                      "content": "See all",
+                      "content": "전체 보기",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 14,
                       "fontWeight": "600"
@@ -548,7 +548,7 @@
                       "fill": "#FFFFFF",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Calendar",
+                      "content": "일정",
                       "textAlign": "center",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 40,
@@ -563,7 +563,7 @@
                       "fill": "#FE9FC8",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Upcoming plans",
+                      "content": "서울촌놈 나들이 일정 🗓️",
                       "textAlign": "center",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 15,
@@ -595,7 +595,7 @@
                           "id": "4Bhwl",
                           "name": "blobChipText",
                           "fill": "#FFFFFF",
-                          "content": "New Event",
+                          "content": "일정 보기",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 10,
                           "fontWeight": "700"
@@ -700,7 +700,7 @@
                           "fill": "#000000",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "A peaceful autumn walk through the winding streets.",
+                          "content": "2024.09.29\n부암동 가을 산책",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 14,
                           "fontWeight": "500"
@@ -735,7 +735,7 @@
                                   "id": "5QN5q",
                                   "name": "outingTag1Text",
                                   "fill": "#000000",
-                                  "content": "#Walk",
+                                  "content": "2024.09.29",
                                   "fontFamily": "Plus Jakarta Sans",
                                   "fontSize": 10,
                                   "fontWeight": "500"
@@ -770,7 +770,7 @@
                                   "id": "lbS2g",
                                   "name": "outingActionText",
                                   "fill": "#FE9FC8",
-                                  "content": "Unlock Story",
+                                  "content": "퀴즈 풀기",
                                   "fontFamily": "Plus Jakarta Sans",
                                   "fontSize": 11,
                                   "fontWeight": "700"
@@ -835,7 +835,7 @@
                       "fill": "#FFFFFF",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Outing Map",
+                      "content": "나들이 기록",
                       "textAlign": "center",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 38,
@@ -850,7 +850,7 @@
                       "fill": "#FE9FC8",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Places we've been",
+                      "content": "서울 촌놈 나들이 기록 📷",
                       "textAlign": "center",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 15,
@@ -910,7 +910,7 @@
                       "fill": "#FFFFFF",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Shoes Pick",
+                      "content": "신발 추천",
                       "textAlign": "center",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 38,
@@ -925,7 +925,7 @@
                       "fill": "#FE9FC8",
                       "textGrowth": "fixed-width",
                       "width": 240,
-                      "content": "Comfy walking",
+                      "content": "서울 촌놈의 신발 추천 👟",
                       "textAlign": "center",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 15,
@@ -1919,19 +1919,19 @@
             },
             "Djb7G": {
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "x": 171,
-              "y": 8
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "x": 250,
-              "y": 8
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "x": 326,
-              "y": 8
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -2010,14 +2010,15 @@
                           "content": "D-day"
                         },
                         "treLr": {
-                          "content": "Trips counter"
+                          "content": "만난지"
                         },
                         "8xk24": {
                           "width": "fit_content"
                         },
                         "4Bhwl": {
                           "x": 9,
-                          "y": 6.5
+                          "y": 6,
+                          "content": "474일째"
                         }
                       }
                     },
@@ -2031,10 +2032,10 @@
                           "iconFontName": "photo_camera"
                         },
                         "RDL1b": {
-                          "content": "Outing"
+                          "content": "나들이 기록"
                         },
                         "WTVzh": {
-                          "content": "Record list"
+                          "content": "서울 촌놈 나들이 기록 📷"
                         }
                       }
                     },
@@ -2048,10 +2049,10 @@
                           "iconFontName": "calendar_month"
                         },
                         "dCu4k": {
-                          "content": "Schedule"
+                          "content": "일정"
                         },
                         "rBxpq": {
-                          "content": "Month view"
+                          "content": "서울촌놈 나들이 일정 🗓️"
                         }
                       }
                     }
@@ -2074,10 +2075,10 @@
                           "iconFontName": "hiking"
                         },
                         "SnxGK": {
-                          "content": "Shoe List"
+                          "content": "신발 추천"
                         },
                         "x7VSW": {
-                          "content": "Catalog"
+                          "content": "서울 촌놈의 신발 추천 👟"
                         }
                       }
                     },
@@ -2088,13 +2089,13 @@
                       "x": 600,
                       "descendants": {
                         "it4fu": {
-                          "content": "Gallery"
+                          "content": "필름"
                         },
                         "bfS0L": {
                           "iconFontName": "movie"
                         },
                         "AVpJm": {
-                          "content": "Choi's Film"
+                          "content": "Choi's Film Art~🎞"
                         }
                       }
                     },
@@ -2107,7 +2108,11 @@
                       "y": 0,
                       "descendants": {
                         "it4fu": {
-                          "content": "New Log"
+                          "content": "새 나들이",
+                          "fontSize": 32,
+                          "width": 220,
+                          "x": 50,
+                          "y": 78
                         },
                         "IkgJB": {
                           "fill": "#FE9FC800",
@@ -2124,7 +2129,10 @@
                           "y": 122
                         },
                         "AVpJm": {
-                          "content": "Coming soon"
+                          "content": "새 나들이 기록하기",
+                          "width": 180,
+                          "x": 70,
+                          "y": 154
                         }
                       }
                     }
@@ -2191,15 +2199,15 @@
             },
             "d5zor": {
               "x": 171,
-              "y": 8
+              "y": 7
             },
             "Dbt6d": {
-              "x": 250,
-              "y": 8
+              "x": 211,
+              "y": 7
             },
             "zNuap": {
-              "x": 326,
-              "y": 8
+              "x": 280,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -2236,9 +2244,9 @@
                   "content": "서울 촌놈 나들이 기록 📸"
                 },
                 "kCJf4": {
-                  "content": "More",
-                  "x": 1292,
-                  "y": 50
+                  "content": "새 나들이 기록하기",
+                  "x": 1220,
+                  "y": 48
                 }
               }
             },
@@ -2256,9 +2264,9 @@
                   "y": 13
                 },
                 "XiXmV": {
-                  "content": "Find by location or date...",
+                  "content": "장소나 날짜로 찾기",
                   "x": 44,
-                  "y": 14
+                  "y": 13
                 }
               }
             },
@@ -2307,7 +2315,7 @@
                       "width": "fill_container",
                       "height": "fit_content",
                       "x": 2,
-                      "y": 80
+                      "y": 100
                     },
                     "smQGO": {
                       "width": "fit_content"
@@ -2320,15 +2328,15 @@
                       "width": "fill_container",
                       "height": "fit_content",
                       "x": 2,
-                      "y": 112
+                      "y": 132
                     },
                     "cJcg6": {
                       "width": "fit_content",
-                      "x": 1027
+                      "x": 1053
                     },
                     "lbS2g": {
                       "x": 10,
-                      "y": 7
+                      "y": 6
                     }
                   }
                 },
@@ -2388,11 +2396,11 @@
                     },
                     "cJcg6": {
                       "width": "fit_content",
-                      "x": 1027
+                      "x": 1053
                     },
                     "lbS2g": {
                       "x": 10,
-                      "y": 7
+                      "y": 6
                     }
                   }
                 },
@@ -2452,11 +2460,11 @@
                     },
                     "cJcg6": {
                       "width": "fit_content",
-                      "x": 1027
+                      "x": 1053
                     },
                     "lbS2g": {
                       "x": 10,
-                      "y": 7
+                      "y": 6
                     }
                   }
                 }
@@ -2496,7 +2504,7 @@
       "y": 1300,
       "name": "pg/outing_registration_form_redesign",
       "width": 1980,
-      "height": 1600,
+      "height": 2550,
       "fill": "#FE9FC8",
       "layout": "vertical",
       "children": [
@@ -2520,24 +2528,24 @@
               "y": 15
             },
             "Djb7G": {
-              "content": "Schedule",
+              "content": "나들이 기록",
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "content": "Outing",
-              "x": 179,
-              "y": 8
+              "content": "일정",
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "content": "Record",
-              "x": 241,
-              "y": 8
+              "content": "신발 추천",
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "content": "MyPage",
-              "x": 305,
-              "y": 8
+              "content": "필름",
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -2552,7 +2560,6 @@
           "id": "koJ62",
           "name": "registerBody",
           "width": "fill_container",
-          "height": "fill_container",
           "layout": "vertical",
           "gap": 26,
           "padding": [
@@ -2565,7 +2572,7 @@
               "id": "twOQo",
               "name": "registerTitle",
               "fill": "#000000",
-              "content": "Outing Registration Form",
+              "content": "서울 촌놈 나들이 추가",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 52,
               "fontWeight": "800"
@@ -2577,7 +2584,7 @@
               "name": "registerStep",
               "height": "fit_content",
               "x": 406,
-              "y": 136,
+              "y": 145,
               "descendants": {
                 "g5mxj": {
                   "width": "fill_container"
@@ -2617,16 +2624,16 @@
                   "y": 16,
                   "descendants": {
                     "yFwZm": {
-                      "content": "OUTING NAME"
+                      "content": "나들이 이름"
                     },
                     "Wd8OW": {
                       "width": "fill_container",
-                      "y": 22
+                      "y": 24
                     },
                     "OnCij": {
-                      "content": "e.g. Summer Picnic 2024",
+                      "content": "나들이 이름",
                       "x": 14,
-                      "y": 14.5
+                      "y": 13
                     }
                   }
                 },
@@ -2638,14 +2645,14 @@
                   "name": "registerDate",
                   "height": "fit_content",
                   "x": 16,
-                  "y": 98,
+                  "y": 100,
                   "descendants": {
                     "yFwZm": {
-                      "content": "DATE"
+                      "content": "날짜"
                     },
                     "Wd8OW": {
                       "width": "fill_container",
-                      "y": 22
+                      "y": 24
                     },
                     "OnCij": {
                       "content": "2024-09-29",
@@ -2661,20 +2668,45 @@
                   "width": "fill_container",
                   "name": "registerThumb",
                   "x": 16,
-                  "y": 180,
+                  "y": 184,
                   "descendants": {
                     "c4vZP": {
                       "x": 555,
-                      "y": 55.5
+                      "y": 54.5
                     },
                     "46CFx": {
-                      "content": "CLICK TO UPLOAD THUMBNAIL",
-                      "x": 485,
-                      "y": 89.5
+                      "content": "로고",
+                      "x": 557.5,
+                      "y": 88.5
                     },
                     "dim8T": {
-                      "x": 506.5,
-                      "y": 111.5
+                      "x": 521.5,
+                      "y": 112.5,
+                      "content": "JPG, PNG, GIF, SVG"
+                    }
+                  }
+                },
+                {
+                  "id": "dJlpL",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "typeField",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 376,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "타입"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "아영 / 일권",
+                      "x": 14,
+                      "y": 13
                     }
                   }
                 }
@@ -2707,17 +2739,17 @@
                     "c4vZP": {
                       "iconFontName": "map",
                       "x": 555,
-                      "y": 55.5
+                      "y": 54
                     },
                     "46CFx": {
-                      "content": "UPLOAD MAP IMAGE",
-                      "x": 512.5,
-                      "y": 89.5
+                      "content": "지도",
+                      "x": 557.5,
+                      "y": 88
                     },
                     "dim8T": {
-                      "content": "PNG, JPG (max 3MB)",
-                      "x": 519.5,
-                      "y": 111.5
+                      "content": "2번 지도 추가하기 · 드라이브 링크",
+                      "x": 499,
+                      "y": 112
                     }
                   }
                 },
@@ -2732,13 +2764,109 @@
                   "descendants": {
                     "j3kWR": {
                       "iconFontName": "add",
-                      "x": 477,
+                      "x": 493.5,
                       "y": 17
                     },
                     "GAcP1": {
-                      "content": "ADD ROUTE BLOCK",
-                      "x": 507,
-                      "y": 17
+                      "content": "2번 지도 추가하기",
+                      "x": 523.5,
+                      "y": 15.5
+                    }
+                  }
+                },
+                {
+                  "id": "j7xpq",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "map2Field",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 274,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "지도 2"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "지도 2",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "Gld7A",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "button1Field",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 358,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "버튼 1"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "버튼 1",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "v71FN",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "button2Field",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 442,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "버튼 2"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "버튼 2",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "KqGwg",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "driveField",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 526,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "드라이브 링크"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "드라이브 링크",
+                      "x": 14,
+                      "y": 13
                     }
                   }
                 }
@@ -2770,16 +2898,16 @@
                   "y": 16,
                   "descendants": {
                     "yFwZm": {
-                      "content": "QUIZ QUESTION"
+                      "content": "퀴즈 제목"
                     },
                     "Wd8OW": {
                       "width": "fill_container",
-                      "y": 22
+                      "y": 24
                     },
                     "OnCij": {
-                      "content": "Enter your question here...",
+                      "content": "퀴즈 제목",
                       "x": 14,
-                      "y": 14.5
+                      "y": 13
                     }
                   }
                 },
@@ -2799,16 +2927,16 @@
                       "height": "fit_content",
                       "descendants": {
                         "yFwZm": {
-                          "content": "OPTION A"
+                          "content": "정답1"
                         },
                         "Wd8OW": {
                           "width": "fill_container",
-                          "y": 22
+                          "y": 24
                         },
                         "OnCij": {
-                          "content": "Option A",
+                          "content": "정답1",
                           "x": 14,
-                          "y": 14.5
+                          "y": 13
                         }
                       }
                     },
@@ -2822,20 +2950,185 @@
                       "x": 573,
                       "descendants": {
                         "yFwZm": {
-                          "content": "OPTION B"
+                          "content": "정답2"
                         },
                         "Wd8OW": {
                           "width": "fill_container",
-                          "y": 22
+                          "y": 24
                         },
                         "OnCij": {
-                          "content": "Option B",
+                          "content": "정답2",
                           "x": 14,
-                          "y": 14.5
+                          "y": 13
                         }
                       }
                     }
                   ]
+                },
+                {
+                  "id": "0oheT",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "answerNum",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 184,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "정답 번호"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "정답 번호",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "vMbCW",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "answer3",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "정답3"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "정답3",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "f5tc0",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "answer4",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "정답4"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "정답4",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "iDMJt",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "answerTitle",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 436,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "정답 제목"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "정답 제목",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "jdZ11",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "answerText",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 520,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "정답 텍스트"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "정답 텍스트",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "IKh1j",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "errorTitle",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 604,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "오답 제목"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "오답 제목",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
+                },
+                {
+                  "id": "wpQt3",
+                  "type": "ref",
+                  "ref": "TgRwm",
+                  "name": "errorText",
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "x": 16,
+                  "y": 688,
+                  "descendants": {
+                    "yFwZm": {
+                      "content": "오답 텍스트"
+                    },
+                    "Wd8OW": {
+                      "width": "fill_container",
+                      "y": 24
+                    },
+                    "OnCij": {
+                      "content": "오답 텍스트",
+                      "x": 14,
+                      "y": 13
+                    }
+                  }
                 }
               ]
             },
@@ -2846,17 +3139,17 @@
               "width": 360,
               "name": "registerSubmit",
               "x": 406,
-              "y": 1108,
+              "y": 2133,
               "descendants": {
                 "rzBRE": {
                   "iconFontName": "check_circle",
-                  "x": 134.5,
+                  "x": 150,
                   "y": 17
                 },
                 "m53Ot": {
-                  "content": "SUBMIT",
-                  "x": 164.5,
-                  "y": 17
+                  "content": "저장",
+                  "x": 180,
+                  "y": 15.5
                 }
               }
             }
@@ -2872,7 +3165,7 @@
           "flipX": false,
           "flipY": false,
           "x": 0,
-          "y": 1508,
+          "y": 2295,
           "textGrowth": "auto",
           "descendants": {
             "2AwKA": {
@@ -2912,24 +3205,24 @@
               "y": 15
             },
             "Djb7G": {
-              "content": "Home",
+              "content": "나들이 기록",
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "content": "Outings",
-              "x": 155,
-              "y": 8
+              "content": "일정",
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "content": "Memories",
-              "x": 224,
-              "y": 8
+              "content": "신발 추천",
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "content": "Profile",
-              "x": 306,
-              "y": 8
+              "content": "필름",
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -3030,7 +3323,7 @@
                       "width": "fill_container",
                       "height": "fit_content",
                       "x": 2,
-                      "y": 80
+                      "y": 100
                     },
                     "smQGO": {
                       "width": "fit_content"
@@ -3043,15 +3336,15 @@
                       "width": "fill_container",
                       "height": "fit_content",
                       "x": 2,
-                      "y": 112
+                      "y": 132
                     },
                     "cJcg6": {
                       "width": "fit_content",
-                      "x": 1019
+                      "x": 1045
                     },
                     "lbS2g": {
                       "x": 10,
-                      "y": 7
+                      "y": 6
                     }
                   }
                 },
@@ -3110,11 +3403,11 @@
                     },
                     "cJcg6": {
                       "width": "fit_content",
-                      "x": 1019
+                      "x": 1045
                     },
                     "lbS2g": {
                       "x": 10,
-                      "y": 7
+                      "y": 6
                     }
                   }
                 }
@@ -3255,15 +3548,15 @@
             },
             "d5zor": {
               "x": 169,
-              "y": 8
+              "y": 7
             },
             "Dbt6d": {
-              "x": 248,
-              "y": 8
+              "x": 209,
+              "y": 7
             },
             "zNuap": {
-              "x": 324,
-              "y": 8
+              "x": 278,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -3463,20 +3756,20 @@
             },
             "Djb7G": {
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "x": 171,
-              "y": 8
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "content": "Shoes",
-              "x": 250,
-              "y": 8
+              "content": "신발 추천",
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "x": 307,
-              "y": 8
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -3510,7 +3803,7 @@
                   "type": "text",
                   "id": "0ZkaL",
                   "fill": "#000000",
-                  "content": "Shoe Picks",
+                  "content": "서울 촌놈의 신발 추천 👟",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 64,
                   "fontWeight": "800"
@@ -3519,7 +3812,7 @@
                   "type": "text",
                   "id": "f6B0q",
                   "fill": "#00000088",
-                  "content": "Curated selections for the urban walker.",
+                  "content": "오래 걸어도 편한 신발들만 골랐습니다~ 🎶",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 16,
                   "fontWeight": "normal"
@@ -3528,7 +3821,7 @@
                   "type": "text",
                   "id": "CHDmY",
                   "fill": "#00000088",
-                  "content": "Comfort meets style in our weekly rotation.",
+                  "content": "클릭하면 더욱 상세한 정보를 확인 가능~!",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 16,
                   "fontWeight": "normal"
@@ -3546,7 +3839,7 @@
                   "type": "text",
                   "id": "Bj7qT",
                   "fill": "#000000",
-                  "content": "NEW BALANCE",
+                  "content": "뉴발란스",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 11,
                   "fontWeight": "800"
@@ -3555,7 +3848,7 @@
                   "type": "text",
                   "id": "IxhEo",
                   "fill": "#000000",
-                  "content": "NIKE",
+                  "content": "나이키",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 11,
                   "fontWeight": "800"
@@ -3564,7 +3857,7 @@
                   "type": "text",
                   "id": "gVazC",
                   "fill": "#000000",
-                  "content": "ASICS",
+                  "content": "아식스",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 11,
                   "fontWeight": "800"
@@ -3582,7 +3875,7 @@
               "type": "text",
               "id": "vMeRw",
               "fill": "#000000",
-              "content": "New Balance",
+              "content": "뉴발란스",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 32,
               "fontWeight": "800"
@@ -3810,7 +4103,7 @@
               "type": "text",
               "id": "nOR6q",
               "fill": "#000000",
-              "content": "Nike",
+              "content": "나이키",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 32,
               "fontWeight": "800"
@@ -3977,7 +4270,7 @@
               "type": "text",
               "id": "YnAaa",
               "fill": "#000000",
-              "content": "Asics",
+              "content": "아식스",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 32,
               "fontWeight": "800"
@@ -4145,7 +4438,7 @@
           "flipX": false,
           "flipY": false,
           "x": 0,
-          "y": 1093,
+          "y": 1131,
           "textGrowth": "auto",
           "descendants": {
             "2AwKA": {
@@ -4188,20 +4481,20 @@
             },
             "Djb7G": {
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "x": 171,
-              "y": 8
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "content": "Shoe Detail",
-              "x": 250,
-              "y": 8
+              "content": "신발 추천",
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "x": 342,
-              "y": 8
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -4268,7 +4561,7 @@
                       "id": "VLxTu",
                       "name": "shoeName",
                       "fill": "#000000",
-                      "content": "Nike V2K Run",
+                      "content": "V2K 런",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 72,
                       "fontWeight": "normal"
@@ -4280,7 +4573,7 @@
                       "fill": "#000000",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Retro runner silhouette, lightweight cushioning, and daily comfort tuned for long city walks.",
+                      "content": "굉장히 인기가 많은 V2K",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 20,
                       "fontWeight": "normal"
@@ -4294,7 +4587,7 @@
               "id": "OeT93",
               "name": "shoeGalleryTitle",
               "fill": "#000000",
-              "content": "OUTFIT MOMENTS",
+              "content": "여러 착용 샷",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 24,
               "fontWeight": "800"
@@ -4458,20 +4751,20 @@
             },
             "Djb7G": {
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "content": "Schedule",
-              "x": 171,
-              "y": 8
+              "content": "일정",
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "x": 250,
-              "y": 8
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "x": 326,
-              "y": 8
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -4512,7 +4805,7 @@
                       "type": "text",
                       "id": "IRFlU",
                       "fill": "#000000",
-                      "content": "September 2023",
+                      "content": "서울촌놈 나들이 일정 🗓️",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 64,
                       "fontWeight": "normal"
@@ -4574,7 +4867,7 @@
                   "type": "ref",
                   "ref": "OaahK",
                   "x": 1400,
-                  "y": 23.5,
+                  "y": 27,
                   "descendants": {
                     "BwfXm": {
                       "fill": "#000000",
@@ -4582,9 +4875,9 @@
                       "height": "fill_container"
                     },
                     "m9e8a": {
-                      "content": "Month",
-                      "x": 27.5,
-                      "y": 12
+                      "content": "월",
+                      "x": 42,
+                      "y": 10.5
                     },
                     "39LhX": {
                       "fill": "#FE9FC8",
@@ -4593,9 +4886,9 @@
                       "x": 104
                     },
                     "6Ekn4": {
-                      "content": "Week",
-                      "x": 29.5,
-                      "y": 12
+                      "content": "주",
+                      "x": 42,
+                      "y": 10.5
                     }
                   }
                 }
@@ -4636,7 +4929,7 @@
                       "type": "text",
                       "id": "mj9l0",
                       "fill": "#00000066",
-                      "content": "SUN",
+                      "content": "일",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4645,7 +4938,7 @@
                       "type": "text",
                       "id": "1AOJd",
                       "fill": "#00000066",
-                      "content": "MON",
+                      "content": "월",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4654,7 +4947,7 @@
                       "type": "text",
                       "id": "AvcPl",
                       "fill": "#00000066",
-                      "content": "TUE",
+                      "content": "화",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4663,7 +4956,7 @@
                       "type": "text",
                       "id": "Jvvbc",
                       "fill": "#00000066",
-                      "content": "WED",
+                      "content": "수",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4672,7 +4965,7 @@
                       "type": "text",
                       "id": "Qfufi",
                       "fill": "#00000066",
-                      "content": "THU",
+                      "content": "목",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4681,7 +4974,7 @@
                       "type": "text",
                       "id": "AomeL",
                       "fill": "#00000066",
-                      "content": "FRI",
+                      "content": "금",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -4690,7 +4983,7 @@
                       "type": "text",
                       "id": "WPRYC",
                       "fill": "#00000066",
-                      "content": "SAT",
+                      "content": "토",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -5755,20 +6048,20 @@
             },
             "Djb7G": {
               "x": 100,
-              "y": 8
+              "y": 7
             },
             "d5zor": {
-              "content": "Schedule",
-              "x": 171,
-              "y": 8
+              "content": "일정",
+              "x": 181,
+              "y": 7
             },
             "Dbt6d": {
-              "x": 250,
-              "y": 8
+              "x": 221,
+              "y": 7
             },
             "zNuap": {
-              "x": 326,
-              "y": 8
+              "x": 290,
+              "y": 7
             },
             "EElQM": {
               "width": "fit_content",
@@ -5811,7 +6104,7 @@
                       "id": "QQTWW",
                       "name": "weekTitle",
                       "fill": "#000000",
-                      "content": "SEPTEMBER 2023",
+                      "content": "서울촌놈 나들이 일정 🗓️",
                       "fontFamily": "Patrick Hand",
                       "fontSize": 64,
                       "fontWeight": "700"
@@ -5876,7 +6169,7 @@
                   "ref": "OaahK",
                   "name": "weekToggle",
                   "x": 1400,
-                  "y": 23.5,
+                  "y": 27,
                   "descendants": {
                     "BwfXm": {
                       "fill": "#FE9FC8",
@@ -5884,10 +6177,10 @@
                       "height": "fill_container"
                     },
                     "m9e8a": {
-                      "content": "Month",
+                      "content": "월",
                       "fill": "#000000",
-                      "x": 27.5,
-                      "y": 12
+                      "x": 42,
+                      "y": 10.5
                     },
                     "39LhX": {
                       "fill": "#000000",
@@ -5896,10 +6189,10 @@
                       "x": 104
                     },
                     "6Ekn4": {
-                      "content": "Week",
+                      "content": "주",
                       "fill": "#FE9FC8",
-                      "x": 29.5,
-                      "y": 12
+                      "x": 42,
+                      "y": 10.5
                     }
                   }
                 }
@@ -5964,7 +6257,7 @@
                           "type": "text",
                           "id": "M9sQY",
                           "fill": "#00000066",
-                          "content": "SUN 3",
+                          "content": "일 3",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -5973,7 +6266,7 @@
                           "type": "text",
                           "id": "xN37B",
                           "fill": "#00000066",
-                          "content": "MON 4",
+                          "content": "월 4",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -5982,7 +6275,7 @@
                           "type": "text",
                           "id": "DrLGf",
                           "fill": "#00000066",
-                          "content": "TUE 5",
+                          "content": "화 5",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -5991,7 +6284,7 @@
                           "type": "text",
                           "id": "tJGmX",
                           "fill": "#00000066",
-                          "content": "WED 6",
+                          "content": "수 6",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -6000,7 +6293,7 @@
                           "type": "text",
                           "id": "LUQ6k",
                           "fill": "#00000066",
-                          "content": "THU 7",
+                          "content": "목 7",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -6009,7 +6302,7 @@
                           "type": "text",
                           "id": "9bkWm",
                           "fill": "#00000066",
-                          "content": "FRI 8",
+                          "content": "금 8",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -6018,7 +6311,7 @@
                           "type": "text",
                           "id": "sMWsb",
                           "fill": "#00000066",
-                          "content": "SAT 9",
+                          "content": "토 9",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -6856,7 +7149,7 @@
               "id": "U3NtX",
               "name": "loginTitle",
               "fill": "#000000",
-              "content": "로그인",
+              "content": "SLCN Login",
               "fontFamily": "Patrick Hand",
               "fontSize": 36,
               "fontWeight": "700"
@@ -7262,7 +7555,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "나들이 기록"
+              "content": "서울 촌놈 나들이 기록 📷"
             },
             "doWoW": {
               "enabled": false
@@ -7313,18 +7606,25 @@
                   "x": 103
                 },
                 "ZLqIS": {
-                  "width": "fill_container"
+                  "width": "fill_container",
+                  "content": "2024.09.29\n부암동 가을 산책"
                 },
                 "ikVfc": {
                   "width": "fill_container",
-                  "y": 116
+                  "y": 100
+                },
+                "5QN5q": {
+                  "content": "2024.09.29"
                 },
                 "OSr5c": {
                   "width": "fill_container",
-                  "y": 148
+                  "y": 132
                 },
                 "cJcg6": {
-                  "x": 42
+                  "x": 68
+                },
+                "lbS2g": {
+                  "content": "퀴즈 풀기"
                 }
               }
             },
@@ -7347,19 +7647,25 @@
                   "x": 103
                 },
                 "ZLqIS": {
-                  "content": "Exploring the northern district. Found hidden alleyways with amazing street art.",
+                  "content": "2024.05.05\n파주 나들이",
                   "width": "fill_container"
                 },
                 "ikVfc": {
                   "width": "fill_container",
-                  "y": 152
+                  "y": 100
+                },
+                "5QN5q": {
+                  "content": "2024.05.05"
                 },
                 "OSr5c": {
                   "width": "fill_container",
-                  "y": 184
+                  "y": 132
                 },
                 "cJcg6": {
-                  "x": 42
+                  "x": 68
+                },
+                "lbS2g": {
+                  "content": "퀴즈 풀기"
                 }
               }
             },
@@ -7381,19 +7687,25 @@
                   "x": 103
                 },
                 "ZLqIS": {
-                  "content": "Late afternoon riverside run with warm sunset view.",
+                  "content": "2024.02.14\n한강 저녁 산책",
                   "width": "fill_container"
                 },
                 "ikVfc": {
                   "width": "fill_container",
-                  "y": 116
+                  "y": 100
+                },
+                "5QN5q": {
+                  "content": "2024.02.14"
                 },
                 "OSr5c": {
                   "width": "fill_container",
-                  "y": 148
+                  "y": 132
                 },
                 "cJcg6": {
-                  "x": 42
+                  "x": 68
+                },
+                "lbS2g": {
+                  "content": "퀴즈 풀기"
                 }
               }
             }
@@ -7429,11 +7741,11 @@
               "descendants": {
                 "rzBRE": {
                   "iconFontName": "add_circle",
-                  "x": 109
+                  "x": 94.5
                 },
                 "m53Ot": {
-                  "content": "새 나들이 기록",
-                  "x": 139
+                  "content": "새 나들이 기록하기",
+                  "x": 124.5
                 }
               }
             }
@@ -7557,14 +7869,14 @@
                     },
                     "ikVfc": {
                       "width": "fill_container",
-                      "y": 116
+                      "y": 100
                     },
                     "OSr5c": {
                       "width": "fill_container",
-                      "y": 148
+                      "y": 132
                     },
                     "cJcg6": {
-                      "x": 42
+                      "x": 68
                     }
                   }
                 },
@@ -7599,7 +7911,7 @@
                       "y": 184
                     },
                     "cJcg6": {
-                      "x": 42
+                      "x": 68
                     }
                   }
                 },
@@ -7633,7 +7945,7 @@
                       "y": 148
                     },
                     "cJcg6": {
-                      "x": 42
+                      "x": 68
                     }
                   }
                 }
@@ -7758,7 +8070,7 @@
       "y": 0,
       "name": "pg/outing_registration_form_redesign_mobile",
       "width": 375,
-      "height": 980,
+      "height": 1900,
       "fill": "#FE9FC8",
       "layout": "vertical",
       "children": [
@@ -7779,7 +8091,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "나들이 추가"
+              "content": "서울 촌놈 나들이 추가"
             },
             "doWoW": {
               "enabled": false
@@ -7791,7 +8103,6 @@
           "id": "V8h12",
           "name": "regBody",
           "width": "fill_container",
-          "height": "fill_container",
           "layout": "vertical",
           "gap": 14,
           "padding": [
@@ -7831,7 +8142,7 @@
               "y": 60,
               "descendants": {
                 "yFwZm": {
-                  "content": "OUTING NAME"
+                  "content": "나들이 이름"
                 },
                 "Wd8OW": {
                   "width": "fill_container"
@@ -7848,10 +8159,10 @@
               "width": "fill_container",
               "name": "regDate",
               "x": 16,
-              "y": 144,
+              "y": 146,
               "descendants": {
                 "yFwZm": {
-                  "content": "DATE"
+                  "content": "날짜"
                 },
                 "Wd8OW": {
                   "width": "fill_container"
@@ -7869,20 +8180,20 @@
               "width": "fill_container",
               "name": "regThumb",
               "x": 16,
-              "y": 228,
+              "y": 232,
               "descendants": {
                 "c4vZP": {
                   "x": 158.5,
                   "y": 54.5
                 },
                 "46CFx": {
-                  "content": "썸네일 업로드",
-                  "x": 140,
+                  "content": "로고",
+                  "x": 161,
                   "y": 88.5
                 },
                 "dim8T": {
-                  "content": "PNG, JPG (max 3MB)",
-                  "x": 123,
+                  "content": "JPG, PNG, GIF, SVG",
+                  "x": 125,
                   "y": 112.5
                 }
               }
@@ -7894,7 +8205,7 @@
               "width": "fill_container",
               "name": "regMap",
               "x": 16,
-              "y": 422,
+              "y": 426,
               "descendants": {
                 "c4vZP": {
                   "iconFontName": "map",
@@ -7902,13 +8213,13 @@
                   "y": 54
                 },
                 "46CFx": {
-                  "content": "지도 이미지 업로드",
-                  "x": 129,
+                  "content": "지도",
+                  "x": 161,
                   "y": 88
                 },
                 "dim8T": {
-                  "content": "단일 또는 복수 지도",
-                  "x": 132,
+                  "content": "2번 지도 추가하기 · 드라이브 링크",
+                  "x": 102.5,
                   "y": 112
                 }
               }
@@ -7920,16 +8231,16 @@
               "width": "fill_container",
               "name": "regQuiz",
               "x": 16,
-              "y": 616,
+              "y": 620,
               "descendants": {
                 "yFwZm": {
-                  "content": "QUIZ QUESTION"
+                  "content": "퀴즈 제목"
                 },
                 "Wd8OW": {
                   "width": "fill_container"
                 },
                 "OnCij": {
-                  "content": "질문을 입력하세요"
+                  "content": "퀴즈 제목"
                 }
               }
             },
@@ -7949,13 +8260,13 @@
                   "y": 0,
                   "descendants": {
                     "yFwZm": {
-                      "content": "OPTION A"
+                      "content": "정답1"
                     },
                     "Wd8OW": {
                       "width": "fill_container"
                     },
                     "OnCij": {
-                      "content": "정답 후보 1"
+                      "content": "정답1"
                     }
                   }
                 },
@@ -7969,17 +8280,256 @@
                   "y": 0,
                   "descendants": {
                     "yFwZm": {
-                      "content": "OPTION B"
+                      "content": "정답2"
                     },
                     "Wd8OW": {
                       "width": "fill_container"
                     },
                     "OnCij": {
-                      "content": "정답 후보 2"
+                      "content": "정답2"
                     }
                   }
                 }
               ]
+            },
+            {
+              "id": "sHb6V",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "typeField",
+              "width": "fill_container",
+              "x": 16,
+              "y": 792,
+              "descendants": {
+                "yFwZm": {
+                  "content": "타입"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "아영 / 일권"
+                }
+              }
+            },
+            {
+              "id": "HQIrt",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "map2Field",
+              "width": "fill_container",
+              "x": 16,
+              "y": 878,
+              "descendants": {
+                "yFwZm": {
+                  "content": "지도 2"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "지도 2"
+                }
+              }
+            },
+            {
+              "id": "6pGWE",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "button1Field",
+              "width": "fill_container",
+              "x": 16,
+              "y": 964,
+              "descendants": {
+                "yFwZm": {
+                  "content": "버튼 1"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "버튼 1"
+                }
+              }
+            },
+            {
+              "id": "xgGnT",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "button2Field",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1050,
+              "descendants": {
+                "yFwZm": {
+                  "content": "버튼 2"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "버튼 2"
+                }
+              }
+            },
+            {
+              "id": "oXr7u",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "driveField",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1136,
+              "descendants": {
+                "yFwZm": {
+                  "content": "드라이브 링크"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "드라이브 링크"
+                }
+              }
+            },
+            {
+              "id": "JRv06",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "answerNum",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1222,
+              "descendants": {
+                "yFwZm": {
+                  "content": "정답 번호"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "정답 번호"
+                }
+              }
+            },
+            {
+              "id": "BU2qp",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "answer3",
+              "width": "fill_container",
+              "y": 1308,
+              "descendants": {
+                "yFwZm": {
+                  "content": "정답3"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "정답3"
+                }
+              }
+            },
+            {
+              "id": "tIO4W",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "answer4",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1394,
+              "descendants": {
+                "yFwZm": {
+                  "content": "정답4"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "정답4"
+                }
+              }
+            },
+            {
+              "id": "H4dGT",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "answerTitle",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1480,
+              "descendants": {
+                "yFwZm": {
+                  "content": "정답 제목"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "정답 제목"
+                }
+              }
+            },
+            {
+              "id": "TGepx",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "answerText",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1566,
+              "descendants": {
+                "yFwZm": {
+                  "content": "정답 텍스트"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "정답 텍스트"
+                }
+              }
+            },
+            {
+              "id": "1HhJI",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "errorTitle",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1652,
+              "descendants": {
+                "yFwZm": {
+                  "content": "오답 제목"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "오답 제목"
+                }
+              }
+            },
+            {
+              "id": "SW2WQ",
+              "type": "ref",
+              "ref": "TgRwm",
+              "name": "errorText",
+              "width": "fill_container",
+              "x": 16,
+              "y": 1738,
+              "descendants": {
+                "yFwZm": {
+                  "content": "오답 텍스트"
+                },
+                "Wd8OW": {
+                  "width": "fill_container"
+                },
+                "OnCij": {
+                  "content": "오답 텍스트"
+                }
+              }
             }
           ]
         },
@@ -8013,11 +8563,11 @@
               "descendants": {
                 "rzBRE": {
                   "iconFontName": "check_circle",
-                  "x": 127
+                  "x": 141.5
                 },
                 "m53Ot": {
-                  "content": "저장하기",
-                  "x": 157
+                  "content": "저장",
+                  "x": 171.5
                 }
               }
             }
@@ -8053,7 +8603,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "나들이 경로"
+              "content": "서울 촌놈 나들이 경로 😎"
             },
             "doWoW": {
               "enabled": false
@@ -8106,7 +8656,7 @@
                       "type": "text",
                       "id": "jABwk",
                       "fill": "#FE9FC8",
-                      "content": "부암동",
+                      "content": "지도 1",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 13,
                       "fontWeight": "700"
@@ -8127,7 +8677,7 @@
                       "type": "text",
                       "id": "sgSo7",
                       "fill": "#000000",
-                      "content": "파주",
+                      "content": "지도 2",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 13,
                       "fontWeight": "700"
@@ -8160,7 +8710,6 @@
                   "id": "25gqS",
                   "name": "heroTitle",
                   "fill": "#FFFFFF",
-                  "content": "Buam-dong Walk",
                   "fontFamily": "Patrick Hand",
                   "fontSize": 34,
                   "fontWeight": "700"
@@ -8174,7 +8723,7 @@
               "fill": "#000000",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "A quiet autumn route around hill paths and hidden stairs.",
+              "content": "사진은 드라이브에서 📷",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 15,
               "fontWeight": "500"
@@ -8201,7 +8750,7 @@
                   "type": "text",
                   "id": "T90pf",
                   "fill": "#000000",
-                  "content": "부암동",
+                  "content": "암호 🔒 : 입사일",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -8210,7 +8759,7 @@
                   "type": "text",
                   "id": "ujGbC",
                   "fill": "#000000",
-                  "content": "3시간 · 5명",
+                  "content": "드라이브 링크",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -8289,7 +8838,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "나들이 일정"
+              "content": "서울촌놈 나들이 일정 🗓️"
             },
             "doWoW": {
               "enabled": false
@@ -8382,7 +8931,7 @@
                       "type": "text",
                       "id": "yWGxp",
                       "fill": "#00000066",
-                      "content": "SUN",
+                      "content": "일",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8391,7 +8940,7 @@
                       "type": "text",
                       "id": "iuGL7",
                       "fill": "#00000066",
-                      "content": "MON",
+                      "content": "월",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8400,7 +8949,7 @@
                       "type": "text",
                       "id": "adc12",
                       "fill": "#00000066",
-                      "content": "TUE",
+                      "content": "화",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8409,7 +8958,7 @@
                       "type": "text",
                       "id": "M5AcD",
                       "fill": "#00000066",
-                      "content": "WED",
+                      "content": "수",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8418,7 +8967,7 @@
                       "type": "text",
                       "id": "gUIeM",
                       "fill": "#00000066",
-                      "content": "THU",
+                      "content": "목",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8427,7 +8976,7 @@
                       "type": "text",
                       "id": "yWeeE",
                       "fill": "#00000066",
-                      "content": "FRI",
+                      "content": "금",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -8436,7 +8985,7 @@
                       "type": "text",
                       "id": "LplsU",
                       "fill": "#00000066",
-                      "content": "SAT",
+                      "content": "토",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -9497,7 +10046,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "주간 일정"
+              "content": "서울촌놈 나들이 일정 🗓️"
             },
             "doWoW": {
               "enabled": false
@@ -9552,8 +10101,9 @@
                     },
                     "m9e8a": {
                       "fill": "#000000",
-                      "x": 7,
-                      "y": 8
+                      "x": 21.5,
+                      "y": 6.5,
+                      "content": "월"
                     },
                     "39LhX": {
                       "fill": "#000000",
@@ -9563,8 +10113,9 @@
                     },
                     "6Ekn4": {
                       "fill": "#FE9FC8",
-                      "x": 9,
-                      "y": 8
+                      "x": 21.5,
+                      "y": 6.5,
+                      "content": "주"
                     }
                   }
                 }
@@ -9629,7 +10180,7 @@
                           "type": "text",
                           "id": "V4aEV",
                           "fill": "#00000066",
-                          "content": "SUN 3",
+                          "content": "일 3",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9638,7 +10189,7 @@
                           "type": "text",
                           "id": "utOTG",
                           "fill": "#00000066",
-                          "content": "MON 4",
+                          "content": "월 4",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9647,7 +10198,7 @@
                           "type": "text",
                           "id": "UcD9p",
                           "fill": "#00000066",
-                          "content": "TUE 5",
+                          "content": "화 5",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9656,7 +10207,7 @@
                           "type": "text",
                           "id": "7gWQG",
                           "fill": "#00000066",
-                          "content": "WED 6",
+                          "content": "수 6",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9665,7 +10216,7 @@
                           "type": "text",
                           "id": "AUJ1d",
                           "fill": "#00000066",
-                          "content": "THU 7",
+                          "content": "목 7",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9674,7 +10225,7 @@
                           "type": "text",
                           "id": "ONJIC",
                           "fill": "#00000066",
-                          "content": "FRI 8",
+                          "content": "금 8",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9683,7 +10234,7 @@
                           "type": "text",
                           "id": "G7zYe",
                           "fill": "#00000066",
-                          "content": "SAT 9",
+                          "content": "토 9",
                           "fontFamily": "Plus Jakarta Sans",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -9745,7 +10296,7 @@
                           "id": "0Ty5t",
                           "type": "ref",
                           "ref": "JlSOX",
-                          "x": 390,
+                          "x": 104,
                           "y": 12,
                           "width": "fit_content",
                           "descendants": {
@@ -9917,7 +10468,7 @@
                           "id": "tdEfK",
                           "type": "ref",
                           "ref": "JlSOX",
-                          "x": 825,
+                          "x": 176,
                           "y": 12,
                           "width": "fit_content",
                           "descendants": {
@@ -10089,7 +10640,7 @@
                           "id": "W1qXF",
                           "type": "ref",
                           "ref": "JlSOX",
-                          "x": 630,
+                          "x": 132,
                           "y": 12,
                           "width": "fit_content",
                           "descendants": {
@@ -10236,7 +10787,7 @@
       "y": 0,
       "name": "pg/shoe_recommendation_catalog_mobile",
       "width": 375,
-      "height": 900,
+      "height": 1040,
       "fill": "#FE9FC8",
       "layout": "vertical",
       "children": [
@@ -10257,7 +10808,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "신발 추천"
+              "content": "서울 촌놈의 신발 추천 👟"
             },
             "doWoW": {
               "enabled": false
@@ -10269,7 +10820,6 @@
           "id": "ki2lm",
           "name": "shoeBody",
           "width": "fill_container",
-          "height": "fill_container",
           "layout": "vertical",
           "gap": 14,
           "padding": [
@@ -10340,7 +10890,7 @@
                       "type": "text",
                       "id": "v3uXu",
                       "fill": "#000000",
-                      "content": "NB 574",
+                      "content": "뉴발란스 574",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 14,
                       "fontWeight": "800"
@@ -10391,7 +10941,7 @@
                       "type": "text",
                       "id": "NS1v5",
                       "fill": "#000000",
-                      "content": "NB 530",
+                      "content": "뉴발란스 530",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 14,
                       "fontWeight": "800"
@@ -10512,12 +11062,92 @@
                       "type": "text",
                       "id": "x7h1p",
                       "fill": "#000000",
-                      "content": "V2K Run",
+                      "content": "V2K 런",
                       "fontFamily": "Plus Jakarta Sans",
                       "fontSize": 14,
                       "fontWeight": "800"
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "F4wtV",
+              "name": "asTitle",
+              "fill": "#000000",
+              "content": "아식스",
+              "fontFamily": "Patrick Hand",
+              "fontSize": 30,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "XZxv5",
+              "name": "asGrid",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "1YGOT",
+                  "name": "asCard",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#000000"
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 10,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "yUw3P",
+                      "name": "imgNK1",
+                      "metadata": {
+                        "type": "unsplash",
+                        "username": "vladieboi",
+                        "link": "https://unsplash.com/@vladieboi",
+                        "author": "Vlad Ciutacu"
+                      },
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1761942028415-8e2a768592c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzMwMzAyMDJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      },
+                      "width": "fill_container",
+                      "height": 110,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#00000022"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "HSzRu",
+                      "fill": "#000000",
+                      "content": "조그 100",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 14,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "N8LXF",
+                  "x": 0,
+                  "y": 0,
+                  "name": "spacer",
+                  "enabled": false,
+                  "width": 1,
+                  "height": 1
                 }
               ]
             }
@@ -10530,7 +11160,7 @@
           "width": "fill_container",
           "name": "shoeNav",
           "x": 0,
-          "y": 840,
+          "y": 821,
           "descendants": {
             "6IwB4": {
               "fill": "#00000066"
@@ -10576,7 +11206,7 @@
               "y": 9
             },
             "IIiv5": {
-              "content": "신발 추천"
+              "content": "서울 촌놈의 신발 추천 👟"
             },
             "doWoW": {
               "enabled": false
@@ -10627,7 +11257,7 @@
               "id": "xNinH",
               "name": "shoeName",
               "fill": "#000000",
-              "content": "Nike V2K Run",
+              "content": "V2K 런",
               "fontFamily": "Patrick Hand",
               "fontSize": 36,
               "fontWeight": "700"
@@ -10639,7 +11269,7 @@
               "fill": "#000000",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Retro runner silhouette, lightweight cushioning, and daily comfort tuned for long city walks.",
+              "content": "굉장히 인기가 많은 V2K",
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 15,
               "fontWeight": "500"
@@ -10674,7 +11304,7 @@
                   "type": "text",
                   "id": "H91VJ",
                   "fill": "#000000",
-                  "content": "유튜브 리뷰 영상",
+                  "content": "참고 영상(링크)🎞",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 14,
                   "fontWeight": "700"
@@ -10686,7 +11316,7 @@
               "id": "KnAhL",
               "name": "reviewTitle",
               "fill": "#000000",
-              "content": "착용 샷",
+              "content": "여러 착용 샷",
               "fontFamily": "Patrick Hand",
               "fontSize": 30,
               "fontWeight": "700"
@@ -10735,7 +11365,7 @@
                   "type": "text",
                   "id": "IGmQ2",
                   "fill": "#000000",
-                  "content": "도시 산책 룩과 잘 어울리는 데일리 스니커즈.",
+                  "content": "여러 색상을 구매한 이청아",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 13,
                   "fontWeight": "500"
@@ -10786,7 +11416,7 @@
                   "type": "text",
                   "id": "rCGPr",
                   "fill": "#000000",
-                  "content": "가벼운 컬러웨이로 어떤 하의와도 매치하기 쉬움.",
+                  "content": "윤승아가 16000보를 걸을때 신은 신발",
                   "fontFamily": "Plus Jakarta Sans",
                   "fontSize": 13,
                   "fontWeight": "500"
