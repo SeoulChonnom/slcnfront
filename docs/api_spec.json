@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "SLCN API Test",
     "description": "SLCN API description",
@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
+      "url": "http://localhost:8080/api",
       "description": "Generated server url"
     }
   ],
@@ -15,10 +15,6 @@
     {
       "name": "일정 정보 API",
       "description": "일정 정보 조회"
-    },
-    {
-      "name": "Depot API",
-      "description": "파일 관련 API"
     },
     {
       "name": "나들이 정보 API",
@@ -30,19 +26,19 @@
     }
   ],
   "paths": {
-    "/schedule/remove/{scheduleId}": {
-      "put": {
+    "/schedule": {
+      "get": {
         "tags": ["일정 정보 API"],
-        "summary": "일정 삭제(숨김)",
-        "description": "일정 목록 삭제 API",
-        "operationId": "hideSchedule",
+        "summary": "특정 달 일정 조회",
+        "description": "달력 이동 시 해당 달의 일정 조회 API",
+        "operationId": "getSchedulesForYearAndMonth",
         "parameters": [
           {
-            "name": "scheduleId",
-            "in": "path",
+            "name": "arg0",
+            "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/ScheduleSearchSdo"
             }
           },
           {
@@ -58,15 +54,16 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleRdo"
+                  }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/schedule/modify": {
+      },
       "put": {
         "tags": ["일정 정보 API"],
         "summary": "일정 수정",
@@ -84,7 +81,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ScheduleModifyRequest"
+                "$ref": "#/components/schemas/ScheduleUdo"
               }
             }
           },
@@ -96,7 +93,43 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "$ref": "#/components/schemas/ScheduleRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 등록",
+        "description": "일정 등록 API",
+        "operationId": "registerSchedule",
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "AccessToken",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRdo"
                 }
               }
             }
@@ -122,7 +155,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserRegisterRequest"
+                "$ref": "#/components/schemas/UserCdo"
               }
             }
           },
@@ -134,7 +167,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "type": "string"
                 }
               }
             }
@@ -152,7 +185,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserLoginRequest"
+                "$ref": "#/components/schemas/UserLoginCdo"
               }
             }
           },
@@ -164,7 +197,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "$ref": "#/components/schemas/UserRdo"
                 }
               }
             }
@@ -172,12 +205,12 @@
         }
       }
     },
-    "/trip/": {
+    "/trip": {
       "get": {
         "tags": ["나들이 정보 API"],
         "summary": "전체 나들이 조회",
         "description": "메인페이지 리스트 생성용 API",
-        "operationId": "getTrips",
+        "operationId": "getAllTrips",
         "parameters": [
           {
             "name": "X-AUTH-TOKEN",
@@ -192,7 +225,10 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TripListRdo"
+                  }
                 }
               }
             }
@@ -216,7 +252,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TripRegisterRequest"
+                "$ref": "#/components/schemas/TripCdo"
               }
             }
           },
@@ -228,7 +264,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "$ref": "#/components/schemas/TripInfoRdo"
                 }
               }
             }
@@ -236,47 +272,9 @@
         }
       }
     },
-    "/schedule/register": {
-      "post": {
-        "tags": ["일정 정보 API"],
-        "summary": "일정 등록",
-        "description": "일정 등록 API",
-        "operationId": "registerSchedule",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ScheduleRegisterRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/depot": {
+    "/file": {
       "get": {
-        "tags": ["Depot API"],
+        "tags": ["file-resource"],
         "summary": "파일 조회 API",
         "description": "파일 경로를 통해 파일을 조회합니다.",
         "operationId": "getFile",
@@ -311,7 +309,7 @@
         }
       },
       "post": {
-        "tags": ["Depot API"],
+        "tags": ["file-resource"],
         "summary": "파일 업로드 API",
         "description": "파일을 업로드합니다.",
         "operationId": "uploadFile",
@@ -333,16 +331,16 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "required": ["file"],
                 "type": "object",
                 "properties": {
                   "file": {
                     "type": "string",
                     "format": "binary"
                   }
-                }
+                },
+                "required": ["file"]
               }
             }
           }
@@ -353,7 +351,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "type": "string"
                 }
               }
             }
@@ -361,45 +359,15 @@
         }
       }
     },
-    "/user/token": {
-      "get": {
-        "tags": ["회원 관리 API"],
-        "summary": "토큰 갱신",
-        "description": "RefreshToken 갱신",
-        "operationId": "reissueToken",
+    "/schedule/{scheduleId}/hide": {
+      "patch": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 삭제(숨김)",
+        "description": "일정 목록 삭제 API",
+        "operationId": "hideSchedule",
         "parameters": [
           {
-            "name": "refreshToken",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/trip/{tripDate}": {
-      "get": {
-        "tags": ["나들이 정보 API"],
-        "summary": "나들이 상세정보 조회",
-        "description": "나들이 상세페이지용 API",
-        "operationId": "getTripByDate",
-        "parameters": [
-          {
-            "name": "tripDate",
+            "name": "scheduleId",
             "in": "path",
             "required": true,
             "schema": {
@@ -415,11 +383,34 @@
         ],
         "responses": {
           "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/token": {
+      "get": {
+        "tags": ["회원 관리 API"],
+        "summary": "토큰 갱신",
+        "description": "RefreshToken 갱신",
+        "operationId": "reissueToken",
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "$ref": "#/components/schemas/UserRdo"
                 }
               }
             }
@@ -427,19 +418,19 @@
         }
       }
     },
-    "/schedule/date": {
+    "/trip/detail": {
       "get": {
-        "tags": ["일정 정보 API"],
-        "summary": "특정 달 일정 조회",
-        "description": "달력 이동 시 해당 달의 일정 조회 API",
-        "operationId": "getSchedulesForYearAndMonth",
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 상세정보 조회",
+        "description": "나들이 상세페이지용 API",
+        "operationId": "getTripByDate",
         "parameters": [
           {
-            "name": "request",
+            "name": "tripDate",
             "in": "query",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/ScheduleSearchRequest"
+              "type": "string"
             }
           },
           {
@@ -455,7 +446,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "$ref": "#/components/schemas/TripInfoRdo"
                 }
               }
             }
@@ -463,7 +454,7 @@
         }
       }
     },
-    "/schedule/": {
+    "/schedule/now": {
       "get": {
         "tags": ["일정 정보 API"],
         "summary": "이번달 일정 조회",
@@ -483,7 +474,10 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleRdo"
+                  }
                 }
               }
             }
@@ -491,7 +485,7 @@
         }
       }
     },
-    "/schedule/delete/{scheduleId}": {
+    "/schedule/{scheduleId}": {
       "delete": {
         "tags": ["일정 정보 API"],
         "summary": "일정 완전 삭제",
@@ -515,14 +509,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponse"
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -530,21 +517,7 @@
   },
   "components": {
     "schemas": {
-      "BaseResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object"
-          }
-        }
-      },
-      "ScheduleModifyRequest": {
+      "ScheduleUdo": {
         "type": "object",
         "properties": {
           "id": {
@@ -582,14 +555,14 @@
           },
           "goingDuration": {
             "type": "integer",
-            "description": "일정 장소 이동시간",
             "format": "int64",
+            "description": "일정 장소 이동시간",
             "example": 1000
           },
           "comingDuration": {
             "type": "integer",
-            "description": "다음 일정 장소 이동시간",
             "format": "int64",
+            "description": "다음 일정 장소 이동시간",
             "example": 1000
           },
           "location": {
@@ -600,8 +573,8 @@
           "category": {
             "type": "string",
             "description": "종류(milestone, task, allday, time)",
-            "example": "time",
-            "enum": ["milestone", "task", "allday", "time"]
+            "enum": ["milestone", "task", "allday", "time"],
+            "example": "time"
           },
           "dueDateClass": {
             "type": "string",
@@ -616,8 +589,8 @@
           "state": {
             "type": "string",
             "description": "일정 상태(Busy, Free)",
-            "example": "Busy",
-            "enum": ["Busy", "Free"]
+            "enum": ["Busy", "Free"],
+            "example": "Busy"
           },
           "isVisible": {
             "type": "boolean",
@@ -662,16 +635,7 @@
           "customStyle": {
             "type": "string",
             "description": "커스텀 색 설정(CSS)",
-            "example": "{}"
-          },
-          "private": {
-            "type": "boolean"
-          },
-          "readOnly": {
-            "type": "boolean"
-          },
-          "visible": {
-            "type": "boolean"
+            "example": {}
           },
           "allday": {
             "type": "boolean"
@@ -681,24 +645,114 @@
           },
           "focused": {
             "type": "boolean"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "readOnly": {
+            "type": "boolean"
           }
         }
       },
-      "UserRegisterRequest": {
+      "ScheduleRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "calendarId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "goingDuration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comingDuration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "location": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["milestone", "task", "allday", "time"]
+          },
+          "dueDateClass": {
+            "type": "string"
+          },
+          "recurrenceRule": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["Busy", "Free"]
+          },
+          "color": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "dragBackgroundColor": {
+            "type": "string"
+          },
+          "borderColor": {
+            "type": "string"
+          },
+          "customStyle": {
+            "type": "string"
+          },
+          "isAllday": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "isPending": {
+            "type": "boolean"
+          },
+          "isFocused": {
+            "type": "boolean"
+          },
+          "isReadOnly": {
+            "type": "boolean"
+          },
+          "isPrivate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserCdo": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
-          "userName": {
+          "password": {
             "type": "string"
           },
-          "password": {
+          "username": {
             "type": "string"
           }
         }
       },
-      "UserLoginRequest": {
+      "UserLoginCdo": {
         "type": "object",
         "properties": {
           "username": {
@@ -709,7 +763,28 @@
           }
         }
       },
-      "QuizRegisterRequest": {
+      "UserRdo": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roleList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["USER", "ADMIN"]
+            }
+          }
+        }
+      },
+      "QuizCdo": {
         "type": "object",
         "properties": {
           "quizIndex": {
@@ -720,7 +795,7 @@
           }
         }
       },
-      "TripRegisterRequest": {
+      "TripCdo": {
         "type": "object",
         "properties": {
           "date": {
@@ -729,19 +804,25 @@
           "type": {
             "type": "string"
           },
-          "info1": {
+          "name": {
             "type": "string"
           },
-          "info2": {
+          "logo": {
             "type": "string"
           },
-          "button1": {
+          "firstMap": {
             "type": "string"
           },
-          "button2": {
+          "secondMap": {
             "type": "string"
           },
-          "drive": {
+          "nextButtonText": {
+            "type": "string"
+          },
+          "previousButtonText": {
+            "type": "string"
+          },
+          "driveUrl": {
             "type": "string"
           },
           "quizTitle": {
@@ -762,24 +843,38 @@
           "quizErrorText": {
             "type": "string"
           },
-          "logo": {
-            "type": "string"
-          },
-          "map1": {
-            "type": "string"
-          },
-          "map2": {
-            "type": "string"
-          },
-          "quizRegisterRequestList": {
+          "quizCdoList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QuizRegisterRequest"
+              "$ref": "#/components/schemas/QuizCdo"
             }
           }
         }
       },
-      "ScheduleRegisterRequest": {
+      "TripInfoRdo": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "firstMap": {
+            "type": "string"
+          },
+          "secondMap": {
+            "type": "string"
+          },
+          "nextButtonText": {
+            "type": "string"
+          },
+          "previousButtonText": {
+            "type": "string"
+          },
+          "drive": {
+            "type": "string"
+          }
+        }
+      },
+      "ScheduleCdo": {
         "type": "object",
         "properties": {
           "calendarId": {
@@ -813,14 +908,14 @@
           },
           "goingDuration": {
             "type": "integer",
-            "description": "일정 장소 이동시간",
             "format": "int64",
+            "description": "일정 장소 이동시간",
             "example": 1000
           },
           "comingDuration": {
             "type": "integer",
-            "description": "다음 일정 장소 이동시간",
             "format": "int64",
+            "description": "다음 일정 장소 이동시간",
             "example": 1000
           },
           "location": {
@@ -831,8 +926,8 @@
           "category": {
             "type": "string",
             "description": "종류(milestone, task, allday, time)",
-            "example": "time",
-            "enum": ["milestone", "task", "allday", "time"]
+            "enum": ["milestone", "task", "allday", "time"],
+            "example": "time"
           },
           "dueDateClass": {
             "type": "string",
@@ -847,8 +942,8 @@
           "state": {
             "type": "string",
             "description": "일정 상태(Busy, Free)",
-            "example": "Busy",
-            "enum": ["Busy", "Free"]
+            "enum": ["Busy", "Free"],
+            "example": "Busy"
           },
           "isVisible": {
             "type": "boolean",
@@ -893,16 +988,7 @@
           "customStyle": {
             "type": "string",
             "description": "커스텀 색 설정(CSS)",
-            "example": "{}"
-          },
-          "private": {
-            "type": "boolean"
-          },
-          "readOnly": {
-            "type": "boolean"
-          },
-          "visible": {
-            "type": "boolean"
+            "example": {}
           },
           "allday": {
             "type": "boolean"
@@ -912,26 +998,87 @@
           },
           "focused": {
             "type": "boolean"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "readOnly": {
+            "type": "boolean"
           }
         }
       },
-      "ScheduleSearchRequest": {
+      "QuizRdo": {
         "type": "object",
+        "properties": {
+          "quizIndex": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "TripListRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "quizTitle": {
+            "type": "string"
+          },
+          "quizAnswer": {
+            "type": "string"
+          },
+          "quizAnswerTitle": {
+            "type": "string"
+          },
+          "quizAnswerText": {
+            "type": "string"
+          },
+          "quizErrorTitle": {
+            "type": "string"
+          },
+          "quizErrorText": {
+            "type": "string"
+          },
+          "quizList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizRdo"
+            }
+          }
+        }
+      },
+      "ScheduleSearchSdo": {
+        "type": "object",
+        "description": "알림 송신 DTO",
         "properties": {
           "year": {
             "type": "integer",
-            "description": "검색 년도",
             "format": "int32",
+            "description": "검색 년도",
             "example": 2025
           },
           "month": {
             "type": "integer",
-            "description": "검색 달",
             "format": "int32",
+            "description": "검색 달",
             "example": 3
           }
-        },
-        "description": "알림 송신 DTO"
+        }
       }
     }
   }
