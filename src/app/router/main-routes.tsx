@@ -5,14 +5,16 @@ import { MainDesktopShell } from '../shells/MainDesktopShell';
 import { PublicShell } from '../shells/PublicShell';
 import { LoginPage } from '../../pages/shared/LoginPage';
 import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { HomePage } from '../../pages/main/HomePage';
-import { TripDetailPage } from '../../pages/main/TripDetailPage';
-import { TripListPage } from '../../pages/main/TripListPage';
-import { TripRegisterPage } from '../../pages/main/TripRegisterPage';
-import { CalendarMonthPage } from '../../pages/main/CalendarMonthPage';
-import { CalendarWeekPage } from '../../pages/main/CalendarWeekPage';
-import { ShoeDetailPage } from '../../pages/main/ShoeDetailPage';
-import { ShoesCatalogPage } from '../../pages/main/ShoesCatalogPage';
+import {
+  MainCalendarMonthRoutePage,
+  MainCalendarWeekRoutePage,
+  MainHomeRoutePage,
+  MainShoeDetailRoutePage,
+  MainShoesCatalogRoutePage,
+  MainTripDetailRoutePage,
+  MainTripListRoutePage,
+  MainTripRegisterRoutePage,
+} from './lazy-route-pages';
 
 export function renderMainRoutes() {
   return (
@@ -34,35 +36,35 @@ export function renderMainRoutes() {
         <Route element={<RequireAuth />}>
           <Route
             index
-            element={<HomePage />}
+            element={<MainHomeRoutePage />}
           />
           <Route
             path="map"
-            element={<TripListPage />}
+            element={<MainTripListRoutePage />}
           />
           <Route
             path="map/register"
-            element={<TripRegisterPage />}
+            element={<MainTripRegisterRoutePage />}
           />
           <Route
             path="map/:date"
-            element={<TripDetailPage />}
+            element={<MainTripDetailRoutePage />}
           />
           <Route
             path="calendar"
-            element={<CalendarMonthPage />}
+            element={<MainCalendarMonthRoutePage />}
           />
           <Route
             path="calendar/week"
-            element={<CalendarWeekPage />}
+            element={<MainCalendarWeekRoutePage />}
           />
           <Route
             path="shoesRecom"
-            element={<ShoesCatalogPage />}
+            element={<MainShoesCatalogRoutePage />}
           />
           <Route
             path=":brand/:shoesName"
-            element={<ShoeDetailPage />}
+            element={<MainShoeDetailRoutePage />}
           />
         </Route>
       </Route>

@@ -6,14 +6,16 @@ import { MainMobileShell } from '../shells/MainMobileShell';
 import { PublicShell } from '../shells/PublicShell';
 import { LoginPage } from '../../pages/shared/LoginPage';
 import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { HomePage } from '../../pages/mobile/HomePage';
-import { TripDetailPage } from '../../pages/mobile/TripDetailPage';
-import { TripListPage } from '../../pages/mobile/TripListPage';
-import { TripRegisterPage } from '../../pages/mobile/TripRegisterPage';
-import { CalendarMonthPage } from '../../pages/mobile/CalendarMonthPage';
-import { CalendarWeekPage } from '../../pages/mobile/CalendarWeekPage';
-import { ShoeDetailPage } from '../../pages/mobile/ShoeDetailPage';
-import { ShoesCatalogPage } from '../../pages/mobile/ShoesCatalogPage';
+import {
+  MobileCalendarMonthRoutePage,
+  MobileCalendarWeekRoutePage,
+  MobileHomeRoutePage,
+  MobileShoeDetailRoutePage,
+  MobileShoesCatalogRoutePage,
+  MobileTripDetailRoutePage,
+  MobileTripListRoutePage,
+  MobileTripRegisterRoutePage,
+} from './lazy-route-pages';
 
 export function renderMobileRoutes() {
   return (
@@ -35,23 +37,23 @@ export function renderMobileRoutes() {
         <Route element={<RequireAuth />}>
           <Route
             index
-            element={<HomePage />}
+            element={<MobileHomeRoutePage />}
           />
           <Route
             path="map"
-            element={<TripListPage />}
+            element={<MobileTripListRoutePage />}
           />
           <Route
             path="calendar"
-            element={<CalendarMonthPage />}
+            element={<MobileCalendarMonthRoutePage />}
           />
           <Route
             path="calendar/week"
-            element={<CalendarWeekPage />}
+            element={<MobileCalendarWeekRoutePage />}
           />
           <Route
             path="shoesRecom"
-            element={<ShoesCatalogPage />}
+            element={<MobileShoesCatalogRoutePage />}
           />
         </Route>
       </Route>
@@ -63,15 +65,15 @@ export function renderMobileRoutes() {
         <Route element={<RequireAuth />}>
           <Route
             path="map/register"
-            element={<TripRegisterPage />}
+            element={<MobileTripRegisterRoutePage />}
           />
           <Route
             path="map/:date"
-            element={<TripDetailPage />}
+            element={<MobileTripDetailRoutePage />}
           />
           <Route
             path=":brand/:shoesName"
-            element={<ShoeDetailPage />}
+            element={<MobileShoeDetailRoutePage />}
           />
         </Route>
       </Route>

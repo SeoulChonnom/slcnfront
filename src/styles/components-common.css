@@ -1374,3 +1374,16 @@
   margin-top: auto;
   padding-top: 1rem;
 }
+
+.slcn-route-loading {
+  display: grid;
+}
+
+.slcn-route-loading__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 14rem;
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+}
