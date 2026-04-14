@@ -110,6 +110,27 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.slcn-shoes-catalog-page__loading {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.slcn-shoes-brand-section__header {
+  grid-template-columns: auto 1fr;
+}
+
+.slcn-shoes-brand-section__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.slcn-shoe-detail-hero {
+  grid-template-columns: minmax(20rem, 28rem) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.slcn-shoe-detail-page__reviews-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 @media (min-width: 768px) {
   .slcn-page-section-header {
     flex-direction: row;

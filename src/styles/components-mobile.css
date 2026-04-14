@@ -132,3 +132,22 @@
 .slcn-calendar-surface .fc-timegrid-slot {
   height: 2.5rem;
 }
+
+.slcn-shoes-catalog-page__intro {
+  padding: 1.5rem;
+}
+
+.slcn-shoes-brand-section__badge {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.slcn-shoes-brand-section__grid,
+.slcn-shoe-detail-page__reviews-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.slcn-shoe-detail-hero__media {
+  min-height: 14rem;
+  padding: 1.5rem;
+}

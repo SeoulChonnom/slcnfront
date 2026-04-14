@@ -1010,3 +1010,313 @@
     opacity: 0.45;
   }
 }
+
+.slcn-shoes-catalog-page,
+.slcn-shoe-detail-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.slcn-shoes-catalog-page__intro {
+  position: relative;
+  overflow: hidden;
+  padding: 1.75rem;
+}
+
+.slcn-shoes-catalog-page__eyebrow,
+.slcn-shoes-brand-section__eyebrow,
+.slcn-shoe-detail-page__eyebrow,
+.slcn-shoe-detail-page__reviews-eyebrow,
+.slcn-shoe-detail-hero__eyebrow,
+.slcn-shoe-video-panel__eyebrow,
+.slcn-shoe-detail-page__fallback-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.slcn-shoes-catalog-page__title,
+.slcn-shoe-detail-page__fallback-title {
+  margin-top: 0.625rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 0.95;
+}
+
+.slcn-shoes-catalog-page__description,
+.slcn-shoe-detail-page__fallback-description,
+.slcn-shoe-video-panel__description,
+.slcn-shoes-brand-section__description,
+.slcn-shoe-detail-hero__desc {
+  margin-top: 0.875rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--color-ink-muted);
+}
+
+.slcn-shoes-catalog-page__loading {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoes-catalog-page__loading-card {
+  min-height: 14rem;
+}
+
+.slcn-shoes-catalog-page__warning {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.slcn-shoes-brand-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoes-brand-section__header {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.slcn-shoes-brand-section__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 7rem;
+  height: 7rem;
+  padding: 1rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-blob);
+  background: var(--color-surface);
+}
+
+.slcn-shoes-brand-section__badge-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slcn-shoes-brand-section__title,
+.slcn-shoe-video-panel__title,
+.slcn-shoe-detail-page__reviews-title {
+  margin-top: 0.25rem;
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  line-height: 0.95;
+}
+
+.slcn-shoes-brand-section__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoe-card-link,
+.slcn-shoe-review-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.slcn-shoe-card {
+  display: grid;
+  gap: 1rem;
+  height: 100%;
+  padding: 1rem;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.slcn-shoe-card-link:hover .slcn-shoe-card,
+.slcn-shoe-card-link:focus-visible .slcn-shoe-card {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: var(--shadow-pink);
+}
+
+.slcn-shoe-card__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  padding: 1rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top, rgb(255 255 255 / 100%), transparent 55%),
+    var(--color-brand-pink-soft);
+}
+
+.slcn-shoe-card__image {
+  width: 100%;
+  max-width: 12rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.slcn-shoe-card__body {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.slcn-shoe-card__brand {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.slcn-shoe-card__name {
+  font-size: 2rem;
+  line-height: 0.92;
+}
+
+.slcn-shoe-card__desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+
+.slcn-shoe-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.slcn-shoe-card__price {
+  font-weight: 800;
+  color: var(--color-ink);
+}
+
+.slcn-shoe-card__cta {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand-pink-strong);
+}
+
+.slcn-shoe-detail-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.slcn-shoe-detail-page__fallback {
+  padding: 2rem;
+}
+
+.slcn-shoe-detail-page__fallback-actions {
+  margin-top: 1rem;
+}
+
+.slcn-shoe-detail-hero {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoe-detail-hero__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 18rem;
+  padding: 2rem;
+}
+
+.slcn-shoe-detail-hero__image {
+  width: 100%;
+  max-width: 18rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.slcn-shoe-detail-hero__summary {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.slcn-shoe-detail-hero__title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 0.92;
+}
+
+.slcn-shoe-detail-hero__price {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-brand-pink-strong);
+}
+
+.slcn-shoe-detail-hero__facts {
+  display: grid;
+  gap: 0.625rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.slcn-shoe-detail-hero__fact {
+  padding-left: 1.25rem;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.slcn-shoe-detail-hero__fact::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-brand-pink-strong);
+}
+
+.slcn-shoe-video-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoe-video-panel__video {
+  width: 100%;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 1rem;
+  background: var(--color-ink);
+}
+
+.slcn-shoe-detail-page__reviews {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoe-detail-page__reviews-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-shoe-review-card {
+  display: grid;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.slcn-shoe-review-card__image-wrap {
+  overflow: hidden;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 1rem;
+  background: var(--color-surface-muted);
+}
+
+.slcn-shoe-review-card__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.slcn-shoe-review-card__caption {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+}

@@ -11,9 +11,10 @@ import { TripListPage } from '../../pages/main/TripListPage';
 import { TripRegisterPage } from '../../pages/main/TripRegisterPage';
 import { CalendarMonthPage } from '../../pages/main/CalendarMonthPage';
 import { CalendarWeekPage } from '../../pages/main/CalendarWeekPage';
+import { ShoeDetailPage } from '../../pages/main/ShoeDetailPage';
+import { ShoesCatalogPage } from '../../pages/main/ShoesCatalogPage';
 import {
   buildDeviceCalendarMonthPath,
-  buildDeviceShoesCatalogPath,
   buildDeviceTripListPath,
 } from '../../lib/routing/route-builders';
 
@@ -75,31 +76,11 @@ export function renderMainRoutes() {
           />
           <Route
             path="shoesRecom"
-            element={
-              <AppPlaceholderPage
-                eyebrow="Shoes Catalog"
-                title="신발 추천"
-                description="정적 카탈로그 shell은 Step 08에서 붙습니다."
-                device="main"
-              />
-            }
+            element={<ShoesCatalogPage />}
           />
           <Route
             path=":brand/:shoesName"
-            element={
-              <AppPlaceholderPage
-                eyebrow="Shoes Detail"
-                title="신발 상세"
-                description="브랜드/slug 기반 상세 라우트가 desktop shell에 연결된 상태입니다."
-                device="main"
-                actions={[
-                  {
-                    label: '목록으로',
-                    to: buildDeviceShoesCatalogPath('main'),
-                  },
-                ]}
-              />
-            }
+            element={<ShoeDetailPage />}
           />
         </Route>
       </Route>

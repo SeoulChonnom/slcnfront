@@ -12,9 +12,8 @@ import { TripListPage } from '../../pages/mobile/TripListPage';
 import { TripRegisterPage } from '../../pages/mobile/TripRegisterPage';
 import { CalendarMonthPage } from '../../pages/mobile/CalendarMonthPage';
 import { CalendarWeekPage } from '../../pages/mobile/CalendarWeekPage';
-import {
-  buildDeviceShoesCatalogPath,
-} from '../../lib/routing/route-builders';
+import { ShoeDetailPage } from '../../pages/mobile/ShoeDetailPage';
+import { ShoesCatalogPage } from '../../pages/mobile/ShoesCatalogPage';
 
 export function renderMobileRoutes() {
   return (
@@ -59,14 +58,7 @@ export function renderMobileRoutes() {
           />
           <Route
             path="shoesRecom"
-            element={
-              <AppPlaceholderPage
-                eyebrow="Shoes Catalog"
-                title="모바일 신발 추천"
-                description="카탈로그 그리드와 상세 라우트는 Step 08에서 채웁니다."
-                device="mobile"
-              />
-            }
+            element={<ShoesCatalogPage />}
           />
         </Route>
       </Route>
@@ -86,20 +78,7 @@ export function renderMobileRoutes() {
           />
           <Route
             path=":brand/:shoesName"
-            element={
-              <AppPlaceholderPage
-                eyebrow="Shoes Detail"
-                title="모바일 신발 상세"
-                description="신발 상세도 detail shell 위에서 렌더링됩니다."
-                device="mobile"
-                actions={[
-                  {
-                    label: '목록으로',
-                    to: buildDeviceShoesCatalogPath('mobile'),
-                  },
-                ]}
-              />
-            }
+            element={<ShoeDetailPage />}
           />
         </Route>
       </Route>
