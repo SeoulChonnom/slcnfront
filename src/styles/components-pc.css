@@ -1,0 +1,131 @@
+.slcn-desktop-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  border-bottom: 2px solid var(--color-border-strong);
+}
+
+.slcn-desktop-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 72rem;
+  height: 4rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.slcn-desktop-header__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slcn-desktop-header__nav-list {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slcn-desktop-header__nav-link {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.slcn-desktop-header__nav-link--active {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.slcn-desktop-header__profile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: #f4f0ea;
+}
+
+.slcn-footer {
+  border-top: 2px solid var(--color-border-strong);
+}
+
+.slcn-footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 72rem;
+  min-height: 5.75rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.slcn-footer__headline {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.slcn-footer__caption {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(0 0 0 / 60%);
+}
+
+.slcn-shell-desktop {
+  min-height: 100vh;
+}
+
+.slcn-shell-desktop__main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.slcn-trip-list-section__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.slcn-trip-detail-section__drive-card {
+  grid-template-columns: 1fr auto;
+}
+
+.slcn-calendar-loading {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.slcn-calendar-modal__datetime-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .slcn-page-section-header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .slcn-foundation-page {
+    padding-bottom: 0;
+  }
+
+  .slcn-foundation-page__grid {
+    grid-template-columns: 1.08fr 0.92fr;
+  }
+
+  .slcn-foundation-page__field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
