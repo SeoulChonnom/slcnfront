@@ -19,7 +19,11 @@ function buildPath(...segments: string[]) {
     })
     .filter(Boolean);
 
-  return `/${normalized.join('/')}` || '/';
+  if (normalized.length === 0) {
+    return '/';
+  }
+
+  return `/${normalized.join('/')}`;
 }
 
 function buildDevicePath(device: DeviceType, ...segments: string[]) {

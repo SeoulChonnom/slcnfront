@@ -1320,3 +1320,57 @@
   line-height: 1.6;
   color: var(--color-ink);
 }
+
+.slcn-home-hub {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.slcn-home-hub__hero {
+  padding: 2rem;
+}
+
+.slcn-home-hub__eyebrow,
+.slcn-home-hub__tile-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.slcn-home-hub__title {
+  margin-top: 0.75rem;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 0.92;
+}
+
+.slcn-home-hub__description,
+.slcn-home-hub__tile-description {
+  margin-top: 0.875rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--color-ink-muted);
+}
+
+.slcn-home-hub__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-home-hub__tile {
+  display: grid;
+  gap: 0.625rem;
+  min-height: 15rem;
+  align-content: start;
+}
+
+.slcn-home-hub__tile-title {
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  line-height: 0.94;
+}
+
+.slcn-home-hub__tile-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+}

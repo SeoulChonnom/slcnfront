@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { createAppQueryClient } from '../../app/providers/QueryProvider';
+import { createAppQueryClient } from '../../app/providers/create-app-query-client';
 
 export function createTestQueryClient() {
   const client = createAppQueryClient();

@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# SLCN Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+기존 Vue 기반 SLCN 서비스를 `Vite + React + TypeScript` 구조로 옮긴 프론트엔드입니다. 내부 라우트는 `/main/*`, `/mobile/*` 구조를 사용하고, 공개 URL은 엔트리 라우트에서 디바이스별 내부 URL로 리다이렉트합니다.
 
-Currently, two official plugins are available:
+## 실행
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Node.js 24 기준으로 작업합니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+## 스크립트
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+pnpm dev
+pnpm test
+pnpm build
+pnpm lint
 ```
+
+## 공개 URL
+
+- `/`
+- `/login`
+- `/map`
+- `/map/register`
+- `/map/:date`
+- `/calendar`
+- `/calendar/week`
+- `/shoesRecom`
+- `/:brand/:shoesName`
+
+## 내부 URL
+
+- `/main/*`
+- `/mobile/*`
+
+## 도메인
+
+- `trip`: 나들이 목록, 퀴즈, 상세, 등록
+- `calendar`: FullCalendar 기반 월간/주간/CRUD
+- `shoes`: 정적 신발 카탈로그/상세
+
+## 테스트 구조
+
+- 도메인: `src/domains/**/__tests__`
+- 라우터/페이지: `src/app/**/__tests__`, `src/pages/**/__tests__`
+- 회귀 smoke: `src/test/regression/__tests__`
+
+## 참고 문서
+
+- 계획 문서: `docs/refactoring_plan`
+- API 명세: `docs/api_spec.json`
+- 디자인 기준: `docs/design/design.pen`

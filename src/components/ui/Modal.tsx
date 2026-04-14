@@ -34,7 +34,8 @@ export function Modal({
   ...props
 }: ModalProps) {
   const titleId = useId();
-  const descriptionId = description ? useId() : undefined;
+  const descriptionElementId = useId();
+  const descriptionId = description ? descriptionElementId : undefined;
 
   useEffect(() => {
     if (!isOpen) {

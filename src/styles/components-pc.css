@@ -131,6 +131,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.slcn-home-hub__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.slcn-home-hub__hero {
+  padding: 2.5rem;
+}
+
 @media (min-width: 768px) {
   .slcn-page-section-header {
     flex-direction: row;

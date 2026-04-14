@@ -1,9 +1,10 @@
 import type { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 import { Link, type LinkProps } from 'react-router-dom';
-import { cn } from '../../lib/utils/cn';
-
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-type ButtonSize = 'sm' | 'md' | 'lg';
+import {
+  getButtonClassName,
+  type ButtonSize,
+  type ButtonVariant,
+} from './button-class-name';
 
 type SharedButtonProps = {
   variant?: ButtonVariant;
@@ -17,16 +18,6 @@ export type ButtonProps = PropsWithChildren<
 >;
 
 export type LinkButtonProps = PropsWithChildren<SharedButtonProps & LinkProps>;
-
-export function getButtonClassName({
-  variant = 'primary',
-  size = 'md',
-  className,
-}: SharedButtonProps & { disabled?: boolean; className?: string }) {
-  void variant;
-  void size;
-  return cn('slcn-button', className);
-}
 
 export function Button({
   children,

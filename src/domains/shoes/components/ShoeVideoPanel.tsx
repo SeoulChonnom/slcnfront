@@ -1,5 +1,5 @@
 import { Card } from '../../../components/ui/Card';
-import { getButtonClassName } from '../../../components/ui/Button';
+import { getButtonClassName } from '../../../components/ui/button-class-name';
 import { cn } from '../../../lib/utils/cn';
 import type { ShoeItem } from '../types';
 

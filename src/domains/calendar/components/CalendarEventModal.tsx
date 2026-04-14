@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Modal } from '../../../components/ui/Modal';
 import { TextField, TextareaField } from '../../../components/ui/TextField';
@@ -31,17 +31,10 @@ export function CalendarEventModal({
   onSubmit,
   onDelete,
 }: CalendarEventModalProps) {
-  const [draft, setDraft] = useState<CalendarEventDraft>(defaultDraft);
+  const [draft, setDraft] = useState<CalendarEventDraft>(() =>
+    event ? createDraftFromSchedule(event) : defaultDraft,
+  );
   const [formError, setFormError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    setDraft(event ? createDraftFromSchedule(event) : defaultDraft);
-    setFormError(null);
-  }, [defaultDraft, event, isOpen]);
 
   const title = event ? '일정 수정' : '일정 만들기';
 

@@ -5,7 +5,7 @@ import { MainDesktopShell } from '../shells/MainDesktopShell';
 import { PublicShell } from '../shells/PublicShell';
 import { LoginPage } from '../../pages/shared/LoginPage';
 import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { AppPlaceholderPage } from '../../pages/shared/AppPlaceholderPage';
+import { HomePage } from '../../pages/main/HomePage';
 import { TripDetailPage } from '../../pages/main/TripDetailPage';
 import { TripListPage } from '../../pages/main/TripListPage';
 import { TripRegisterPage } from '../../pages/main/TripRegisterPage';
@@ -13,10 +13,6 @@ import { CalendarMonthPage } from '../../pages/main/CalendarMonthPage';
 import { CalendarWeekPage } from '../../pages/main/CalendarWeekPage';
 import { ShoeDetailPage } from '../../pages/main/ShoeDetailPage';
 import { ShoesCatalogPage } from '../../pages/main/ShoesCatalogPage';
-import {
-  buildDeviceCalendarMonthPath,
-  buildDeviceTripListPath,
-} from '../../lib/routing/route-builders';
 
 export function renderMainRoutes() {
   return (
@@ -38,21 +34,7 @@ export function renderMainRoutes() {
         <Route element={<RequireAuth />}>
           <Route
             index
-            element={
-              <AppPlaceholderPage
-                eyebrow="Desktop Main"
-                title="SLCN 데스크톱 홈"
-                description="메인 라우트와 desktop shell이 연결된 상태입니다."
-                device="main"
-                actions={[
-                  { label: '나들이 목록', to: buildDeviceTripListPath('main') },
-                  {
-                    label: '캘린더 월간',
-                    to: buildDeviceCalendarMonthPath('main'),
-                  },
-                ]}
-              />
-            }
+            element={<HomePage />}
           />
           <Route
             path="map"

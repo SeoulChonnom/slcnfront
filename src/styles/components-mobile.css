@@ -151,3 +151,7 @@
   min-height: 14rem;
   padding: 1.5rem;
 }
+
+.slcn-home-hub__grid {
+  grid-template-columns: minmax(0, 1fr);
+}

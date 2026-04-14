@@ -6,7 +6,7 @@ import { MainMobileShell } from '../shells/MainMobileShell';
 import { PublicShell } from '../shells/PublicShell';
 import { LoginPage } from '../../pages/shared/LoginPage';
 import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { AppPlaceholderPage } from '../../pages/shared/AppPlaceholderPage';
+import { HomePage } from '../../pages/mobile/HomePage';
 import { TripDetailPage } from '../../pages/mobile/TripDetailPage';
 import { TripListPage } from '../../pages/mobile/TripListPage';
 import { TripRegisterPage } from '../../pages/mobile/TripRegisterPage';
@@ -35,14 +35,7 @@ export function renderMobileRoutes() {
         <Route element={<RequireAuth />}>
           <Route
             index
-            element={
-              <AppPlaceholderPage
-                eyebrow="Mobile Main"
-                title="SLCN 모바일 홈"
-                description="모바일 shell과 bottom navigation이 연결된 상태입니다."
-                device="mobile"
-              />
-            }
+            element={<HomePage />}
           />
           <Route
             path="map"

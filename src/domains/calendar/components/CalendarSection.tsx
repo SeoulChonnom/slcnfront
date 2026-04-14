@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useState } from 'react';
+import { startTransition, useMemo, useState } from 'react';
 import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -71,40 +71,28 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
     calendars.find((calendar) => calendar.defaultSelected)?.id ??
     calendars[0]?.id ??
     '';
-  const [visibleCalendarIds, setVisibleCalendarIds] = useState<string[]>([]);
+  const [selectedCalendarIds, setSelectedCalendarIds] = useState<string[] | null>(
+    null,
+  );
   const [editorState, setEditorState] = useState<CalendarEditorState>(() =>
     createClosedEditorState(defaultCalendarId),
   );
   const { createSchedule, updateSchedule, deleteSchedule, isSubmitting } =
     useCalendarEventMutations();
 
-  useEffect(() => {
-    setVisibleCalendarIds((current) => {
-      const nextIds = calendars.map((calendar) => calendar.id);
+  const visibleCalendarIds = useMemo(() => {
+    const nextIds = calendars.map((calendar) => calendar.id);
 
-      if (nextIds.length === 0) {
-        return [];
-      }
-
-      if (current.length === 0) {
-        return nextIds;
-      }
-
-      const filtered = current.filter((id) => nextIds.includes(id));
-
-      return filtered.length > 0 ? filtered : nextIds;
-    });
-  }, [calendars]);
-
-  useEffect(() => {
-    if (
-      !editorState.isOpen &&
-      defaultCalendarId &&
-      editorState.draft.calendarId !== defaultCalendarId
-    ) {
-      setEditorState(createClosedEditorState(defaultCalendarId));
+    if (nextIds.length === 0) {
+      return [];
     }
-  }, [defaultCalendarId, editorState.draft.calendarId, editorState.isOpen]);
+
+    if (selectedCalendarIds === null) {
+      return nextIds;
+    }
+
+    return selectedCalendarIds.filter((id) => nextIds.includes(id));
+  }, [calendars, selectedCalendarIds]);
 
   const visibleSchedules = schedules.filter((schedule) =>
     visibleCalendarIds.includes(schedule.calendarId),
@@ -161,11 +149,13 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         visibleCalendarIds={visibleCalendarIds}
         createDisabled={createDisabled}
         onToggleCalendar={(calendarId) => {
-          setVisibleCalendarIds((current) =>
-            current.includes(calendarId)
-              ? current.filter((id) => id !== calendarId)
-              : [...current, calendarId],
-          );
+          setSelectedCalendarIds((current) => {
+            const baseIds = current ?? calendars.map((calendar) => calendar.id);
+
+            return baseIds.includes(calendarId)
+              ? baseIds.filter((id) => id !== calendarId)
+              : [...baseIds, calendarId];
+          });
         }}
         onViewChange={(nextView) => {
           const nextPath =
@@ -291,6 +281,17 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
       ) : null}
 
       <CalendarEventModal
+        key={
+          editorState.event?.id ??
+          [
+            editorState.isOpen ? 'open' : 'closed',
+            editorState.draft.calendarId,
+            editorState.draft.startDate,
+            editorState.draft.startTime,
+            editorState.draft.endDate,
+            editorState.draft.endTime,
+          ].join(':')
+        }
         isOpen={editorState.isOpen}
         calendars={calendars}
         defaultDraft={editorState.draft}
