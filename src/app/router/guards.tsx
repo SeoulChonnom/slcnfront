@@ -5,17 +5,13 @@ import { buildPublicLoginPath } from '../../lib/routing/route-builders';
 export function RequireAuth() {
   const location = useLocation();
   const hydrated = useAuthStore((state) => state.hydrated);
-  const userInfo = useAuthStore((state) => state.userInfo);
   const restoreState = useAuthStore((state) => state.restoreState);
   const hasSession = useAuthStore((state) =>
     Boolean(state.accessToken && state.userInfo),
   );
 
   const shouldWaitForRestore =
-    hydrated &&
-    Boolean(userInfo) &&
-    !hasSession &&
-    (restoreState === 'idle' || restoreState === 'pending');
+    hydrated && !hasSession && (restoreState === 'idle' || restoreState === 'pending');
 
   if (!hydrated || shouldWaitForRestore) {
     return (

@@ -74,6 +74,8 @@ describe('auth smoke', () => {
   });
 
   it('redirects unauthenticated protected routes to the public login URL', async () => {
+    restoreSession.mockRejectedValueOnce(new Error('refresh token missing'));
+
     renderApp('/main/map');
 
     await waitFor(() => {
@@ -84,16 +86,12 @@ describe('auth smoke', () => {
     expect(await screen.findByText('SEOUL CHONNOM LOGIN')).toBeTruthy();
   });
 
-  it('restores a session from stored user info before entering the protected route', async () => {
+  it('restores a session from refresh token before entering the protected route', async () => {
     useAuthStore.setState({
       hydrated: true,
       accessToken: null,
       restoreState: 'idle',
-      userInfo: {
-        name: 'SLCN',
-        userName: 'slcn-admin',
-        roleList: ['admin'],
-      },
+      userInfo: null,
     });
     restoreSession.mockResolvedValueOnce({
       accessToken: 'token-123',

@@ -2,8 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppProviders } from '../../../app/providers/AppProviders';
+import { QueryProvider } from '../../../app/providers/QueryProvider';
 import { AppRouter } from '../../../app/router/AppRouter';
+import { createTestQueryClient } from '../../helpers/query-client';
 import {
   resetAuthStore,
   useAuthStore,
@@ -34,11 +35,13 @@ function LocationProbe() {
 }
 
 function renderApp(route: string) {
+  const queryClient = createTestQueryClient();
+
   function Wrapper({ children }: PropsWithChildren) {
     return (
-      <AppProviders>
+      <QueryProvider client={queryClient}>
         <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </AppProviders>
+      </QueryProvider>
     );
   }
 

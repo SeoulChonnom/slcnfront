@@ -112,6 +112,8 @@ describe('TripListPage', () => {
 
     expect(screen.getByText('연말 나들이')).toBeTruthy();
     expect(screen.getByRole('link', { name: '새 나들이 기록하기' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: '퀴즈 풀고 지도 보기' })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: '퀴즈 풀고 나들이 기록 보기' }),
+    ).toBeTruthy();
   });
 });

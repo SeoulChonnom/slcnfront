@@ -7,17 +7,11 @@ import { PageSectionHeader } from '../../components/ui/PageSectionHeader';
 import { TextField } from '../../components/ui/TextField';
 import { useLogin } from '../../domains/auth/hooks/useLogin';
 import { useAuthStore } from '../../domains/auth/store/auth-store';
-import { buildDeviceRootPath } from '../../lib/routing/route-builders';
+import { resolvePostAuthRedirectTarget } from '../../domains/auth/utils/redirect-target';
 
 type LoginPageProps = {
   device: DeviceType;
 };
-
-function getRedirectTarget(search: string, device: DeviceType) {
-  const searchParams = new URLSearchParams(search);
-
-  return searchParams.get('redirect') || buildDeviceRootPath(device);
-}
 
 export function LoginPage({ device }: LoginPageProps) {
   const location = useLocation();
@@ -26,7 +20,7 @@ export function LoginPage({ device }: LoginPageProps) {
     Boolean(state.accessToken && state.userInfo),
   );
   const loginMutation = useLogin();
-  const redirectTarget = getRedirectTarget(location.search, device);
+  const redirectTarget = resolvePostAuthRedirectTarget(location.search, device);
 
   useEffect(() => {
     if (isAuthenticated) {

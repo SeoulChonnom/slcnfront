@@ -69,7 +69,7 @@ describe('AppRouter', () => {
       hydrated: true,
       accessToken: null,
       userInfo: null,
-      restoreState: 'idle',
+      restoreState: 'error',
     });
     renderAppRouter('/map');
 
@@ -106,7 +106,7 @@ describe('AppRouter', () => {
       hydrated: true,
       accessToken: null,
       userInfo: null,
-      restoreState: 'idle',
+      restoreState: 'error',
     });
     renderAppRouter('/main/not-a-route');
 

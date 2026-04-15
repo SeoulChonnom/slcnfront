@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
 import { TripCard } from '../TripCard';
 
-vi.mock('../hooks/useTripAssetUrl', () => ({
+vi.mock('../../hooks/useTripAssetUrl', () => ({
   useTripAssetUrl: () => ({
     objectUrl: 'blob:logo',
   }),
@@ -34,7 +34,9 @@ describe('TripCard', () => {
       <TripCard trip={trip} onOpenQuiz={onOpenQuiz} />,
     );
 
-    await user.click(screen.getByRole('button', { name: '퀴즈 풀고 지도 보기' }));
+    await user.click(
+      screen.getByRole('button', { name: '퀴즈 풀고 나들이 기록 보기' }),
+    );
 
     expect(onOpenQuiz).toHaveBeenCalledWith(trip);
   });

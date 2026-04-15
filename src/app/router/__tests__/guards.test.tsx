@@ -32,6 +32,7 @@ describe('RequireAuth', () => {
       hydrated: true,
       accessToken: null,
       userInfo: null,
+      restoreState: 'error',
     });
 
     renderWithProviders(
@@ -58,6 +59,30 @@ describe('RequireAuth', () => {
     );
   });
 
+  it('shows a pending state while refresh-token restore is in progress', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: null,
+      userInfo: null,
+      restoreState: 'idle',
+    });
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<RequireAuth />}>
+          <Route path="/protected" element={<p>private-page</p>} />
+        </Route>
+      </Routes>,
+      {
+        route: '/protected',
+      },
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('세션을 확인하고 있어요.')).toBeTruthy();
+    });
+  });
+
   it('renders the protected outlet when a session is present', async () => {
     useAuthStore.setState({
       hydrated: true,
@@ -67,6 +92,7 @@ describe('RequireAuth', () => {
         userName: 'demo',
         roleList: ['admin'],
       },
+      restoreState: 'success',
     });
 
     renderWithProviders(

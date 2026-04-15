@@ -98,6 +98,7 @@ describe('auth-store', () => {
     expect(useAuthStore.getState()).toMatchObject({
       accessToken: null,
       hydrated: true,
+      userInfo: null,
       restoreState: 'error',
     });
   });

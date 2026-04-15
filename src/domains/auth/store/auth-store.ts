@@ -105,12 +105,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
     });
   },
   markRestoreFailed: () => {
-    set((state) => ({
+    writeStoredUserInfo(null);
+    set({
       accessToken: null,
-      userInfo: state.userInfo,
+      userInfo: null,
       hydrated: true,
       restoreState: 'error',
-    }));
+    });
   },
 }));
 

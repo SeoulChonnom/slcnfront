@@ -28,6 +28,7 @@ export function AppPlaceholderPage({
   return (
     <section className="slcn-route-page">
       <Card className="slcn-route-page__card">
+        <p className="slcn-route-page__device-chip">{eyebrow}</p>
         <PageSectionHeader title={title} description={description} />
         <div className="slcn-route-page__meta">
           <span className="slcn-route-page__device-chip">{device}</span>
