@@ -29,7 +29,9 @@ export function TripRegisterStepBasic({
         ]}
         onChange={(value) => onFieldChange('type', value)}
       />
-      {errors.type ? <p className="slcn-trip-register-step__error">{errors.type}</p> : null}
+      {errors.type ? (
+        <p className="slcn-trip-register-step__error">{errors.type}</p>
+      ) : null}
       <TextField
         type="date"
         label="날짜"
@@ -53,7 +55,9 @@ export function TripRegisterStepBasic({
       {values.logo ? (
         <p className="slcn-trip-register-step__file-name">{values.logo.name}</p>
       ) : null}
-      {errors.logo ? <p className="slcn-trip-register-step__error">{errors.logo}</p> : null}
+      {errors.logo ? (
+        <p className="slcn-trip-register-step__error">{errors.logo}</p>
+      ) : null}
     </div>
   );
 }

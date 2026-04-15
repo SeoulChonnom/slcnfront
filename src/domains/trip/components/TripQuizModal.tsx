@@ -5,13 +5,11 @@ import type { TripListItem } from '../types';
 type TripQuizModalProps = {
   trip: TripListItem | null;
   isOpen: boolean;
-  feedback:
-    | {
-        isCorrect: boolean;
-        title: string;
-        description: string;
-      }
-    | null;
+  feedback: {
+    isCorrect: boolean;
+    title: string;
+    description: string;
+  } | null;
   onClose: () => void;
   onAnswer: (answerIndex: number) => void;
   onConfirmSuccess: () => void;

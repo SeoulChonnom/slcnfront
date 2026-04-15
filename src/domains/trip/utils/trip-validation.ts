@@ -108,7 +108,9 @@ export function validateTripRegisterStep(
       errors.quizErrorText = '오답 설명을 입력해주세요.';
     }
 
-    const filledOptions = values.quizOptions.filter((option) => option.trim() !== '');
+    const filledOptions = values.quizOptions.filter(
+      (option) => option.trim() !== '',
+    );
 
     if (filledOptions.length < 2) {
       errors.quizOptions = '보기는 최소 2개 이상 입력해주세요.';

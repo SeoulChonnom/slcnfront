@@ -29,9 +29,7 @@ export function useTripQuiz() {
     const isCorrect = answerIndex === activeTrip.quizAnswerIndex;
     const nextFeedback = {
       isCorrect,
-      title: isCorrect
-        ? activeTrip.quizAnswerTitle
-        : activeTrip.quizErrorTitle,
+      title: isCorrect ? activeTrip.quizAnswerTitle : activeTrip.quizErrorTitle,
       description: isCorrect
         ? activeTrip.quizAnswerText
         : activeTrip.quizErrorText,

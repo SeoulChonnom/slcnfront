@@ -51,16 +51,14 @@ export function LoginPage({ device }: LoginPageProps) {
   return (
     <Card className="slcn-login-page" tone="default">
       <PageSectionHeader
-        eyebrow={device === 'main' ? 'Desktop Login' : 'Mobile Login'}
         title="SEOUL CHONNOM LOGIN"
-        description="Auth API와 session store가 연결된 상태입니다. 로그인 성공 시 현재 디바이스 메인으로 이동합니다."
+        description="서울 촌놈의 서울 구경 일지"
       />
       <form className="slcn-login-page__form" onSubmit={handleSubmit}>
         <TextField
           name="userName"
           label="USER NAME"
           placeholder="아이디를 입력하세요"
-          defaultValue="slcn-admin"
           required
         />
         <TextField
@@ -68,7 +66,6 @@ export function LoginPage({ device }: LoginPageProps) {
           type="password"
           label="PASSWORD"
           placeholder="비밀번호를 입력하세요"
-          defaultValue="********"
           required
         />
         <div className="slcn-login-page__actions">

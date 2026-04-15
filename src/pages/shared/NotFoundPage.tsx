@@ -13,9 +13,8 @@ export function NotFoundPage({ device }: NotFoundPageProps) {
     <section className="slcn-route-page">
       <Card className="slcn-route-page__card" tone="muted">
         <PageSectionHeader
-          eyebrow="404"
           title="페이지를 찾을 수 없어요."
-          description="라우트 계약에 없는 경로입니다. canonical URL 또는 내부 device route를 다시 확인해주세요."
+          description="잘못된 페이지에 오신 것 같아요. 올바른 페이지로 이동해보시겠어요?"
         />
         <div className="slcn-route-page__actions">
           <LinkButton to={buildDeviceRootPath(device)}>

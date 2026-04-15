@@ -56,19 +56,25 @@ export function TripRegisterStepQuiz({
         label="정답 제목"
         value={values.quizAnswerTitle}
         error={errors.quizAnswerTitle}
-        onChange={(event) => onFieldChange('quizAnswerTitle', event.target.value)}
+        onChange={(event) =>
+          onFieldChange('quizAnswerTitle', event.target.value)
+        }
       />
       <TextField
         label="정답 설명"
         value={values.quizAnswerText}
         error={errors.quizAnswerText}
-        onChange={(event) => onFieldChange('quizAnswerText', event.target.value)}
+        onChange={(event) =>
+          onFieldChange('quizAnswerText', event.target.value)
+        }
       />
       <TextField
         label="오답 제목"
         value={values.quizErrorTitle}
         error={errors.quizErrorTitle}
-        onChange={(event) => onFieldChange('quizErrorTitle', event.target.value)}
+        onChange={(event) =>
+          onFieldChange('quizErrorTitle', event.target.value)
+        }
       />
       <TextField
         label="오답 설명"

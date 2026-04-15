@@ -32,7 +32,7 @@ export function TripCard({ trip, onOpenQuiz }: TripCardProps) {
       </div>
       <div className="slcn-trip-card__actions">
         <Button fullWidth onClick={() => onOpenQuiz(trip)}>
-          퀴즈 풀고 지도 보기
+          퀴즈 풀고 나들이 기록 보기
         </Button>
       </div>
     </Card>

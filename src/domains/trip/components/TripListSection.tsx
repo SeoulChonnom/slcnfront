@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../auth/store/auth-store';
-import { buildDeviceTripDetailPath, buildDeviceTripRegisterPath } from '../../../lib/routing/route-builders';
+import {
+  buildDeviceTripDetailPath,
+  buildDeviceTripRegisterPath,
+} from '../../../lib/routing/route-builders';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { ErrorState } from '../../../components/ui/ErrorState';
 import { LinkButton } from '../../../components/ui/Button';
@@ -27,9 +30,8 @@ export function TripListSection({ device }: TripListSectionProps) {
   return (
     <section className="slcn-trip-list-section">
       <PageSectionHeader
-        eyebrow={device === 'main' ? 'Trip Archive' : 'Mobile Archive'}
         title="서울 촌놈 나들이 기록"
-        description="퀴즈를 통과하면 해당 날짜의 경로와 드라이브 링크를 열 수 있습니다."
+        description="기록을 선택해서 나들이 기록을 확인해보세요"
         action={
           isAdmin ? (
             <LinkButton to={buildDeviceTripRegisterPath(device)}>
@@ -69,7 +71,11 @@ export function TripListSection({ device }: TripListSectionProps) {
       {!isPending && !isError && data && data.length > 0 ? (
         <div className="slcn-trip-list-section__grid">
           {data.map((trip) => (
-            <TripCard key={trip.id || trip.date} trip={trip} onOpenQuiz={quiz.openQuiz} />
+            <TripCard
+              key={trip.id || trip.date}
+              trip={trip}
+              onOpenQuiz={quiz.openQuiz}
+            />
           ))}
         </div>
       ) : null}

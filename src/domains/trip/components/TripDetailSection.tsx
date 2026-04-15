@@ -23,7 +23,6 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
   return (
     <section className="slcn-trip-detail-section">
       <PageSectionHeader
-        eyebrow="Trip Route"
         title="서울 촌놈 나들이 경로"
         description="지도 이미지를 전환해 동선을 확인하고, 아래 드라이브 CTA로 사진 보관함을 열 수 있습니다."
       />

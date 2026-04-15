@@ -30,7 +30,9 @@ export function TripRegisterStepMaps({
       {values.map1 ? (
         <p className="slcn-trip-register-step__file-name">{values.map1.name}</p>
       ) : null}
-      {errors.map1 ? <p className="slcn-trip-register-step__error">{errors.map1}</p> : null}
+      {errors.map1 ? (
+        <p className="slcn-trip-register-step__error">{errors.map1}</p>
+      ) : null}
       <Button
         variant="secondary"
         onClick={() => {
@@ -55,7 +57,9 @@ export function TripRegisterStepMaps({
             }
           />
           {values.map2 ? (
-            <p className="slcn-trip-register-step__file-name">{values.map2.name}</p>
+            <p className="slcn-trip-register-step__file-name">
+              {values.map2.name}
+            </p>
           ) : null}
           {errors.map2 ? (
             <p className="slcn-trip-register-step__error">{errors.map2}</p>

@@ -30,7 +30,6 @@ export function TripRegisterWizard({
   return (
     <section className="slcn-trip-register-wizard">
       <PageSectionHeader
-        eyebrow="Trip Register"
         title="새 나들이 기록하기"
         description="기존 필드는 유지하되, 3단계 wizard로 입력을 분리했습니다."
       />
@@ -81,7 +80,10 @@ export function TripRegisterWizard({
           {form.step < 3 ? (
             <Button onClick={form.goNext}>다음 단계</Button>
           ) : (
-            <Button loading={form.isSubmitting} onClick={() => void form.submit()}>
+            <Button
+              loading={form.isSubmitting}
+              onClick={() => void form.submit()}
+            >
               저장
             </Button>
           )}
