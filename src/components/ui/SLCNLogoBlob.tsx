@@ -1,4 +1,5 @@
 import { cn } from '../../lib/utils/cn';
+import logo from '../../assets/img/SLCN.png';
 
 type SLCNLogoBlobProps = {
   className?: string;
@@ -12,11 +13,7 @@ export function SLCNLogoBlob({ className, size = 'md' }: SLCNLogoBlobProps) {
       className={cn('slcn-logo-blob display-hand', className)}
       data-size={size}
     >
-      <span>
-        SL
-        <br />
-        CN
-      </span>
+      <img src={logo} alt="SLCN" />
     </span>
   );
 }

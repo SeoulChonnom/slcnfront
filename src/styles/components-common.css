@@ -624,13 +624,50 @@
   gap: 1rem;
 }
 
-.slcn-login-page__field-icon {
+.slcn-login-page .slcn-field__control {
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.slcn-login-page .slcn-field__control:focus-within {
+  border-color: var(--color-brand-pink);
+  box-shadow: 0 0 0 3px rgb(254 159 200 / 20%);
+}
+
+.slcn-login-page .slcn-field__input:focus-visible,
+.slcn-login-page__clear-button:focus-visible {
+  outline: none;
+}
+
+.slcn-login-page__clear-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
   color: var(--color-ink-soft);
   font-size: 1rem;
+  line-height: 1;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.slcn-login-page__clear-button:hover:not(:disabled) {
+  color: var(--color-ink);
+  background: var(--color-brand-pink-soft);
+}
+
+.slcn-login-page__clear-button:disabled {
+  cursor: default;
+  opacity: 0.35;
 }
 
 .slcn-login-page__error {
