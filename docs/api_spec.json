@@ -244,6 +244,44 @@
         }
       }
     },
+    "/user/token": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "토큰 갱신",
+        "description": "RefreshToken 갱신",
+        "operationId": "reissueToken",
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/register": {
       "post": {
         "tags": ["회원 관리 API"],
@@ -278,6 +316,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "로그아웃",
+        "description": "현재 세션 로그아웃",
+        "operationId": "logoutUser",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -520,36 +581,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/user/token": {
-      "get": {
-        "tags": ["회원 관리 API"],
-        "summary": "토큰 갱신",
-        "description": "RefreshToken 갱신",
-        "operationId": "reissueToken",
-        "parameters": [
-          {
-            "name": "refreshToken",
-            "in": "cookie",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserRdo"
-                }
-              }
-            }
           }
         }
       }
@@ -850,6 +881,27 @@
           }
         }
       },
+      "UserRdo": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roleList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["USER", "ADMIN"]
+            }
+          }
+        }
+      },
       "UserCdo": {
         "type": "object",
         "properties": {
@@ -872,27 +924,6 @@
           },
           "password": {
             "type": "string"
-          }
-        }
-      },
-      "UserRdo": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "roleList": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["USER", "ADMIN"]
-            }
           }
         }
       },
