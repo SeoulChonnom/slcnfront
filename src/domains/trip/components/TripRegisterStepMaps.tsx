@@ -4,10 +4,35 @@ import { TextField } from '../../../components/ui/TextField';
 import type { TripValidationErrors } from '../utils/trip-validation';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 
+type TripRegisterMapsFieldKey =
+  | 'map1'
+  | 'hasSecondMap'
+  | 'map2'
+  | 'button1'
+  | 'button2'
+  | 'drive';
+
+type TripRegisterMapsErrorKey =
+  | 'map1'
+  | 'map2'
+  | 'button1'
+  | 'button2'
+  | 'drive';
+
+type TripRegisterMapsValues = Pick<
+  TripRegisterWizardValues,
+  TripRegisterMapsFieldKey
+>;
+
+type TripRegisterMapsErrors = Pick<
+  TripValidationErrors,
+  TripRegisterMapsErrorKey
+>;
+
 type TripRegisterStepMapsProps = {
-  values: TripRegisterWizardValues;
-  errors: TripValidationErrors;
-  onFieldChange: <Key extends keyof TripRegisterWizardValues>(
+  values: TripRegisterMapsValues;
+  errors: TripRegisterMapsErrors;
+  onFieldChange: <Key extends TripRegisterMapsFieldKey>(
     key: Key,
     value: TripRegisterWizardValues[Key],
   ) => void;
@@ -21,7 +46,7 @@ export function TripRegisterStepMaps({
   return (
     <div className="slcn-trip-register-step">
       <FileDropzone
-        label="지도 1 업로드"
+        label="지도"
         accept=".jpg,.jpeg,.png,.gif,.svg"
         onChange={(event) =>
           onFieldChange('map1', event.target.files?.[0] ?? null)
@@ -50,7 +75,7 @@ export function TripRegisterStepMaps({
       {values.hasSecondMap ? (
         <>
           <FileDropzone
-            label="지도 2 업로드"
+            label="지도 2"
             accept=".jpg,.jpeg,.png,.gif,.svg"
             onChange={(event) =>
               onFieldChange('map2', event.target.files?.[0] ?? null)
@@ -66,12 +91,14 @@ export function TripRegisterStepMaps({
           ) : null}
           <TextField
             label="버튼 1"
+            placeholder="버튼 1"
             value={values.button1}
             error={errors.button1}
             onChange={(event) => onFieldChange('button1', event.target.value)}
           />
           <TextField
             label="버튼 2"
+            placeholder="버튼 2"
             value={values.button2}
             error={errors.button2}
             onChange={(event) => onFieldChange('button2', event.target.value)}
@@ -80,12 +107,13 @@ export function TripRegisterStepMaps({
       ) : null}
       <TextField
         label="드라이브 링크"
+        placeholder="드라이브 링크"
         value={values.drive}
         error={errors.drive}
         onChange={(event) => onFieldChange('drive', event.target.value)}
       />
       <p className="slcn-trip-register-step__hint">
-        드라이브 비밀번호 안내는 상세 화면에서 고정 문구로 노출됩니다.
+        드라이브 비밀번호는 상세 화면에서 입사일로 안내됩니다.
       </p>
     </div>
   );

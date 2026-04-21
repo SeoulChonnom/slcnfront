@@ -53,7 +53,54 @@ describe('auth-api', () => {
         roleList: ['admin', 'user'],
       },
     });
-    expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/user/login');
+    expect(fetchFn.mock.calls[0]?.[0]).toBe(
+      'http://localhost:8080/api/user/login',
+    );
+    expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
+      method: 'POST',
+    });
+  });
+
+  it('posts to the refresh-token reissue endpoint and normalizes the response', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          accessToken: 'token-restore',
+          username: 'slcn-admin',
+          name: 'SLCN',
+          roleList: ['ADMIN'],
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+    const authApi = createAuthApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      }),
+    );
+
+    const session = await authApi.restoreSession();
+
+    expect(session).toEqual({
+      accessToken: 'token-restore',
+      userInfo: {
+        name: 'SLCN',
+        userName: 'slcn-admin',
+        roleList: ['admin'],
+      },
+    });
+    expect(fetchFn.mock.calls[0]?.[0]).toBe(
+      'http://localhost:8080/api/user/token',
+    );
+    expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
+      method: 'POST',
+    });
   });
 
   it('propagates restoreSession transport errors as AppError', async () => {
@@ -78,5 +125,11 @@ describe('auth-api', () => {
       status: 401,
       message: 'restore failed',
     } satisfies Partial<AppError>);
+    expect(fetchFn.mock.calls[0]?.[0]).toBe(
+      'http://localhost:8080/api/user/token',
+    );
+    expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
+      method: 'POST',
+    });
   });
 });

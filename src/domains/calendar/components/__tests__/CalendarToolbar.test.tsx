@@ -45,7 +45,7 @@ describe('CalendarToolbar', () => {
     await user.click(screen.getByRole('button', { name: '이전' }));
     await user.click(screen.getByRole('button', { name: 'Today' }));
     await user.click(screen.getByRole('button', { name: '다음' }));
-    await user.click(screen.getByRole('tab', { name: 'Week' }));
+    await user.click(screen.getByRole('tab', { name: '주' }));
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
 
     expect(onPrev).toHaveBeenCalledTimes(1);

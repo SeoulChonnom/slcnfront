@@ -1,10 +1,10 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createTestQueryClient } from '../../../../test/helpers/query-client';
-import { scheduleQueryKeys } from '../../../../lib/api/query-keys';
 import { useCalendarEventMutations } from '../useCalendarEventMutations';
+import { calendarScheduleQueryKeys } from '../../query-keys';
 
 const { createSchedule, updateSchedule, deleteSchedule } = vi.hoisted(() => ({
   createSchedule: vi.fn(),
@@ -27,6 +27,12 @@ function createWrapper(client = createTestQueryClient()) {
 }
 
 describe('useCalendarEventMutations', () => {
+  beforeEach(() => {
+    createSchedule.mockReset();
+    updateSchedule.mockReset();
+    deleteSchedule.mockReset();
+  });
+
   it('calls create, update and delete APIs then invalidates schedule queries', async () => {
     const client = createTestQueryClient();
     const invalidateSpy = vi.spyOn(client, 'invalidateQueries');
@@ -66,7 +72,7 @@ describe('useCalendarEventMutations', () => {
 
     await waitFor(() => {
       expect(invalidateSpy).toHaveBeenCalledWith({
-        queryKey: scheduleQueryKeys.all,
+        queryKey: calendarScheduleQueryKeys.all,
       });
     });
     expect(createSchedule).toHaveBeenCalledTimes(1);

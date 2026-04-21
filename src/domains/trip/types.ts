@@ -75,34 +75,3 @@ export type TripRegisterPayload = {
     map2?: File | null;
   };
 };
-
-export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
-  return {
-    id: dto.id,
-    date: dto.date,
-    name: dto.name,
-    displayDate: dto.date.replace(
-      /(\d{4})(\d{2})(\d{2})/,
-      '$1.$2.$3',
-    ),
-    logoPath: dto.logo,
-    quizTitle: dto.quizTitle,
-    quizAnswerIndex: Number(dto.quizAnswer),
-    quizAnswerTitle: dto.quizAnswerTitle,
-    quizAnswerText: dto.quizAnswerText,
-    quizErrorTitle: dto.quizErrorTitle,
-    quizErrorText: dto.quizErrorText,
-    quizResponses: dto.quizList,
-  };
-}
-
-export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
-  return {
-    date: dto.date,
-    firstMapPath: dto.firstMap,
-    secondMapPath: dto.secondMap || null,
-    nextButtonText: dto.nextButtonText || null,
-    previousButtonText: dto.previousButtonText || null,
-    driveUrl: dto.drive,
-  };
-}

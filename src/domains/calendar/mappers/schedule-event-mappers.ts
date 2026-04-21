@@ -1,8 +1,11 @@
-import type { EventApi } from '@fullcalendar/core';
-import type { CalendarEventInput, CalendarMeta, ScheduleEvent, ScheduleMutationPayload } from '../types';
+import type {
+  CalendarEventInput,
+  CalendarMeta,
+  ScheduleEvent,
+  ScheduleMutationPayload,
+} from '../types';
 import {
   API_DATE_FORMAT,
-  API_DATE_TIME_FORMAT,
   coerceDateValue,
   coerceTimeValue,
   formatDraftDateTime,
@@ -79,7 +82,9 @@ export function createDraftFromRange(
   };
 }
 
-export function createDraftFromSchedule(event: ScheduleEvent): CalendarEventDraft {
+export function createDraftFromSchedule(
+  event: ScheduleEvent,
+): CalendarEventDraft {
   return {
     calendarId: event.calendarId,
     title: event.title,
@@ -102,7 +107,11 @@ export function validateCalendarEventDraft(draft: CalendarEventDraft) {
     return '제목을 입력해주세요.';
   }
 
-  const start = formatDraftDateTime(draft.startDate, draft.startTime, draft.allDay);
+  const start = formatDraftDateTime(
+    draft.startDate,
+    draft.startTime,
+    draft.allDay,
+  );
   const end = formatDraftDateTime(draft.endDate, draft.endTime, draft.allDay);
   const startDate = dayjs(start);
   const endDate = dayjs(end);
@@ -163,23 +172,5 @@ export function mapScheduleToCalendarEventInput(
       location: schedule.location,
       calendarId: schedule.calendarId,
     },
-  };
-}
-
-export function mapEventApiToSchedulePayload(event: EventApi): ScheduleMutationPayload {
-  return {
-    id: event.id,
-    calendarId: String(event.extendedProps['calendarId'] ?? ''),
-    title: event.title,
-    body: String(event.extendedProps['body'] ?? ''),
-    start: event.allDay
-      ? dayjs(event.start).format(API_DATE_FORMAT)
-      : dayjs(event.start).format(API_DATE_TIME_FORMAT),
-    end: event.allDay
-      ? (toInclusiveAllDayEnd(event.end ?? event.start) ??
-          dayjs(event.start).format(API_DATE_FORMAT))
-      : dayjs(event.end ?? event.start).format(API_DATE_TIME_FORMAT),
-    allDay: event.allDay,
-    location: String(event.extendedProps['location'] ?? ''),
   };
 }

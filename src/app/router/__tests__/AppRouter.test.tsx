@@ -74,7 +74,7 @@ describe('AppRouter', () => {
     renderAppRouter('/map');
 
     await waitFor(() => {
-      expect(screen.getByText('SEOUL CHONNOM LOGIN')).toBeTruthy();
+      expect(screen.getByText('SLCN Login')).toBeTruthy();
     });
   });
 

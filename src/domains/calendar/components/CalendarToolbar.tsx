@@ -35,7 +35,7 @@ export function CalendarToolbar({
   return (
     <div className={cn('slcn-calendar-toolbar', className)}>
       <div className="slcn-calendar-toolbar__heading">
-        <p className="slcn-calendar-toolbar__eyebrow">Schedule</p>
+        <p className="slcn-calendar-toolbar__eyebrow">서울촌놈 나들이 일정 🗓️</p>
         <h1 className="slcn-calendar-toolbar__title display-hand">{label}</h1>
       </div>
       <div className="slcn-calendar-toolbar__controls">
@@ -54,8 +54,8 @@ export function CalendarToolbar({
           className="slcn-calendar-toolbar__view-toggle"
           value={activeView}
           options={[
-            { label: 'Month', value: 'month' },
-            { label: 'Week', value: 'week' },
+            { label: '월', value: 'month' },
+            { label: '주', value: 'week' },
           ]}
           onChange={(value) => onViewChange(value as CalendarViewMode)}
         />

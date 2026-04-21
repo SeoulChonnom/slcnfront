@@ -1,13 +1,13 @@
-import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { type EventResizeDoneArg } from '@fullcalendar/interaction';
-import koLocale from '@fullcalendar/core/locales/ko';
+import interactionPlugin, {
+  type EventResizeDoneArg,
+} from '@fullcalendar/interaction';
 import type {
-  DateSelectArg,
   EventClickArg,
   EventDropArg,
   EventInput,
 } from '@fullcalendar/core';
+import { CalendarTimelineView } from './CalendarTimelineView';
 
 type CalendarMonthViewProps = {
   currentDate: string;
@@ -27,35 +27,18 @@ export function CalendarMonthView({
   onEventResize,
 }: CalendarMonthViewProps) {
   return (
-    <div className="slcn-calendar-surface slcn-calendar-surface--month">
-      <FullCalendar
-        key={`month-${currentDate}`}
-        plugins={[dayGridPlugin, interactionPlugin]}
-        locale={koLocale}
-        initialView="dayGridMonth"
-        initialDate={currentDate}
-        headerToolbar={false}
-        events={events}
-        height="auto"
-        selectable
-        dayMaxEvents={3}
-        fixedWeekCount={false}
-        eventDisplay="block"
-        select={(selection: DateSelectArg) => {
-          onSelect({
-            start: selection.start,
-            end: selection.end,
-            allDay: selection.allDay,
-          });
-        }}
-        eventClick={(click) => onEventClick(click.event)}
-        eventDrop={async (arg) => {
-          await onEventDrop(arg);
-        }}
-        eventResize={async (arg) => {
-          await onEventResize(arg);
-        }}
-      />
-    </div>
+    <CalendarTimelineView
+      currentDate={currentDate}
+      events={events}
+      className="slcn-calendar-surface slcn-calendar-surface--month"
+      plugins={[dayGridPlugin, interactionPlugin]}
+      initialView="dayGridMonth"
+      dayMaxEvents={3}
+      fixedWeekCount={false}
+      onSelect={onSelect}
+      onEventClick={onEventClick}
+      onEventDrop={onEventDrop}
+      onEventResize={onEventResize}
+    />
   );
 }

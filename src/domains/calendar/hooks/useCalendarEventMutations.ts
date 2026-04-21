@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { scheduleQueryKeys } from '../../../lib/api/query-keys';
 import { scheduleApi } from '../api/schedule-api';
+import { calendarScheduleQueryKeys } from '../query-keys';
 import type { ScheduleMutationPayload } from '../types';
 
 export function useCalendarEventMutations() {
   const queryClient = useQueryClient();
   const invalidateSchedules = () =>
-    queryClient.invalidateQueries({ queryKey: scheduleQueryKeys.all });
+    queryClient.invalidateQueries({ queryKey: calendarScheduleQueryKeys.all });
 
   const createMutation = useMutation({
     mutationFn: (payload: ScheduleMutationPayload) =>

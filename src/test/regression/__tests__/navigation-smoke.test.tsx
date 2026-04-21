@@ -22,22 +22,34 @@ describe('navigation smoke', () => {
   it('renders desktop home links for core domains', () => {
     renderInApp(<MainHomePage />, '/main');
 
-    expect(screen.getAllByRole('link', { name: '바로 이동' })[0]?.getAttribute('href')).toBe(
-      '/main/map',
-    );
-    expect(screen.getByRole('heading', { name: '신발 추천' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '인스타그램 열기' })).toBeTruthy();
+    expect(
+      screen.getByRole('link', { name: /\bmap\b/i }).getAttribute('href'),
+    ).toBe('/main/map');
+    expect(
+      screen.getByRole('link', { name: /\brecom\b/i }).getAttribute('href'),
+    ).toBe('/main/shoesRecom');
+    expect(
+      screen
+        .getByRole('link', { name: /Choi's Film Art~🎞/i })
+        .getAttribute('href'),
+    ).toBe('http://naver.me/52RjLNuT');
   });
 
   it('renders mobile home links with mobile-prefixed routes', () => {
     renderInApp(<MobileHomePage />, '/mobile');
 
-    expect(screen.getAllByRole('link', { name: '바로 이동' })[0]?.getAttribute('href')).toBe(
-      '/mobile/map',
-    );
-    expect(screen.getByText('서울 촌놈 서비스 허브')).toBeTruthy();
-    expect(screen.getByRole('link', { name: '인스타그램 열기' }).getAttribute('href')).toBe(
-      'https://www.instagram.com/',
-    );
+    expect(
+      screen
+        .getAllByRole('link', { name: '바로 이동' })[0]
+        ?.getAttribute('href'),
+    ).toBe('/mobile/map');
+    expect(
+      screen.getByRole('heading', { name: '서울 촌놈 나들이 기록 📷' }),
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByRole('link', { name: "Choi's Film Art~🎞" })
+        .getAttribute('href'),
+    ).toBe('http://naver.me/52RjLNuT');
   });
 });

@@ -11,7 +11,7 @@ export const AUTH_RESTORE_STATES = [
 
 export type AuthRestoreState = (typeof AUTH_RESTORE_STATES)[number];
 
-type AuthStore = AuthSession & {
+export type AuthStoreState = AuthSession & {
   restoreState: AuthRestoreState;
   hydrateFromStorage: () => void;
   setSession: (session: Pick<AuthSession, 'accessToken' | 'userInfo'>) => void;
@@ -19,6 +19,12 @@ type AuthStore = AuthSession & {
   startRestore: () => void;
   markRestoreFailed: () => void;
 };
+
+export type AuthPhase =
+  | 'hydrating'
+  | 'restoring'
+  | 'authenticated'
+  | 'anonymous';
 
 const initialAuthState: AuthSession & { restoreState: AuthRestoreState } = {
   accessToken: null,
@@ -71,7 +77,45 @@ function writeStoredUserInfo(userInfo: UserInfo | null) {
   );
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export function selectHasSession(
+  state: Pick<AuthStoreState, 'accessToken' | 'userInfo'>,
+) {
+  return Boolean(state.accessToken && state.userInfo);
+}
+
+export function selectAuthPhase(
+  state: Pick<
+    AuthStoreState,
+    'accessToken' | 'hydrated' | 'restoreState' | 'userInfo'
+  >,
+): AuthPhase {
+  if (!state.hydrated) {
+    return 'hydrating';
+  }
+
+  if (selectHasSession(state)) {
+    return 'authenticated';
+  }
+
+  if (state.restoreState === 'idle' || state.restoreState === 'pending') {
+    return 'restoring';
+  }
+
+  return 'anonymous';
+}
+
+export function selectShouldAttemptSessionRestore(
+  state: Pick<
+    AuthStoreState,
+    'accessToken' | 'hydrated' | 'restoreState' | 'userInfo'
+  >,
+) {
+  return (
+    state.hydrated && !selectHasSession(state) && state.restoreState === 'idle'
+  );
+}
+
+export const useAuthStore = create<AuthStoreState>((set) => ({
   ...initialAuthState,
   hydrateFromStorage: () => {
     set({

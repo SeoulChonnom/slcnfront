@@ -83,7 +83,7 @@ describe('auth smoke', () => {
         '/main/login?redirect=%2Fmain%2Fmap',
       );
     });
-    expect(await screen.findByText('SEOUL CHONNOM LOGIN')).toBeTruthy();
+    expect(await screen.findByText('SLCN Login')).toBeTruthy();
   });
 
   it('restores a session from refresh token before entering the protected route', async () => {
@@ -107,8 +107,10 @@ describe('auth smoke', () => {
     await waitFor(() => {
       expect(restoreSession).toHaveBeenCalledTimes(1);
     });
-    expect(await screen.findByText('서울 촌놈의 신발 추천')).toBeTruthy();
-    expect(screen.getByTestId('location-probe').textContent).toBe('/main/shoesRecom');
+    expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
+    expect(screen.getByTestId('location-probe').textContent).toBe(
+      '/main/shoesRecom',
+    );
     expect(useAuthStore.getState().accessToken).toBe('token-123');
   });
 });

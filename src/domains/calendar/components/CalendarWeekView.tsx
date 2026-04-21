@@ -1,13 +1,13 @@
-import FullCalendar from '@fullcalendar/react';
-import interactionPlugin, { type EventResizeDoneArg } from '@fullcalendar/interaction';
+import interactionPlugin, {
+  type EventResizeDoneArg,
+} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import koLocale from '@fullcalendar/core/locales/ko';
 import type {
-  DateSelectArg,
   EventClickArg,
   EventDropArg,
   EventInput,
 } from '@fullcalendar/core';
+import { CalendarTimelineView } from './CalendarTimelineView';
 
 type CalendarWeekViewProps = {
   currentDate: string;
@@ -27,36 +27,20 @@ export function CalendarWeekView({
   onEventResize,
 }: CalendarWeekViewProps) {
   return (
-    <div className="slcn-calendar-surface slcn-calendar-surface--week">
-      <FullCalendar
-        key={`week-${currentDate}`}
-        plugins={[timeGridPlugin, interactionPlugin]}
-        locale={koLocale}
-        initialView="timeGridWeek"
-        initialDate={currentDate}
-        headerToolbar={false}
-        events={events}
-        height="auto"
-        selectable
-        nowIndicator
-        allDaySlot
-        slotMinTime="07:00:00"
-        slotMaxTime="23:00:00"
-        select={(selection: DateSelectArg) => {
-          onSelect({
-            start: selection.start,
-            end: selection.end,
-            allDay: selection.allDay,
-          });
-        }}
-        eventClick={(click) => onEventClick(click.event)}
-        eventDrop={async (arg) => {
-          await onEventDrop(arg);
-        }}
-        eventResize={async (arg) => {
-          await onEventResize(arg);
-        }}
-      />
-    </div>
+    <CalendarTimelineView
+      currentDate={currentDate}
+      events={events}
+      className="slcn-calendar-surface slcn-calendar-surface--week"
+      plugins={[timeGridPlugin, interactionPlugin]}
+      initialView="timeGridWeek"
+      nowIndicator
+      allDaySlot
+      slotMinTime="07:00:00"
+      slotMaxTime="23:00:00"
+      onSelect={onSelect}
+      onEventClick={onEventClick}
+      onEventDrop={onEventDrop}
+      onEventResize={onEventResize}
+    />
   );
 }

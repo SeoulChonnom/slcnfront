@@ -3,12 +3,6 @@ import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
 import { TripCard } from '../TripCard';
 
-vi.mock('../../hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: () => ({
-    objectUrl: 'blob:logo',
-  }),
-}));
-
 const trip = {
   id: 'trip-1',
   date: '20991231',
@@ -31,11 +25,15 @@ describe('TripCard', () => {
   it('opens the quiz flow when the CTA is clicked', async () => {
     const onOpenQuiz = vi.fn();
     const { user } = renderWithProviders(
-      <TripCard trip={trip} onOpenQuiz={onOpenQuiz} />,
+      <TripCard
+        trip={trip}
+        logoObjectUrl="blob:logo"
+        onOpenQuiz={onOpenQuiz}
+      />,
     );
 
     await user.click(
-      screen.getByRole('button', { name: '퀴즈 풀고 나들이 기록 보기' }),
+      screen.getByRole('button', { name: '퀴즈 풀기' }),
     );
 
     expect(onOpenQuiz).toHaveBeenCalledWith(trip);

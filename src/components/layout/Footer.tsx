@@ -11,7 +11,9 @@ export function Footer({ className }: FooterProps) {
         <p className="slcn-footer__headline display-hand">
           Contact . Terms . Privacy
         </p>
-        <p className="slcn-footer__caption">© 2024 SLCN.</p>
+        <p className="slcn-footer__caption">
+          © 2024 SLCN. Hand-crafted with love in Seoul.
+        </p>
       </div>
     </footer>
   );

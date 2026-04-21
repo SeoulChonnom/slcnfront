@@ -10,7 +10,27 @@ const IMAGE_MIME_TYPES = [
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export type TripRegisterStep = 1 | 2 | 3;
-export type TripValidationErrors = Partial<Record<string, string>>;
+export type TripValidationErrorKey =
+  | 'type'
+  | 'date'
+  | 'info2'
+  | 'logo'
+  | 'map1'
+  | 'map2'
+  | 'button1'
+  | 'button2'
+  | 'drive'
+  | 'quizTitle'
+  | 'quizOptions'
+  | 'quizAnswer'
+  | 'quizAnswerTitle'
+  | 'quizAnswerText'
+  | 'quizErrorTitle'
+  | 'quizErrorText';
+
+export type TripValidationErrors = Partial<
+  Record<TripValidationErrorKey, string>
+>;
 
 export function validateTripFile(file: File | null | undefined) {
   if (!file) {
@@ -97,7 +117,7 @@ export function validateTripRegisterStep(
     }
 
     if (!values.quizAnswerText.trim()) {
-      errors.quizAnswerText = '정답 설명을 입력해주세요.';
+      errors.quizAnswerText = '정답 텍스트를 입력해주세요.';
     }
 
     if (!values.quizErrorTitle.trim()) {
@@ -105,7 +125,7 @@ export function validateTripRegisterStep(
     }
 
     if (!values.quizErrorText.trim()) {
-      errors.quizErrorText = '오답 설명을 입력해주세요.';
+      errors.quizErrorText = '오답 텍스트를 입력해주세요.';
     }
 
     const filledOptions = values.quizOptions.filter(

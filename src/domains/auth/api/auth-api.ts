@@ -67,7 +67,7 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
       return mapUserResponse(response);
     },
     async restoreSession(options?: Pick<ApiRequestOptions, 'signal'>) {
-      const response = await client.get<UserResponseDto>({
+      const response = await client.post<UserResponseDto>({
         path: '/user/token',
         auth: false,
         signal: options?.signal,

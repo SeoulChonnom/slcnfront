@@ -84,7 +84,7 @@ describe('public-routes smoke', () => {
         '/main/shoesRecom',
       );
     });
-    expect(await screen.findByText('서울 촌놈의 신발 추천')).toBeTruthy();
+    expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
   });
 
   it('redirects a public catalog URL into the mobile device route', async () => {
@@ -97,7 +97,7 @@ describe('public-routes smoke', () => {
         '/mobile/shoesRecom',
       );
     });
-    expect(await screen.findByText('서울 촌놈의 신발 추천')).toBeTruthy();
+    expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
   });
 
   it('sends unknown public paths to the 404 route', async () => {
@@ -106,7 +106,9 @@ describe('public-routes smoke', () => {
     renderApp('/missing/path/extra');
 
     await waitFor(() => {
-      expect(screen.getByTestId('location-probe').textContent).toBe('/main/404');
+      expect(screen.getByTestId('location-probe').textContent).toBe(
+        '/main/404',
+      );
     });
     expect(await screen.findByText('페이지를 찾을 수 없어요.')).toBeTruthy();
   });

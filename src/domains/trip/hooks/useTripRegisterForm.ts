@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { tripApi } from '../api/trip-api';
+import { buildTripRegisterPayload } from '../mappers/trip-mappers';
 import { tripQueryKeys } from '../../../lib/api/query-keys';
 import {
-  buildTripRegisterPayload,
   createInitialTripRegisterValues,
   type TripRegisterWizardValues,
 } from '../utils/trip-form-data';

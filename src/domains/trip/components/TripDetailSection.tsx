@@ -24,7 +24,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
     <section className="slcn-trip-detail-section">
       <PageSectionHeader
         title="서울 촌놈 나들이 경로"
-        description="지도 이미지를 전환해 동선을 확인하고, 아래 드라이브 CTA로 사진 보관함을 열 수 있습니다."
+        description="사진은 드라이브에서 📷"
       />
 
       {hasSecondMap ? (
@@ -56,13 +56,13 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
       <Card className="slcn-trip-detail-section__drive-card" tone="pink">
         <div>
           <p className="slcn-trip-detail-section__drive-kicker display-hand">
-            Photo Vault
+            SLCN Drive
           </p>
           <h3 className="slcn-trip-detail-section__drive-title display-hand">
-            사진은 드라이브에서
+            사진은 드라이브에서 📷
           </h3>
           <p className="slcn-trip-detail-section__drive-copy">
-            고정 안내 문구: 암호는 입사일입니다.
+            암호 🔒 : 입사일
           </p>
         </div>
         <Button
@@ -70,7 +70,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
             window.open(tripDetail.driveUrl, '_blank', 'noopener,noreferrer');
           }}
         >
-          드라이브 열기
+          드라이브 링크
         </Button>
       </Card>
     </section>

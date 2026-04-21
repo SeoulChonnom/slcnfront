@@ -1,11 +1,12 @@
+import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../../app/router/route-constants';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { PageSectionHeader } from '../../../components/ui/PageSectionHeader';
 import { buildDeviceTripListPath } from '../../../lib/routing/route-builders';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 import { useTripRegisterForm } from '../hooks/useTripRegisterForm';
+import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 import { TripRegisterStepBasic } from './TripRegisterStepBasic';
 import { TripRegisterStepMaps } from './TripRegisterStepMaps';
 import { TripRegisterStepQuiz } from './TripRegisterStepQuiz';
@@ -14,6 +15,51 @@ type TripRegisterWizardProps = {
   device: DeviceType;
   onSubmit?: (values: TripRegisterWizardValues) => Promise<void> | void;
 };
+
+type TripRegisterFormState = ReturnType<typeof useTripRegisterForm>;
+
+type TripRegisterStepConfig = {
+  step: 1 | 2 | 3;
+  label: string;
+  render: (form: TripRegisterFormState) => ReactNode;
+};
+
+const TRIP_REGISTER_STEP_CONFIGS: readonly TripRegisterStepConfig[] = [
+  {
+    step: 1,
+    label: '기본 정보',
+    render: (form) => (
+      <TripRegisterStepBasic
+        values={form.values}
+        errors={form.errors}
+        onFieldChange={form.updateField}
+      />
+    ),
+  },
+  {
+    step: 2,
+    label: '지도 정보',
+    render: (form) => (
+      <TripRegisterStepMaps
+        values={form.values}
+        errors={form.errors}
+        onFieldChange={form.updateField}
+      />
+    ),
+  },
+  {
+    step: 3,
+    label: '퀴즈 정보',
+    render: (form) => (
+      <TripRegisterStepQuiz
+        values={form.values}
+        errors={form.errors}
+        onFieldChange={form.updateField}
+        onQuizOptionChange={form.updateQuizOption}
+      />
+    ),
+  },
+] as const;
 
 export function TripRegisterWizard({
   device,
@@ -26,44 +72,28 @@ export function TripRegisterWizard({
       navigate(buildDeviceTripListPath(device));
     },
   });
+  const activeStep = TRIP_REGISTER_STEP_CONFIGS.find(
+    (config) => config.step === form.step,
+  );
 
   return (
     <section className="slcn-trip-register-wizard">
-      <PageSectionHeader
-        title="새 나들이 기록하기"
-        description="기존 필드는 유지하되, 3단계 wizard로 입력을 분리했습니다."
-      />
+      {device === 'main' ? (
+        <PageSectionHeader
+          title="서울 촌놈 나들이 추가"
+          description="날짜, 지도, 퀴즈 정보를 차례대로 입력해 나들이 기록을 남겨보세요."
+        />
+      ) : null}
       <Card className="slcn-trip-register-wizard__card">
         <div className="slcn-trip-register-wizard__step-indicator">
-          <span data-active={form.step === 1}>STEP 1</span>
-          <span data-active={form.step === 2}>STEP 2</span>
-          <span data-active={form.step === 3}>STEP 3</span>
+          {TRIP_REGISTER_STEP_CONFIGS.map((config) => (
+            <span key={config.step} data-active={form.step === config.step}>
+              {config.label}
+            </span>
+          ))}
         </div>
 
-        {form.step === 1 ? (
-          <TripRegisterStepBasic
-            values={form.values}
-            errors={form.errors}
-            onFieldChange={form.updateField}
-          />
-        ) : null}
-
-        {form.step === 2 ? (
-          <TripRegisterStepMaps
-            values={form.values}
-            errors={form.errors}
-            onFieldChange={form.updateField}
-          />
-        ) : null}
-
-        {form.step === 3 ? (
-          <TripRegisterStepQuiz
-            values={form.values}
-            errors={form.errors}
-            onFieldChange={form.updateField}
-            onQuizOptionChange={form.updateQuizOption}
-          />
-        ) : null}
+        {activeStep ? activeStep.render(form) : null}
 
         {form.submitError ? (
           <p className="slcn-trip-register-step__error" role="alert">
@@ -78,7 +108,7 @@ export function TripRegisterWizard({
             </Button>
           ) : null}
           {form.step < 3 ? (
-            <Button onClick={form.goNext}>다음 단계</Button>
+            <Button onClick={form.goNext}>다음</Button>
           ) : (
             <Button
               loading={form.isSubmitting}

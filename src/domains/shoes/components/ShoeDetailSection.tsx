@@ -19,28 +19,18 @@ export function ShoeDetailSection({
   brandSlug,
   shoesSlug,
 }: ShoeDetailSectionProps) {
-  const shoeDetailQuery = useShoeDetail(brandSlug, shoesSlug);
+  const shoeDetail = useShoeDetail(brandSlug, shoesSlug);
 
-  if (shoeDetailQuery.isLoading) {
-    return (
-      <section className="slcn-shoe-detail-page" aria-label="loading">
-        <Card className="slcn-shoe-detail-page__fallback" tone="muted">
-          정보를 불러오는 중입니다.
-        </Card>
-      </section>
-    );
-  }
-
-  if (!shoeDetailQuery.data) {
+  if (!shoeDetail) {
     return (
       <section className="slcn-shoe-detail-page">
         <Card className="slcn-shoe-detail-page__fallback" tone="muted">
-          <p className="slcn-shoe-detail-page__fallback-eyebrow">Shoes 404</p>
+          <p className="slcn-shoe-detail-page__fallback-eyebrow">SLCN Shoes</p>
           <h1 className="slcn-shoe-detail-page__fallback-title display-hand">
             존재하지 않는 신발입니다.
           </h1>
           <p className="slcn-shoe-detail-page__fallback-description">
-            브랜드 slug 또는 신발 slug가 카탈로그와 맞지 않습니다.
+            찾으시는 신발 정보를 다시 확인해주세요.
           </p>
           <div className="slcn-shoe-detail-page__fallback-actions">
             <LinkButton to={buildDeviceShoesCatalogPath(device)}>
@@ -52,27 +42,33 @@ export function ShoeDetailSection({
     );
   }
 
-  const { brand, shoe } = shoeDetailQuery.data;
+  const { brand, shoe } = shoeDetail;
 
   return (
     <section className="slcn-shoe-detail-page">
-      <div className="slcn-shoe-detail-page__header">
-        <p className="slcn-shoe-detail-page__eyebrow">Shoes Detail</p>
-        <LinkButton
-          to={buildDeviceShoesCatalogPath(device)}
-          variant="ghost"
-          size="sm"
-        >
-          ← 신발 추천으로
-        </LinkButton>
-      </div>
+      {device === 'main' ? (
+        <div className="slcn-shoe-detail-page__header">
+          <p className="slcn-shoe-detail-page__eyebrow">서울 촌놈의 신발 추천 👟</p>
+          <LinkButton
+            to={buildDeviceShoesCatalogPath(device)}
+            variant="ghost"
+            size="sm"
+          >
+            신발 추천으로 돌아가기
+          </LinkButton>
+        </div>
+      ) : null}
+
+      <Card className="slcn-shoe-detail-page__warning" tone="muted">
+        사진을 클릭하면 링크로 이동합니다
+      </Card>
 
       <ShoeDetailHero brand={brand} shoe={shoe} />
       <ShoeVideoPanel shoe={shoe} />
 
       <section className="slcn-shoe-detail-page__reviews">
         <div className="slcn-shoe-detail-page__reviews-header">
-          <p className="slcn-shoe-detail-page__reviews-eyebrow">Street Review</p>
+          <p className="slcn-shoe-detail-page__reviews-eyebrow">착용 후기</p>
           <h2 className="slcn-shoe-detail-page__reviews-title display-hand">
             여러 착용 샷
           </h2>

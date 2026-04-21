@@ -18,7 +18,7 @@ type MobileBottomNavProps = {
 };
 
 const iconByLabel: Record<string, string> = {
-  메인: '⌂',
+  홈: '⌂',
   나들이: '⌖',
   달력: '☷',
   신발: '⌁',

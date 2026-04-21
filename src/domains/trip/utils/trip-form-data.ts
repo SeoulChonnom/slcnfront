@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import type { TripRegisterPayload } from '../types';
-
 export type TripRegisterWizardValues = {
   type: string;
   date: string;
@@ -40,40 +37,5 @@ export function createInitialTripRegisterValues(): TripRegisterWizardValues {
     quizAnswerText: '',
     quizErrorTitle: '',
     quizErrorText: '',
-  };
-}
-
-export function buildTripRegisterPayload(
-  values: TripRegisterWizardValues,
-): TripRegisterPayload {
-  const filteredQuizOptions = values.quizOptions
-    .map((answer, index) => ({
-      answer: answer.trim(),
-      quizIndex: String(index),
-    }))
-    .filter((option) => option.answer !== '');
-
-  return {
-    request: {
-      date: dayjs(values.date).format('YYYYMMDD'),
-      type: values.type,
-      info1: dayjs(values.date).format('YYYY.MM.DD'),
-      info2: values.info2.trim(),
-      button1: values.hasSecondMap ? values.button1.trim() : '',
-      button2: values.hasSecondMap ? values.button2.trim() : '',
-      drive: values.drive.trim(),
-      quizTitle: values.quizTitle.trim(),
-      quizAnswer: String(Number(values.quizAnswer) - 1),
-      quizAnswerTitle: values.quizAnswerTitle.trim(),
-      quizAnswerText: values.quizAnswerText.trim(),
-      quizErrorTitle: values.quizErrorTitle.trim(),
-      quizErrorText: values.quizErrorText.trim(),
-      quizRegisterRequestList: filteredQuizOptions,
-    },
-    files: {
-      logo: values.logo,
-      map1: values.map1,
-      map2: values.hasSecondMap ? values.map2 : null,
-    },
   };
 }

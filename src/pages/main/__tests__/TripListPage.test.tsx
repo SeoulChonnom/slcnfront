@@ -10,10 +10,9 @@ vi.mock('../../../domains/trip/hooks/useTripList', () => ({
   useTripList: () => useTripListMock(),
 }));
 
-vi.mock('../../../domains/trip/hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: () => ({
-    objectUrl: 'blob:logo',
-    isPending: false,
+vi.mock('../../../domains/trip/hooks/useTripAssetUrls', () => ({
+  useTripAssetUrls: () => ({
+    '/logo.png': 'blob:logo',
   }),
 }));
 
@@ -111,9 +110,12 @@ describe('TripListPage', () => {
     });
 
     expect(screen.getByText('연말 나들이')).toBeTruthy();
-    expect(screen.getByRole('link', { name: '새 나들이 기록하기' })).toBeTruthy();
     expect(
-      screen.getByRole('button', { name: '퀴즈 풀고 나들이 기록 보기' }),
+      screen.getAllByRole('link', { name: '새 나들이 기록하기' }).length,
     ).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: '퀴즈 풀기' }),
+    ).toBeTruthy();
+    expect(screen.getByPlaceholderText('날짜나 나들이 이름')).toBeTruthy();
   });
 });

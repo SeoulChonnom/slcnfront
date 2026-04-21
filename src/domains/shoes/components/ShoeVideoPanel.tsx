@@ -15,12 +15,11 @@ export function ShoeVideoPanel({ shoe }: ShoeVideoPanelProps) {
   return (
     <Card className="slcn-shoe-video-panel" tone="default">
       <div className="slcn-shoe-video-panel__header">
-        <p className="slcn-shoe-video-panel__eyebrow">Reference Clip</p>
-        <h2 className="slcn-shoe-video-panel__title display-hand">영상으로 보는 무드</h2>
+        <p className="slcn-shoe-video-panel__eyebrow">참고 영상</p>
+        <h2 className="slcn-shoe-video-panel__title display-hand">
+          {shoe.videoDesc || '참고 영상(링크)🎞'}
+        </h2>
       </div>
-      {shoe.videoDesc ? (
-        <p className="slcn-shoe-video-panel__description">{shoe.videoDesc}</p>
-      ) : null}
       {shoe.videoUrl ? (
         <video
           className="slcn-shoe-video-panel__video"
@@ -37,9 +36,11 @@ export function ShoeVideoPanel({ shoe }: ShoeVideoPanelProps) {
           href={shoe.videoLink}
           target="_blank"
           rel="noreferrer"
-          className={cn(getButtonClassName({ variant: 'secondary', size: 'md' }))}
+          className={cn(
+            getButtonClassName({ variant: 'secondary', size: 'md' }),
+          )}
         >
-          영상 링크 열기
+          영상 보러가기
         </a>
       ) : null}
     </Card>

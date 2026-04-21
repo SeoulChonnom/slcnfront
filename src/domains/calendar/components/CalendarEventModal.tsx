@@ -1,41 +1,34 @@
-import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Modal } from '../../../components/ui/Modal';
 import { TextField, TextareaField } from '../../../components/ui/TextField';
-import {
-  createDraftFromSchedule,
-  mapDraftToSchedulePayload,
-  validateCalendarEventDraft,
-  type CalendarEventDraft,
-} from '../mappers/schedule-event-mappers';
-import type { CalendarMeta, ScheduleEvent, ScheduleMutationPayload } from '../types';
+import type { CalendarEventDraft } from '../mappers/schedule-event-mappers';
+import type { CalendarMeta, ScheduleEvent } from '../types';
 
 type CalendarEventModalProps = {
   isOpen: boolean;
   calendars: CalendarMeta[];
-  defaultDraft: CalendarEventDraft;
+  draft: CalendarEventDraft;
   event: ScheduleEvent | null;
+  errorMessage: string | null;
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (payload: ScheduleMutationPayload) => Promise<void>;
-  onDelete?: (id: string) => Promise<void>;
+  onDraftChange: (patch: Partial<CalendarEventDraft>) => void;
+  onSubmit: () => Promise<void>;
+  onDelete?: () => Promise<void>;
 };
 
 export function CalendarEventModal({
   isOpen,
   calendars,
-  defaultDraft,
+  draft,
   event,
+  errorMessage,
   isSubmitting,
   onClose,
   onSubmit,
   onDelete,
+  onDraftChange,
 }: CalendarEventModalProps) {
-  const [draft, setDraft] = useState<CalendarEventDraft>(() =>
-    event ? createDraftFromSchedule(event) : defaultDraft,
-  );
-  const [formError, setFormError] = useState<string | null>(null);
-
   const title = event ? '일정 수정' : '일정 만들기';
 
   return (
@@ -43,22 +36,14 @@ export function CalendarEventModal({
       isOpen={isOpen}
       onClose={onClose}
       title={title}
-      description="달력과 시간을 정하고 바로 저장할 수 있어요."
+      description="일정 내용을 입력하고 바로 저장할 수 있어요."
       className="slcn-calendar-modal"
     >
       <form
         className="slcn-calendar-modal__form"
         onSubmit={async (submitEvent) => {
           submitEvent.preventDefault();
-          const error = validateCalendarEventDraft(draft);
-
-          if (error) {
-            setFormError(error);
-            return;
-          }
-
-          await onSubmit(mapDraftToSchedulePayload(draft, event?.id));
-          onClose();
+          await onSubmit();
         }}
       >
         <label className="slcn-calendar-modal__select-field">
@@ -67,10 +52,9 @@ export function CalendarEventModal({
             value={draft.calendarId}
             className="slcn-calendar-modal__select"
             onChange={(changeEvent) => {
-              setDraft((current) => ({
-                ...current,
+              onDraftChange({
                 calendarId: changeEvent.target.value,
-              }));
+              });
             }}
           >
             {calendars.map((calendar) => (
@@ -84,10 +68,9 @@ export function CalendarEventModal({
           label="제목"
           value={draft.title}
           onChange={(changeEvent) => {
-            setDraft((current) => ({
-              ...current,
+            onDraftChange({
               title: changeEvent.target.value,
-            }));
+            });
           }}
           required
         />
@@ -95,10 +78,9 @@ export function CalendarEventModal({
           label="설명"
           value={draft.body}
           onChange={(changeEvent) => {
-            setDraft((current) => ({
-              ...current,
+            onDraftChange({
               body: changeEvent.target.value,
-            }));
+            });
           }}
           rows={4}
         />
@@ -106,10 +88,9 @@ export function CalendarEventModal({
           label="장소"
           value={draft.location}
           onChange={(changeEvent) => {
-            setDraft((current) => ({
-              ...current,
+            onDraftChange({
               location: changeEvent.target.value,
-            }));
+            });
           }}
         />
         <label className="slcn-calendar-modal__checkbox">
@@ -117,10 +98,9 @@ export function CalendarEventModal({
             type="checkbox"
             checked={draft.allDay}
             onChange={(changeEvent) => {
-              setDraft((current) => ({
-                ...current,
+              onDraftChange({
                 allDay: changeEvent.target.checked,
-              }));
+              });
             }}
           />
           <span>종일 일정</span>
@@ -131,10 +111,9 @@ export function CalendarEventModal({
             type="date"
             value={draft.startDate}
             onChange={(changeEvent) => {
-              setDraft((current) => ({
-                ...current,
+              onDraftChange({
                 startDate: changeEvent.target.value,
-              }));
+              });
             }}
             required
           />
@@ -144,10 +123,9 @@ export function CalendarEventModal({
               type="time"
               value={draft.startTime}
               onChange={(changeEvent) => {
-                setDraft((current) => ({
-                  ...current,
+                onDraftChange({
                   startTime: changeEvent.target.value,
-                }));
+                });
               }}
               required
             />
@@ -157,10 +135,9 @@ export function CalendarEventModal({
             type="date"
             value={draft.endDate}
             onChange={(changeEvent) => {
-              setDraft((current) => ({
-                ...current,
+              onDraftChange({
                 endDate: changeEvent.target.value,
-              }));
+              });
             }}
             required
           />
@@ -170,18 +147,17 @@ export function CalendarEventModal({
               type="time"
               value={draft.endTime}
               onChange={(changeEvent) => {
-                setDraft((current) => ({
-                  ...current,
+                onDraftChange({
                   endTime: changeEvent.target.value,
-                }));
+                });
               }}
               required
             />
           ) : null}
         </div>
-        {formError ? (
+        {errorMessage ? (
           <p className="slcn-calendar-modal__error" role="alert">
-            {formError}
+            {errorMessage}
           </p>
         ) : null}
         <div className="slcn-calendar-modal__actions">
@@ -191,8 +167,7 @@ export function CalendarEventModal({
               type="button"
               disabled={isSubmitting}
               onClick={async () => {
-                await onDelete(event.id);
-                onClose();
+                await onDelete();
               }}
             >
               삭제

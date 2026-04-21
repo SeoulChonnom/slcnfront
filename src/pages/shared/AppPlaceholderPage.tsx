@@ -25,15 +25,18 @@ export function AppPlaceholderPage({
   note,
   actions = [],
 }: AppPlaceholderPageProps) {
+  const deviceLabel = device === 'main' ? '데스크톱' : '모바일';
+
   return (
     <section className="slcn-route-page">
       <Card className="slcn-route-page__card">
         <p className="slcn-route-page__device-chip">{eyebrow}</p>
         <PageSectionHeader title={title} description={description} />
         <div className="slcn-route-page__meta">
-          <span className="slcn-route-page__device-chip">{device}</span>
+          <span className="slcn-route-page__device-chip">{deviceLabel}</span>
           <p className="slcn-route-page__note">
-            {note ?? 'Step 04에서는 shell과 route contract만 먼저 고정합니다.'}
+            {note ??
+              '준비 중인 화면입니다. 곧 더 자연스럽게 이어서 이용할 수 있어요.'}
           </p>
         </div>
         {actions.length > 0 ? (

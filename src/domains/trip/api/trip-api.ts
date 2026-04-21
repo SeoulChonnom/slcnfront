@@ -1,12 +1,11 @@
 import { apiClient, type createApiClient } from '../../../lib/api/api-client';
-import {
-  mapTripDetailDto,
-  mapTripListItemDto,
-  type TripDetail,
-  type TripDetailDto,
-  type TripListItem,
-  type TripListItemDto,
-  type TripRegisterPayload,
+import { mapTripDetailDto, mapTripListItemDto } from '../mappers/trip-mappers';
+import type {
+  TripDetail,
+  TripDetailDto,
+  TripListItem,
+  TripListItemDto,
+  TripRegisterPayload,
 } from '../types';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;

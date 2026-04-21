@@ -29,7 +29,7 @@ export function TripQuizModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={feedback ? feedback.title : 'QUIZ'}
+      title={feedback ? feedback.title : '나들이 퀴즈'}
       description={feedback ? feedback.description : trip?.quizTitle}
     >
       {feedback ? (
@@ -38,7 +38,7 @@ export function TripQuizModal({
             fullWidth
             onClick={feedback.isCorrect ? onConfirmSuccess : onClose}
           >
-            {feedback.isCorrect ? '지도 보러가기' : '다시 목록으로'}
+            {feedback.isCorrect ? '지도 보러가기' : '목록으로 돌아가기'}
           </Button>
         </div>
       ) : (

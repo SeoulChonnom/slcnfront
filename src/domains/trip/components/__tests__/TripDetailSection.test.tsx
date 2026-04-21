@@ -27,7 +27,7 @@ describe('TripDetailSection', () => {
 
     expect(screen.getByRole('img', { name: '나들이 지도' })).toBeTruthy();
     expect(screen.queryByRole('tab', { name: '첫 번째 지도' })).toBeNull();
-    expect(screen.getByRole('button', { name: '드라이브 열기' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: '드라이브 링크' })).toBeTruthy();
   });
 
   it('supports multi-map switching and drive CTA', async () => {
@@ -49,7 +49,7 @@ describe('TripDetailSection', () => {
     expect(screen.getByRole('tab', { name: '2차 경로' })).toBeTruthy();
 
     await user.click(screen.getByRole('tab', { name: '2차 경로' }));
-    await user.click(screen.getByRole('button', { name: '드라이브 열기' }));
+    await user.click(screen.getByRole('button', { name: '드라이브 링크' }));
 
     expect(screen.getByRole('img', { name: '나들이 지도' }).getAttribute('src')).toBe(
       'blob:/map2.png',

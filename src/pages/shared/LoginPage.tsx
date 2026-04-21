@@ -3,10 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
-import { PageSectionHeader } from '../../components/ui/PageSectionHeader';
 import { TextField } from '../../components/ui/TextField';
+import { SLCNLogoBlob } from '../../components/ui/SLCNLogoBlob';
 import { useLogin } from '../../domains/auth/hooks/useLogin';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
+import {
+  selectAuthPhase,
+  useAuthStore,
+} from '../../domains/auth/store/auth-store';
 import { resolvePostAuthRedirectTarget } from '../../domains/auth/utils/redirect-target';
 
 type LoginPageProps = {
@@ -16,17 +19,15 @@ type LoginPageProps = {
 export function LoginPage({ device }: LoginPageProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((state) =>
-    Boolean(state.accessToken && state.userInfo),
-  );
+  const authPhase = useAuthStore(selectAuthPhase);
   const loginMutation = useLogin();
   const redirectTarget = resolvePostAuthRedirectTarget(location.search, device);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authPhase === 'authenticated') {
       navigate(redirectTarget, { replace: true });
     }
-  }, [isAuthenticated, navigate, redirectTarget]);
+  }, [authPhase, navigate, redirectTarget]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,27 +45,34 @@ export function LoginPage({ device }: LoginPageProps) {
 
   return (
     <Card className="slcn-login-page" tone="default">
-      <PageSectionHeader
-        title="SEOUL CHONNOM LOGIN"
-        description="서울 촌놈의 서울 구경 일지"
-      />
+      <div className="slcn-login-page__hero">
+        <div className="slcn-login-page__brand">
+          <SLCNLogoBlob size="sm" />
+          <span className="slcn-login-page__brand-text">SLCN</span>
+        </div>
+        <p className="slcn-login-page__welcome">SLCN Login</p>
+      </div>
       <form className="slcn-login-page__form" onSubmit={handleSubmit}>
         <TextField
           name="userName"
-          label="USER NAME"
-          placeholder="아이디를 입력하세요"
+          label="아이디"
+          placeholder="Enter your id"
+          autoComplete="username"
+          trailing={<span className="slcn-login-page__field-icon">◔</span>}
           required
         />
         <TextField
           name="password"
           type="password"
-          label="PASSWORD"
-          placeholder="비밀번호를 입력하세요"
+          label="비밀번호"
+          placeholder="Enter your password"
+          autoComplete="current-password"
+          trailing={<span className="slcn-login-page__field-icon">◌</span>}
           required
         />
         <div className="slcn-login-page__actions">
           <Button type="submit" fullWidth loading={loginMutation.isPending}>
-            LOGIN
+            Login
           </Button>
         </div>
         {loginMutation.error ? (
@@ -72,6 +80,13 @@ export function LoginPage({ device }: LoginPageProps) {
             {loginMutation.error.message}
           </p>
         ) : null}
+        <div className="slcn-login-page__links" aria-label="로그인 도움 링크">
+          <button type="button">아이디 찾기</button>
+          <span aria-hidden="true">|</span>
+          <button type="button">비밀번호 찾기</button>
+          <span aria-hidden="true">|</span>
+          <button type="button">회원가입</button>
+        </div>
       </form>
     </Card>
   );

@@ -1,82 +1,38 @@
-import { Navigate, Route } from 'react-router-dom';
 import { MOBILE_ROUTE_PATTERNS } from './route-constants';
-import { RequireAuth } from './guards';
+import { BASE_PROTECTED_ROUTES, createDeviceRouteConfig, withShell } from './route-manifest';
+import { renderDeviceRoutes } from './render-device-routes';
 import { DetailMobileShell } from '../shells/DetailMobileShell';
 import { MainMobileShell } from '../shells/MainMobileShell';
 import { PublicShell } from '../shells/PublicShell';
 import { LoginPage } from '../../pages/shared/LoginPage';
 import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import {
-  MobileCalendarMonthRoutePage,
-  MobileCalendarWeekRoutePage,
-  MobileHomeRoutePage,
-  MobileShoeDetailRoutePage,
-  MobileShoesCatalogRoutePage,
-  MobileTripDetailRoutePage,
-  MobileTripListRoutePage,
-  MobileTripRegisterRoutePage,
-} from './lazy-route-pages';
+
+const mobileRouteConfig = createDeviceRouteConfig('mobile', {
+  loginPath: MOBILE_ROUTE_PATTERNS.login,
+  rootPath: MOBILE_ROUTE_PATTERNS.root,
+  notFoundPath: MOBILE_ROUTE_PATTERNS.notFound,
+  loginElement: (
+    <PublicShell>
+      <LoginPage device="mobile" />
+    </PublicShell>
+  ),
+  notFoundElement: <NotFoundPage device="mobile" />,
+  protectedRoutes: withShell(BASE_PROTECTED_ROUTES, {
+    tripRegister: 'detail',
+    tripDetail: 'detail',
+    shoeDetail: 'detail',
+  }, 'main'),
+});
 
 export function renderMobileRoutes() {
-  return (
-    <>
-      <Route
-        path={MOBILE_ROUTE_PATTERNS.login}
-        element={
-          <PublicShell>
-            <LoginPage device="mobile" />
-          </PublicShell>
-        }
-      />
-      <Route path={MOBILE_ROUTE_PATTERNS.root} element={<MainMobileShell />}>
-        <Route path="404" element={<NotFoundPage device="mobile" />} />
-        <Route
-          path="*"
-          element={<Navigate replace to={MOBILE_ROUTE_PATTERNS.notFound} />}
-        />
-        <Route element={<RequireAuth />}>
-          <Route
-            index
-            element={<MobileHomeRoutePage />}
-          />
-          <Route
-            path="map"
-            element={<MobileTripListRoutePage />}
-          />
-          <Route
-            path="calendar"
-            element={<MobileCalendarMonthRoutePage />}
-          />
-          <Route
-            path="calendar/week"
-            element={<MobileCalendarWeekRoutePage />}
-          />
-          <Route
-            path="shoesRecom"
-            element={<MobileShoesCatalogRoutePage />}
-          />
-        </Route>
-      </Route>
-      <Route path={MOBILE_ROUTE_PATTERNS.root} element={<DetailMobileShell />}>
-        <Route
-          path="*"
-          element={<Navigate replace to={MOBILE_ROUTE_PATTERNS.notFound} />}
-        />
-        <Route element={<RequireAuth />}>
-          <Route
-            path="map/register"
-            element={<MobileTripRegisterRoutePage />}
-          />
-          <Route
-            path="map/:date"
-            element={<MobileTripDetailRoutePage />}
-          />
-          <Route
-            path=":brand/:shoesName"
-            element={<MobileShoeDetailRoutePage />}
-          />
-        </Route>
-      </Route>
-    </>
-  );
+  return renderDeviceRoutes('mobile', mobileRouteConfig, [
+    {
+      key: 'main',
+      element: <MainMobileShell />,
+    },
+    {
+      key: 'detail',
+      element: <DetailMobileShell />,
+    },
+  ]);
 }

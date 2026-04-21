@@ -16,11 +16,13 @@ export type NavigationItem = {
 export function getPrimaryNavigationItems(
   device: DeviceType,
 ): NavigationItem[] {
+  const filmUrl = 'http://naver.me/52RjLNuT';
+
   return [
-    { label: '메인', to: buildDeviceRootPath(device), end: true },
+    { label: '홈', to: buildDeviceRootPath(device), end: true },
     { label: '나들이', to: buildDeviceTripListPath(device) },
     { label: '달력', to: buildDeviceCalendarMonthPath(device) },
     { label: '신발', to: buildDeviceShoesCatalogPath(device) },
-    { label: '필름', to: 'https://www.instagram.com/', external: true },
+    { label: '필름', to: filmUrl, external: true },
   ];
 }

@@ -105,6 +105,10 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.slcn-trip-list-section__search-row {
+  display: grid;
+}
+
 .slcn-calendar-toolbar__controls {
   align-items: stretch;
 }
@@ -154,4 +158,8 @@
 
 .slcn-home-hub__grid {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.slcn-home-hub__hero {
+  padding: 1.5rem;
 }

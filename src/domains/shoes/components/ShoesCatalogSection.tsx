@@ -1,6 +1,5 @@
 import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/ui/EmptyState';
-import { Skeleton } from '../../../components/ui/Skeleton';
 import type { DeviceType } from '../../../app/router/route-constants';
 import { useShoeCatalog } from '../hooks/useShoeCatalog';
 import { ShoeBrandSection } from './ShoeBrandSection';
@@ -10,47 +9,64 @@ type ShoesCatalogSectionProps = {
 };
 
 export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
-  const catalogQuery = useShoeCatalog();
+  const catalog = useShoeCatalog();
+  const showIntro = device === 'main';
 
   return (
     <section className="slcn-shoes-catalog-page">
-      <Card className="slcn-shoes-catalog-page__intro" tone="pink" blob>
-        <p className="slcn-shoes-catalog-page__eyebrow">Shoes Recom</p>
-        <h1 className="slcn-shoes-catalog-page__title display-hand">
-          서울 촌놈의 신발 추천
-        </h1>
-        <p className="slcn-shoes-catalog-page__description">
-          오래 걸어도 편한 모델만 골랐습니다. 서울 촌놈 취향이 많이 들어가 있으니
-          취향표로 봐도 됩니다.
-        </p>
-      </Card>
-
-      {catalogQuery.isLoading ? (
-        <div className="slcn-shoes-catalog-page__loading" aria-label="loading">
-          <Skeleton className="slcn-shoes-catalog-page__loading-card" />
-          <Skeleton className="slcn-shoes-catalog-page__loading-card" />
-        </div>
+      {showIntro ? (
+        <Card className="slcn-shoes-catalog-page__intro" tone="pink" blob>
+          <p className="slcn-shoes-catalog-page__eyebrow">SLCN Shoes</p>
+          <h1 className="slcn-shoes-catalog-page__title display-hand">
+            서울 촌놈의 신발 추천 👟
+          </h1>
+          <p className="slcn-shoes-catalog-page__description">
+            오래 걸어도 편한 신발들만 골랐습니다~ 🎶
+            <br />
+            서울 촌놈 취향 200% 첨가되어있으니 유의~ 😏
+            <br />
+            클릭하면 더욱 상세한 정보를 확인 가능~!
+          </p>
+        </Card>
       ) : null}
 
-      {!catalogQuery.isLoading && !catalogQuery.data?.length ? (
+      {catalog.length ? (
+        <nav
+          className="slcn-shoes-catalog-page__brand-nav"
+          aria-label="브랜드 이동"
+        >
+          {catalog.map((brand) => (
+            <a
+              key={brand.brandId}
+              href={`#brand-${brand.brandId}`}
+              className="slcn-shoes-catalog-page__brand-link"
+            >
+              {brand.name}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+
+      {!catalog.length ? (
         <EmptyState
-          title="추천 신발 데이터가 비어 있어요."
-          description="정적 카탈로그 정규화 결과를 다시 확인해주세요."
+          title="추천할 신발이 아직 없어요."
+          description="신발 추천 목록이 준비되면 여기에서 바로 확인할 수 있어요."
         />
       ) : null}
 
-      {catalogQuery.data?.map((brand) => (
-        <ShoeBrandSection
-          key={brand.brandId}
-          device={device}
-          brand={brand}
-        />
+      {catalog.map((brand) => (
+        <ShoeBrandSection key={brand.brandId} device={device} brand={brand} />
       ))}
 
-      <Card className="slcn-shoes-catalog-page__warning" tone="muted">
-        전체 가격은 정가 기준입니다. 외부 후기 링크는 새 탭으로 열리며, 실제 재고와
-        가격은 판매처 기준으로 다시 확인해야 합니다.
-      </Card>
+      {showIntro ? (
+        <Card className="slcn-shoes-catalog-page__warning" tone="muted">
+          전체 신발 가격은 정가를 기준으로 작성하였습니다..
+          <br />
+          더욱 저렴한 가격은 다른 사이트에서 구매하시는 것을 추천드립니다~
+          <br />
+          단. 가품이 많아 유의해서 구매 필수!
+        </Card>
+      ) : null}
     </section>
   );
 }

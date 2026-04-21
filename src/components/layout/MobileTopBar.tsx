@@ -5,12 +5,14 @@ type MobileTopBarProps = {
   title?: string;
   className?: string;
   backHref?: string;
+  showTrailingAction?: boolean;
 };
 
 export function MobileTopBar({
   title = 'SLCN',
   className,
   backHref,
+  showTrailingAction = false,
 }: MobileTopBarProps) {
   return (
     <header className={cn('slcn-mobile-topbar pink-mesh', className)}>
@@ -29,13 +31,17 @@ export function MobileTopBar({
         <div className="slcn-mobile-topbar__title">
           <p className="slcn-mobile-topbar__title-text display-hand">{title}</p>
         </div>
-        <button
-          type="button"
-          aria-label="더 보기"
-          className="slcn-mobile-topbar__trailing"
-        >
-          …
-        </button>
+        {showTrailingAction ? (
+          <button
+            type="button"
+            aria-label="더 보기"
+            className="slcn-mobile-topbar__trailing"
+          >
+            …
+          </button>
+        ) : (
+          <span className="slcn-mobile-topbar__trailing" aria-hidden="true" />
+        )}
       </div>
     </header>
   );

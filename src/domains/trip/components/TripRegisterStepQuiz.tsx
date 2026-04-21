@@ -3,10 +3,29 @@ import { TextField } from '../../../components/ui/TextField';
 import type { TripValidationErrors } from '../utils/trip-validation';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 
+type TripRegisterQuizFieldKey =
+  | 'quizTitle'
+  | 'quizOptions'
+  | 'quizAnswer'
+  | 'quizAnswerTitle'
+  | 'quizAnswerText'
+  | 'quizErrorTitle'
+  | 'quizErrorText';
+
+type TripRegisterQuizValues = Pick<
+  TripRegisterWizardValues,
+  TripRegisterQuizFieldKey
+>;
+
+type TripRegisterQuizErrors = Pick<
+  TripValidationErrors,
+  TripRegisterQuizFieldKey
+>;
+
 type TripRegisterStepQuizProps = {
-  values: TripRegisterWizardValues;
-  errors: TripValidationErrors;
-  onFieldChange: <Key extends keyof TripRegisterWizardValues>(
+  values: TripRegisterQuizValues;
+  errors: TripRegisterQuizErrors;
+  onFieldChange: <Key extends TripRegisterQuizFieldKey>(
     key: Key,
     value: TripRegisterWizardValues[Key],
   ) => void;
@@ -23,6 +42,7 @@ export function TripRegisterStepQuiz({
     <div className="slcn-trip-register-step">
       <TextField
         label="퀴즈 제목"
+        placeholder="퀴즈 제목"
         value={values.quizTitle}
         error={errors.quizTitle}
         onChange={(event) => onFieldChange('quizTitle', event.target.value)}
@@ -30,7 +50,8 @@ export function TripRegisterStepQuiz({
       {values.quizOptions.map((option, index) => (
         <TextField
           key={index}
-          label={`보기 ${index + 1}`}
+          label={`정답${index + 1}`}
+          placeholder={`정답${index + 1}`}
           value={option}
           onChange={(event) => onQuizOptionChange(index, event.target.value)}
         />
@@ -54,6 +75,7 @@ export function TripRegisterStepQuiz({
       ) : null}
       <TextField
         label="정답 제목"
+        placeholder="정답 제목"
         value={values.quizAnswerTitle}
         error={errors.quizAnswerTitle}
         onChange={(event) =>
@@ -61,7 +83,8 @@ export function TripRegisterStepQuiz({
         }
       />
       <TextField
-        label="정답 설명"
+        label="정답 텍스트"
+        placeholder="정답 텍스트"
         value={values.quizAnswerText}
         error={errors.quizAnswerText}
         onChange={(event) =>
@@ -70,6 +93,7 @@ export function TripRegisterStepQuiz({
       />
       <TextField
         label="오답 제목"
+        placeholder="오답 제목"
         value={values.quizErrorTitle}
         error={errors.quizErrorTitle}
         onChange={(event) =>
@@ -77,7 +101,8 @@ export function TripRegisterStepQuiz({
         }
       />
       <TextField
-        label="오답 설명"
+        label="오답 텍스트"
+        placeholder="오답 텍스트"
         value={values.quizErrorText}
         error={errors.quizErrorText}
         onChange={(event) => onFieldChange('quizErrorText', event.target.value)}
