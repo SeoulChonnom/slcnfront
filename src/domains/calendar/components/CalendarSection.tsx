@@ -82,7 +82,11 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
             <CalendarMonthView
               currentDate={controller.currentDate}
               events={controller.events}
+              selectable={!controller.createDisabled}
               onSelect={controller.onSelectRange}
+              onDateClick={
+                controller.createDisabled ? undefined : controller.onDateClick
+              }
               onEventClick={controller.onEventClick}
               onEventDrop={controller.onEventDrop}
               onEventResize={controller.onEventResize}
@@ -91,7 +95,11 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
             <CalendarWeekView
               currentDate={controller.currentDate}
               events={controller.events}
+              selectable={!controller.createDisabled}
               onSelect={controller.onSelectRange}
+              onDateClick={
+                controller.createDisabled ? undefined : controller.onDateClick
+              }
               onEventClick={controller.onEventClick}
               onEventDrop={controller.onEventDrop}
               onEventResize={controller.onEventResize}

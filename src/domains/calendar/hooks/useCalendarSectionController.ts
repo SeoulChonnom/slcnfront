@@ -76,6 +76,7 @@ type CalendarSectionControllerResult = {
     end: Date;
     allDay: boolean;
   }) => void;
+  onDateClick: (selection: { date: Date; allDay: boolean }) => void;
   onEventClick: (event: EventApi) => void;
   onEventDrop: (arg: EventDropArg) => Promise<void>;
   onEventResize: (arg: EventResizeDoneArg) => Promise<void>;
@@ -87,6 +88,33 @@ function createClosedEditorState(calendarId: string): CalendarEditorState {
     draft: createEmptyCalendarEventDraft(calendarId),
     event: null,
     error: null,
+  };
+}
+
+function getMutationErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
+function buildQuickCreateSelection(date: Date, allDay: boolean) {
+  const start = new Date(date);
+  const end = new Date(date);
+
+  if (allDay) {
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    end.setDate(end.getDate() + 1);
+  } else {
+    end.setHours(end.getHours() + 1);
+  }
+
+  return {
+    start,
+    end,
+    allDay,
   };
 }
 
@@ -130,6 +158,13 @@ export function useCalendarSectionController({
 
     return selectedCalendarIds.filter((id) => nextIds.includes(id));
   }, [calendars, selectedCalendarIds]);
+  const visibleCalendars = useMemo(
+    () =>
+      calendars.filter((calendar) => visibleCalendarIds.includes(calendar.id)),
+    [calendars, visibleCalendarIds]
+  );
+  const defaultEditableCalendarId =
+    visibleCalendars.find((calendar) => calendar.editable)?.id ?? '';
 
   const visibleSchedules = useMemo(
     () =>
@@ -196,16 +231,28 @@ export function useCalendarSectionController({
     [updateSchedule]
   );
 
-  const onDraftChange = useCallback((patch: Partial<CalendarEventDraft>) => {
-    setEditorState((current) => ({
-      ...current,
-      draft: {
-        ...current.draft,
-        ...patch,
-      },
-      error: null,
-    }));
-  }, []);
+  const onDraftChange = useCallback(
+    (patch: Partial<CalendarEventDraft>) => {
+      setEditorState((current) => {
+        if (
+          patch.calendarId !== undefined &&
+          !calendarById.get(patch.calendarId)?.editable
+        ) {
+          return current;
+        }
+
+        return {
+          ...current,
+          draft: {
+            ...current.draft,
+            ...patch,
+          },
+          error: null,
+        };
+      });
+    },
+    [calendarById]
+  );
 
   const onSubmitEditor = useCallback(async () => {
     const error = validateCalendarEventDraft(editorState.draft);
@@ -219,19 +266,39 @@ export function useCalendarSectionController({
       return;
     }
 
+    if (!calendarById.get(editorState.draft.calendarId)?.editable) {
+      setEditorState((current) => ({
+        ...current,
+        error: '선택한 캘린더에는 일정을 저장할 수 없어요.',
+      }));
+
+      return;
+    }
+
     const payload = mapDraftToSchedulePayload(
       editorState.draft,
       editorState.event?.id
     );
 
-    if (editorState.event) {
-      await updateSchedule(payload);
-    } else {
-      await createSchedule(payload);
-    }
+    try {
+      if (editorState.event) {
+        await updateSchedule(payload);
+      } else {
+        await createSchedule(payload);
+      }
 
-    closeEditor();
+      closeEditor();
+    } catch (submitError) {
+      setEditorState((current) => ({
+        ...current,
+        error: getMutationErrorMessage(
+          submitError,
+          '일정을 저장하지 못했어요. 잠시 후 다시 시도해주세요.'
+        ),
+      }));
+    }
   }, [
+    calendarById,
     closeEditor,
     createSchedule,
     editorState.draft,
@@ -244,15 +311,50 @@ export function useCalendarSectionController({
       return;
     }
 
-    await deleteSchedule(editorState.event.id);
-    closeEditor();
+    try {
+      await deleteSchedule(editorState.event.id);
+      closeEditor();
+    } catch (deleteError) {
+      setEditorState((current) => ({
+        ...current,
+        error: getMutationErrorMessage(
+          deleteError,
+          '일정을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.'
+        ),
+      }));
+    }
   }, [closeEditor, deleteSchedule, editorState.event]);
+
+  const openCreateEditor = useCallback(
+    (selection?: { start: Date; end: Date; allDay: boolean }) => {
+      if (!defaultEditableCalendarId) {
+        return;
+      }
+
+      openEditor(
+        selection
+          ? createDraftFromRange(selection, defaultEditableCalendarId)
+          : createEmptyCalendarEventDraft(defaultEditableCalendarId),
+        null
+      );
+    },
+    [defaultEditableCalendarId, openEditor]
+  );
 
   const onSelectRange = useCallback(
     (selection: { start: Date; end: Date; allDay: boolean }) => {
-      openEditor(createDraftFromRange(selection, defaultCalendarId), null);
+      openCreateEditor(selection);
     },
-    [defaultCalendarId, openEditor]
+    [openCreateEditor]
+  );
+
+  const onDateClick = useCallback(
+    (selection: { date: Date; allDay: boolean }) => {
+      openCreateEditor(
+        buildQuickCreateSelection(selection.date, selection.allDay)
+      );
+    },
+    [openCreateEditor]
   );
 
   const onEventClick = useCallback(
@@ -265,14 +367,18 @@ export function useCalendarSectionController({
         return;
       }
 
+      if (!calendarById.get(selectedEvent.calendarId)?.editable) {
+        return;
+      }
+
       openEditor(createDraftFromSchedule(selectedEvent), selectedEvent);
     },
-    [openEditor, schedules]
+    [calendarById, openEditor, schedules]
   );
 
   const onCreate = useCallback(() => {
-    openEditor(createEmptyCalendarEventDraft(defaultCalendarId), null);
-  }, [defaultCalendarId, openEditor]);
+    openCreateEditor();
+  }, [openCreateEditor]);
 
   const onViewChange = useCallback(
     (nextView: CalendarViewMode) => {
@@ -308,8 +414,8 @@ export function useCalendarSectionController({
     visibleCalendarIds,
     events,
     createDisabled:
-      calendars.length === 0 ||
-      !calendars.some((calendar) => calendar.editable),
+      visibleCalendars.length === 0 ||
+      !visibleCalendars.some((calendar) => calendar.editable),
     isLoading: state.isLoading,
     isError: state.isError,
     isSubmitting,
@@ -328,11 +434,28 @@ export function useCalendarSectionController({
     onSubmitEditor,
     onDeleteEditor,
     onSelectRange,
+    onDateClick,
     onEventClick,
     onEventDrop: async (arg: EventDropArg) => {
+      const calendarId = String(arg.event.extendedProps['calendarId'] ?? '');
+      const calendar = calendarById.get(calendarId);
+
+      if (!calendar?.editable || !calendar.startEditable) {
+        arg.revert();
+        return;
+      }
+
       await handleEventMutationFromCalendar(arg.event, arg.revert);
     },
     onEventResize: async (arg: EventResizeDoneArg) => {
+      const calendarId = String(arg.event.extendedProps['calendarId'] ?? '');
+      const calendar = calendarById.get(calendarId);
+
+      if (!calendar?.editable || !calendar.durationEditable) {
+        arg.revert();
+        return;
+      }
+
       await handleEventMutationFromCalendar(arg.event, arg.revert);
     },
   };

@@ -1,3 +1,6 @@
+import '@fullcalendar/core/internal';
+import '@fullcalendar/daygrid/internal';
+import '@fullcalendar/timegrid/internal';
 import FullCalendar from '@fullcalendar/react';
 import koLocale from '@fullcalendar/core/locales/ko';
 import type {
@@ -24,6 +27,7 @@ type CalendarTimelineViewProps = {
   slotMinTime?: string;
   slotMaxTime?: string;
   onSelect: (selection: { start: Date; end: Date; allDay: boolean }) => void;
+  onDateClick?: (selection: { date: Date; allDay: boolean }) => void;
   onEventClick: (event: EventClickArg['event']) => void;
   onEventDrop: (arg: EventDropArg) => Promise<void>;
   onEventResize: (arg: EventResizeDoneArg) => Promise<void>;
@@ -44,6 +48,7 @@ export function CalendarTimelineView({
   slotMinTime,
   slotMaxTime,
   onSelect,
+  onDateClick,
   onEventClick,
   onEventDrop,
   onEventResize,
@@ -74,6 +79,16 @@ export function CalendarTimelineView({
             allDay: selection.allDay,
           });
         }}
+        dateClick={
+          onDateClick
+            ? (click) => {
+                onDateClick({
+                  date: click.date,
+                  allDay: click.allDay,
+                });
+              }
+            : undefined
+        }
         eventClick={(click) => onEventClick(click.event)}
         eventDrop={async (arg) => {
           await onEventDrop(arg);

@@ -30,6 +30,7 @@ export function CalendarEventModal({
   onDraftChange,
 }: CalendarEventModalProps) {
   const title = event ? '일정 수정' : '일정 만들기';
+  const editableCalendars = calendars.filter((calendar) => calendar.editable);
 
   return (
     <Modal
@@ -51,13 +52,14 @@ export function CalendarEventModal({
           <select
             value={draft.calendarId}
             className="slcn-calendar-modal__select"
+            disabled={isSubmitting || editableCalendars.length === 0}
             onChange={(changeEvent) => {
               onDraftChange({
                 calendarId: changeEvent.target.value,
               });
             }}
           >
-            {calendars.map((calendar) => (
+            {editableCalendars.map((calendar) => (
               <option key={calendar.id} value={calendar.id}>
                 {calendar.name}
               </option>

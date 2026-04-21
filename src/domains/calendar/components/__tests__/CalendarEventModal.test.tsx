@@ -16,6 +16,19 @@ const calendars = [
     defaultSelected: true,
     sortOrder: 1,
   },
+  {
+    id: 'cal-2',
+    name: '읽기 전용',
+    backgroundColor: '#cccccc',
+    borderColor: '#cccccc',
+    textColor: '#111111',
+    visible: true,
+    editable: false,
+    startEditable: false,
+    durationEditable: false,
+    defaultSelected: false,
+    sortOrder: 2,
+  },
 ];
 
 describe('CalendarEventModal', () => {
@@ -56,6 +69,8 @@ describe('CalendarEventModal', () => {
     expect(screen.getByText('일정 만들기')).toBeTruthy();
     expect(screen.getByDisplayValue('초기 제목')).toBeTruthy();
     expect(screen.getByRole('alert').textContent).toContain('검증 오류');
+    expect(screen.getByRole('option', { name: '아영' })).toBeTruthy();
+    expect(screen.queryByRole('option', { name: '읽기 전용' })).toBeNull();
 
     fireEvent.change(screen.getAllByRole('textbox')[0], {
       target: { value: '수정 제목' },
