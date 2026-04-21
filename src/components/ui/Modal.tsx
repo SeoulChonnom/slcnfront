@@ -19,8 +19,8 @@ type ModalProps = PropsWithChildren<{
 function getFocusableElements(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    ),
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
   ).filter((element) => !element.hasAttribute('disabled'));
 }
 
@@ -142,6 +142,6 @@ export function Modal({
         <div className="slcn-modal__body">{children}</div>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }

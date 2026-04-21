@@ -55,7 +55,7 @@ export function validateTripFile(file: File | null | undefined) {
 
 export function validateTripRegisterStep(
   step: TripRegisterStep,
-  values: TripRegisterWizardValues,
+  values: TripRegisterWizardValues
 ) {
   const errors: TripValidationErrors = {};
 
@@ -129,7 +129,7 @@ export function validateTripRegisterStep(
     }
 
     const filledOptions = values.quizOptions.filter(
-      (option) => option.trim() !== '',
+      (option) => option.trim() !== ''
     );
 
     if (filledOptions.length < 2) {

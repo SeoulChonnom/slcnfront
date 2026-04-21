@@ -98,7 +98,7 @@ function getLazyRoutePage(device: DeviceType, page: RoutePageKey) {
 
 export function renderLazyRoutePage(
   device: DeviceType,
-  page: RoutePageKey,
+  page: RoutePageKey
 ): ReactElement {
   const RoutePage = getLazyRoutePage(device, page);
 

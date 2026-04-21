@@ -36,7 +36,7 @@ export const BASE_PROTECTED_ROUTES: BaseRouteDefinition[] = [
 export function withShell(
   routes: BaseRouteDefinition[],
   shellOverrides: Partial<Record<RoutePageKey, DeviceShellKey>>,
-  defaultShell: DeviceShellKey,
+  defaultShell: DeviceShellKey
 ): DeviceProtectedRouteDefinition[] {
   return routes.map((route) => ({
     ...route,
@@ -68,7 +68,7 @@ export const PUBLIC_ENTRY_ROUTE_PATHS = [
 
 export function filterRoutesByShell(
   routes: DeviceProtectedRouteDefinition[],
-  shell: DeviceShellKey,
+  shell: DeviceShellKey
 ) {
   return routes.filter((route) => route.shell === shell);
 }
@@ -81,7 +81,7 @@ export function createDeviceRouteConfig(
   device: DeviceType,
   config: Omit<DeviceRouteConfig, 'protectedRoutes'> & {
     protectedRoutes: DeviceProtectedRouteDefinition[];
-  },
+  }
 ) {
   return {
     device,

@@ -47,7 +47,7 @@ describe('RequireAuth', () => {
       </>,
       {
         route: '/protected',
-      },
+      }
     );
 
     await waitFor(() => {
@@ -55,7 +55,7 @@ describe('RequireAuth', () => {
     });
 
     expect(screen.getByTestId('location-probe').textContent).toBe(
-      '/login?redirect=%2Fprotected',
+      '/login?redirect=%2Fprotected'
     );
   });
 
@@ -75,7 +75,7 @@ describe('RequireAuth', () => {
       </Routes>,
       {
         route: '/protected',
-      },
+      }
     );
 
     await waitFor(() => {
@@ -103,7 +103,7 @@ describe('RequireAuth', () => {
       </Routes>,
       {
         route: '/protected',
-      },
+      }
     );
 
     await waitFor(() => {

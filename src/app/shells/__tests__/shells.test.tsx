@@ -13,7 +13,7 @@ describe('shell components', () => {
       </MainDesktopShell>,
       {
         route: '/main',
-      },
+      }
     );
 
     expect(screen.getByText('desktop-content')).toBeTruthy();
@@ -28,13 +28,13 @@ describe('shell components', () => {
       </MainMobileShell>,
       {
         route: '/mobile',
-      },
+      }
     );
 
     expect(screen.getByText('mobile-content')).toBeTruthy();
     expect(screen.getByText('서울 촌놈 나들이 기록 📷')).toBeTruthy();
     expect(
-      screen.getByRole('navigation', { name: '모바일 하단 내비게이션' }),
+      screen.getByRole('navigation', { name: '모바일 하단 내비게이션' })
     ).toBeTruthy();
   });
 
@@ -45,15 +45,15 @@ describe('shell components', () => {
       </DetailMobileShell>,
       {
         route: '/mobile/map/register',
-      },
+      }
     );
 
     expect(screen.getByText('detail-content')).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: '이전 화면으로 이동' }),
+      screen.getByRole('link', { name: '이전 화면으로 이동' })
     ).toBeTruthy();
     expect(
-      screen.queryByRole('navigation', { name: '모바일 하단 내비게이션' }),
+      screen.queryByRole('navigation', { name: '모바일 하단 내비게이션' })
     ).toBeNull();
   });
 
@@ -64,12 +64,12 @@ describe('shell components', () => {
       </PublicShell>,
       {
         route: '/login',
-      },
+      }
     );
 
     expect(screen.getByText('public-content')).toBeTruthy();
     expect(
-      screen.queryByRole('navigation', { name: '모바일 하단 내비게이션' }),
+      screen.queryByRole('navigation', { name: '모바일 하단 내비게이션' })
     ).toBeNull();
     expect(screen.queryByText('Contact . Terms . Privacy')).toBeNull();
   });

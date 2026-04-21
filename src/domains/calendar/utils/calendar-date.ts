@@ -83,7 +83,7 @@ export function shiftWeek(dateKey: string, offset: number) {
 export function formatDraftDateTime(
   dateValue: string,
   timeValue: string,
-  allDay: boolean,
+  allDay: boolean
 ) {
   if (allDay) {
     return dayjs(dateValue).format(API_DATE_FORMAT);
@@ -95,7 +95,7 @@ export function formatDraftDateTime(
 export function ensureCalendarEventEnd(
   startValue: string,
   endValue: string,
-  allDay: boolean,
+  allDay: boolean
 ) {
   const start = dayjs(startValue);
   const end = dayjs(endValue);
@@ -130,7 +130,7 @@ export function doesScheduleOverlapRange(
   end: string,
   rangeStart: string,
   rangeEnd: string,
-  allDay: boolean,
+  allDay: boolean
 ) {
   const eventStart = dayjs(start);
   const normalizedEventEnd = allDay ? dayjs(end).add(1, 'day') : dayjs(end);
@@ -146,7 +146,9 @@ export function doesScheduleOverlapRange(
     return false;
   }
 
-  return eventStart.isBefore(queryEnd) && normalizedEventEnd.isAfter(queryStart);
+  return (
+    eventStart.isBefore(queryEnd) && normalizedEventEnd.isAfter(queryStart)
+  );
 }
 
 export function coerceTimeValue(value: string | null | undefined) {

@@ -50,7 +50,7 @@ function renderApp(route: string) {
       <LocationProbe />
       <AppRouter />
     </>,
-    { wrapper: Wrapper },
+    { wrapper: Wrapper }
   );
 }
 
@@ -81,7 +81,7 @@ describe('public-routes smoke', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe(
-        '/main/shoesRecom',
+        '/main/shoesRecom'
       );
     });
     expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
@@ -94,7 +94,7 @@ describe('public-routes smoke', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe(
-        '/mobile/shoesRecom',
+        '/mobile/shoesRecom'
       );
     });
     expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
@@ -107,7 +107,7 @@ describe('public-routes smoke', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe(
-        '/main/404',
+        '/main/404'
       );
     });
     expect(await screen.findByText('페이지를 찾을 수 없어요.')).toBeTruthy();

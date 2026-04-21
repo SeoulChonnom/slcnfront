@@ -22,7 +22,7 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
       return response.map(mapScheduleEventDto);
     },
     async getSchedulesInRange(
-      query: ScheduleRangeQuery,
+      query: ScheduleRangeQuery
     ): Promise<ScheduleEvent[]> {
       const response = await client.get<ScheduleEventDto[]>({
         path: '/schedule',
@@ -31,7 +31,9 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
 
       return response.map(mapScheduleEventDto);
     },
-    async createSchedule(payload: ScheduleMutationPayload): Promise<ScheduleEvent> {
+    async createSchedule(
+      payload: ScheduleMutationPayload
+    ): Promise<ScheduleEvent> {
       const response = await client.post<ScheduleEventDto>({
         path: '/schedule',
         body: payload,
@@ -39,7 +41,9 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
 
       return mapScheduleEventDto(response);
     },
-    async updateSchedule(payload: ScheduleMutationPayload): Promise<ScheduleEvent> {
+    async updateSchedule(
+      payload: ScheduleMutationPayload
+    ): Promise<ScheduleEvent> {
       const response = await client.put<ScheduleEventDto>({
         path: '/schedule',
         body: payload,

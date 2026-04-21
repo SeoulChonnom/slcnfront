@@ -14,7 +14,7 @@ export type NavigationItem = {
 };
 
 export function getPrimaryNavigationItems(
-  device: DeviceType,
+  device: DeviceType
 ): NavigationItem[] {
   const filmUrl = 'http://naver.me/52RjLNuT';
 

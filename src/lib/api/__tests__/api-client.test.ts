@@ -10,7 +10,7 @@ describe('createApiClient', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }),
+      })
     );
 
     const client = createApiClient({
@@ -27,7 +27,7 @@ describe('createApiClient', () => {
     expect(response).toEqual({ ok: true });
     expect(fetchFn).toHaveBeenCalledTimes(1);
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/example',
+      'http://localhost:8080/api/example'
     );
 
     const init = fetchFn.mock.calls[0]?.[1];
@@ -35,7 +35,7 @@ describe('createApiClient', () => {
     expect(init?.method).toBe('POST');
     expect(new Headers(init?.headers).get('x-auth-token')).toBe('token-123');
     expect(new Headers(init?.headers).get('content-type')).toBe(
-      'application/json',
+      'application/json'
     );
     expect(init?.body).toBe(JSON.stringify({ value: 'hello' }));
   });
@@ -44,7 +44,7 @@ describe('createApiClient', () => {
     const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('file-content', {
         status: 200,
-      }),
+      })
     );
     const client = createApiClient({
       fetchFn,
@@ -67,7 +67,7 @@ describe('createApiClient', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }),
+      })
     );
     const client = createApiClient({
       fetchFn,
@@ -77,7 +77,7 @@ describe('createApiClient', () => {
     await expect(
       client.get({
         path: '/api/error',
-      }),
+      })
     ).rejects.toMatchObject({
       name: 'AppError',
       code: 'HTTP_ERROR',

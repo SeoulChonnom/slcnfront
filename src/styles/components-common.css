@@ -14,53 +14,53 @@
     box-shadow 150ms ease;
 }
 
-.slcn-button[data-size='sm'] {
+.slcn-button[data-size="sm"] {
   min-height: 2.75rem;
   padding: 0 1.125rem;
   font-size: 0.875rem;
 }
 
-.slcn-button[data-size='md'] {
+.slcn-button[data-size="md"] {
   min-height: 3.375rem;
   padding: 0 1.125rem;
   font-size: 1rem;
 }
 
-.slcn-button[data-size='lg'] {
+.slcn-button[data-size="lg"] {
   min-height: 3.5rem;
   padding: 0 1.5rem;
   font-size: 1.125rem;
 }
 
-.slcn-button[data-full-width='true'] {
+.slcn-button[data-full-width="true"] {
   width: 100%;
 }
 
-.slcn-button[data-variant='primary'] {
+.slcn-button[data-variant="primary"] {
   background: var(--color-ink);
   color: var(--color-brand-pink);
   box-shadow: var(--shadow-pink);
 }
 
-.slcn-button[data-variant='secondary'] {
+.slcn-button[data-variant="secondary"] {
   background: var(--color-surface);
   color: var(--color-ink);
   box-shadow: 3px 3px 0 0 rgb(0 0 0 / 20%);
 }
 
-.slcn-button[data-variant='ghost'] {
+.slcn-button[data-variant="ghost"] {
   background: transparent;
   color: var(--color-ink);
   box-shadow: none;
 }
 
-.slcn-button[data-variant='danger'] {
+.slcn-button[data-variant="danger"] {
   background: var(--color-error);
   color: var(--color-surface);
   box-shadow: 3px 3px 0 0 rgb(0 0 0 / 35%);
 }
 
-.slcn-button[data-disabled='true'] {
+.slcn-button[data-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.6;
   box-shadow: none;
@@ -73,15 +73,15 @@
   padding: 1.5rem;
 }
 
-.slcn-card[data-tone='muted'] {
+.slcn-card[data-tone="muted"] {
   background: var(--color-surface-muted);
 }
 
-.slcn-card[data-tone='pink'] {
+.slcn-card[data-tone="pink"] {
   background: var(--color-brand-pink-soft);
 }
 
-.slcn-card[data-blob='true'] {
+.slcn-card[data-blob="true"] {
   border-radius: var(--radius-blob);
 }
 
@@ -112,12 +112,12 @@
   background: var(--color-surface);
 }
 
-.slcn-field__control[data-disabled='true'] {
+.slcn-field__control[data-disabled="true"] {
   background: rgb(245 245 245);
   color: rgb(163 163 163);
 }
 
-.slcn-field__control[data-error='true'] {
+.slcn-field__control[data-error="true"] {
   border-color: var(--color-error);
 }
 
@@ -141,11 +141,11 @@
   font-size: 0.875rem;
 }
 
-.slcn-field__message[data-kind='hint'] {
+.slcn-field__message[data-kind="hint"] {
   color: var(--color-ink-muted);
 }
 
-.slcn-field__message[data-kind='error'] {
+.slcn-field__message[data-kind="error"] {
   font-weight: 500;
   color: var(--color-error);
 }
@@ -160,12 +160,12 @@
   outline: none;
 }
 
-.slcn-field__textarea[data-disabled='true'] {
+.slcn-field__textarea[data-disabled="true"] {
   background: rgb(245 245 245);
   color: rgb(163 163 163);
 }
 
-.slcn-field__textarea[data-error='true'] {
+.slcn-field__textarea[data-error="true"] {
   border-color: var(--color-error);
 }
 
@@ -327,7 +327,7 @@
   font-weight: 700;
 }
 
-.slcn-calendar-toolbar__chip[data-active='true'] {
+.slcn-calendar-toolbar__chip[data-active="true"] {
   color: var(--color-ink);
   background: var(--color-surface);
   box-shadow: 3px 3px 0 0 rgb(0 0 0 / 20%);
@@ -544,7 +544,7 @@
 }
 
 .slcn-login-page::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -2rem;
   right: -2rem;
@@ -846,7 +846,7 @@
   font-weight: 700;
 }
 
-.slcn-trip-register-wizard__step-indicator span[data-active='true'] {
+.slcn-trip-register-wizard__step-indicator span[data-active="true"] {
   background: var(--color-brand-pink);
 }
 
@@ -896,7 +896,7 @@
   cursor: pointer;
 }
 
-.slcn-radio-group__option[data-checked='true'] {
+.slcn-radio-group__option[data-checked="true"] {
   background: var(--color-brand-pink-soft);
 }
 
@@ -934,7 +934,7 @@
   font-weight: 700;
 }
 
-.slcn-segmented-control__button[data-active='true'] {
+.slcn-segmented-control__button[data-active="true"] {
   background: var(--color-brand-pink);
 }
 
@@ -1031,19 +1031,19 @@
   text-align: center;
 }
 
-.slcn-logo-blob[data-size='sm'] {
+.slcn-logo-blob[data-size="sm"] {
   width: 2rem;
   height: 2rem;
   font-size: 0.5rem;
 }
 
-.slcn-logo-blob[data-size='md'] {
+.slcn-logo-blob[data-size="md"] {
   width: 2.5rem;
   height: 2.5rem;
   font-size: 0.6rem;
 }
 
-.slcn-logo-blob[data-size='lg'] {
+.slcn-logo-blob[data-size="lg"] {
   width: 4rem;
   height: 4rem;
   font-size: 0.75rem;
@@ -1455,7 +1455,7 @@
 }
 
 .slcn-shoe-detail-hero__fact::before {
-  content: '•';
+  content: "•";
   position: absolute;
   left: 0;
   color: var(--color-brand-pink-strong);
@@ -1596,7 +1596,7 @@
   align-content: start;
 }
 
-.slcn-home-hub__tile[data-dashed='true'] {
+.slcn-home-hub__tile[data-dashed="true"] {
   border-style: dashed;
   background: rgb(255 255 255 / 45%);
 }

@@ -34,7 +34,7 @@ type TripRegisterStepMapsProps = {
   errors: TripRegisterMapsErrors;
   onFieldChange: <Key extends TripRegisterMapsFieldKey>(
     key: Key,
-    value: TripRegisterWizardValues[Key],
+    value: TripRegisterWizardValues[Key]
   ) => void;
 };
 

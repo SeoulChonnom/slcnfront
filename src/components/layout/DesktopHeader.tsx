@@ -48,7 +48,7 @@ export function DesktopHeader({
                       className={({ isActive }) =>
                         cn(
                           'slcn-desktop-header__nav-link',
-                          isActive && 'slcn-desktop-header__nav-link--active',
+                          isActive && 'slcn-desktop-header__nav-link--active'
                         )
                       }
                     >

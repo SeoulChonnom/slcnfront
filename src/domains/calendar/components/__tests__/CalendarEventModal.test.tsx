@@ -50,7 +50,7 @@ describe('CalendarEventModal', () => {
         onDraftChange={onDraftChange}
         onSubmit={onSubmit}
         onDelete={onDelete}
-      />,
+      />
     );
 
     expect(screen.getByText('일정 만들기')).toBeTruthy();
@@ -84,7 +84,7 @@ describe('CalendarEventModal', () => {
         onDraftChange={onDraftChange}
         onSubmit={onSubmit}
         onDelete={onDelete}
-      />,
+      />
     );
 
     expect(screen.getByDisplayValue('수정 제목')).toBeTruthy();
@@ -130,7 +130,7 @@ describe('CalendarEventModal', () => {
         onDraftChange={vi.fn()}
         onSubmit={vi.fn().mockResolvedValue(undefined)}
         onDelete={onDelete}
-      />,
+      />
     );
 
     expect(screen.getByText('일정 수정')).toBeTruthy();

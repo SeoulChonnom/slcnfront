@@ -9,7 +9,7 @@ describe('Button', () => {
     const { user } = renderWithProviders(
       <Button variant="primary" onClick={onClick}>
         저장하기
-      </Button>,
+      </Button>
     );
 
     const button = screen.getByRole('button', { name: '저장하기' });
@@ -26,7 +26,7 @@ describe('Button', () => {
     renderWithProviders(
       <Button variant="danger" disabled loading>
         삭제
-      </Button>,
+      </Button>
     );
 
     const button = screen.getByRole('button', {

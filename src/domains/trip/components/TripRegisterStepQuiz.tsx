@@ -27,7 +27,7 @@ type TripRegisterStepQuizProps = {
   errors: TripRegisterQuizErrors;
   onFieldChange: <Key extends TripRegisterQuizFieldKey>(
     key: Key,
-    value: TripRegisterWizardValues[Key],
+    value: TripRegisterWizardValues[Key]
   ) => void;
   onQuizOptionChange: (index: number, value: string) => void;
 };

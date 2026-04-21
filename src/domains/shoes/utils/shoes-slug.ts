@@ -7,7 +7,7 @@ export function isReservedShoeBrandSlug(brandSlug: string) {
 
 export function findBrandBySlug(
   brands: ShoeBrand[],
-  brandSlug: string | undefined,
+  brandSlug: string | undefined
 ) {
   if (!brandSlug || isReservedShoeBrandSlug(brandSlug)) {
     return null;
@@ -18,7 +18,7 @@ export function findBrandBySlug(
 
 export function findShoeBySlug(
   brand: ShoeBrand | null,
-  shoesSlug: string | undefined,
+  shoesSlug: string | undefined
 ) {
   if (!brand || !shoesSlug) {
     return null;
@@ -30,7 +30,7 @@ export function findShoeBySlug(
 export function getShoeDetailBySlug(
   brands: ShoeBrand[],
   brandSlug: string | undefined,
-  shoesSlug: string | undefined,
+  shoesSlug: string | undefined
 ) {
   const brand = findBrandBySlug(brands, brandSlug);
   const shoe = findShoeBySlug(brand, shoesSlug);

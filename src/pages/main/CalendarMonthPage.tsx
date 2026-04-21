@@ -6,7 +6,7 @@ import { normalizeCalendarDateKey } from '../../domains/calendar/utils/calendar-
 export function CalendarMonthPage() {
   const [searchParams] = useSearchParams();
   const state = useCalendarMonth(
-    normalizeCalendarDateKey(searchParams.get('date')),
+    normalizeCalendarDateKey(searchParams.get('date'))
   );
 
   return <CalendarSection device="main" view="month" state={state} />;

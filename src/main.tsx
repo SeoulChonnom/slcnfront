@@ -12,5 +12,5 @@ if (!container) {
 createRoot(container).render(
   <StrictMode>
     <AppRoot />
-  </StrictMode>,
+  </StrictMode>
 );

@@ -12,7 +12,7 @@ export function useTripAssetUrl(path: string | null | undefined) {
 
   const objectUrl = useMemo(
     () => (query.data ? URL.createObjectURL(query.data) : null),
-    [query.data],
+    [query.data]
   );
 
   useEffect(() => {

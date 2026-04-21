@@ -52,7 +52,7 @@ function renderApp(route: string) {
       <LocationProbe />
       <AppRouter />
     </>,
-    { wrapper: Wrapper },
+    { wrapper: Wrapper }
   );
 }
 
@@ -80,7 +80,7 @@ describe('auth smoke', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe(
-        '/main/login?redirect=%2Fmain%2Fmap',
+        '/main/login?redirect=%2Fmain%2Fmap'
       );
     });
     expect(await screen.findByText('SLCN Login')).toBeTruthy();
@@ -109,7 +109,7 @@ describe('auth smoke', () => {
     });
     expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
     expect(screen.getByTestId('location-probe').textContent).toBe(
-      '/main/shoesRecom',
+      '/main/shoesRecom'
     );
     expect(useAuthStore.getState().accessToken).toBe('token-123');
   });

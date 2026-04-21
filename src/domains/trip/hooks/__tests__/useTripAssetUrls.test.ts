@@ -16,7 +16,7 @@ vi.mock('../../api/trip-files-api', () => ({
 describe('useTripAssetUrls', () => {
   beforeEach(() => {
     vi.spyOn(URL, 'createObjectURL').mockImplementation(
-      (blob) => `blob:${(blob as File).name}`,
+      (blob) => `blob:${(blob as File).name}`
     );
     vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
   });
@@ -29,7 +29,7 @@ describe('useTripAssetUrls', () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
 
     const { result, unmount } = renderHook(() =>
-      useTripAssetUrls(['/logo.png', '/map1.png', '/logo.png']),
+      useTripAssetUrls(['/logo.png', '/map1.png', '/logo.png'])
     );
 
     await waitFor(() => {

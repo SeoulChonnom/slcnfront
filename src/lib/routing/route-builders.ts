@@ -101,12 +101,12 @@ export function buildDeviceShoesCatalogPath(device: DeviceType) {
 export function buildDeviceShoeDetailPath(
   device: DeviceType,
   brand: string,
-  shoesName: string,
+  shoesName: string
 ) {
   return buildDevicePath(
     device,
     encodeSegment(brand),
-    encodeSegment(shoesName),
+    encodeSegment(shoesName)
   );
 }
 

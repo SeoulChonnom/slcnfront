@@ -19,7 +19,7 @@ function isSafeRedirectTarget(target: string | null): target is string {
 
 export function resolvePostAuthRedirectTarget(
   search: string,
-  device: DeviceType,
+  device: DeviceType
 ) {
   const searchParams = new URLSearchParams(search);
   const redirectTarget = searchParams.get('redirect');

@@ -37,7 +37,7 @@ describe('CalendarToolbar', () => {
         onToday={onToday}
         onNext={onNext}
         onCreate={onCreate}
-      />,
+      />
     );
 
     expect(screen.getByText('2026년 4월')).toBeTruthy();

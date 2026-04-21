@@ -17,7 +17,7 @@ describe('public-entry-resolver', () => {
         matchMedia,
         search: '?view=compact',
         hash: '#top',
-      }),
+      })
     ).toBe('/mobile/calendar/week?view=compact#top');
   });
 
@@ -29,7 +29,7 @@ describe('public-entry-resolver', () => {
   it('routes reserved public paths before shoe detail matching', () => {
     expect(resolvePublicEntryPath('/map/register')).toBe('/main/map/register');
     expect(resolvePublicEntryPath('/calendar/week')).toBe(
-      '/main/calendar/week',
+      '/main/calendar/week'
     );
   });
 

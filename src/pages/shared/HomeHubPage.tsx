@@ -50,7 +50,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
   const ddayDays =
     Math.floor(
       (Date.now() - new Date('2024-11-10T00:00:00+09:00').getTime()) /
-        86_400_000,
+        86_400_000
     ) + 1;
   const isMobile = device === 'mobile';
   const mobileTiles: MobileTile[] = [
@@ -203,7 +203,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             const surfaceClassName = cn(
               'slcn-home-hub__desktop-panel',
               `slcn-home-hub__desktop-panel--${panel.kind}`,
-              panel.dashed && 'slcn-home-hub__desktop-panel--dashed',
+              panel.dashed && 'slcn-home-hub__desktop-panel--dashed'
             );
             const cardBody = (
               <>
@@ -327,7 +327,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
               target="_blank"
               rel="noreferrer"
               className={cn(
-                getButtonClassName({ variant: 'secondary', size: 'md' }),
+                getButtonClassName({ variant: 'secondary', size: 'md' })
               )}
             >
               Choi&apos;s Film Art~🎞
@@ -358,7 +358,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                   target="_blank"
                   rel="noreferrer"
                   className={cn(
-                    getButtonClassName({ variant: 'secondary', size: 'md' }),
+                    getButtonClassName({ variant: 'secondary', size: 'md' })
                   )}
                 >
                   열기

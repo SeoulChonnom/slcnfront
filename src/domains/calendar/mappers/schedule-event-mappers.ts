@@ -27,7 +27,7 @@ export type CalendarEventDraft = {
 };
 
 export function createEmptyCalendarEventDraft(
-  calendarId: string,
+  calendarId: string
 ): CalendarEventDraft {
   const now = dayjs();
   const end = now.add(1, 'hour');
@@ -51,7 +51,7 @@ export function createDraftFromRange(
     end: Date;
     allDay: boolean;
   },
-  calendarId: string,
+  calendarId: string
 ): CalendarEventDraft {
   if (selection.allDay) {
     return {
@@ -83,7 +83,7 @@ export function createDraftFromRange(
 }
 
 export function createDraftFromSchedule(
-  event: ScheduleEvent,
+  event: ScheduleEvent
 ): CalendarEventDraft {
   return {
     calendarId: event.calendarId,
@@ -110,7 +110,7 @@ export function validateCalendarEventDraft(draft: CalendarEventDraft) {
   const start = formatDraftDateTime(
     draft.startDate,
     draft.startTime,
-    draft.allDay,
+    draft.allDay
   );
   const end = formatDraftDateTime(draft.endDate, draft.endTime, draft.allDay);
   const startDate = dayjs(start);
@@ -137,7 +137,7 @@ export function validateCalendarEventDraft(draft: CalendarEventDraft) {
 
 export function mapDraftToSchedulePayload(
   draft: CalendarEventDraft,
-  id?: string,
+  id?: string
 ): ScheduleMutationPayload {
   return {
     id,
@@ -153,7 +153,7 @@ export function mapDraftToSchedulePayload(
 
 export function mapScheduleToCalendarEventInput(
   schedule: ScheduleEvent,
-  calendar: CalendarMeta | null,
+  calendar: CalendarMeta | null
 ): CalendarEventInput {
   return {
     id: schedule.id,

@@ -23,7 +23,7 @@ describe('auth-store', () => {
         name: 'Stored User',
         userName: 'stored-user',
         roleList: ['admin'],
-      }),
+      })
     );
 
     useAuthStore.getState().hydrateFromStorage();
@@ -57,8 +57,8 @@ describe('auth-store', () => {
     });
     expect(
       JSON.parse(
-        window.sessionStorage.getItem(AUTH_USER_INFO_STORAGE_KEY) || 'null',
-      ),
+        window.sessionStorage.getItem(AUTH_USER_INFO_STORAGE_KEY) || 'null'
+      )
     ).toEqual({
       name: 'SLCN',
       userName: 'slcn-admin',
@@ -84,7 +84,9 @@ describe('auth-store', () => {
       userInfo: null,
       restoreState: 'idle',
     });
-    expect(window.sessionStorage.getItem(AUTH_USER_INFO_STORAGE_KEY)).toBeNull();
+    expect(
+      window.sessionStorage.getItem(AUTH_USER_INFO_STORAGE_KEY)
+    ).toBeNull();
   });
 
   it('tracks restore lifecycle state', () => {

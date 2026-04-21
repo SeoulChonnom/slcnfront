@@ -12,7 +12,7 @@ describe('ShoeDetailPage', () => {
       </Routes>,
       {
         route: '/main/nike/v2k',
-      },
+      }
     );
 
     expect(await screen.findByText('V2K 런')).toBeTruthy();
@@ -27,7 +27,7 @@ describe('ShoeDetailPage', () => {
       </Routes>,
       {
         route: '/main/asics/jog100',
-      },
+      }
     );
 
     expect(await screen.findByText('조그 100')).toBeTruthy();
@@ -41,12 +41,12 @@ describe('ShoeDetailPage', () => {
       </Routes>,
       {
         route: '/main/nike/missing',
-      },
+      }
     );
 
     expect(await screen.findByText('존재하지 않는 신발입니다.')).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: '신발 추천으로 돌아가기' }),
+      screen.getByRole('link', { name: '신발 추천으로 돌아가기' })
     ).toBeTruthy();
   });
 });

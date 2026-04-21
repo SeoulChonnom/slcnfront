@@ -17,7 +17,7 @@ export type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   function TextField(
     { label, hint, error, leading, trailing, required, disabled, id, ...props },
-    ref,
+    ref
   ) {
     const fallbackId = useId();
     const inputId = id ?? fallbackId;
@@ -63,7 +63,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         ) : null}
       </div>
     );
-  },
+  }
 );
 
 export type TextareaFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -77,7 +77,7 @@ export const TextareaField = forwardRef<
   TextareaFieldProps
 >(function TextareaField(
   { label, hint, error, required, disabled, id, ...props },
-  ref,
+  ref
 ) {
   const fallbackId = useId();
   const inputId = id ?? fallbackId;

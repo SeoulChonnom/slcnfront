@@ -9,7 +9,7 @@ describe('parseAppEnv', () => {
         MODE: 'development',
         DEV: true,
         PROD: false,
-      }),
+      })
     ).toEqual({
       apiUrl: 'http://localhost:8080',
       mode: 'development',
@@ -21,7 +21,7 @@ describe('parseAppEnv', () => {
 
   it('throws when VITE_API_URL is missing', () => {
     expect(() => parseAppEnv({ MODE: 'test' })).toThrowError(
-      'VITE_API_URL is required',
+      'VITE_API_URL is required'
     );
   });
 });

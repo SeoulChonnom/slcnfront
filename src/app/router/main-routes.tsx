@@ -1,5 +1,9 @@
 import { MAIN_ROUTE_PATTERNS } from './route-constants';
-import { BASE_PROTECTED_ROUTES, createDeviceRouteConfig, withShell } from './route-manifest';
+import {
+  BASE_PROTECTED_ROUTES,
+  createDeviceRouteConfig,
+  withShell,
+} from './route-manifest';
 import { renderDeviceRoutes } from './render-device-routes';
 import { MainDesktopShell } from '../shells/MainDesktopShell';
 import { PublicShell } from '../shells/PublicShell';

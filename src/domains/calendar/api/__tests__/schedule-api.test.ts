@@ -20,25 +20,25 @@ describe('schedule-api', () => {
         new Response(JSON.stringify([eventBody]), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }),
+        })
       )
       .mockResolvedValueOnce(
         new Response(JSON.stringify([eventBody]), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }),
+        })
       )
       .mockResolvedValueOnce(
         new Response(JSON.stringify(eventBody), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }),
+        })
       )
       .mockResolvedValueOnce(
         new Response(JSON.stringify(eventBody), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }),
+        })
       )
       .mockResolvedValueOnce(new Response(null, { status: 204 }))
       .mockResolvedValueOnce(new Response(null, { status: 204 }));
@@ -76,19 +76,19 @@ describe('schedule-api', () => {
     expect(createdResult.id).toBe('schedule-1');
     expect(updatedResult.location).toBe('Seoul');
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/schedule?start=2026-04-01T00%3A00%3A00%2B09%3A00&end=2026-05-01T00%3A00%3A00%2B09%3A00',
+      'http://localhost:8080/api/schedule?start=2026-04-01T00%3A00%3A00%2B09%3A00&end=2026-05-01T00%3A00%3A00%2B09%3A00'
     );
     expect(fetchFn.mock.calls[1]?.[0]).toBe(
-      'http://localhost:8080/api/schedule/now',
+      'http://localhost:8080/api/schedule/now'
     );
     expect(fetchFn.mock.calls[2]?.[1]?.method).toBe('POST');
     expect(fetchFn.mock.calls[3]?.[1]?.method).toBe('PUT');
     expect(fetchFn.mock.calls[4]?.[0]).toBe(
-      'http://localhost:8080/api/schedule/schedule-1/hide',
+      'http://localhost:8080/api/schedule/schedule-1/hide'
     );
     expect(fetchFn.mock.calls[4]?.[1]?.method).toBe('PATCH');
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
-      'http://localhost:8080/api/schedule/schedule-1',
+      'http://localhost:8080/api/schedule/schedule-1'
     );
   });
 });

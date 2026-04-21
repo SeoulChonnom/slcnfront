@@ -13,7 +13,7 @@ describe('MobileBottomNav', () => {
     expect(screen.getByRole('link', { name: '달력' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '신발' })).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: '달력' }).getAttribute('aria-current'),
+      screen.getByRole('link', { name: '달력' }).getAttribute('aria-current')
     ).toBe('page');
   });
 });

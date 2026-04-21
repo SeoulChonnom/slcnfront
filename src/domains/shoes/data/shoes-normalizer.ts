@@ -1,6 +1,8 @@
 import type { RawShoesCatalog, ShoeBrand } from '../types';
 
-export function normalizeShoesCatalog(rawCatalog: RawShoesCatalog): ShoeBrand[] {
+export function normalizeShoesCatalog(
+  rawCatalog: RawShoesCatalog
+): ShoeBrand[] {
   return rawCatalog.brands.map((brand) => ({
     id: brand.id,
     brandId: brand.brandId,

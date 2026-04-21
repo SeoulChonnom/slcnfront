@@ -28,10 +28,10 @@ export function TripListSection({ device }: TripListSectionProps) {
   const quiz = useTripQuiz();
   const [query, setQuery] = useState('');
   const logoObjectUrls = useTripAssetUrls(
-    data?.map((trip) => trip.logoPath) ?? [],
+    data?.map((trip) => trip.logoPath) ?? []
   );
   const isAdmin = useAuthStore((state) =>
-    state.userInfo?.roleList.includes('admin'),
+    state.userInfo?.roleList.includes('admin')
   );
   const filteredTrips = useMemo(() => {
     if (!data) {
@@ -48,7 +48,7 @@ export function TripListSection({ device }: TripListSectionProps) {
       [trip.name, trip.displayDate, trip.quizTitle]
         .join(' ')
         .toLowerCase()
-        .includes(normalizedQuery),
+        .includes(normalizedQuery)
     );
   }, [data, query]);
   const showSectionHeader = device === 'main';
@@ -71,7 +71,9 @@ export function TripListSection({ device }: TripListSectionProps) {
 
       <Card className="slcn-trip-list-section__search" tone="pink" blob>
         <div className="slcn-trip-list-section__search-copy">
-          <p className="slcn-trip-list-section__eyebrow">서울 촌놈 나들이 기록 📷</p>
+          <p className="slcn-trip-list-section__eyebrow">
+            서울 촌놈 나들이 기록 📷
+          </p>
           <h2 className="slcn-trip-list-section__title display-hand">
             서울 촌놈 나들이 기록
           </h2>

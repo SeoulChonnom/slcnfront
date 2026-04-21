@@ -23,15 +23,15 @@ describe('navigation smoke', () => {
     renderInApp(<MainHomePage />, '/main');
 
     expect(
-      screen.getByRole('link', { name: /\bmap\b/i }).getAttribute('href'),
+      screen.getByRole('link', { name: /\bmap\b/i }).getAttribute('href')
     ).toBe('/main/map');
     expect(
-      screen.getByRole('link', { name: /\brecom\b/i }).getAttribute('href'),
+      screen.getByRole('link', { name: /\brecom\b/i }).getAttribute('href')
     ).toBe('/main/shoesRecom');
     expect(
       screen
         .getByRole('link', { name: /Choi's Film Art~🎞/i })
-        .getAttribute('href'),
+        .getAttribute('href')
     ).toBe('http://naver.me/52RjLNuT');
   });
 
@@ -41,15 +41,15 @@ describe('navigation smoke', () => {
     expect(
       screen
         .getAllByRole('link', { name: '바로 이동' })[0]
-        ?.getAttribute('href'),
+        ?.getAttribute('href')
     ).toBe('/mobile/map');
     expect(
-      screen.getByRole('heading', { name: '서울 촌놈 나들이 기록 📷' }),
+      screen.getByRole('heading', { name: '서울 촌놈 나들이 기록 📷' })
     ).toBeTruthy();
     expect(
       screen
         .getByRole('link', { name: "Choi's Film Art~🎞" })
-        .getAttribute('href'),
+        .getAttribute('href')
     ).toBe('http://naver.me/52RjLNuT');
   });
 });

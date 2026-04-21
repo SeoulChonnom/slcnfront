@@ -14,7 +14,7 @@ type UseCalendarRangeDataOptions = {
   getLabel: (dateKey: string) => string;
   getScheduleQueryKey: (
     dateKey: string,
-    range: CalendarRange,
+    range: CalendarRange
   ) => readonly unknown[];
 };
 
@@ -50,8 +50,8 @@ export function useCalendarRangeData({
       schedule.end,
       range.start,
       range.end,
-      schedule.allDay,
-    ),
+      schedule.allDay
+    )
   );
 
   return {

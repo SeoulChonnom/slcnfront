@@ -37,7 +37,7 @@ export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
 }
 
 export function buildTripRegisterPayload(
-  values: TripRegisterWizardValues,
+  values: TripRegisterWizardValues
 ): TripRegisterPayload {
   const filteredQuizOptions = values.quizOptions
     .map((answer, index) => ({

@@ -10,7 +10,7 @@ describe('TripRegisterWizard', () => {
       <TripRegisterWizard device="main" onSubmit={onSubmit} />,
       {
         route: '/main/map/register',
-      },
+      }
     );
 
     await user.click(screen.getByRole('button', { name: '다음' }));
@@ -20,7 +20,7 @@ describe('TripRegisterWizard', () => {
     await user.type(screen.getByLabelText('날짜'), '2099-12-31');
     await user.type(screen.getByLabelText('나들이 이름'), '연말 나들이');
     const step1Inputs = container.querySelectorAll<HTMLInputElement>(
-      '.slcn-file-dropzone__input',
+      '.slcn-file-dropzone__input'
     );
     const logoInput = step1Inputs[0];
 
@@ -30,16 +30,16 @@ describe('TripRegisterWizard', () => {
 
     await user.upload(
       logoInput,
-      new File(['logo'], 'logo.png', { type: 'image/png' }),
+      new File(['logo'], 'logo.png', { type: 'image/png' })
     );
     await user.click(screen.getByRole('button', { name: '다음' }));
 
     expect(screen.getByText('지도 정보').getAttribute('data-active')).toBe(
-      'true',
+      'true'
     );
 
     const step2Inputs = container.querySelectorAll<HTMLInputElement>(
-      '.slcn-file-dropzone__input',
+      '.slcn-file-dropzone__input'
     );
     const map1Input = step2Inputs[0];
 
@@ -49,16 +49,16 @@ describe('TripRegisterWizard', () => {
 
     await user.upload(
       map1Input,
-      new File(['map1'], 'map1.png', { type: 'image/png' }),
+      new File(['map1'], 'map1.png', { type: 'image/png' })
     );
     await user.type(
       screen.getByLabelText('드라이브 링크'),
-      'https://drive.google.com/x',
+      'https://drive.google.com/x'
     );
     await user.click(screen.getByRole('button', { name: '다음' }));
 
     expect(screen.getByText('퀴즈 정보').getAttribute('data-active')).toBe(
-      'true',
+      'true'
     );
 
     await user.type(screen.getByLabelText('퀴즈 제목'), '정답은?');

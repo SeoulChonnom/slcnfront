@@ -25,16 +25,10 @@ describe('TripCard', () => {
   it('opens the quiz flow when the CTA is clicked', async () => {
     const onOpenQuiz = vi.fn();
     const { user } = renderWithProviders(
-      <TripCard
-        trip={trip}
-        logoObjectUrl="blob:logo"
-        onOpenQuiz={onOpenQuiz}
-      />,
+      <TripCard trip={trip} logoObjectUrl="blob:logo" onOpenQuiz={onOpenQuiz} />
     );
 
-    await user.click(
-      screen.getByRole('button', { name: '퀴즈 풀기' }),
-    );
+    await user.click(screen.getByRole('button', { name: '퀴즈 풀기' }));
 
     expect(onOpenQuiz).toHaveBeenCalledWith(trip);
   });

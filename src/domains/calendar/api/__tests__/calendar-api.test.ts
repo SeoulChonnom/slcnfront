@@ -37,8 +37,8 @@ describe('calendar-api', () => {
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        },
-      ),
+        }
+      )
     );
     const client = createApiClient({
       fetchFn,
@@ -50,6 +50,8 @@ describe('calendar-api', () => {
     const result = await calendarApi.getCalendars();
 
     expect(result.map((calendar) => calendar.id)).toEqual(['cal-1', 'cal-2']);
-    expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/calendar');
+    expect(fetchFn.mock.calls[0]?.[0]).toBe(
+      'http://localhost:8080/api/calendar'
+    );
   });
 });

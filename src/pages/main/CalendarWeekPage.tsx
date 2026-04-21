@@ -6,7 +6,7 @@ import { normalizeCalendarDateKey } from '../../domains/calendar/utils/calendar-
 export function CalendarWeekPage() {
   const [searchParams] = useSearchParams();
   const state = useCalendarWeek(
-    normalizeCalendarDateKey(searchParams.get('date')),
+    normalizeCalendarDateKey(searchParams.get('date'))
   );
 
   return <CalendarSection device="main" view="week" state={state} />;

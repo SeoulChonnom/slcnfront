@@ -30,7 +30,7 @@ describe('schedule-event-mappers', () => {
         durationEditable: true,
         defaultSelected: true,
         sortOrder: 1,
-      },
+      }
     );
 
     expect(event.start).toBe('2026-04-14');
@@ -45,14 +45,14 @@ describe('schedule-event-mappers', () => {
         end: new Date(2026, 3, 15),
         allDay: true,
       },
-      'cal-1',
+      'cal-1'
     );
     const payload = mapDraftToSchedulePayload(
       {
         ...draft,
         title: '종일 기록',
       },
-      'schedule-1',
+      'schedule-1'
     );
 
     expect(payload).toEqual({

@@ -6,7 +6,7 @@ import { ShoeDetailSection } from '../ShoeDetailSection';
 describe('ShoeDetailSection', () => {
   it('renders a valid shoe detail immediately', () => {
     renderWithProviders(
-      <ShoeDetailSection device="main" brandSlug="nike" shoesSlug="v2k" />,
+      <ShoeDetailSection device="main" brandSlug="nike" shoesSlug="v2k" />
     );
 
     expect(screen.getByRole('heading', { name: 'V2K 런' })).toBeTruthy();
@@ -15,7 +15,7 @@ describe('ShoeDetailSection', () => {
 
   it('shows the fallback for an unknown slug pair', () => {
     renderWithProviders(
-      <ShoeDetailSection device="main" brandSlug="nike" shoesSlug="missing" />,
+      <ShoeDetailSection device="main" brandSlug="nike" shoesSlug="missing" />
     );
 
     expect(screen.getByText('존재하지 않는 신발입니다.')).toBeTruthy();

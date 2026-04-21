@@ -9,7 +9,7 @@ describe('auth-api', () => {
       toLoginRequest({
         userName: 'slcn-admin',
         password: 'pw1234',
-      }),
+      })
     ).toEqual({
       username: 'slcn-admin',
       password: 'pw1234',
@@ -30,14 +30,14 @@ describe('auth-api', () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
-      ),
+        }
+      )
     );
     const authApi = createAuthApi(
       createApiClient({
         fetchFn,
         getBaseUrl: () => 'http://localhost:8080/api',
-      }),
+      })
     );
 
     const session = await authApi.login({
@@ -54,7 +54,7 @@ describe('auth-api', () => {
       },
     });
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/login',
+      'http://localhost:8080/api/user/login'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
@@ -75,14 +75,14 @@ describe('auth-api', () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
-      ),
+        }
+      )
     );
     const authApi = createAuthApi(
       createApiClient({
         fetchFn,
         getBaseUrl: () => 'http://localhost:8080/api',
-      }),
+      })
     );
 
     const session = await authApi.restoreSession();
@@ -96,7 +96,7 @@ describe('auth-api', () => {
       },
     });
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/token',
+      'http://localhost:8080/api/user/token'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
@@ -110,13 +110,13 @@ describe('auth-api', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }),
+      })
     );
     const authApi = createAuthApi(
       createApiClient({
         fetchFn,
         getBaseUrl: () => 'http://localhost:8080/api',
-      }),
+      })
     );
 
     await expect(authApi.restoreSession()).rejects.toMatchObject({
@@ -126,7 +126,7 @@ describe('auth-api', () => {
       message: 'restore failed',
     } satisfies Partial<AppError>);
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/token',
+      'http://localhost:8080/api/user/token'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',

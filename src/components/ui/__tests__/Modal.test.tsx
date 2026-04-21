@@ -16,7 +16,7 @@ describe('Modal', () => {
       >
         <button type="button">확인</button>
         <button type="button">취소</button>
-      </Modal>,
+      </Modal>
     );
 
     const dialog = screen.getByRole('dialog', { name: '퀴즈 풀기' });

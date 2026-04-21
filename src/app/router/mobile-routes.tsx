@@ -1,5 +1,9 @@
 import { MOBILE_ROUTE_PATTERNS } from './route-constants';
-import { BASE_PROTECTED_ROUTES, createDeviceRouteConfig, withShell } from './route-manifest';
+import {
+  BASE_PROTECTED_ROUTES,
+  createDeviceRouteConfig,
+  withShell,
+} from './route-manifest';
 import { renderDeviceRoutes } from './render-device-routes';
 import { DetailMobileShell } from '../shells/DetailMobileShell';
 import { MainMobileShell } from '../shells/MainMobileShell';
@@ -17,11 +21,15 @@ const mobileRouteConfig = createDeviceRouteConfig('mobile', {
     </PublicShell>
   ),
   notFoundElement: <NotFoundPage device="mobile" />,
-  protectedRoutes: withShell(BASE_PROTECTED_ROUTES, {
-    tripRegister: 'detail',
-    tripDetail: 'detail',
-    shoeDetail: 'detail',
-  }, 'main'),
+  protectedRoutes: withShell(
+    BASE_PROTECTED_ROUTES,
+    {
+      tripRegister: 'detail',
+      tripDetail: 'detail',
+      shoeDetail: 'detail',
+    },
+    'main'
+  ),
 });
 
 export function renderMobileRoutes() {

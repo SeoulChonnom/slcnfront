@@ -22,7 +22,7 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState<TripRegisterStep>(1);
   const [values, setValues] = useState<TripRegisterWizardValues>(
-    createInitialTripRegisterValues,
+    createInitialTripRegisterValues
   );
   const [errors, setErrors] = useState<TripValidationErrors>({});
   const mutation = useMutation({
@@ -45,7 +45,7 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
 
   function updateField<Key extends keyof TripRegisterWizardValues>(
     key: Key,
-    value: TripRegisterWizardValues[Key],
+    value: TripRegisterWizardValues[Key]
   ) {
     setValues((currentValues) => ({
       ...currentValues,
@@ -84,7 +84,7 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
     }
 
     setStep((currentStep) =>
-      currentStep < 3 ? ((currentStep + 1) as TripRegisterStep) : currentStep,
+      currentStep < 3 ? ((currentStep + 1) as TripRegisterStep) : currentStep
     );
 
     return true;
@@ -93,7 +93,7 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
   function goPrev() {
     setErrors({});
     setStep((currentStep) =>
-      currentStep > 1 ? ((currentStep - 1) as TripRegisterStep) : currentStep,
+      currentStep > 1 ? ((currentStep - 1) as TripRegisterStep) : currentStep
     );
   }
 

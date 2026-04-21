@@ -69,7 +69,7 @@ export function MobileBottomNav({
                 className={({ isActive }) =>
                   cn(
                     'slcn-mobile-bottom-nav__link',
-                    isActive && 'slcn-mobile-bottom-nav__link--active',
+                    isActive && 'slcn-mobile-bottom-nav__link--active'
                   )
                 }
               >

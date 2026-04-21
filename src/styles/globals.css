@@ -1,9 +1,9 @@
-@import 'tailwindcss';
-@import './tokens.css';
-@import './utilities.css';
-@import './components-common.css';
-@import './components-pc.css';
-@import './components-mobile.css';
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./utilities.css";
+@import "./components-common.css";
+@import "./components-pc.css";
+@import "./components-mobile.css";
 
 :root {
   color: var(--color-ink);

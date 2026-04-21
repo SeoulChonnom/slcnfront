@@ -102,7 +102,7 @@ export function useCalendarSectionController({
   const schedules = state.schedules;
   const calendarById = useMemo(
     () => new Map(calendars.map((calendar) => [calendar.id, calendar])),
-    [calendars],
+    [calendars]
   );
   const defaultCalendarId =
     calendars.find((calendar) => calendar.defaultSelected)?.id ??
@@ -112,7 +112,7 @@ export function useCalendarSectionController({
     string[] | null
   >(null);
   const [editorState, setEditorState] = useState<CalendarEditorState>(() =>
-    createClosedEditorState(''),
+    createClosedEditorState('')
   );
   const { createSchedule, updateSchedule, deleteSchedule, isSubmitting } =
     useCalendarEventMutations();
@@ -134,19 +134,19 @@ export function useCalendarSectionController({
   const visibleSchedules = useMemo(
     () =>
       schedules.filter((schedule) =>
-        visibleCalendarIds.includes(schedule.calendarId),
+        visibleCalendarIds.includes(schedule.calendarId)
       ),
-    [schedules, visibleCalendarIds],
+    [schedules, visibleCalendarIds]
   );
   const events = useMemo(
     () =>
       visibleSchedules.map((schedule) =>
         mapScheduleToCalendarEventInput(
           schedule,
-          calendarById.get(schedule.calendarId) ?? null,
-        ),
+          calendarById.get(schedule.calendarId) ?? null
+        )
       ),
-    [calendarById, visibleSchedules],
+    [calendarById, visibleSchedules]
   );
 
   const updateDateParam = useCallback(
@@ -155,7 +155,7 @@ export function useCalendarSectionController({
         setSearchParams({ date: nextDate });
       });
     },
-    [setSearchParams],
+    [setSearchParams]
   );
 
   const moveDate = useCallback(
@@ -163,10 +163,10 @@ export function useCalendarSectionController({
       updateDateParam(
         view === 'month'
           ? shiftMonth(currentDate, direction)
-          : shiftWeek(currentDate, direction),
+          : shiftWeek(currentDate, direction)
       );
     },
-    [currentDate, updateDateParam, view],
+    [currentDate, updateDateParam, view]
   );
 
   const closeEditor = useCallback(() => {
@@ -182,7 +182,7 @@ export function useCalendarSectionController({
         error: null,
       });
     },
-    [],
+    []
   );
 
   const handleEventMutationFromCalendar = useCallback(
@@ -193,7 +193,7 @@ export function useCalendarSectionController({
         revert();
       }
     },
-    [updateSchedule],
+    [updateSchedule]
   );
 
   const onDraftChange = useCallback((patch: Partial<CalendarEventDraft>) => {
@@ -221,7 +221,7 @@ export function useCalendarSectionController({
 
     const payload = mapDraftToSchedulePayload(
       editorState.draft,
-      editorState.event?.id,
+      editorState.event?.id
     );
 
     if (editorState.event) {
@@ -252,13 +252,13 @@ export function useCalendarSectionController({
     (selection: { start: Date; end: Date; allDay: boolean }) => {
       openEditor(createDraftFromRange(selection, defaultCalendarId), null);
     },
-    [defaultCalendarId, openEditor],
+    [defaultCalendarId, openEditor]
   );
 
   const onEventClick = useCallback(
     (event: EventApi) => {
       const selectedEvent = schedules.find(
-        (schedule) => schedule.id === event.id,
+        (schedule) => schedule.id === event.id
       );
 
       if (!selectedEvent) {
@@ -267,7 +267,7 @@ export function useCalendarSectionController({
 
       openEditor(createDraftFromSchedule(selectedEvent), selectedEvent);
     },
-    [openEditor, schedules],
+    [openEditor, schedules]
   );
 
   const onCreate = useCallback(() => {
@@ -285,7 +285,7 @@ export function useCalendarSectionController({
         navigate(`${nextPath}?date=${currentDate}`);
       });
     },
-    [currentDate, device, navigate],
+    [currentDate, device, navigate]
   );
 
   const onToggleCalendar = useCallback(
@@ -298,7 +298,7 @@ export function useCalendarSectionController({
           : [...baseIds, calendarId];
       });
     },
-    [calendars],
+    [calendars]
   );
 
   return {

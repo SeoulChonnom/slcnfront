@@ -111,11 +111,9 @@ describe('TripListPage', () => {
 
     expect(screen.getByText('연말 나들이')).toBeTruthy();
     expect(
-      screen.getAllByRole('link', { name: '새 나들이 기록하기' }).length,
+      screen.getAllByRole('link', { name: '새 나들이 기록하기' }).length
     ).toBeTruthy();
-    expect(
-      screen.getByRole('button', { name: '퀴즈 풀기' }),
-    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: '퀴즈 풀기' })).toBeTruthy();
     expect(screen.getByPlaceholderText('날짜나 나들이 이름')).toBeTruthy();
   });
 });

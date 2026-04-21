@@ -73,7 +73,7 @@ export function TripRegisterWizard({
     },
   });
   const activeStep = TRIP_REGISTER_STEP_CONFIGS.find(
-    (config) => config.step === form.step,
+    (config) => config.step === form.step
   );
 
   return (

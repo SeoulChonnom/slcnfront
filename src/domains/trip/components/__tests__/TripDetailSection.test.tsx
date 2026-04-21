@@ -22,7 +22,7 @@ describe('TripDetailSection', () => {
           previousButtonText: null,
           driveUrl: 'https://drive.google.com/x',
         }}
-      />,
+      />
     );
 
     expect(screen.getByRole('img', { name: '나들이 지도' })).toBeTruthy();
@@ -42,7 +42,7 @@ describe('TripDetailSection', () => {
           previousButtonText: '2차 경로',
           driveUrl: 'https://drive.google.com/x',
         }}
-      />,
+      />
     );
 
     expect(screen.getByRole('tab', { name: '1차 경로' })).toBeTruthy();
@@ -51,13 +51,13 @@ describe('TripDetailSection', () => {
     await user.click(screen.getByRole('tab', { name: '2차 경로' }));
     await user.click(screen.getByRole('button', { name: '드라이브 링크' }));
 
-    expect(screen.getByRole('img', { name: '나들이 지도' }).getAttribute('src')).toBe(
-      'blob:/map2.png',
-    );
+    expect(
+      screen.getByRole('img', { name: '나들이 지도' }).getAttribute('src')
+    ).toBe('blob:/map2.png');
     expect(openSpy).toHaveBeenCalledWith(
       'https://drive.google.com/x',
       '_blank',
-      'noopener,noreferrer',
+      'noopener,noreferrer'
     );
   });
 });

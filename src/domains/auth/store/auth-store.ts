@@ -73,12 +73,12 @@ function writeStoredUserInfo(userInfo: UserInfo | null) {
 
   window.sessionStorage.setItem(
     AUTH_USER_INFO_STORAGE_KEY,
-    JSON.stringify(userInfo),
+    JSON.stringify(userInfo)
   );
 }
 
 export function selectHasSession(
-  state: Pick<AuthStoreState, 'accessToken' | 'userInfo'>,
+  state: Pick<AuthStoreState, 'accessToken' | 'userInfo'>
 ) {
   return Boolean(state.accessToken && state.userInfo);
 }
@@ -87,7 +87,7 @@ export function selectAuthPhase(
   state: Pick<
     AuthStoreState,
     'accessToken' | 'hydrated' | 'restoreState' | 'userInfo'
-  >,
+  >
 ): AuthPhase {
   if (!state.hydrated) {
     return 'hydrating';
@@ -108,7 +108,7 @@ export function selectShouldAttemptSessionRestore(
   state: Pick<
     AuthStoreState,
     'accessToken' | 'hydrated' | 'restoreState' | 'userInfo'
-  >,
+  >
 ) {
   return (
     state.hydrated && !selectHasSession(state) && state.restoreState === 'idle'

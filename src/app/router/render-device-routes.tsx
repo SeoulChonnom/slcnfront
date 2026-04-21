@@ -18,7 +18,7 @@ type ShellDefinition = {
 function renderProtectedRoutes(
   device: DeviceType,
   routeConfig: DeviceRouteConfig,
-  shell: DeviceShellKey,
+  shell: DeviceShellKey
 ) {
   return filterRoutesByShell(routeConfig.protectedRoutes, shell).map(
     (route) => (
@@ -28,14 +28,14 @@ function renderProtectedRoutes(
         path={route.path}
         element={renderLazyRoutePage(device, route.page)}
       />
-    ),
+    )
   );
 }
 
 export function renderDeviceRoutes(
   device: DeviceType,
   routeConfig: DeviceRouteConfig,
-  shells: ShellDefinition[],
+  shells: ShellDefinition[]
 ): ReactElement {
   return (
     <Fragment key={device}>

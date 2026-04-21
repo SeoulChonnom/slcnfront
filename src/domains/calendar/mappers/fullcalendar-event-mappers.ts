@@ -8,7 +8,7 @@ import {
 import type { ScheduleMutationPayload } from '../types';
 
 export function mapEventApiToSchedulePayload(
-  event: EventApi,
+  event: EventApi
 ): ScheduleMutationPayload {
   return {
     id: event.id,

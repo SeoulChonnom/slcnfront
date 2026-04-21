@@ -93,7 +93,7 @@ function renderSection() {
             refetch: vi.fn(),
           }}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     ),
   };
 }

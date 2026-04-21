@@ -12,7 +12,7 @@ type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
 
 export function renderWithProviders(
   ui: ReactElement,
-  { route = '/', ...options }: ExtendedRenderOptions = {},
+  { route = '/', ...options }: ExtendedRenderOptions = {}
 ) {
   const queryClient = createTestQueryClient();
 

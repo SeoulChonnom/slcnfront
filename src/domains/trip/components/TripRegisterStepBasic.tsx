@@ -21,7 +21,7 @@ type TripRegisterStepBasicProps = {
   errors: TripRegisterBasicErrors;
   onFieldChange: <Key extends TripRegisterBasicFieldKey>(
     key: Key,
-    value: TripRegisterWizardValues[Key],
+    value: TripRegisterWizardValues[Key]
   ) => void;
 };
 

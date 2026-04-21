@@ -65,8 +65,8 @@ describe('trip-api', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          },
-        ),
+          }
+        )
       )
       .mockResolvedValueOnce(
         new Response(
@@ -83,8 +83,8 @@ describe('trip-api', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          },
-        ),
+          }
+        )
       )
       .mockResolvedValueOnce(
         new Response(
@@ -101,8 +101,8 @@ describe('trip-api', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          },
-        ),
+          }
+        )
       )
       .mockResolvedValueOnce(new Response('file-content', { status: 200 }));
     const client = createApiClient({
@@ -142,11 +142,11 @@ describe('trip-api', () => {
     expect(await fileBlob.text()).toBe('file-content');
     expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trip');
     expect(fetchFn.mock.calls[1]?.[0]).toBe(
-      'http://localhost:8080/api/trip/detail?tripDate=2099-12-31',
+      'http://localhost:8080/api/trip/detail?tripDate=2099-12-31'
     );
     expect(fetchFn.mock.calls[2]?.[0]).toBe('http://localhost:8080/api/trip');
     expect(fetchFn.mock.calls[3]?.[0]).toBe(
-      'http://localhost:8080/api/file?path=%2Flogo.png',
+      'http://localhost:8080/api/file?path=%2Flogo.png'
     );
     expect(fetchFn.mock.calls[2]?.[1]?.body).toBeInstanceOf(FormData);
   });

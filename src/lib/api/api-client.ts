@@ -34,7 +34,7 @@ type ErrorPayload = {
 function buildUrl(
   path: string,
   query: QueryParams | undefined,
-  baseUrl: string,
+  baseUrl: string
 ) {
   const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
@@ -77,7 +77,7 @@ async function parseError(response: Response) {
 
 async function parseResponse<T>(
   response: Response,
-  responseType: ResponseType,
+  responseType: ResponseType
 ) {
   if (responseType === 'void' || response.status === 204) {
     return undefined as T;

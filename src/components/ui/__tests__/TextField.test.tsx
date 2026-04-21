@@ -10,7 +10,7 @@ describe('TextField', () => {
         name="userName"
         required
         hint="아이디를 입력하세요."
-      />,
+      />
     );
 
     const input = screen.getByLabelText(/아이디/) as HTMLInputElement;
@@ -22,7 +22,7 @@ describe('TextField', () => {
 
   it('renders an error message and marks the field invalid', () => {
     renderWithProviders(
-      <TextField label="비밀번호" error="비밀번호를 입력해주세요." />,
+      <TextField label="비밀번호" error="비밀번호를 입력해주세요." />
     );
 
     const input = screen.getByLabelText('비밀번호') as HTMLInputElement;

@@ -3,7 +3,7 @@ import { tripFilesApi } from '../api/trip-files-api';
 
 function normalizeAssetPaths(paths: Array<string | null | undefined>) {
   return Array.from(
-    new Set(paths.filter((path): path is string => Boolean(path?.trim()))),
+    new Set(paths.filter((path): path is string => Boolean(path?.trim())))
   );
 }
 
@@ -29,7 +29,7 @@ export function useTripAssetUrls(paths: Array<string | null | undefined>) {
       }
 
       setObjectUrls((current) =>
-        Object.keys(current).length === 0 ? current : {},
+        Object.keys(current).length === 0 ? current : {}
       );
     });
 
@@ -40,7 +40,7 @@ export function useTripAssetUrls(paths: Array<string | null | undefined>) {
     }
 
     void Promise.allSettled(
-      nextPaths.map((path) => tripFilesApi.downloadTripFile(path)),
+      nextPaths.map((path) => tripFilesApi.downloadTripFile(path))
     ).then((results) => {
       if (cancelled) {
         return;

@@ -15,11 +15,9 @@ vi.mock('../../../domains/calendar/hooks/useCalendarMonth', () => ({
 }));
 
 vi.mock('../../../domains/calendar/components/CalendarSection', () => ({
-  CalendarSection: ({
-    state,
-  }: {
-    state: { label: string };
-  }) => <div>{state.label}</div>,
+  CalendarSection: ({ state }: { state: { label: string } }) => (
+    <div>{state.label}</div>
+  ),
 }));
 
 describe('CalendarMonthPage', () => {

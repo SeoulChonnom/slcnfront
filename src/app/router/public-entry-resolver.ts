@@ -17,7 +17,7 @@ import {
 } from '../../lib/routing/route-builders';
 
 export type MatchMediaLike = (
-  query: string,
+  query: string
 ) => Pick<MediaQueryList, 'matches'> | null;
 
 type ResolvePublicEntryOptions = {
@@ -53,7 +53,7 @@ function isReservedShoeBrand(brand: string) {
 
 export function detectPreferredDevice(
   pathname: string,
-  matchMedia?: MatchMediaLike,
+  matchMedia?: MatchMediaLike
 ): DeviceType {
   if (
     pathname === DEVICE_PREFIX.mobile ||
@@ -80,7 +80,7 @@ export function detectPreferredDevice(
 
 export function resolvePublicEntryPath(
   pathname: string,
-  options: ResolvePublicEntryOptions = {},
+  options: ResolvePublicEntryOptions = {}
 ) {
   const normalizedPathname = normalizePathname(pathname);
   const device = detectPreferredDevice(normalizedPathname, options.matchMedia);
@@ -89,7 +89,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       normalizedPathname,
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -97,7 +97,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceRootPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -105,7 +105,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceLoginPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -113,7 +113,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceTripRegisterPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -124,7 +124,7 @@ export function resolvePublicEntryPath(
       return appendLocationParts(
         buildDeviceTripDetailPath(device, date),
         options.search,
-        options.hash,
+        options.hash
       );
     }
   }
@@ -133,7 +133,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceTripListPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -141,7 +141,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceCalendarWeekPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -149,7 +149,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceCalendarMonthPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -157,7 +157,7 @@ export function resolvePublicEntryPath(
     return appendLocationParts(
       buildDeviceShoesCatalogPath(device),
       options.search,
-      options.hash,
+      options.hash
     );
   }
 
@@ -170,7 +170,7 @@ export function resolvePublicEntryPath(
       return appendLocationParts(
         buildDeviceShoeDetailPath(device, brand, shoesName),
         options.search,
-        options.hash,
+        options.hash
       );
     }
   }
@@ -178,6 +178,6 @@ export function resolvePublicEntryPath(
   return appendLocationParts(
     buildDeviceNotFoundPath(device),
     options.search,
-    options.hash,
+    options.hash
   );
 }

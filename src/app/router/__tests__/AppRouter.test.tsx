@@ -97,7 +97,7 @@ describe('AppRouter', () => {
     });
 
     expect(
-      screen.getByRole('navigation', { name: '모바일 하단 내비게이션' }),
+      screen.getByRole('navigation', { name: '모바일 하단 내비게이션' })
     ).toBeTruthy();
   });
 

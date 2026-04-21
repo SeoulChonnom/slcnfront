@@ -20,7 +20,7 @@ describe('trip-mappers', () => {
         quizErrorTitle: '오답',
         quizErrorText: '다시',
         quizList: [{ quizIndex: '0', answer: '보기1' }],
-      }),
+      })
     ).toMatchObject({
       displayDate: '2099.12.31',
       logoPath: '/logo.png',
@@ -35,7 +35,7 @@ describe('trip-mappers', () => {
         nextButtonText: '',
         previousButtonText: '이전',
         drive: 'https://drive.google.com/x',
-      }),
+      })
     ).toMatchObject({
       firstMapPath: '/map1.png',
       secondMapPath: null,

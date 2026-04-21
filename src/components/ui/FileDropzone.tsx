@@ -33,7 +33,7 @@ export function FileDropzone({
         onDrop={preventDefault}
         className={cn(
           'slcn-file-dropzone__label slcn-card surface-blob pink-mesh',
-          className,
+          className
         )}
       >
         <span className="slcn-file-dropzone__title display-hand">{label}</span>

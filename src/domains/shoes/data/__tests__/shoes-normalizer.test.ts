@@ -10,7 +10,7 @@ describe('normalizeShoesCatalog', () => {
     expect(catalog[0]?.brandId).toBe('nb');
     expect(catalog[1]?.shoes[1]?.videoUrl).toMatch(/mjV2K\.mp4/);
     expect(catalog[2]?.shoes[0]?.reviews[1]?.imageUrl).toMatch(
-      /AsicsJogReview2\.png/,
+      /AsicsJogReview2\.png/
     );
     expect(catalog[1]?.shoes[0]?.info).toHaveLength(3);
   });

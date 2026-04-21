@@ -6,11 +6,11 @@ describe('trip-validation', () => {
   it('returns typed keys for each step', () => {
     const step1Errors = validateTripRegisterStep(
       1,
-      createInitialTripRegisterValues(),
+      createInitialTripRegisterValues()
     );
     const step3Errors = validateTripRegisterStep(
       3,
-      createInitialTripRegisterValues(),
+      createInitialTripRegisterValues()
     );
 
     expect(Object.keys(step1Errors)).toEqual(['type', 'date', 'info2', 'logo']);

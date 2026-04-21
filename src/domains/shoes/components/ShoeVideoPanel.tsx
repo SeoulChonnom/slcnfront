@@ -37,7 +37,7 @@ export function ShoeVideoPanel({ shoe }: ShoeVideoPanelProps) {
           target="_blank"
           rel="noreferrer"
           className={cn(
-            getButtonClassName({ variant: 'secondary', size: 'md' }),
+            getButtonClassName({ variant: 'secondary', size: 'md' })
           )}
         >
           영상 보러가기
