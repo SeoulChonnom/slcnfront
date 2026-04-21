@@ -85,29 +85,29 @@ src/
 
 ```ts
 type ShoeBrand = {
-  brandId: string
-  name: string
-  desc: string
-  img: string
-  shoes: ShoeItem[]
-}
+  brandId: string;
+  name: string;
+  desc: string;
+  img: string;
+  shoes: ShoeItem[];
+};
 
 type ShoeItem = {
-  shoesId: string
-  name: string
-  desc: string
-  price: string
-  img: string
-  videoLink?: string
-  video?: string
-  videoDesc?: string
-  reviewImg1: string
-  reviewDesc1: string
-  reviewLink1: string
-  reviewImg2: string
-  reviewDesc2: string
-  reviewLink2: string
-}
+  shoesId: string;
+  name: string;
+  desc: string;
+  price: string;
+  img: string;
+  videoLink?: string;
+  video?: string;
+  videoDesc?: string;
+  reviewImg1: string;
+  reviewDesc1: string;
+  reviewLink1: string;
+  reviewImg2: string;
+  reviewDesc2: string;
+  reviewLink2: string;
+};
 ```
 
 ### 7.2 slug 규칙

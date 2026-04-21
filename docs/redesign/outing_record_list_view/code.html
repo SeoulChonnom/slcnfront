@@ -1,26 +1,33 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Outing Record List (Vertical Layout)</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&amp;family=Permanent+Marker&amp;family=Nanum+Pen+Script&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Outing Record List (Vertical Layout)</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&amp;family=Permanent+Marker&amp;family=Nanum+Pen+Script&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
       tailwind.config = {
-        darkMode: "class",
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              primary: "#FE9FC8", // Light Pink
-              "primary-content": "#000000",
-              "background-light": "#FE9FC8", // Light Pink background
-              "background-dark": "#FE9FC8", // Force light pink even in dark mode context for this specific request
-              "card-light": "#ffffff",
-              "card-dark": "#ffffff",
-              "accent": "#000000", // Black for accent
+              primary: '#FE9FC8', // Light Pink
+              'primary-content': '#000000',
+              'background-light': '#FE9FC8', // Light Pink background
+              'background-dark': '#FE9FC8', // Force light pink even in dark mode context for this specific request
+              'card-light': '#ffffff',
+              'card-dark': '#ffffff',
+              accent: '#000000', // Black for accent
             },
             fontFamily: {
               display: ['"Permanent Marker"', 'cursive'],
@@ -29,379 +36,660 @@
               sans: ['Inter', 'sans-serif'],
             },
             borderRadius: {
-              DEFAULT: "0.25rem",
-              lg: "0.5rem",
-              xl: "0.75rem",
-              'blob': "40% 60% 70% 30% / 40% 50% 60% 50%",
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              blob: '40% 60% 70% 30% / 40% 50% 60% 50%',
             },
             boxShadow: {
-              'sketch': '4px 4px 0px 0px rgba(0,0,0,1)',
+              sketch: '4px 4px 0px 0px rgba(0,0,0,1)',
               'sketch-hover': '2px 2px 0px 0px rgba(0,0,0,1)',
-            }
+            },
           },
         },
       };
     </script>
-<style>
-        .blob-1 { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-        .blob-2 { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-        .blob-3 { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-        .fade-in {
-            animation: fadeIn 0.8s ease-in-out;
+    <style>
+      .blob-1 {
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      }
+      .blob-2 {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      }
+      .blob-3 {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      }
+      .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }::-webkit-scrollbar {
-            width: 8px;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        ::-webkit-scrollbar-track {
-            background: #FE9FC8; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #000; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #333; 
-        }
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fe9fc8;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #333;
+      }
     </style>
-</head>
-<body class="bg-[#FE9FC8] text-black min-h-screen font-korean relative overflow-x-hidden flex flex-col">
-<header class="w-full py-6 px-4 flex justify-between items-center relative z-50">
-<div class="flex-1">
-<button class="p-2 hover:bg-black/10 rounded-full transition-colors md:hidden text-black">
-<span class="material-symbols-outlined text-3xl">menu</span>
-</button>
-</div>
-<div class="absolute left-1/2 top-4 transform -translate-x-1/2 z-50">
-<a class="group block relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-transform hover:scale-105" href="#">
-<div class="absolute inset-0 bg-black blob-2 transform rotate-12 scale-110 opacity-10 group-hover:rotate-45 transition-transform duration-700"></div>
-<div class="bg-black w-full h-full blob-1 flex items-center justify-center text-[#FE9FC8] shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] relative z-10 group-hover:blob-3 transition-all duration-500">
-<span class="text-2xl sm:text-3xl font-display leading-none text-center transform -rotate-3 group-hover:rotate-0 transition-transform">SL<br/>CN</span>
-</div>
-</a>
-</div>
-<div class="flex-1 flex justify-end gap-4">
-<button class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border-2 border-black bg-transparent text-black hover:bg-black hover:text-[#FE9FC8] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
-<span class="material-symbols-outlined text-xl">account_circle</span>
-<span class="font-bold text-lg">Profile</span>
-</button>
-<button class="md:hidden p-2 hover:bg-black/10 rounded-full transition-colors text-black">
-<span class="material-symbols-outlined text-3xl">account_circle</span>
-</button>
-</div>
-</header>
-<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 max-w-4xl relative z-10">
-<div class="flex flex-col lg:flex-row justify-between items-end mb-12 fade-in" style="animation-delay: 0.1s;">
-<div class="mb-6 lg:mb-0">
-<h1 class="text-5xl md:text-6xl font-bold text-black mb-2 relative inline-block">
-                    Outing Records
-                    <span class="absolute -top-6 -right-8 text-4xl transform rotate-12">📸</span>
-</h1>
-<p class="text-xl text-black font-body ml-1">Seoul Chonnom's adventure log</p>
-</div>
-<div class="w-full lg:w-auto min-w-[320px] max-w-md relative group">
-<div class="absolute -inset-1 bg-black rounded-full blur opacity-10 group-hover:opacity-20 transition duration-200"></div>
-<div class="relative flex items-center bg-white rounded-full border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-<div class="pl-4 pr-2 text-black">
-<span class="material-symbols-outlined text-2xl">search</span>
-</div>
-<input class="w-full py-3 bg-transparent border-none focus:ring-0 text-black placeholder-gray-500 font-korean text-xl" placeholder="Find by location or date..." type="text"/>
-<button class="mr-2 p-2 rounded-full hover:bg-gray-100 transition-colors">
-<span class="material-symbols-outlined text-black">tune</span>
-</button>
-</div>
-</div>
-</div>
-<div class="flex flex-col gap-8">
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.2s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">image</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-1 transform -rotate-2 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Buam<br/>dong</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-3 transform rotate-6 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.09.29
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    A peaceful autumn walk through the winding streets. The air was crisp and coffee hot.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Autumn</span>
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Walk</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.3s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">hiking</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-2 transform rotate-1 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Gang<br/>Buk</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-1 transform -rotate-3 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.10.05
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    Exploring the northern district. Found a hidden alleyway with amazing street art.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Hiking</span>
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Art</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.4s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">menu_book</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-3 transform -rotate-3 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Paju<br/>City</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-2 transform rotate-2 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.10.13
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    Surrounded by millions of books. The architecture is as inspiring as stories.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Books</span>
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Drive</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.5s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">local_cafe</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-1 transform rotate-2 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Dasan<br/>ro</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-3 transform -rotate-1 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.10.20
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    Cafe hopping along Dasan-ro. The vibes were immaculate.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Cafe</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.6s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">train</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-2 transform -rotate-2 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Yong<br/>San</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-1 transform rotate-3 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.10.26
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    A day trip to Yongsan. Visited the park and saw the new exhibits.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Park</span>
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#City</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full" style="animation-delay: 0.7s;">
-<div class="flex flex-col md:flex-row gap-6">
-<div class="w-full md:w-1/3 flex-shrink-0">
-<div class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]">
-<div class="absolute inset-0 flex items-center justify-center text-black/50">
-<span class="material-symbols-outlined text-6xl">restaurant</span>
-</div>
-<div class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden">
-<span class="material-symbols-outlined text-black text-sm">favorite</span>
-</div>
-</div>
-</div>
-<div class="flex-grow flex flex-col justify-between">
-<div>
-<div class="flex justify-between items-start mb-4">
-<div class="relative">
-<div class="bg-black text-[#FE9FC8] py-3 px-6 blob-3 transform rotate-1 shadow-lg z-10 relative inline-block">
-<h3 class="text-3xl font-display leading-none">Seorae<br/>Vill</h3>
-</div>
-<div class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-2 transform -rotate-2 border-2 border-black text-sm font-bold whitespace-nowrap z-0">
-                                            2024.11.02
-                                        </div>
-</div>
-<div class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-<span class="material-symbols-outlined text-black">favorite</span>
-</div>
-</div>
-<p class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0">
-                                    French vibes in Seoul. Delicious brunch and a walk through Montmartre Park.
-                                </p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Date</span>
-<span class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default">#Food</span>
-</div>
-</div>
-<div class="pt-4 border-t-2 border-dashed border-black/20">
-<button class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto">
-<span class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform">lock_open</span>
-<span>Unlock Detail</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="mt-20 mb-10 text-center text-black">
-<p class="flex items-center justify-center gap-2 text-2xl font-korean">
-                more adventures coming soon... <span class="animate-bounce">🏃‍♂️</span>
-</p>
-</div>
-</main>
-<footer class="mt-auto w-full bg-[#FE9FC8] text-black border-t-2 border-black relative z-10 py-8">
-<div class="container mx-auto px-4 flex flex-col items-center justify-center gap-4 font-sans text-center">
-<div class="flex gap-4 text-sm font-medium">
-<a class="hover:underline" href="#">Contact</a>
-<span>.</span>
-<a class="hover:underline" href="#">Terms</a>
-<span>.</span>
-<a class="hover:underline" href="#">Privacy</a>
-</div>
-<p class="text-sm">© 2024 SLCN. Hand-crafted with love in Seoul.</p>
-</div>
-</footer>
-<div class="fixed bottom-8 right-8 z-50">
-<button class="group bg-black text-[#FE9FC8] w-16 h-16 rounded-full shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] border-2 border-[#FE9FC8] flex items-center justify-center transform transition hover:scale-110 hover:rotate-90">
-<span class="material-symbols-outlined text-4xl group-hover:text-white transition-colors">add</span>
-<span class="sr-only">Register New Outing</span>
-</button>
-</div>
-<div class="fixed inset-0 pointer-events-none opacity-5 mix-blend-multiply z-0" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
-</body></html>
+  </head>
+  <body
+    class="bg-[#FE9FC8] text-black min-h-screen font-korean relative overflow-x-hidden flex flex-col"
+  >
+    <header
+      class="w-full py-6 px-4 flex justify-between items-center relative z-50"
+    >
+      <div class="flex-1">
+        <button
+          class="p-2 hover:bg-black/10 rounded-full transition-colors md:hidden text-black"
+        >
+          <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+      </div>
+      <div class="absolute left-1/2 top-4 transform -translate-x-1/2 z-50">
+        <a
+          class="group block relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-transform hover:scale-105"
+          href="#"
+        >
+          <div
+            class="absolute inset-0 bg-black blob-2 transform rotate-12 scale-110 opacity-10 group-hover:rotate-45 transition-transform duration-700"
+          ></div>
+          <div
+            class="bg-black w-full h-full blob-1 flex items-center justify-center text-[#FE9FC8] shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] relative z-10 group-hover:blob-3 transition-all duration-500"
+          >
+            <span
+              class="text-2xl sm:text-3xl font-display leading-none text-center transform -rotate-3 group-hover:rotate-0 transition-transform"
+              >SL<br />CN</span
+            >
+          </div>
+        </a>
+      </div>
+      <div class="flex-1 flex justify-end gap-4">
+        <button
+          class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border-2 border-black bg-transparent text-black hover:bg-black hover:text-[#FE9FC8] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
+        >
+          <span class="material-symbols-outlined text-xl">account_circle</span>
+          <span class="font-bold text-lg">Profile</span>
+        </button>
+        <button
+          class="md:hidden p-2 hover:bg-black/10 rounded-full transition-colors text-black"
+        >
+          <span class="material-symbols-outlined text-3xl">account_circle</span>
+        </button>
+      </div>
+    </header>
+    <main
+      class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 max-w-4xl relative z-10"
+    >
+      <div
+        class="flex flex-col lg:flex-row justify-between items-end mb-12 fade-in"
+        style="animation-delay: 0.1s"
+      >
+        <div class="mb-6 lg:mb-0">
+          <h1
+            class="text-5xl md:text-6xl font-bold text-black mb-2 relative inline-block"
+          >
+            Outing Records
+            <span class="absolute -top-6 -right-8 text-4xl transform rotate-12"
+              >📸</span
+            >
+          </h1>
+          <p class="text-xl text-black font-body ml-1">
+            Seoul Chonnom's adventure log
+          </p>
+        </div>
+        <div class="w-full lg:w-auto min-w-[320px] max-w-md relative group">
+          <div
+            class="absolute -inset-1 bg-black rounded-full blur opacity-10 group-hover:opacity-20 transition duration-200"
+          ></div>
+          <div
+            class="relative flex items-center bg-white rounded-full border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          >
+            <div class="pl-4 pr-2 text-black">
+              <span class="material-symbols-outlined text-2xl">search</span>
+            </div>
+            <input
+              class="w-full py-3 bg-transparent border-none focus:ring-0 text-black placeholder-gray-500 font-korean text-xl"
+              placeholder="Find by location or date..."
+              type="text"
+            />
+            <button
+              class="mr-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <span class="material-symbols-outlined text-black">tune</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-8">
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.2s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl">image</span>
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-1 transform -rotate-2 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Buam<br />dong
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-3 transform rotate-6 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.09.29
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  A peaceful autumn walk through the winding streets. The air
+                  was crisp and coffee hot.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Autumn</span
+                  >
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Walk</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.3s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl">hiking</span>
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-2 transform rotate-1 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Gang<br />Buk
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-1 transform -rotate-3 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.10.05
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  Exploring the northern district. Found a hidden alleyway with
+                  amazing street art.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Hiking</span
+                  >
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Art</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.4s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl"
+                    >menu_book</span
+                  >
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-3 transform -rotate-3 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Paju<br />City
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-2 transform rotate-2 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.10.13
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  Surrounded by millions of books. The architecture is as
+                  inspiring as stories.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Books</span
+                  >
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Drive</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.5s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl"
+                    >local_cafe</span
+                  >
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-1 transform rotate-2 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Dasan<br />ro
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-3 transform -rotate-1 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.10.20
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  Cafe hopping along Dasan-ro. The vibes were immaculate.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Cafe</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.6s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl">train</span>
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-2 transform -rotate-2 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Yong<br />San
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-1 transform rotate-3 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.10.26
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  A day trip to Yongsan. Visited the park and saw the new
+                  exhibits.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Park</span
+                  >
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#City</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="group relative bg-white border-2 border-black rounded-3xl p-5 shadow-sketch hover:-translate-y-1 hover:shadow-none transition-all duration-300 fade-in w-full"
+          style="animation-delay: 0.7s"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/3 flex-shrink-0">
+              <div
+                class="relative h-48 md:h-full w-full bg-[#FFF0F5] rounded-2xl overflow-hidden border-2 border-dashed border-black group-hover:border-solid transition-all min-h-[200px]"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center text-black/50"
+                >
+                  <span class="material-symbols-outlined text-6xl"
+                    >restaurant</span
+                  >
+                </div>
+                <div
+                  class="absolute top-2 right-2 bg-[#FE9FC8] rounded-full p-2 border-2 border-black md:hidden"
+                >
+                  <span class="material-symbols-outlined text-black text-sm"
+                    >favorite</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-4">
+                  <div class="relative">
+                    <div
+                      class="bg-black text-[#FE9FC8] py-3 px-6 blob-3 transform rotate-1 shadow-lg z-10 relative inline-block"
+                    >
+                      <h3 class="text-3xl font-display leading-none">
+                        Seorae<br />Vill
+                      </h3>
+                    </div>
+                    <div
+                      class="absolute -bottom-2 -right-4 bg-white text-black px-3 py-1 blob-2 transform -rotate-2 border-2 border-black text-sm font-bold whitespace-nowrap z-0"
+                    >
+                      2024.11.02
+                    </div>
+                  </div>
+                  <div
+                    class="bg-[#FE9FC8] rounded-full p-2 border-2 border-black hidden md:block hover:scale-110 transition-transform cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <span class="material-symbols-outlined text-black"
+                      >favorite</span
+                    >
+                  </div>
+                </div>
+                <p
+                  class="text-2xl text-black font-korean leading-relaxed mb-4 mt-6 md:mt-0"
+                >
+                  French vibes in Seoul. Delicious brunch and a walk through
+                  Montmartre Park.
+                </p>
+                <div class="flex gap-2 flex-wrap mb-4">
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Date</span
+                  >
+                  <span
+                    class="text-sm bg-white text-black px-3 py-1 rounded-full border border-black hover:bg-black hover:text-[#FE9FC8] transition-colors cursor-default"
+                    >#Food</span
+                  >
+                </div>
+              </div>
+              <div class="pt-4 border-t-2 border-dashed border-black/20">
+                <button
+                  class="w-full md:w-auto bg-black hover:bg-gray-800 text-[#FE9FC8] font-bold py-3 px-8 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(254,159,200,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center justify-center gap-2 group/btn ml-auto"
+                >
+                  <span
+                    class="material-symbols-outlined group-hover/btn:rotate-12 transition-transform"
+                    >lock_open</span
+                  >
+                  <span>Unlock Detail</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-20 mb-10 text-center text-black">
+        <p class="flex items-center justify-center gap-2 text-2xl font-korean">
+          more adventures coming soon... <span class="animate-bounce">🏃‍♂️</span>
+        </p>
+      </div>
+    </main>
+    <footer
+      class="mt-auto w-full bg-[#FE9FC8] text-black border-t-2 border-black relative z-10 py-8"
+    >
+      <div
+        class="container mx-auto px-4 flex flex-col items-center justify-center gap-4 font-sans text-center"
+      >
+        <div class="flex gap-4 text-sm font-medium">
+          <a class="hover:underline" href="#">Contact</a>
+          <span>.</span>
+          <a class="hover:underline" href="#">Terms</a>
+          <span>.</span>
+          <a class="hover:underline" href="#">Privacy</a>
+        </div>
+        <p class="text-sm">© 2024 SLCN. Hand-crafted with love in Seoul.</p>
+      </div>
+    </footer>
+    <div class="fixed bottom-8 right-8 z-50">
+      <button
+        class="group bg-black text-[#FE9FC8] w-16 h-16 rounded-full shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] border-2 border-[#FE9FC8] flex items-center justify-center transform transition hover:scale-110 hover:rotate-90"
+      >
+        <span
+          class="material-symbols-outlined text-4xl group-hover:text-white transition-colors"
+          >add</span
+        >
+        <span class="sr-only">Register New Outing</span>
+      </button>
+    </div>
+    <div
+      class="fixed inset-0 pointer-events-none opacity-5 mix-blend-multiply z-0"
+      style="
+        background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');
+      "
+    ></div>
+  </body>
+</html>

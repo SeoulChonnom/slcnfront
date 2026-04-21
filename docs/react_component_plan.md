@@ -255,17 +255,17 @@ type AppShellProps = {
 
 ## 7. 페이지별 반응형 매핑
 
-| Route | Desktop/Tablet | Mobile |
-| --- | --- | --- |
-| `/login` | 중앙 카드형 로그인 | 세로 스택 로그인 + 키보드 대응 CTA |
-| `/` | 2x3 블롭 카드 그리드 | 2열 또는 1열 카드 스택 + BottomNav |
-| `/map` | 상단 타이틀 + 검색 + 리스트 | AppBar + 단일 열 카드 + 하단 CTA |
-| `/map/register` | 넓은 중앙 컬럼 step form | 단일 열 step form + sticky action |
-| `/map/:date` | 지도 중심 + 정보 카드 | 상단 AppBar + 단일 열 + sticky CTA |
-| `/calendar` | 월간 그리드 중심 | compact month grid + BottomNav |
-| `/calendar/week` | 시간축 + 7일 컬럼 | 세로 스크롤 주간 뷰 |
-| `/shoesRecom` | 브랜드별 분할 카탈로그 | 브랜드 섹션 세로 스택 |
-| `/:brand/:shoesName` | 이미지 + 정보 2열 | 이미지/설명/리뷰 순차 스택 |
+| Route                | Desktop/Tablet              | Mobile                             |
+| -------------------- | --------------------------- | ---------------------------------- |
+| `/login`             | 중앙 카드형 로그인          | 세로 스택 로그인 + 키보드 대응 CTA |
+| `/`                  | 2x3 블롭 카드 그리드        | 2열 또는 1열 카드 스택 + BottomNav |
+| `/map`               | 상단 타이틀 + 검색 + 리스트 | AppBar + 단일 열 카드 + 하단 CTA   |
+| `/map/register`      | 넓은 중앙 컬럼 step form    | 단일 열 step form + sticky action  |
+| `/map/:date`         | 지도 중심 + 정보 카드       | 상단 AppBar + 단일 열 + sticky CTA |
+| `/calendar`          | 월간 그리드 중심            | compact month grid + BottomNav     |
+| `/calendar/week`     | 시간축 + 7일 컬럼           | 세로 스크롤 주간 뷰                |
+| `/shoesRecom`        | 브랜드별 분할 카탈로그      | 브랜드 섹션 세로 스택              |
+| `/:brand/:shoesName` | 이미지 + 정보 2열           | 이미지/설명/리뷰 순차 스택         |
 
 ## 8. 공통 UI 컴포넌트 계획
 

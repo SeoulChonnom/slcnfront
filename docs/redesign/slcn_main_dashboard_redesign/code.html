@@ -1,245 +1,439 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SLCN Main Dashboard (Duo-tone)</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Patrick+Hand&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#000000", 
-                        "slcn-pink": "#FE9FC8", 
-                        "slcn-accent": "#FFFFFF",
-                        "background-light": "#FE9FC8", 
-                        "background-dark": "#FE9FC8", // Forcing the pink theme even in dark mode for this specific request
-                        "card-dark": "#000000", 
-                    },
-                    fontFamily: {
-                        display: ["'Gochi Hand'", "cursive"], 
-                        body: ["'Patrick Hand'", "cursive"], 
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"
-                    }
-                },
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SLCN Main Dashboard (Duo-tone)</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Patrick+Hand&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#000000',
+              'slcn-pink': '#FE9FC8',
+              'slcn-accent': '#FFFFFF',
+              'background-light': '#FE9FC8',
+              'background-dark': '#FE9FC8', // Forcing the pink theme even in dark mode for this specific request
+              'card-dark': '#000000',
             },
-        };
+            fontFamily: {
+              display: ["'Gochi Hand'", 'cursive'],
+              body: ["'Patrick Hand'", 'cursive'],
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+          },
+        },
+      };
     </script>
-<style>
-        .blob-shape {
-            border-radius: 45% 55% 70% 30% / 30% 30% 70% 70%;
-            transition: all 0.4s ease-in-out;
-        }
-        .blob-shape:hover {
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            transform: scale(1.02);
-        }
-        .blob-shape-2 {
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-        }
-        .blob-shape-3 {
-            border-radius: 73% 27% 57% 43% / 54% 39% 61% 46%;
-        }
-        .blob-shape-4 {
-             border-radius: 41% 59% 41% 59% / 57% 51% 49% 43%;
-        }
-        .blob-shape-5 {
-             border-radius: 66% 34% 52% 48% / 46% 59% 41% 54%;
-        }
-        .rough-border {
-             filter: url('#roughpaper'); 
-        }
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FE9FC8;
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: #FE9FC8;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #000;
-            border-radius: 5px;
-            border: 2px solid #FE9FC8;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #000;
-            border: 2px solid #FE9FC8;
-        }body {
-            background-color: #FE9FC8;
-            color: #000000;
-        }
+    <style>
+      .blob-shape {
+        border-radius: 45% 55% 70% 30% / 30% 30% 70% 70%;
+        transition: all 0.4s ease-in-out;
+      }
+      .blob-shape:hover {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        transform: scale(1.02);
+      }
+      .blob-shape-2 {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      }
+      .blob-shape-3 {
+        border-radius: 73% 27% 57% 43% / 54% 39% 61% 46%;
+      }
+      .blob-shape-4 {
+        border-radius: 41% 59% 41% 59% / 57% 51% 49% 43%;
+      }
+      .blob-shape-5 {
+        border-radius: 66% 34% 52% 48% / 46% 59% 41% 54%;
+      }
+      .rough-border {
+        filter: url('#roughpaper');
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fe9fc8;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #fe9fc8;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 5px;
+        border: 2px solid #fe9fc8;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #000;
+        border: 2px solid #fe9fc8;
+      }
+      body {
+        background-color: #fe9fc8;
+        color: #000000;
+      }
     </style>
-</head>
-<body class="bg-slcn-pink font-body min-h-screen text-black transition-colors duration-300 selection:bg-black selection:text-[#FE9FC8]">
-<svg height="0" style="visibility: hidden; position: absolute;" version="1.1" width="0" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<filter id="roughpaper">
-<feTurbulence baseFrequency="0.04" numOctaves="5" result="noise" type="fractalNoise"></feTurbulence>
-<feDisplacementMap in="SourceGraphic" in2="noise" scale="5"></feDisplacementMap>
-</filter>
-</defs>
-</svg>
-<nav class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-[#FE9FC8]/90 backdrop-blur-sm">
-<div class="w-10"></div>
-<a class="group relative block" href="#">
-<div class="absolute inset-0 bg-black rounded-[40%_60%_70%_30%/40%_50%_60%_50%] opacity-0 group-hover:opacity-10 transition-opacity duration-300 transform scale-110"></div>
-<div class="relative bg-black text-[#FE9FC8] w-14 h-14 flex items-center justify-center blob-shape shadow-lg transition-transform duration-300 group-hover:rotate-12 border-2 border-black">
-<span class="font-display text-xl leading-none">SL<br/>CN</span>
-</div>
-</a>
-<div class="flex items-center gap-4">
-<button class="hidden p-2 rounded-full hover:bg-black/10 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
-<span class="material-symbols-outlined block dark:hidden text-black">dark_mode</span>
-<span class="material-symbols-outlined hidden dark:block text-black">light_mode</span>
-</button>
-</div>
-</nav>
-<main class="container mx-auto px-4 pt-32 pb-20 flex flex-col items-center">
-<header class="mb-16 text-center relative group cursor-pointer">
-<div class="relative inline-block">
-<div class="bg-black text-[#FE9FC8] p-12 md:p-16 blob-shape rough-border flex items-center justify-center shadow-2xl">
-<div class="text-center">
-<h1 class="font-display text-8xl md:text-9xl leading-none tracking-tighter block mb-2 text-[#FE9FC8]">SL<br/>CN</h1>
-</div>
-</div>
-<div class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full opacity-100 blob-shape-3 -z-10 animate-pulse border-2 border-black"></div>
-<div class="absolute -bottom-2 -left-6 w-16 h-16 bg-white rounded-full opacity-100 blob-shape-4 -z-10 border-2 border-black"></div>
-</div>
-<p class="font-display text-2xl md:text-3xl mt-6 tracking-widest uppercase text-black font-bold">
-                © Seoul Chonnom.
-            </p>
-<p class="mt-2 text-sm text-black font-body font-semibold">
-                서울 촌놈 나들이 기록 📷
-            </p>
-</header>
-<section class="w-full max-w-6xl">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-<div class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 bg-black blob-shape-2 shadow-xl group-hover:rotate-1 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"></div>
-<div class="relative z-10 text-[#FE9FC8] text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2 animate-bounce text-white">favorite</span>
-<h2 class="font-display text-4xl mb-1 text-white">D-Day</h2>
-<p class="font-body text-xl opacity-90 text-[#FE9FC8]">Day 474 Together</p>
-<div class="mt-4 text-xs font-mono text-white bg-black/50 px-2 py-1 rounded-full border border-[#FE9FC8]">2024.11.24</div>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Anniversary</h3>
-</div>
-</div>
-<div class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 bg-black blob-shape-3 shadow-xl group-hover:-rotate-1 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"></div>
-<div class="relative z-10 text-[#FE9FC8] text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2 text-white">calendar_month</span>
-<h2 class="font-display text-4xl mb-1 text-white">Calendar</h2>
-<p class="font-body text-xl opacity-90 text-[#FE9FC8]">Upcoming Plans</p>
-<div class="mt-4 flex gap-1 justify-center">
-<span class="w-2 h-2 bg-white rounded-full"></span>
-<span class="w-2 h-2 bg-[#FE9FC8] rounded-full"></span>
-<span class="w-2 h-2 bg-[#FE9FC8] rounded-full opacity-50"></span>
-</div>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Schedule</h3>
-</div>
-</div>
-<div class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 bg-black blob-shape-4 shadow-xl group-hover:rotate-2 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"></div>
-<div class="relative z-10 text-[#FE9FC8] text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2 text-white">photo_camera</span>
-<h2 class="font-display text-4xl mb-1 text-white">Outing Map</h2>
-<p class="font-body text-xl opacity-90 text-[#FE9FC8]">Places We've Been</p>
-<div class="mt-3 inline-block border-2 border-[#FE9FC8] px-3 py-1 text-xs rounded-full bg-black text-white font-bold">
-                                New: Buam-dong
-                            </div>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Memories</h3>
-</div>
-</div>
-<div class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 bg-black blob-shape-5 shadow-xl group-hover:-rotate-2 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"></div>
-<div class="relative z-10 text-[#FE9FC8] text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2 text-white">hiking</span>
-<h2 class="font-display text-3xl mb-1 text-white">Shoes Pick</h2>
-<p class="font-body text-xl opacity-90 text-[#FE9FC8]">Comfy Walking</p>
-<div class="mt-4 text-xs font-mono text-white opacity-80">Updated Weekly</div>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Recommendations</h3>
-</div>
-</div>
-<div class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 bg-black blob-shape shadow-xl group-hover:scale-105 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"></div>
-<div class="relative z-10 text-[#FE9FC8] text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2 text-white">movie</span>
-<h2 class="font-display text-3xl mb-1 text-white">Choi's Film</h2>
-<p class="font-body text-xl opacity-90 text-[#FE9FC8]">Art &amp; Reviews</p>
-<div class="mt-3 flex items-center justify-center gap-1">
-<span class="material-symbols-outlined text-xs text-white fill-current">star</span>
-<span class="material-symbols-outlined text-xs text-white fill-current">star</span>
-<span class="material-symbols-outlined text-xs text-white fill-current">star</span>
-<span class="material-symbols-outlined text-xs text-white fill-current">star</span>
-<span class="material-symbols-outlined text-xs text-white fill-current">star_half</span>
-</div>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Film Reviews</h3>
-</div>
-</div>
-<div class="flex flex-col items-center group opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
-<div class="relative w-full aspect-[4/3] flex items-center justify-center">
-<div class="absolute inset-0 border-4 border-dashed border-black blob-shape-3 bg-transparent group-hover:bg-white/20 transition-colors duration-300"></div>
-<div class="relative z-10 text-black text-center p-6">
-<span class="material-symbols-outlined text-5xl mb-2">add_circle</span>
-<h2 class="font-display text-3xl mb-1">New Log</h2>
-<p class="font-body text-xl opacity-90 font-bold">Coming Soon...</p>
-</div>
-</div>
-<div class="mt-4 text-center">
-<h3 class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block">Add Entry</h3>
-</div>
-</div>
-</div>
-</section>
-<footer class="mt-32 w-full text-center pb-8 border-t-2 border-black/10 pt-8">
-<div class="flex justify-center items-center space-x-6 mb-4">
-<a class="text-black hover:scale-110 transition-transform hover:font-bold" href="#">
-<span class="font-display text-xl">Contact</span>
-</a>
-<span class="text-black">•</span>
-<a class="text-black hover:scale-110 transition-transform hover:font-bold" href="#">
-<span class="font-display text-xl">Terms</span>
-</a>
-<span class="text-black">•</span>
-<a class="text-black hover:scale-110 transition-transform hover:font-bold" href="#">
-<span class="font-display text-xl">Privacy</span>
-</a>
-</div>
-<p class="font-body text-base text-black font-semibold">
-                © 2024 SLCN. Hand-crafted with love in Seoul.
-            </p>
-</footer>
-</main>
-<div class="fixed top-24 left-10 text-4xl opacity-20 pointer-events-none -rotate-12 select-none text-black">🎨</div>
-<div class="fixed bottom-20 right-10 text-4xl opacity-20 pointer-events-none rotate-12 select-none text-black">👟</div>
-<div class="fixed top-1/2 left-5 w-4 h-4 rounded-full bg-black opacity-20 pointer-events-none"></div>
-<div class="fixed top-1/3 right-8 w-6 h-6 rounded-full bg-black opacity-10 pointer-events-none"></div>
-
-</body></html>
+  </head>
+  <body
+    class="bg-slcn-pink font-body min-h-screen text-black transition-colors duration-300 selection:bg-black selection:text-[#FE9FC8]"
+  >
+    <svg
+      height="0"
+      style="visibility: hidden; position: absolute"
+      version="1.1"
+      width="0"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="roughpaper">
+          <feTurbulence
+            baseFrequency="0.04"
+            numOctaves="5"
+            result="noise"
+            type="fractalNoise"
+          ></feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="5"
+          ></feDisplacementMap>
+        </filter>
+      </defs>
+    </svg>
+    <nav
+      class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-[#FE9FC8]/90 backdrop-blur-sm"
+    >
+      <div class="w-10"></div>
+      <a class="group relative block" href="#">
+        <div
+          class="absolute inset-0 bg-black rounded-[40%_60%_70%_30%/40%_50%_60%_50%] opacity-0 group-hover:opacity-10 transition-opacity duration-300 transform scale-110"
+        ></div>
+        <div
+          class="relative bg-black text-[#FE9FC8] w-14 h-14 flex items-center justify-center blob-shape shadow-lg transition-transform duration-300 group-hover:rotate-12 border-2 border-black"
+        >
+          <span class="font-display text-xl leading-none">SL<br />CN</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-4">
+        <button
+          class="hidden p-2 rounded-full hover:bg-black/10 transition-colors"
+          onclick="document.documentElement.classList.toggle('dark')"
+        >
+          <span class="material-symbols-outlined block dark:hidden text-black"
+            >dark_mode</span
+          >
+          <span class="material-symbols-outlined hidden dark:block text-black"
+            >light_mode</span
+          >
+        </button>
+      </div>
+    </nav>
+    <main class="container mx-auto px-4 pt-32 pb-20 flex flex-col items-center">
+      <header class="mb-16 text-center relative group cursor-pointer">
+        <div class="relative inline-block">
+          <div
+            class="bg-black text-[#FE9FC8] p-12 md:p-16 blob-shape rough-border flex items-center justify-center shadow-2xl"
+          >
+            <div class="text-center">
+              <h1
+                class="font-display text-8xl md:text-9xl leading-none tracking-tighter block mb-2 text-[#FE9FC8]"
+              >
+                SL<br />CN
+              </h1>
+            </div>
+          </div>
+          <div
+            class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full opacity-100 blob-shape-3 -z-10 animate-pulse border-2 border-black"
+          ></div>
+          <div
+            class="absolute -bottom-2 -left-6 w-16 h-16 bg-white rounded-full opacity-100 blob-shape-4 -z-10 border-2 border-black"
+          ></div>
+        </div>
+        <p
+          class="font-display text-2xl md:text-3xl mt-6 tracking-widest uppercase text-black font-bold"
+        >
+          © Seoul Chonnom.
+        </p>
+        <p class="mt-2 text-sm text-black font-body font-semibold">
+          서울 촌놈 나들이 기록 📷
+        </p>
+      </header>
+      <section class="w-full max-w-6xl">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+        >
+          <div
+            class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 bg-black blob-shape-2 shadow-xl group-hover:rotate-1 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"
+              ></div>
+              <div class="relative z-10 text-[#FE9FC8] text-center p-6">
+                <span
+                  class="material-symbols-outlined text-5xl mb-2 animate-bounce text-white"
+                  >favorite</span
+                >
+                <h2 class="font-display text-4xl mb-1 text-white">D-Day</h2>
+                <p class="font-body text-xl opacity-90 text-[#FE9FC8]">
+                  Day 474 Together
+                </p>
+                <div
+                  class="mt-4 text-xs font-mono text-white bg-black/50 px-2 py-1 rounded-full border border-[#FE9FC8]"
+                >
+                  2024.11.24
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Anniversary
+              </h3>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 bg-black blob-shape-3 shadow-xl group-hover:-rotate-1 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"
+              ></div>
+              <div class="relative z-10 text-[#FE9FC8] text-center p-6">
+                <span class="material-symbols-outlined text-5xl mb-2 text-white"
+                  >calendar_month</span
+                >
+                <h2 class="font-display text-4xl mb-1 text-white">Calendar</h2>
+                <p class="font-body text-xl opacity-90 text-[#FE9FC8]">
+                  Upcoming Plans
+                </p>
+                <div class="mt-4 flex gap-1 justify-center">
+                  <span class="w-2 h-2 bg-white rounded-full"></span>
+                  <span class="w-2 h-2 bg-[#FE9FC8] rounded-full"></span>
+                  <span
+                    class="w-2 h-2 bg-[#FE9FC8] rounded-full opacity-50"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Schedule
+              </h3>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 bg-black blob-shape-4 shadow-xl group-hover:rotate-2 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"
+              ></div>
+              <div class="relative z-10 text-[#FE9FC8] text-center p-6">
+                <span class="material-symbols-outlined text-5xl mb-2 text-white"
+                  >photo_camera</span
+                >
+                <h2 class="font-display text-4xl mb-1 text-white">
+                  Outing Map
+                </h2>
+                <p class="font-body text-xl opacity-90 text-[#FE9FC8]">
+                  Places We've Been
+                </p>
+                <div
+                  class="mt-3 inline-block border-2 border-[#FE9FC8] px-3 py-1 text-xs rounded-full bg-black text-white font-bold"
+                >
+                  New: Buam-dong
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Memories
+              </h3>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 bg-black blob-shape-5 shadow-xl group-hover:-rotate-2 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"
+              ></div>
+              <div class="relative z-10 text-[#FE9FC8] text-center p-6">
+                <span class="material-symbols-outlined text-5xl mb-2 text-white"
+                  >hiking</span
+                >
+                <h2 class="font-display text-3xl mb-1 text-white">
+                  Shoes Pick
+                </h2>
+                <p class="font-body text-xl opacity-90 text-[#FE9FC8]">
+                  Comfy Walking
+                </p>
+                <div class="mt-4 text-xs font-mono text-white opacity-80">
+                  Updated Weekly
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Recommendations
+              </h3>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 bg-black blob-shape shadow-xl group-hover:scale-105 transition-transform duration-300 ring-2 ring-black ring-offset-4 ring-offset-[#FE9FC8]"
+              ></div>
+              <div class="relative z-10 text-[#FE9FC8] text-center p-6">
+                <span class="material-symbols-outlined text-5xl mb-2 text-white"
+                  >movie</span
+                >
+                <h2 class="font-display text-3xl mb-1 text-white">
+                  Choi's Film
+                </h2>
+                <p class="font-body text-xl opacity-90 text-[#FE9FC8]">
+                  Art &amp; Reviews
+                </p>
+                <div class="mt-3 flex items-center justify-center gap-1">
+                  <span
+                    class="material-symbols-outlined text-xs text-white fill-current"
+                    >star</span
+                  >
+                  <span
+                    class="material-symbols-outlined text-xs text-white fill-current"
+                    >star</span
+                  >
+                  <span
+                    class="material-symbols-outlined text-xs text-white fill-current"
+                    >star</span
+                  >
+                  <span
+                    class="material-symbols-outlined text-xs text-white fill-current"
+                    >star</span
+                  >
+                  <span
+                    class="material-symbols-outlined text-xs text-white fill-current"
+                    >star_half</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Film Reviews
+              </h3>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center group opacity-80 hover:opacity-100 transition-opacity cursor-pointer"
+          >
+            <div
+              class="relative w-full aspect-[4/3] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 border-4 border-dashed border-black blob-shape-3 bg-transparent group-hover:bg-white/20 transition-colors duration-300"
+              ></div>
+              <div class="relative z-10 text-black text-center p-6">
+                <span class="material-symbols-outlined text-5xl mb-2"
+                  >add_circle</span
+                >
+                <h2 class="font-display text-3xl mb-1">New Log</h2>
+                <p class="font-body text-xl opacity-90 font-bold">
+                  Coming Soon...
+                </p>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <h3
+                class="font-display text-2xl text-black font-bold border-b-2 border-black inline-block"
+              >
+                Add Entry
+              </h3>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer
+        class="mt-32 w-full text-center pb-8 border-t-2 border-black/10 pt-8"
+      >
+        <div class="flex justify-center items-center space-x-6 mb-4">
+          <a
+            class="text-black hover:scale-110 transition-transform hover:font-bold"
+            href="#"
+          >
+            <span class="font-display text-xl">Contact</span>
+          </a>
+          <span class="text-black">•</span>
+          <a
+            class="text-black hover:scale-110 transition-transform hover:font-bold"
+            href="#"
+          >
+            <span class="font-display text-xl">Terms</span>
+          </a>
+          <span class="text-black">•</span>
+          <a
+            class="text-black hover:scale-110 transition-transform hover:font-bold"
+            href="#"
+          >
+            <span class="font-display text-xl">Privacy</span>
+          </a>
+        </div>
+        <p class="font-body text-base text-black font-semibold">
+          © 2024 SLCN. Hand-crafted with love in Seoul.
+        </p>
+      </footer>
+    </main>
+    <div
+      class="fixed top-24 left-10 text-4xl opacity-20 pointer-events-none -rotate-12 select-none text-black"
+    >
+      🎨
+    </div>
+    <div
+      class="fixed bottom-20 right-10 text-4xl opacity-20 pointer-events-none rotate-12 select-none text-black"
+    >
+      👟
+    </div>
+    <div
+      class="fixed top-1/2 left-5 w-4 h-4 rounded-full bg-black opacity-20 pointer-events-none"
+    ></div>
+    <div
+      class="fixed top-1/3 right-8 w-6 h-6 rounded-full bg-black opacity-10 pointer-events-none"
+    ></div>
+  </body>
+</html>

@@ -92,35 +92,35 @@
 
 ## 5. 대상 라우트와 내부 매핑
 
-| 공개 URL | PC 내부 라우트 | Mobile 내부 라우트 | 비고 |
-| --- | --- | --- | --- |
-| `/` | `/main` | `/mobile` | 인증 후 메인 |
-| `/login` | `/main/login` | `/mobile/login` | 공개 라우트 |
-| `/map` | `/main/map` | `/mobile/map` | 목록 |
-| `/map/register` | `/main/map/register` | `/mobile/map/register` | 등록 |
-| `/map/:date` | `/main/map/:date` | `/mobile/map/:date` | 상세 |
-| `/calendar` | `/main/calendar` | `/mobile/calendar` | 월간 |
-| `/calendar/week` | `/main/calendar/week` | `/mobile/calendar/week` | 주간 |
-| `/shoesRecom` | `/main/shoesRecom` | `/mobile/shoesRecom` | 목록 |
-| `/:brand/:shoesName` | `/main/:brand/:shoesName` | `/mobile/:brand/:shoesName` | 상세 |
-| `*` | `/main/404` | `/mobile/404` | 내부 전용 404 |
+| 공개 URL             | PC 내부 라우트            | Mobile 내부 라우트          | 비고          |
+| -------------------- | ------------------------- | --------------------------- | ------------- |
+| `/`                  | `/main`                   | `/mobile`                   | 인증 후 메인  |
+| `/login`             | `/main/login`             | `/mobile/login`             | 공개 라우트   |
+| `/map`               | `/main/map`               | `/mobile/map`               | 목록          |
+| `/map/register`      | `/main/map/register`      | `/mobile/map/register`      | 등록          |
+| `/map/:date`         | `/main/map/:date`         | `/mobile/map/:date`         | 상세          |
+| `/calendar`          | `/main/calendar`          | `/mobile/calendar`          | 월간          |
+| `/calendar/week`     | `/main/calendar/week`     | `/mobile/calendar/week`     | 주간          |
+| `/shoesRecom`        | `/main/shoesRecom`        | `/mobile/shoesRecom`        | 목록          |
+| `/:brand/:shoesName` | `/main/:brand/:shoesName` | `/mobile/:brand/:shoesName` | 상세          |
+| `*`                  | `/main/404`               | `/mobile/404`               | 내부 전용 404 |
 
 공개 URL은 사용자가 직접 진입하는 주소다. 내부 라우트는 앱 내부 구현과 디바이스 분기에만 사용한다.
 
 ## 6. 단계 로드맵
 
-| 단계 | 문서 | 핵심 결과물 | 선행 단계 |
-| --- | --- | --- | --- |
-| 0 | `00_master_plan.md` | 공통 기준 고정 | 없음 |
-| 1 | `01_baseline_audit.md` | 기능/데이터/라우트 기준선 확보 | 0 |
-| 2 | `02_foundation_architecture.md` | 패키지/폴더/API/테스트 기반 구축 | 1 |
-| 3 | `03_design_system_and_pencil_mapping.md` | Pencil 기반 UI 시스템 구축 | 2 |
-| 4 | `04_app_shell_and_dual_routing.md` | `/main/*`, `/mobile/*` 라우팅과 shell 완성 | 2, 3 |
-| 5 | `05_auth_and_shared_data_layer.md` | 인증/세션/API/공통 타입 완성 | 2, 4 |
-| 6 | `06_trip_domain.md` | 나들이 도메인 완성 | 5 |
-| 7 | `07_calendar_domain.md` | FullCalendar 월간/주간 완성 | 5 |
-| 8 | `08_shoes_domain.md` | 정적 신발 도메인 완성 | 5 |
-| 9 | `09_quality_cutover_and_migration.md` | 회귀 점검/전환/마감 | 6, 7, 8 |
+| 단계 | 문서                                     | 핵심 결과물                                | 선행 단계 |
+| ---- | ---------------------------------------- | ------------------------------------------ | --------- |
+| 0    | `00_master_plan.md`                      | 공통 기준 고정                             | 없음      |
+| 1    | `01_baseline_audit.md`                   | 기능/데이터/라우트 기준선 확보             | 0         |
+| 2    | `02_foundation_architecture.md`          | 패키지/폴더/API/테스트 기반 구축           | 1         |
+| 3    | `03_design_system_and_pencil_mapping.md` | Pencil 기반 UI 시스템 구축                 | 2         |
+| 4    | `04_app_shell_and_dual_routing.md`       | `/main/*`, `/mobile/*` 라우팅과 shell 완성 | 2, 3      |
+| 5    | `05_auth_and_shared_data_layer.md`       | 인증/세션/API/공통 타입 완성               | 2, 4      |
+| 6    | `06_trip_domain.md`                      | 나들이 도메인 완성                         | 5         |
+| 7    | `07_calendar_domain.md`                  | FullCalendar 월간/주간 완성                | 5         |
+| 8    | `08_shoes_domain.md`                     | 정적 신발 도메인 완성                      | 5         |
+| 9    | `09_quality_cutover_and_migration.md`    | 회귀 점검/전환/마감                        | 6, 7, 8   |
 
 ## 7. 단계별 완료 정의
 

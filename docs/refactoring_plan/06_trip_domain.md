@@ -132,26 +132,26 @@ src/
 
 ```ts
 type TripListItem = {
-  date: string
-  info2: string
-  logo: string
-  quizTitle: string
-  quizAnswer: number
-  quizResponses: { quizIndex: string; answer: string }[]
-  quizAnswerTitle: string
-  quizAnswerText: string
-  quizErrorTitle: string
-  quizErrorText: string
-}
+  date: string;
+  info2: string;
+  logo: string;
+  quizTitle: string;
+  quizAnswer: number;
+  quizResponses: { quizIndex: string; answer: string }[];
+  quizAnswerTitle: string;
+  quizAnswerText: string;
+  quizErrorTitle: string;
+  quizErrorText: string;
+};
 
 type TripDetail = {
-  date: string
-  map1: string
-  map2?: string | null
-  button1?: string | null
-  button2?: string | null
-  drive: string
-}
+  date: string;
+  map1: string;
+  map2?: string | null;
+  button1?: string | null;
+  button2?: string | null;
+  drive: string;
+};
 ```
 
 ### 7.2 등록 payload 계약

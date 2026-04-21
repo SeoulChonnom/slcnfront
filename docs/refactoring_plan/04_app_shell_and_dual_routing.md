@@ -114,16 +114,16 @@ src/
 
 ### 7.1 공개 URL → 내부 라우트 규칙
 
-| 공개 URL | 내부 대상 |
-| --- | --- |
-| `/` | `/main` or `/mobile` |
-| `/login` | `/main/login` or `/mobile/login` |
-| `/map` | `/main/map` or `/mobile/map` |
-| `/map/register` | `/main/map/register` or `/mobile/map/register` |
-| `/map/:date` | `/main/map/:date` or `/mobile/map/:date` |
-| `/calendar` | `/main/calendar` or `/mobile/calendar` |
-| `/calendar/week` | `/main/calendar/week` or `/mobile/calendar/week` |
-| `/shoesRecom` | `/main/shoesRecom` or `/mobile/shoesRecom` |
+| 공개 URL             | 내부 대상                                                |
+| -------------------- | -------------------------------------------------------- |
+| `/`                  | `/main` or `/mobile`                                     |
+| `/login`             | `/main/login` or `/mobile/login`                         |
+| `/map`               | `/main/map` or `/mobile/map`                             |
+| `/map/register`      | `/main/map/register` or `/mobile/map/register`           |
+| `/map/:date`         | `/main/map/:date` or `/mobile/map/:date`                 |
+| `/calendar`          | `/main/calendar` or `/mobile/calendar`                   |
+| `/calendar/week`     | `/main/calendar/week` or `/mobile/calendar/week`         |
+| `/shoesRecom`        | `/main/shoesRecom` or `/mobile/shoesRecom`               |
 | `/:brand/:shoesName` | `/main/:brand/:shoesName` or `/mobile/:brand/:shoesName` |
 
 정적 경로 예약 규칙:

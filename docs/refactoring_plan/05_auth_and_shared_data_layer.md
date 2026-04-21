@@ -40,19 +40,19 @@
 최소 아래 타입을 정식 정의한다.
 
 ```ts
-type Role = 'admin'
+type Role = 'admin';
 
 type UserInfo = {
-  name: string
-  userName: string
-  roleList: Role[]
-}
+  name: string;
+  userName: string;
+  roleList: Role[];
+};
 
 type AuthSession = {
-  accessToken: string | null
-  userInfo: UserInfo | null
-  hydrated: boolean
-}
+  accessToken: string | null;
+  userInfo: UserInfo | null;
+  hydrated: boolean;
+};
 ```
 
 ### 5.2 API module 구조

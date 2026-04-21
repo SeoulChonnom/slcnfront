@@ -1,190 +1,308 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SLCN Shoe Picks - Catalog</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#FE9FC8", // Light Pink
-                        black: "#000000",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                    },
-                },
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SLCN Shoe Picks - Catalog</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#FE9FC8', // Light Pink
+              black: '#000000',
             },
-        };
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      };
     </script>
-<style>
-        body {
-            background-color: #FE9FC8;
-            color: #000000;
-        }
-        .hide-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scroll {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+    <style>
+      body {
+        background-color: #fe9fc8;
+        color: #000000;
+      }
+      .hide-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scroll {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
     </style>
-</head>
-<body class="bg-[#FE9FC8] text-black font-sans min-h-screen">
-<nav class="bg-[#FE9FC8] px-8 py-6 border-b border-black flex justify-between items-center sticky top-0 z-50">
-<div class="flex items-center gap-12">
-<a class="text-2xl font-black tracking-tighter uppercase" href="#">SLCN</a>
-<div class="hidden md:flex gap-8 text-sm font-medium">
-<a class="hover:underline underline-offset-4" href="#">Schedule</a>
-<a class="hover:underline underline-offset-4" href="#">Catalog</a>
-<a class="hover:underline underline-offset-4" href="#">Membership</a>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<span class="text-sm font-medium">Hi, Alex</span>
-<button class="w-8 h-8 rounded-full bg-black text-[#FE9FC8] flex items-center justify-center hover:opacity-80 transition-opacity">
-<span class="material-symbols-outlined text-lg">person</span>
-</button>
-</div>
-</nav>
-<main class="max-w-7xl mx-auto px-8 pb-32 pt-20">
-<header class="text-center mb-32 max-w-4xl mx-auto">
-<h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-black mb-8 leading-[0.9]">
-            Shoe Picks
+  </head>
+  <body class="bg-[#FE9FC8] text-black font-sans min-h-screen">
+    <nav
+      class="bg-[#FE9FC8] px-8 py-6 border-b border-black flex justify-between items-center sticky top-0 z-50"
+    >
+      <div class="flex items-center gap-12">
+        <a class="text-2xl font-black tracking-tighter uppercase" href="#"
+          >SLCN</a
+        >
+        <div class="hidden md:flex gap-8 text-sm font-medium">
+          <a class="hover:underline underline-offset-4" href="#">Schedule</a>
+          <a class="hover:underline underline-offset-4" href="#">Catalog</a>
+          <a class="hover:underline underline-offset-4" href="#">Membership</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <span class="text-sm font-medium">Hi, Alex</span>
+        <button
+          class="w-8 h-8 rounded-full bg-black text-[#FE9FC8] flex items-center justify-center hover:opacity-80 transition-opacity"
+        >
+          <span class="material-symbols-outlined text-lg">person</span>
+        </button>
+      </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-8 pb-32 pt-20">
+      <header class="text-center mb-32 max-w-4xl mx-auto">
+        <h1
+          class="text-6xl md:text-8xl font-bold tracking-tighter text-black mb-8 leading-[0.9]"
+        >
+          Shoe Picks
         </h1>
-<p class="text-xl md:text-2xl text-black font-light leading-relaxed max-w-2xl mx-auto">
-            Curated selections for the urban walker. <br class="hidden md:block"/>Comfort meets style in our weekly rotation.
+        <p
+          class="text-xl md:text-2xl text-black font-light leading-relaxed max-w-2xl mx-auto"
+        >
+          Curated selections for the urban walker.
+          <br class="hidden md:block" />Comfort meets style in our weekly
+          rotation.
         </p>
-</header>
-<div class="flex flex-wrap justify-center gap-8 mb-32 sticky top-24 z-40 py-4 bg-[#FE9FC8]/95 backdrop-blur">
-<a class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4" href="#newbalance">New Balance</a>
-<a class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4" href="#nike">Nike</a>
-<a class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4" href="#asics">Asics</a>
-</div>
-<section class="mb-32 scroll-mt-32" id="newbalance">
-<div class="border-t border-black mb-12 pt-4 flex justify-between items-end">
-<h2 class="text-4xl font-bold tracking-tight">New Balance</h2>
-<span class="text-sm font-mono opacity-60">01</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="New Balance 530 White Silver" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4tVg-M8HhPB8jIeDkQfN1mHS_EpAcgQSsnZFepDx3s79nbVrvWbqaxnaGztNwllodqXmvEV81iypnYcgo3vhG_6eMW6IG6a_6Tu42Lg1KLsBjTOXMM8HRGfXMA84OACqpcE9iOMrscdK0_Zk8mpB1r1AHeZh8GmsxiRXr4J-FbSG059kXPfZ1_WDZ0NqrOi2cp_oYHpA0iEgXw50SbPkF1GpBjmKvc-AFCopdekXQO9i-botrnN4_Hyusroh8geOJGdX0Wo8qm2o4"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">NB 530 Retro</h3>
-<span class="font-mono text-lg">$100</span>
-</div>
-<p class="text-sm opacity-70">White / Silver Metallic</p>
-</div>
-</article>
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="New Balance 2002R Grey" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvMFeB9z_RhVoASROk1X0c3QgvLTb_-XPjNyL1rCI8jOjlGmePDGnsOHDuDV_2N-0D1MLO291UNK3HMmGpkx8M7qn8TiQgqMJWceWNdd541h7tY1QoKbTDbv57gxGCmLz94anl7i_8vnq0TcV6QZKhrGIOPjhhJoEjkEl4ZR0JWLFCj9OBfQ-_x3U_uD3hoGRyZO93UqQzrsDzzzUE0OSIPnp7mCfFT31aEHtJHqpHDT15jIbF2i5ZNXFs0_ilsk0C2EHtPHxTgkfz"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">NB 2002R Protection</h3>
-<span class="font-mono text-lg">$160</span>
-</div>
-<p class="text-sm opacity-70">Rain Cloud / Grey</p>
-</div>
-</article>
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="New Balance 990v5" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBslaoO-HyvgsmRME-51o8xRbxOoLh0nWItJBRpk7Z3bNadjRA8_Rx_yMROrVna1XqQQ8dvHQoqpmP7qeRQQDj8AS9tb8qjxFx9kp6t3wB4gVGiHFb5vYuPBJxcUMC0jfyRoBVt8gv69_LnsBzG7IPO5KBHEDhpUqzInUccn5bdorVYTsEtnA0gT19FI4YLVrZo0madLWowrWBxFtO-IQlkws9-ZjtiVQRsdqQaMXTkVj4FCU_jqFDaMyDspAVmF-wrayFw7fc1SDHf"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">NB 990v6</h3>
-<span class="font-mono text-lg">$200</span>
-</div>
-<p class="text-sm opacity-70">Castlerock / Grey</p>
-</div>
-</article>
-</div>
-</section>
-<section class="mb-32 scroll-mt-32" id="nike">
-<div class="border-t border-black mb-12 pt-4 flex justify-between items-end">
-<h2 class="text-4xl font-bold tracking-tight">Nike</h2>
-<span class="text-sm font-mono opacity-60">02</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="Nike Air Max" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDh_SalB8DFYydzI4LoH9QiWLfW8OaOYquDxv5mycYSd7SnyOyEYuLg9_F7bdsXSRnbfmPD_y3b4NBMWG17C3EXugDgMyi4gVpUC5Jo7Yaq9xF5wJcw81CppG63gg0OPxxpN70REMaPMxx0F1GbPknEFwfzSd3PDnobuFSKRlyBwg-SAmtTThnZ3JfV_G2MPaZu9skINVqRkPaA7ZhqrrghUNfZCBIcPswSESsa566lgwdRNhGKmWcTr9SVZwhJvK2TtnRMtsoa-JL"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">Air Max 90</h3>
-<span class="font-mono text-lg">$130</span>
-</div>
-<p class="text-sm opacity-70">Infrared / White</p>
-</div>
-</article>
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="Nike Dunk Low" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjzJ8uzsmsfny26McaY9ea7eUmZowqbo_MMTu7eRVyWLUjG_KQRiuyDUU7iFFrE7XJDKzQVBCYuyf-qRqGEUcJfBdPsWljD5HXYlZiT8hSLkAyWsOkAc2BDnfyZOMEgete-E3eEIWyuUxTFk7qvoMIxRUW5ExOtM26pkJGJJd3CivDD25zyRBOI-JSq-MeF3yojDRtZTXAQhZLNgqkPlDPQxw7Ok4HkRaCj7o22VW207DqJ4u-l9YoKz7IyW3jp29h3NLHXqjEc4ZZ"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">Dunk Low Retro</h3>
-<span class="font-mono text-lg">$115</span>
-</div>
-<p class="text-sm opacity-70">Panda / Black &amp; White</p>
-</div>
-</article>
-</div>
-</section>
-<section class="mb-12 scroll-mt-32" id="asics">
-<div class="border-t border-black mb-12 pt-4 flex justify-between items-end">
-<h2 class="text-4xl font-bold tracking-tight">Asics</h2>
-<span class="text-sm font-mono opacity-60">03</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="Asics Gel Kayano 14" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGX49L6jgAcUidT9EodyOPb-ZQXtwJT7hxCNcmdfUTinq-YUs4cUVB7yeRpRBB7n22lnwyKkCyzJzzxElGyDcCSPdLAvSg2VM27uKo7ABjh7A00yh0lR4b8cNEcIkXNQYtoziRHymjknvucWPtAgyt_7FGZixI4TU0GxyifaGdrxoRPcoT7D-VDEA3NK-evktQ53Kqid_-5eWs-P3f2_vLhnj0oPNGVV7k1RCRteYPuXM8R99g85tPdn9M6D5zF9-d5aQ_nnXJ2P5h"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">Gel-Kayano 14</h3>
-<span class="font-mono text-lg">$150</span>
-</div>
-<p class="text-sm opacity-70">Cream / Metallic Silver</p>
-</div>
-</article>
-<article class="group cursor-pointer">
-<div class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent">
-<img alt="Asics Gel-1130" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2eTflvpS1umUn9CUZituciU4gl1lwlUj5QaHdoMGzh8mqGiKXDoMKMPKpBbwWQuKwswr_nzQWVQfQqEdAlC98XLpAQqGEe_tmSUP53gMW-gb38C9f_FgCyGNkhAqKnJgu-I3t5TfzCpJ_WNnlM2gcUDGEye8SlmVUn1MAAV61joh_CdhGMJRvCfCyMjphT9IUtylITJwap1jt2Kn5l21CMqW6gOUrVaTCFnEmBaRA0hkInvoOxrVCk3-Wnz4-JkDAIe-uGZJZCEFq"/>
-</div>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-baseline border-b border-black pb-2 mb-2">
-<h3 class="text-lg font-semibold uppercase tracking-wide">Gel-1130</h3>
-<span class="font-mono text-lg">$100</span>
-</div>
-<p class="text-sm opacity-70">White / Midnight</p>
-</div>
-</article>
-</div>
-</section>
-</main>
-<footer class="border-t border-black py-8 px-8 bg-[#FE9FC8]">
-<div class="max-w-7xl mx-auto flex flex-col items-center gap-3">
-<div class="text-sm flex gap-2 text-black">
-<a class="hover:underline" href="#">Contact</a>
-<span>.</span>
-<a class="hover:underline" href="#">Terms</a>
-<span>.</span>
-<a class="hover:underline" href="#">Privacy</a>
-</div>
-<p class="text-xs text-black">© 2024 SLCN. Hand-crafted with love in Seoul.</p>
-</div>
-</footer>
-</body></html>
+      </header>
+      <div
+        class="flex flex-wrap justify-center gap-8 mb-32 sticky top-24 z-40 py-4 bg-[#FE9FC8]/95 backdrop-blur"
+      >
+        <a
+          class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
+          href="#newbalance"
+          >New Balance</a
+        >
+        <a
+          class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
+          href="#nike"
+          >Nike</a
+        >
+        <a
+          class="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
+          href="#asics"
+          >Asics</a
+        >
+      </div>
+      <section class="mb-32 scroll-mt-32" id="newbalance">
+        <div
+          class="border-t border-black mb-12 pt-4 flex justify-between items-end"
+        >
+          <h2 class="text-4xl font-bold tracking-tight">New Balance</h2>
+          <span class="text-sm font-mono opacity-60">01</span>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20"
+        >
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="New Balance 530 White Silver"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4tVg-M8HhPB8jIeDkQfN1mHS_EpAcgQSsnZFepDx3s79nbVrvWbqaxnaGztNwllodqXmvEV81iypnYcgo3vhG_6eMW6IG6a_6Tu42Lg1KLsBjTOXMM8HRGfXMA84OACqpcE9iOMrscdK0_Zk8mpB1r1AHeZh8GmsxiRXr4J-FbSG059kXPfZ1_WDZ0NqrOi2cp_oYHpA0iEgXw50SbPkF1GpBjmKvc-AFCopdekXQO9i-botrnN4_Hyusroh8geOJGdX0Wo8qm2o4"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  NB 530 Retro
+                </h3>
+                <span class="font-mono text-lg">$100</span>
+              </div>
+              <p class="text-sm opacity-70">White / Silver Metallic</p>
+            </div>
+          </article>
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="New Balance 2002R Grey"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvMFeB9z_RhVoASROk1X0c3QgvLTb_-XPjNyL1rCI8jOjlGmePDGnsOHDuDV_2N-0D1MLO291UNK3HMmGpkx8M7qn8TiQgqMJWceWNdd541h7tY1QoKbTDbv57gxGCmLz94anl7i_8vnq0TcV6QZKhrGIOPjhhJoEjkEl4ZR0JWLFCj9OBfQ-_x3U_uD3hoGRyZO93UqQzrsDzzzUE0OSIPnp7mCfFT31aEHtJHqpHDT15jIbF2i5ZNXFs0_ilsk0C2EHtPHxTgkfz"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  NB 2002R Protection
+                </h3>
+                <span class="font-mono text-lg">$160</span>
+              </div>
+              <p class="text-sm opacity-70">Rain Cloud / Grey</p>
+            </div>
+          </article>
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="New Balance 990v5"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBslaoO-HyvgsmRME-51o8xRbxOoLh0nWItJBRpk7Z3bNadjRA8_Rx_yMROrVna1XqQQ8dvHQoqpmP7qeRQQDj8AS9tb8qjxFx9kp6t3wB4gVGiHFb5vYuPBJxcUMC0jfyRoBVt8gv69_LnsBzG7IPO5KBHEDhpUqzInUccn5bdorVYTsEtnA0gT19FI4YLVrZo0madLWowrWBxFtO-IQlkws9-ZjtiVQRsdqQaMXTkVj4FCU_jqFDaMyDspAVmF-wrayFw7fc1SDHf"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  NB 990v6
+                </h3>
+                <span class="font-mono text-lg">$200</span>
+              </div>
+              <p class="text-sm opacity-70">Castlerock / Grey</p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="mb-32 scroll-mt-32" id="nike">
+        <div
+          class="border-t border-black mb-12 pt-4 flex justify-between items-end"
+        >
+          <h2 class="text-4xl font-bold tracking-tight">Nike</h2>
+          <span class="text-sm font-mono opacity-60">02</span>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20"
+        >
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="Nike Air Max"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDh_SalB8DFYydzI4LoH9QiWLfW8OaOYquDxv5mycYSd7SnyOyEYuLg9_F7bdsXSRnbfmPD_y3b4NBMWG17C3EXugDgMyi4gVpUC5Jo7Yaq9xF5wJcw81CppG63gg0OPxxpN70REMaPMxx0F1GbPknEFwfzSd3PDnobuFSKRlyBwg-SAmtTThnZ3JfV_G2MPaZu9skINVqRkPaA7ZhqrrghUNfZCBIcPswSESsa566lgwdRNhGKmWcTr9SVZwhJvK2TtnRMtsoa-JL"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  Air Max 90
+                </h3>
+                <span class="font-mono text-lg">$130</span>
+              </div>
+              <p class="text-sm opacity-70">Infrared / White</p>
+            </div>
+          </article>
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="Nike Dunk Low"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjzJ8uzsmsfny26McaY9ea7eUmZowqbo_MMTu7eRVyWLUjG_KQRiuyDUU7iFFrE7XJDKzQVBCYuyf-qRqGEUcJfBdPsWljD5HXYlZiT8hSLkAyWsOkAc2BDnfyZOMEgete-E3eEIWyuUxTFk7qvoMIxRUW5ExOtM26pkJGJJd3CivDD25zyRBOI-JSq-MeF3yojDRtZTXAQhZLNgqkPlDPQxw7Ok4HkRaCj7o22VW207DqJ4u-l9YoKz7IyW3jp29h3NLHXqjEc4ZZ"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  Dunk Low Retro
+                </h3>
+                <span class="font-mono text-lg">$115</span>
+              </div>
+              <p class="text-sm opacity-70">Panda / Black &amp; White</p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="mb-12 scroll-mt-32" id="asics">
+        <div
+          class="border-t border-black mb-12 pt-4 flex justify-between items-end"
+        >
+          <h2 class="text-4xl font-bold tracking-tight">Asics</h2>
+          <span class="text-sm font-mono opacity-60">03</span>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20"
+        >
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="Asics Gel Kayano 14"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGX49L6jgAcUidT9EodyOPb-ZQXtwJT7hxCNcmdfUTinq-YUs4cUVB7yeRpRBB7n22lnwyKkCyzJzzxElGyDcCSPdLAvSg2VM27uKo7ABjh7A00yh0lR4b8cNEcIkXNQYtoziRHymjknvucWPtAgyt_7FGZixI4TU0GxyifaGdrxoRPcoT7D-VDEA3NK-evktQ53Kqid_-5eWs-P3f2_vLhnj0oPNGVV7k1RCRteYPuXM8R99g85tPdn9M6D5zF9-d5aQ_nnXJ2P5h"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  Gel-Kayano 14
+                </h3>
+                <span class="font-mono text-lg">$150</span>
+              </div>
+              <p class="text-sm opacity-70">Cream / Metallic Silver</p>
+            </div>
+          </article>
+          <article class="group cursor-pointer">
+            <div
+              class="aspect-[4/3] w-full overflow-hidden mb-6 bg-transparent"
+            >
+              <img
+                alt="Asics Gel-1130"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-in-out mix-blend-multiply"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2eTflvpS1umUn9CUZituciU4gl1lwlUj5QaHdoMGzh8mqGiKXDoMKMPKpBbwWQuKwswr_nzQWVQfQqEdAlC98XLpAQqGEe_tmSUP53gMW-gb38C9f_FgCyGNkhAqKnJgu-I3t5TfzCpJ_WNnlM2gcUDGEye8SlmVUn1MAAV61joh_CdhGMJRvCfCyMjphT9IUtylITJwap1jt2Kn5l21CMqW6gOUrVaTCFnEmBaRA0hkInvoOxrVCk3-Wnz4-JkDAIe-uGZJZCEFq"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <div
+                class="flex justify-between items-baseline border-b border-black pb-2 mb-2"
+              >
+                <h3 class="text-lg font-semibold uppercase tracking-wide">
+                  Gel-1130
+                </h3>
+                <span class="font-mono text-lg">$100</span>
+              </div>
+              <p class="text-sm opacity-70">White / Midnight</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t border-black py-8 px-8 bg-[#FE9FC8]">
+      <div class="max-w-7xl mx-auto flex flex-col items-center gap-3">
+        <div class="text-sm flex gap-2 text-black">
+          <a class="hover:underline" href="#">Contact</a>
+          <span>.</span>
+          <a class="hover:underline" href="#">Terms</a>
+          <span>.</span>
+          <a class="hover:underline" href="#">Privacy</a>
+        </div>
+        <p class="text-xs text-black">
+          © 2024 SLCN. Hand-crafted with love in Seoul.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

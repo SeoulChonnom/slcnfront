@@ -99,27 +99,27 @@ src/
 
 ```ts
 type ScheduleEventDto = {
-  id: string
-  title: string
-  body?: string
-  start: string
-  end: string
-  isAllday?: boolean
-  category?: 'allday' | 'time'
-  calendarId?: string
-}
+  id: string;
+  title: string;
+  body?: string;
+  start: string;
+  end: string;
+  isAllday?: boolean;
+  category?: 'allday' | 'time';
+  calendarId?: string;
+};
 
 type CalendarEventModel = {
-  id: string
-  title: string
-  start: Date | string
-  end: Date | string
-  allDay: boolean
+  id: string;
+  title: string;
+  start: Date | string;
+  end: Date | string;
+  allDay: boolean;
   extendedProps: {
-    body?: string
-    calendarId?: string
-  }
-}
+    body?: string;
+    calendarId?: string;
+  };
+};
 ```
 
 ### 7.2 API 계약

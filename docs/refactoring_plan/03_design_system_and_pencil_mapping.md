@@ -53,18 +53,18 @@ Pencil 디자인을 React/Tailwind 컴포넌트 시스템으로 번역하는 단
 
 ### 5.2 Pencil reusable component → React 매핑
 
-| Pencil 컴포넌트 | React 컴포넌트 | 위치 |
-| --- | --- | --- |
-| `cmp/ButtonPrimary` | `components/ui/Button.tsx` | 공통 |
-| `cmp/ButtonSecondary` | `components/ui/Button.tsx` variant | 공통 |
-| `cmp/TextInput` | `components/ui/TextField.tsx` | 공통 |
-| `cmp/UploadDropzone` | `components/ui/FileDropzone.tsx` | 공통 |
-| `cmp/QuizUnlockModal` | `components/ui/QuizModal.tsx` | 공통 |
-| `cmp/GlobalHeader` | `components/layout/DesktopHeader.tsx` | PC |
-| `cmp/GlobalFooter` | `components/layout/Footer.tsx` | 공통 |
-| `cmp/MobileTopAppBar` | `components/layout/MobileTopBar.tsx` | Mobile |
-| `cmp/MobileBottomNav` | `components/layout/MobileBottomNav.tsx` | Mobile |
-| `cmp/CalendarViewToggle` | `components/ui/CalendarViewToggle.tsx` | 캘린더 |
+| Pencil 컴포넌트          | React 컴포넌트                          | 위치   |
+| ------------------------ | --------------------------------------- | ------ |
+| `cmp/ButtonPrimary`      | `components/ui/Button.tsx`              | 공통   |
+| `cmp/ButtonSecondary`    | `components/ui/Button.tsx` variant      | 공통   |
+| `cmp/TextInput`          | `components/ui/TextField.tsx`           | 공통   |
+| `cmp/UploadDropzone`     | `components/ui/FileDropzone.tsx`        | 공통   |
+| `cmp/QuizUnlockModal`    | `components/ui/QuizModal.tsx`           | 공통   |
+| `cmp/GlobalHeader`       | `components/layout/DesktopHeader.tsx`   | PC     |
+| `cmp/GlobalFooter`       | `components/layout/Footer.tsx`          | 공통   |
+| `cmp/MobileTopAppBar`    | `components/layout/MobileTopBar.tsx`    | Mobile |
+| `cmp/MobileBottomNav`    | `components/layout/MobileBottomNav.tsx` | Mobile |
+| `cmp/CalendarViewToggle` | `components/ui/CalendarViewToggle.tsx`  | 캘린더 |
 
 ### 5.3 공통 primitive
 
