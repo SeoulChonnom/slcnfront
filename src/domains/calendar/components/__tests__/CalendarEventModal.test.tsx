@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CalendarEventModal } from '../CalendarEventModal';
 
@@ -34,6 +34,38 @@ const calendars = [
 describe('CalendarEventModal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it('focuses the title input when opened', async () => {
+    render(
+      <CalendarEventModal
+        isOpen
+        calendars={calendars}
+        draft={{
+          calendarId: 'cal-1',
+          title: '',
+          body: '',
+          location: '',
+          allDay: false,
+          startDate: '2026-04-14',
+          startTime: '09:00',
+          endDate: '2026-04-14',
+          endTime: '10:00',
+        }}
+        event={null}
+        errorMessage={null}
+        isSubmitting={false}
+        onClose={vi.fn()}
+        onDraftChange={vi.fn()}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />
+    );
+
+    const titleInput = screen.getByRole('textbox', { name: '제목' });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(titleInput);
+    });
   });
 
   it('renders controlled draft values and emits field changes', async () => {

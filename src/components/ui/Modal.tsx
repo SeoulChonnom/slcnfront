@@ -1,6 +1,7 @@
 import {
   useEffect,
   useId,
+  useRef,
   type HTMLAttributes,
   type PropsWithChildren,
 } from 'react';
@@ -16,12 +17,22 @@ type ModalProps = PropsWithChildren<{
 }> &
   HTMLAttributes<HTMLDivElement>;
 
+function isUsableFocusTarget(element: Element | null): element is HTMLElement {
+  return (
+    element instanceof HTMLElement &&
+    element.isConnected &&
+    !element.hasAttribute('disabled') &&
+    !element.hasAttribute('hidden') &&
+    element.getAttribute('aria-hidden') !== 'true'
+  );
+}
+
 function getFocusableElements(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, select, textarea, summary, [tabindex]:not([tabindex="-1"])'
     )
-  ).filter((element) => !element.hasAttribute('disabled'));
+  ).filter(isUsableFocusTarget);
 }
 
 export function Modal({
@@ -31,11 +42,24 @@ export function Modal({
   description,
   children,
   className,
+  onKeyDown,
   ...props
 }: ModalProps) {
   const titleId = useId();
   const descriptionElementId = useId();
   const descriptionId = description ? descriptionElementId : undefined;
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const previousFocusedElementRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(false);
+
+  if (isOpen && !wasOpenRef.current) {
+    previousFocusedElementRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+  }
+
+  wasOpenRef.current = isOpen;
 
   useEffect(() => {
     if (!isOpen) {
@@ -47,7 +71,44 @@ export function Modal({
 
     return () => {
       document.body.style.overflow = previousOverflow;
+
+      const previousFocusedElement = previousFocusedElementRef.current;
+      previousFocusedElementRef.current = null;
+
+      if (isUsableFocusTarget(previousFocusedElement)) {
+        previousFocusedElement.focus();
+      }
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const dialog = dialogRef.current;
+
+    if (!dialog) {
+      return;
+    }
+
+    if (
+      document.activeElement instanceof HTMLElement &&
+      dialog.contains(document.activeElement)
+    ) {
+      return;
+    }
+
+    const explicitAutoFocusTarget =
+      dialog.querySelector<HTMLElement>('[autofocus]');
+
+    if (isUsableFocusTarget(explicitAutoFocusTarget)) {
+      explicitAutoFocusTarget.focus();
+      return;
+    }
+
+    const firstFocusableElement = getFocusableElements(dialog)[0];
+    (firstFocusableElement ?? dialog).focus();
   }, [isOpen]);
 
   if (!isOpen) {
@@ -64,12 +125,20 @@ export function Modal({
       }}
     >
       <div
+        {...props}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         className={cn('slcn-modal', className)}
+        ref={dialogRef}
         onKeyDown={(event) => {
+          onKeyDown?.(event);
+
+          if (event.defaultPrevented) {
+            return;
+          }
+
           if (event.key === 'Escape') {
             event.preventDefault();
             onClose();
@@ -103,18 +172,7 @@ export function Modal({
             last?.focus();
           }
         }}
-        ref={(node) => {
-          if (!node) {
-            return;
-          }
-
-          queueMicrotask(() => {
-            const focusableElements = getFocusableElements(node);
-            (focusableElements[0] ?? node).focus();
-          });
-        }}
         tabIndex={-1}
-        {...props}
       >
         <button
           type="button"

@@ -69,6 +69,7 @@ export function CalendarEventModal({
         <TextField
           label="제목"
           value={draft.title}
+          autoFocus
           onChange={(changeEvent) => {
             onDraftChange({
               title: changeEvent.target.value,

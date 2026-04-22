@@ -36,6 +36,7 @@ export function TripQuizModal({
         <div className="slcn-trip-quiz-modal__feedback">
           <Button
             fullWidth
+            autoFocus
             onClick={feedback.isCorrect ? onConfirmSuccess : onClose}
           >
             {feedback.isCorrect ? '지도 보러가기' : '목록으로 돌아가기'}
@@ -48,6 +49,7 @@ export function TripQuizModal({
               key={answer.quizIndex}
               variant="secondary"
               fullWidth
+              autoFocus={index === 0}
               onClick={() => onAnswer(index)}
             >
               {index + 1}. {answer.answer}
