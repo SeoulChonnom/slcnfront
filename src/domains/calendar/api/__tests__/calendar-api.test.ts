@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { AppError } from '../../../../lib/api/errors';
 import { createApiClient } from '../../../../lib/api/api-client';
 import { createCalendarApi } from '../calendar-api';
 
@@ -122,5 +123,140 @@ describe('calendar-api', () => {
       'http://localhost:8080/api/calendar/cal-1'
     );
     expect(fetchFn.mock.calls[2]?.[1]?.method).toBe('DELETE');
+  });
+
+  it('rejects malformed calendar list payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: 'cal-1',
+            name: '아영',
+            backgroundColor: '#fe9fc8',
+            borderColor: '#fe9fc8',
+            textColor: '#111111',
+            visible: 'true',
+            editable: true,
+            startEditable: true,
+            durationEditable: true,
+            defaultSelected: true,
+            sortOrder: 1,
+          },
+        ]),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const calendarApi = createCalendarApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(calendarApi.getCalendars()).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Calendar list response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed calendar create payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 'cal-1',
+          name: '아영',
+          backgroundColor: '#fe9fc8',
+          borderColor: '#fe9fc8',
+          textColor: '#111111',
+          visible: true,
+          editable: true,
+          startEditable: true,
+          durationEditable: true,
+          defaultSelected: true,
+          sortOrder: '1',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const calendarApi = createCalendarApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(
+      calendarApi.createCalendar({
+        name: '아영',
+        backgroundColor: '#fe9fc8',
+        borderColor: '#fe9fc8',
+        textColor: '#111111',
+        editable: true,
+        startEditable: true,
+        durationEditable: true,
+        defaultSelected: true,
+        sortOrder: 1,
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Calendar create response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed calendar update payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 'cal-1',
+          name: '아영',
+          backgroundColor: '#fe9fc8',
+          borderColor: '#fe9fc8',
+          textColor: '#111111',
+          visible: true,
+          editable: true,
+          startEditable: true,
+          durationEditable: 'true',
+          defaultSelected: true,
+          sortOrder: 1,
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const calendarApi = createCalendarApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(
+      calendarApi.updateCalendar({
+        id: 'cal-1',
+        name: '아영',
+        backgroundColor: '#fe9fc8',
+        borderColor: '#fe9fc8',
+        textColor: '#111111',
+        editable: true,
+        startEditable: true,
+        durationEditable: true,
+        defaultSelected: true,
+        sortOrder: 1,
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Calendar update response payload is invalid.',
+    } satisfies Partial<AppError>);
   });
 });

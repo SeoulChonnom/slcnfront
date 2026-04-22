@@ -85,4 +85,25 @@ describe('createApiClient', () => {
       message: 'Bad request payload',
     } satisfies Partial<AppError>);
   });
+
+  it('passes through successful json payloads without validating their shape', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ unexpected: 123 }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+    });
+
+    const response = await client.get<{ ok: boolean }>({
+      path: '/api/example',
+    });
+
+    expect(response).toEqual({ unexpected: 123 });
+  });
 });

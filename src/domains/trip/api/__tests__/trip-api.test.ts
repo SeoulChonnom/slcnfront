@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { AppError } from '../../../../lib/api/errors';
 import { createApiClient } from '../../../../lib/api/api-client';
 import { createTripApi, buildTripRegisterFormData } from '../trip-api';
 import { createTripFilesApi } from '../trip-files-api';
@@ -149,5 +150,131 @@ describe('trip-api', () => {
       'http://localhost:8080/api/file?path=%2Flogo.png'
     );
     expect(fetchFn.mock.calls[2]?.[1]?.body).toBeInstanceOf(FormData);
+  });
+
+  it('rejects malformed trip list payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: 'trip-1',
+            date: '2099-12-31',
+            name: '연말 나들이',
+            logo: '/logo.png',
+            quizTitle: '퀴즈',
+            quizAnswer: '1',
+            quizAnswerTitle: '정답',
+            quizAnswerText: '설명',
+            quizErrorTitle: '오답',
+            quizErrorText: '다시',
+            quizList: 'invalid',
+          },
+        ]),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const tripApi = createTripApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(tripApi.getTripList()).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Trip list response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed trip detail payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          date: '2099-12-31',
+          firstMap: 123,
+          secondMap: '/map2.png',
+          nextButtonText: '다음',
+          previousButtonText: '이전',
+          drive: 'https://drive.google.com/x',
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const tripApi = createTripApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(tripApi.getTripDetail('2099-12-31')).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Trip detail response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed trip register payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          date: '2099-12-31',
+          firstMap: '/map1.png',
+          secondMap: '/map2.png',
+          nextButtonText: '다음',
+          previousButtonText: '이전',
+          drive: 123,
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const tripApi = createTripApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(
+      tripApi.registerTrip({
+        request: {
+          date: '2099-12-31',
+          type: 'year-end',
+          info1: '2099.12.31',
+          info2: '연말 나들이',
+          button1: '다음',
+          button2: '이전',
+          drive: 'https://drive.google.com/x',
+          quizTitle: '정답은?',
+          quizAnswer: '2',
+          quizAnswerTitle: '정답',
+          quizAnswerText: '설명',
+          quizErrorTitle: '오답',
+          quizErrorText: '다시 시도',
+          quizRegisterRequestList: [{ quizIndex: '0', answer: '보기1' }],
+        },
+        files: {},
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Trip register response payload is invalid.',
+    } satisfies Partial<AppError>);
   });
 });

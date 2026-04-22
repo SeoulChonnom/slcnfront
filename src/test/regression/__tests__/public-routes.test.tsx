@@ -1,14 +1,12 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import type { PropsWithChildren } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
+import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { QueryProvider } from '../../../app/providers/QueryProvider';
 import { AppRouter } from '../../../app/router/AppRouter';
-import { createTestQueryClient } from '../../helpers/query-client';
 import {
   resetAuthStore,
   useAuthStore,
 } from '../../../domains/auth/store/auth-store';
+import { renderWithMinimalProviders } from '../../helpers/render';
 
 function createMatchMedia(matches: boolean) {
   return vi.fn().mockImplementation(() => ({
@@ -35,22 +33,12 @@ function LocationProbe() {
 }
 
 function renderApp(route: string) {
-  const queryClient = createTestQueryClient();
-
-  function Wrapper({ children }: PropsWithChildren) {
-    return (
-      <QueryProvider client={queryClient}>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </QueryProvider>
-    );
-  }
-
-  return render(
+  return renderWithMinimalProviders(
     <>
       <LocationProbe />
       <AppRouter />
     </>,
-    { wrapper: Wrapper }
+    { route }
   );
 }
 

@@ -4,7 +4,7 @@ import {
   resetAuthStore,
   useAuthStore,
 } from '../../../domains/auth/store/auth-store';
-import { renderWithProviders } from '../../../test/helpers/render';
+import { renderWithMinimalProviders } from '../../../test/helpers/render';
 import { RequireAuth } from '../guards';
 
 function LocationProbe() {
@@ -35,7 +35,7 @@ describe('RequireAuth', () => {
       restoreState: 'error',
     });
 
-    renderWithProviders(
+    renderWithMinimalProviders(
       <>
         <Routes>
           <Route path="/login" element={<p>login-page</p>} />
@@ -67,7 +67,7 @@ describe('RequireAuth', () => {
       restoreState: 'idle',
     });
 
-    renderWithProviders(
+    renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
           <Route path="/protected" element={<p>private-page</p>} />
@@ -95,7 +95,7 @@ describe('RequireAuth', () => {
       restoreState: 'success',
     });
 
-    renderWithProviders(
+    renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
           <Route path="/protected" element={<p>private-page</p>} />

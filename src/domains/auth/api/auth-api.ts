@@ -4,19 +4,13 @@ import {
   type createApiClient,
 } from '../../../lib/api/api-client';
 import type { LoginFormValues, Role, UserInfo } from '../types';
+import { parseUserResponse, type UserResponseDto } from './auth-schemas';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 
 type LoginRequestDto = {
   username: string;
   password: string;
-};
-
-type UserResponseDto = {
-  accessToken: string;
-  username: string;
-  name: string;
-  roleList: string[];
 };
 
 export type AuthSuccess = {
@@ -64,7 +58,7 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
         auth: false,
       });
 
-      return mapUserResponse(response);
+      return mapUserResponse(parseUserResponse(response, 'login'));
     },
     async restoreSession(options?: Pick<ApiRequestOptions, 'signal'>) {
       const response = await client.post<UserResponseDto>({
@@ -73,7 +67,7 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
         signal: options?.signal,
       });
 
-      return mapUserResponse(response);
+      return mapUserResponse(parseUserResponse(response, 'restoreSession'));
     },
   };
 }

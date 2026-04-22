@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { AppError } from '../../../../lib/api/errors';
 import { createApiClient } from '../../../../lib/api/api-client';
 import { createScheduleApi } from '../schedule-api';
 
@@ -90,5 +91,165 @@ describe('schedule-api', () => {
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
       'http://localhost:8080/api/schedule/schedule-1'
     );
+  });
+
+  it('rejects malformed current schedules payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '봄 산책',
+            body: '석촌호수',
+            start: '2026-04-10T10:00:00+09:00',
+            end: '2026-04-10T12:00:00+09:00',
+            allDay: 'false',
+            location: 'Seoul',
+          },
+        ]),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const scheduleApi = createScheduleApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(scheduleApi.getCurrentSchedules()).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Current schedules response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed range schedules payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '봄 산책',
+            body: '석촌호수',
+            start: '2026-04-10T10:00:00+09:00',
+            allDay: false,
+            location: 'Seoul',
+          },
+        ]),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const scheduleApi = createScheduleApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(
+      scheduleApi.getSchedulesInRange({
+        start: '2026-04-01T00:00:00+09:00',
+        end: '2026-05-01T00:00:00+09:00',
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Schedule range response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed create schedule payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 'schedule-1',
+          calendarId: 'cal-1',
+          title: '봄 산책',
+          body: '석촌호수',
+          start: '2026-04-10T10:00:00+09:00',
+          end: '2026-04-10T12:00:00+09:00',
+          allDay: false,
+          location: 123,
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const scheduleApi = createScheduleApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+    const payload = {
+      calendarId: 'cal-1',
+      title: '봄 산책',
+      body: '석촌호수',
+      start: '2026-04-10T10:00:00+09:00',
+      end: '2026-04-10T12:00:00+09:00',
+      allDay: false,
+      location: 'Seoul',
+    };
+
+    await expect(scheduleApi.createSchedule(payload)).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Schedule create response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed update schedule payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 'schedule-1',
+          calendarId: 'cal-1',
+          title: '봄 산책',
+          body: '석촌호수',
+          start: '2026-04-10T10:00:00+09:00',
+          end: '2026-04-10T12:00:00+09:00',
+          allDay: 'false',
+          location: 'Seoul',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    );
+    const scheduleApi = createScheduleApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    const payload = {
+      id: 'schedule-1',
+      calendarId: 'cal-1',
+      title: '봄 산책',
+      body: '석촌호수',
+      start: '2026-04-10T10:00:00+09:00',
+      end: '2026-04-10T12:00:00+09:00',
+      allDay: false,
+      location: 'Seoul',
+    };
+
+    await expect(scheduleApi.updateSchedule(payload)).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Schedule update response payload is invalid.',
+    } satisfies Partial<AppError>);
   });
 });

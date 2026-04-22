@@ -2,10 +2,14 @@ import { apiClient, type createApiClient } from '../../../lib/api/api-client';
 import {
   mapScheduleEventDto,
   type ScheduleEvent,
-  type ScheduleEventDto,
   type ScheduleMutationPayload,
   type ScheduleRangeQuery,
 } from '../types';
+import {
+  parseScheduleListResponse,
+  parseScheduleResponse,
+  type ScheduleEventDto,
+} from './calendar-schemas';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,
@@ -19,7 +23,9 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
         path: '/schedule/now',
       });
 
-      return response.map(mapScheduleEventDto);
+      return parseScheduleListResponse(response, 'current').map(
+        mapScheduleEventDto
+      );
     },
     async getSchedulesInRange(
       query: ScheduleRangeQuery
@@ -29,7 +35,9 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
         query,
       });
 
-      return response.map(mapScheduleEventDto);
+      return parseScheduleListResponse(response, 'range').map(
+        mapScheduleEventDto
+      );
     },
     async createSchedule(
       payload: ScheduleMutationPayload
@@ -39,7 +47,7 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
         body: payload,
       });
 
-      return mapScheduleEventDto(response);
+      return mapScheduleEventDto(parseScheduleResponse(response, 'create'));
     },
     async updateSchedule(
       payload: ScheduleMutationPayload
@@ -49,7 +57,7 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
         body: payload,
       });
 
-      return mapScheduleEventDto(response);
+      return mapScheduleEventDto(parseScheduleResponse(response, 'update'));
     },
     async deleteSchedule(id: string) {
       await client.delete<void>({

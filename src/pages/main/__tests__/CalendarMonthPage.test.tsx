@@ -1,9 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import type { PropsWithChildren } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { QueryProvider } from '../../../app/providers/QueryProvider';
-import { createTestQueryClient } from '../../../test/helpers/query-client';
+import { renderWithMinimalProviders } from '../../../test/helpers/render';
 import { CalendarMonthPage } from '../CalendarMonthPage';
 
 const { useCalendarMonth } = vi.hoisted(() => ({
@@ -31,19 +28,9 @@ describe('CalendarMonthPage', () => {
       refetch: vi.fn(),
     });
 
-    const queryClient = createTestQueryClient();
-
-    function Wrapper({ children }: PropsWithChildren) {
-      return (
-        <QueryProvider client={queryClient}>
-          <MemoryRouter initialEntries={['/main/calendar?date=2026-04-14']}>
-            {children}
-          </MemoryRouter>
-        </QueryProvider>
-      );
-    }
-
-    render(<CalendarMonthPage />, { wrapper: Wrapper });
+    renderWithMinimalProviders(<CalendarMonthPage />, {
+      route: '/main/calendar?date=2026-04-14',
+    });
 
     expect(screen.getByText('2026년 4월')).toBeTruthy();
     expect(useCalendarMonth).toHaveBeenCalledWith('2026-04-14');

@@ -1,13 +1,12 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import type { PropsWithChildren } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
+import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppProviders } from '../../../app/providers/AppProviders';
 import { AppRouter } from '../../../app/router/AppRouter';
 import {
   resetAuthStore,
   useAuthStore,
 } from '../../../domains/auth/store/auth-store';
+import { renderWithAppProviders } from '../../helpers/render';
 
 const { restoreSession } = vi.hoisted(() => ({
   restoreSession: vi.fn(),
@@ -39,20 +38,12 @@ function LocationProbe() {
 }
 
 function renderApp(route: string) {
-  function Wrapper({ children }: PropsWithChildren) {
-    return (
-      <AppProviders>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </AppProviders>
-    );
-  }
-
-  return render(
+  return renderWithAppProviders(
     <>
       <LocationProbe />
       <AppRouter />
     </>,
-    { wrapper: Wrapper }
+    { route }
   );
 }
 
@@ -83,7 +74,7 @@ describe('auth smoke', () => {
         '/main/login?redirect=%2Fmain%2Fmap'
       );
     });
-    expect(await screen.findByText('SLCN Login')).toBeTruthy();
+    expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
   });
 
   it('restores a session from refresh token before entering the protected route', async () => {

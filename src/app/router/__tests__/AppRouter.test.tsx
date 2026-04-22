@@ -1,14 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import type { PropsWithChildren } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { QueryProvider } from '../../providers/QueryProvider';
-import { createTestQueryClient } from '../../../test/helpers/query-client';
 import {
   resetAuthStore,
   useAuthStore,
 } from '../../../domains/auth/store/auth-store';
 import { AppRouter } from '../AppRouter';
+import { renderWithMinimalProviders } from '../../../test/helpers/render';
 
 vi.mock('../../../pages/mobile/CalendarMonthPage', () => ({
   CalendarMonthPage: () => <div>모바일 월간 캘린더</div>,
@@ -41,17 +38,7 @@ function stubMatchMedia(matches: boolean) {
 }
 
 function renderAppRouter(route: string) {
-  const queryClient = createTestQueryClient();
-
-  function Wrapper({ children }: PropsWithChildren) {
-    return (
-      <QueryProvider client={queryClient}>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </QueryProvider>
-    );
-  }
-
-  return render(<AppRouter />, { wrapper: Wrapper });
+  return renderWithMinimalProviders(<AppRouter />, { route });
 }
 
 describe('AppRouter', () => {
@@ -73,9 +60,7 @@ describe('AppRouter', () => {
     });
     renderAppRouter('/map');
 
-    await waitFor(() => {
-      expect(screen.getByText('SLCN Login')).toBeTruthy();
-    });
+    expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
   });
 
   it('renders authenticated internal routes inside the mobile shell', async () => {

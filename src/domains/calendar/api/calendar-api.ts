@@ -3,9 +3,13 @@ import {
   mapCalendarMetaDto,
   type CalendarCreatePayload,
   type CalendarMeta,
-  type CalendarMetaDto,
   type CalendarUpdatePayload,
 } from '../types';
+import {
+  parseCalendarListResponse,
+  parseCalendarResponse,
+  type CalendarMetaDto,
+} from './calendar-schemas';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,
@@ -19,7 +23,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
         path: '/calendar',
       });
 
-      return response
+      return parseCalendarListResponse(response)
         .map(mapCalendarMetaDto)
         .toSorted((left, right) => left.sortOrder - right.sortOrder);
     },
@@ -31,7 +35,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
         body: payload,
       });
 
-      return mapCalendarMetaDto(response);
+      return mapCalendarMetaDto(parseCalendarResponse(response, 'create'));
     },
     async updateCalendar(
       payload: CalendarUpdatePayload
@@ -41,7 +45,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
         body: payload,
       });
 
-      return mapCalendarMetaDto(response);
+      return mapCalendarMetaDto(parseCalendarResponse(response, 'update'));
     },
     async deleteCalendar(id: string) {
       await client.delete<void>({

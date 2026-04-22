@@ -1,21 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import type { PropsWithChildren, ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
-import { AppProviders } from '../../../app/providers/AppProviders';
 import { HomePage as MainHomePage } from '../../../pages/main/HomePage';
 import { HomePage as MobileHomePage } from '../../../pages/mobile/HomePage';
+import { renderWithMinimalProviders } from '../../helpers/render';
 
 function renderInApp(ui: ReactElement, route: string) {
-  function Wrapper({ children }: PropsWithChildren) {
-    return (
-      <AppProviders>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </AppProviders>
-    );
-  }
-
-  return render(ui, { wrapper: Wrapper });
+  return renderWithMinimalProviders(ui, { route });
 }
 
 describe('navigation smoke', () => {

@@ -20,3 +20,11 @@ export class AppError extends Error {
     this.details = details;
   }
 }
+
+export function createInvalidResponseError(context: string, details?: unknown) {
+  return new AppError({
+    code: 'INVALID_RESPONSE',
+    message: `${context} response payload is invalid.`,
+    details,
+  });
+}

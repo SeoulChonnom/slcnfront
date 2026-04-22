@@ -132,4 +132,70 @@ describe('auth-api', () => {
       method: 'POST',
     });
   });
+
+  it('rejects malformed login success payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          accessToken: 'token-123',
+          username: 'slcn-admin',
+          name: 'SLCN',
+          roleList: 'ADMIN',
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const authApi = createAuthApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(
+      authApi.login({
+        userName: 'slcn-admin',
+        password: 'pw1234',
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Login response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('rejects malformed restoreSession success payloads as INVALID_RESPONSE', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          accessToken: 'token-restore',
+          username: 'slcn-admin',
+          roleList: ['ADMIN'],
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const authApi = createAuthApi(
+      createApiClient({
+        fetchFn,
+        getBaseUrl: () => 'http://localhost:8080/api',
+      })
+    );
+
+    await expect(authApi.restoreSession()).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'INVALID_RESPONSE',
+      message: 'Restore session response payload is invalid.',
+    } satisfies Partial<AppError>);
+  });
 });

@@ -1,12 +1,12 @@
 import { apiClient, type createApiClient } from '../../../lib/api/api-client';
 import { mapTripDetailDto, mapTripListItemDto } from '../mappers/trip-mappers';
-import type {
-  TripDetail,
-  TripDetailDto,
-  TripListItem,
-  TripListItemDto,
-  TripRegisterPayload,
-} from '../types';
+import type { TripDetail, TripListItem, TripRegisterPayload } from '../types';
+import {
+  parseTripDetailResponse,
+  parseTripListResponse,
+  type TripDetailDto,
+  type TripListItemDto,
+} from './trip-schemas';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 
@@ -40,7 +40,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
         path: '/trip',
       });
 
-      return response.map(mapTripListItemDto);
+      return parseTripListResponse(response).map(mapTripListItemDto);
     },
     async getTripDetail(date: string): Promise<TripDetail> {
       const response = await client.get<TripDetailDto>({
@@ -50,7 +50,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
         },
       });
 
-      return mapTripDetailDto(response);
+      return mapTripDetailDto(parseTripDetailResponse(response, 'detail'));
     },
     async registerTrip(payload: TripRegisterPayload): Promise<TripDetail> {
       const response = await client.post<TripDetailDto>({
@@ -58,7 +58,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
         body: buildTripRegisterFormData(payload),
       });
 
-      return mapTripDetailDto(response);
+      return mapTripDetailDto(parseTripDetailResponse(response, 'register'));
     },
   };
 }
