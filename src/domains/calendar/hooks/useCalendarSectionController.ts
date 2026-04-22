@@ -19,50 +19,70 @@ export type CalendarSectionState = {
   refetch: () => Promise<unknown>;
 };
 
-type CalendarEditorState = {
-  isOpen: boolean;
-  draft: CalendarEventDraft;
-  event: ScheduleEvent | null;
-  error: string | null;
-};
-
 type CalendarSectionControllerProps = {
   device: DeviceType;
   view: CalendarViewMode;
   state: CalendarSectionState;
 };
 
-type CalendarSectionControllerResult = {
-  currentDate: string;
-  label: string;
-  calendars: CalendarMeta[];
-  visibleCalendarIds: string[];
-  events: CalendarEventInput[];
-  createDisabled: boolean;
+export type CalendarStatusModel = {
   isLoading: boolean;
   isError: boolean;
   isSubmitting: boolean;
-  editor: CalendarEditorState;
-  onToggleCalendar: (calendarId: string) => void;
+  onRetry: () => void;
+};
+
+export type CalendarNavigationModel = {
+  currentDate: string;
+  label: string;
+  activeView: CalendarViewMode;
   onViewChange: (nextView: CalendarViewMode) => void;
   onPrev: () => void;
   onToday: () => void;
   onNext: () => void;
+};
+
+export type CalendarFiltersModel = {
+  calendars: CalendarMeta[];
+  visibleCalendarIds: string[];
+  createDisabled: boolean;
+  onToggleCalendar: (calendarId: string) => void;
   onCreate: () => void;
-  onRetry: () => void;
-  onDraftChange: (patch: Partial<CalendarEventDraft>) => void;
-  onCloseEditor: () => void;
-  onSubmitEditor: () => Promise<void>;
-  onDeleteEditor: () => Promise<void>;
+};
+
+export type CalendarEventsModel = {
+  items: CalendarEventInput[];
+  selectable: boolean;
   onSelectRange: (selection: {
     start: Date;
     end: Date;
     allDay: boolean;
   }) => void;
-  onDateClick: (selection: { date: Date; allDay: boolean }) => void;
+  onDateClick?: (selection: { date: Date; allDay: boolean }) => void;
   onEventClick: (event: EventApi) => void;
   onEventDrop: (arg: EventDropArg) => Promise<void>;
   onEventResize: (arg: EventResizeDoneArg) => Promise<void>;
+};
+
+export type CalendarEditorModel = {
+  isOpen: boolean;
+  calendars: CalendarMeta[];
+  draft: CalendarEventDraft;
+  event: ScheduleEvent | null;
+  errorMessage: string | null;
+  isSubmitting: boolean;
+  onDraftChange: (patch: Partial<CalendarEventDraft>) => void;
+  onClose: () => void;
+  onSubmit: () => Promise<void>;
+  onDelete?: () => Promise<void>;
+};
+
+export type CalendarSectionControllerResult = {
+  status: CalendarStatusModel;
+  navigation: CalendarNavigationModel;
+  filters: CalendarFiltersModel;
+  calendarEvents: CalendarEventsModel;
+  editor: CalendarEditorModel;
 };
 
 export function useCalendarSectionController({
@@ -92,33 +112,52 @@ export function useCalendarSectionController({
   });
 
   return {
-    currentDate: navigation.currentDate,
-    label: state.label,
-    calendars,
-    visibleCalendarIds: visibility.visibleCalendarIds,
-    events: visibility.events,
-    createDisabled: visibility.createDisabled,
-    isLoading: state.isLoading,
-    isError: state.isError,
-    isSubmitting,
-    editor: editor.editor,
-    onToggleCalendar: visibility.onToggleCalendar,
-    onViewChange: navigation.onViewChange,
-    onPrev: navigation.onPrev,
-    onToday: navigation.onToday,
-    onNext: navigation.onNext,
-    onCreate: interactions.onCreate,
-    onRetry: () => {
-      void state.refetch();
+    status: {
+      isLoading: state.isLoading,
+      isError: state.isError,
+      isSubmitting,
+      onRetry: () => {
+        void state.refetch();
+      },
     },
-    onDraftChange: editor.onDraftChange,
-    onCloseEditor: editor.onCloseEditor,
-    onSubmitEditor: editor.onSubmitEditor,
-    onDeleteEditor: editor.onDeleteEditor,
-    onSelectRange: interactions.onSelectRange,
-    onDateClick: interactions.onDateClick,
-    onEventClick: interactions.onEventClick,
-    onEventDrop: interactions.onEventDrop,
-    onEventResize: interactions.onEventResize,
+    navigation: {
+      currentDate: navigation.currentDate,
+      label: state.label,
+      activeView: view,
+      onViewChange: navigation.onViewChange,
+      onPrev: navigation.onPrev,
+      onToday: navigation.onToday,
+      onNext: navigation.onNext,
+    },
+    filters: {
+      calendars,
+      visibleCalendarIds: visibility.visibleCalendarIds,
+      createDisabled: visibility.createDisabled,
+      onToggleCalendar: visibility.onToggleCalendar,
+      onCreate: interactions.onCreate,
+    },
+    calendarEvents: {
+      items: visibility.events,
+      selectable: !visibility.createDisabled,
+      onSelectRange: interactions.onSelectRange,
+      onDateClick: visibility.createDisabled
+        ? undefined
+        : interactions.onDateClick,
+      onEventClick: interactions.onEventClick,
+      onEventDrop: interactions.onEventDrop,
+      onEventResize: interactions.onEventResize,
+    },
+    editor: {
+      isOpen: editor.editor.isOpen,
+      calendars,
+      draft: editor.editor.draft,
+      event: editor.editor.event,
+      errorMessage: editor.editor.error,
+      isSubmitting,
+      onDraftChange: editor.onDraftChange,
+      onClose: editor.onCloseEditor,
+      onSubmit: editor.onSubmitEditor,
+      onDelete: editor.editor.event ? editor.onDeleteEditor : undefined,
+    },
   };
 }

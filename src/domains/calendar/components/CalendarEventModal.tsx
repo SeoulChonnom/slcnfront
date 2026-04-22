@@ -1,34 +1,25 @@
 import { Button } from '../../../components/ui/Button';
 import { Modal } from '../../../components/ui/Modal';
 import { TextField, TextareaField } from '../../../components/ui/TextField';
-import type { CalendarEventDraft } from '../mappers/schedule-event-mappers';
-import type { CalendarMeta, ScheduleEvent } from '../types';
+import type { CalendarEditorModel } from '../hooks/useCalendarSectionController';
 
 type CalendarEventModalProps = {
-  isOpen: boolean;
-  calendars: CalendarMeta[];
-  draft: CalendarEventDraft;
-  event: ScheduleEvent | null;
-  errorMessage: string | null;
-  isSubmitting: boolean;
-  onClose: () => void;
-  onDraftChange: (patch: Partial<CalendarEventDraft>) => void;
-  onSubmit: () => Promise<void>;
-  onDelete?: () => Promise<void>;
+  editor: CalendarEditorModel;
 };
 
-export function CalendarEventModal({
-  isOpen,
-  calendars,
-  draft,
-  event,
-  errorMessage,
-  isSubmitting,
-  onClose,
-  onSubmit,
-  onDelete,
-  onDraftChange,
-}: CalendarEventModalProps) {
+export function CalendarEventModal({ editor }: CalendarEventModalProps) {
+  const {
+    isOpen,
+    calendars,
+    draft,
+    event,
+    errorMessage,
+    isSubmitting,
+    onClose,
+    onSubmit,
+    onDelete,
+    onDraftChange,
+  } = editor;
   const title = event ? '일정 수정' : '일정 만들기';
   const editableCalendars = calendars.filter((calendar) => calendar.editable);
 

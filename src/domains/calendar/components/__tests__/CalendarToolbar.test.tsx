@@ -14,30 +14,36 @@ describe('CalendarToolbar', () => {
     const onToggleCalendar = vi.fn();
     const { user } = renderWithProviders(
       <CalendarToolbar
-        label="2026년 4월"
-        activeView="month"
-        calendars={[
-          {
-            id: 'cal-1',
-            name: '아영',
-            backgroundColor: '#fe9fc8',
-            borderColor: '#fe9fc8',
-            textColor: '#111111',
-            visible: true,
-            editable: true,
-            startEditable: true,
-            durationEditable: true,
-            defaultSelected: true,
-            sortOrder: 1,
-          },
-        ]}
-        visibleCalendarIds={['cal-1']}
-        onToggleCalendar={onToggleCalendar}
-        onViewChange={onViewChange}
-        onPrev={onPrev}
-        onToday={onToday}
-        onNext={onNext}
-        onCreate={onCreate}
+        navigation={{
+          label: '2026년 4월',
+          currentDate: '2026-04-01',
+          activeView: 'month',
+          onViewChange,
+          onPrev,
+          onToday,
+          onNext,
+        }}
+        filters={{
+          calendars: [
+            {
+              id: 'cal-1',
+              name: '아영',
+              backgroundColor: '#fe9fc8',
+              borderColor: '#fe9fc8',
+              textColor: '#111111',
+              visible: true,
+              editable: true,
+              startEditable: true,
+              durationEditable: true,
+              defaultSelected: true,
+              sortOrder: 1,
+            },
+          ],
+          visibleCalendarIds: ['cal-1'],
+          createDisabled: false,
+          onToggleCalendar,
+          onCreate,
+        }}
         onManageCalendars={onManageCalendars}
       />
     );

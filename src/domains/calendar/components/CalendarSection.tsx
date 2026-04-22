@@ -96,15 +96,15 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
     [state.calendars]
   );
   const shouldRenderCalendarSurface =
-    !controller.isLoading && !controller.isError;
+    !controller.status.isLoading && !controller.status.isError;
   const supplementalEmptyState =
-    controller.calendars.length === 0
+    controller.filters.calendars.length === 0
       ? {
           title: '캘린더가 아직 없어요.',
           description:
             '캘린더를 만들면 일정 화면에서 바로 추가하고 관리할 수 있어요.',
         }
-      : controller.visibleCalendarIds.length === 0
+      : controller.filters.visibleCalendarIds.length === 0
         ? {
             title: '표시 중인 캘린더가 없어요.',
             description: '상단 필터에서 하나 이상의 캘린더를 다시 켜주세요.',
@@ -208,64 +208,51 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
   return (
     <section className="slcn-calendar-page">
       <CalendarToolbar
-        label={controller.label}
-        activeView={view}
-        calendars={controller.calendars}
-        visibleCalendarIds={controller.visibleCalendarIds}
-        createDisabled={controller.createDisabled}
-        onToggleCalendar={controller.onToggleCalendar}
-        onViewChange={controller.onViewChange}
-        onPrev={controller.onPrev}
-        onToday={controller.onToday}
-        onNext={controller.onNext}
-        onCreate={controller.onCreate}
+        navigation={controller.navigation}
+        filters={controller.filters}
         onManageCalendars={openCreateCalendarManager}
       />
 
-      {controller.isLoading ? (
+      {controller.status.isLoading ? (
         <div className="slcn-calendar-loading">
           <Skeleton className="slcn-calendar-loading__panel" />
           <Skeleton className="slcn-calendar-loading__panel" />
         </div>
       ) : null}
 
-      {!controller.isLoading && controller.isError ? (
+      {!controller.status.isLoading && controller.status.isError ? (
         <ErrorState
           title="일정을 불러오지 못했어요."
           description="잠시 후 다시 시도하거나, 네트워크 상태를 확인해주세요."
           onRetry={() => {
-            controller.onRetry();
+            controller.status.onRetry();
           }}
         />
       ) : null}
 
       {shouldRenderCalendarSurface ? (
         <>
-          {view === 'month' ? (
+          {controller.navigation.activeView === 'month' ? (
             <CalendarMonthView
-              currentDate={controller.currentDate}
-              events={controller.events}
-              selectable={!controller.createDisabled}
-              onSelect={controller.onSelectRange}
-              onDateClick={
-                controller.createDisabled ? undefined : controller.onDateClick
-              }
-              onEventClick={controller.onEventClick}
-              onEventDrop={controller.onEventDrop}
-              onEventResize={controller.onEventResize}
+              currentDate={controller.navigation.currentDate}
+              events={controller.calendarEvents.items}
+              selectable={controller.calendarEvents.selectable}
+              onSelect={controller.calendarEvents.onSelectRange}
+              onDateClick={controller.calendarEvents.onDateClick}
+              onEventClick={controller.calendarEvents.onEventClick}
+              onEventDrop={controller.calendarEvents.onEventDrop}
+              onEventResize={controller.calendarEvents.onEventResize}
             />
           ) : (
             <CalendarWeekView
-              currentDate={controller.currentDate}
-              events={controller.events}
-              selectable={!controller.createDisabled}
-              onSelect={controller.onSelectRange}
-              onDateClick={
-                controller.createDisabled ? undefined : controller.onDateClick
-              }
-              onEventClick={controller.onEventClick}
-              onEventDrop={controller.onEventDrop}
-              onEventResize={controller.onEventResize}
+              currentDate={controller.navigation.currentDate}
+              events={controller.calendarEvents.items}
+              selectable={controller.calendarEvents.selectable}
+              onSelect={controller.calendarEvents.onSelectRange}
+              onDateClick={controller.calendarEvents.onDateClick}
+              onEventClick={controller.calendarEvents.onEventClick}
+              onEventDrop={controller.calendarEvents.onEventDrop}
+              onEventResize={controller.calendarEvents.onEventResize}
             />
           )}
 
@@ -278,24 +265,11 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         </>
       ) : null}
 
-      <CalendarEventModal
-        isOpen={controller.editor.isOpen}
-        calendars={controller.calendars}
-        draft={controller.editor.draft}
-        event={controller.editor.event}
-        errorMessage={controller.editor.error}
-        isSubmitting={controller.isSubmitting}
-        onClose={controller.onCloseEditor}
-        onDraftChange={controller.onDraftChange}
-        onSubmit={controller.onSubmitEditor}
-        onDelete={
-          controller.editor.event ? controller.onDeleteEditor : undefined
-        }
-      />
+      <CalendarEventModal editor={controller.editor} />
 
       <CalendarManageModal
         isOpen={calendarManager.isOpen}
-        calendars={controller.calendars}
+        calendars={controller.filters.calendars}
         draft={calendarManager.draft}
         editingCalendarId={calendarManager.editingCalendarId}
         errorMessage={calendarManager.error}

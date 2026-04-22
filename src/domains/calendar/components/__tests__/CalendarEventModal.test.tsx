@@ -39,25 +39,27 @@ describe('CalendarEventModal', () => {
   it('focuses the title input when opened', async () => {
     render(
       <CalendarEventModal
-        isOpen
-        calendars={calendars}
-        draft={{
-          calendarId: 'cal-1',
-          title: '',
-          body: '',
-          location: '',
-          allDay: false,
-          startDate: '2026-04-14',
-          startTime: '09:00',
-          endDate: '2026-04-14',
-          endTime: '10:00',
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '',
+            body: '',
+            location: '',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: null,
+          errorMessage: null,
+          isSubmitting: false,
+          onClose: vi.fn(),
+          onDraftChange: vi.fn(),
+          onSubmit: vi.fn().mockResolvedValue(undefined),
         }}
-        event={null}
-        errorMessage={null}
-        isSubmitting={false}
-        onClose={vi.fn()}
-        onDraftChange={vi.fn()}
-        onSubmit={vi.fn().mockResolvedValue(undefined)}
       />
     );
 
@@ -75,26 +77,28 @@ describe('CalendarEventModal', () => {
     const onDraftChange = vi.fn();
     const { rerender } = render(
       <CalendarEventModal
-        isOpen
-        calendars={calendars}
-        draft={{
-          calendarId: 'cal-1',
-          title: '초기 제목',
-          body: '초기 설명',
-          location: '초기 장소',
-          allDay: false,
-          startDate: '2026-04-14',
-          startTime: '09:00',
-          endDate: '2026-04-14',
-          endTime: '10:00',
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '초기 제목',
+            body: '초기 설명',
+            location: '초기 장소',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: null,
+          errorMessage: '검증 오류',
+          isSubmitting: false,
+          onClose,
+          onDraftChange,
+          onSubmit,
+          onDelete,
         }}
-        event={null}
-        errorMessage="검증 오류"
-        isSubmitting={false}
-        onClose={onClose}
-        onDraftChange={onDraftChange}
-        onSubmit={onSubmit}
-        onDelete={onDelete}
       />
     );
 
@@ -111,26 +115,28 @@ describe('CalendarEventModal', () => {
 
     rerender(
       <CalendarEventModal
-        isOpen
-        calendars={calendars}
-        draft={{
-          calendarId: 'cal-1',
-          title: '수정 제목',
-          body: '갱신 설명',
-          location: '갱신 장소',
-          allDay: true,
-          startDate: '2026-04-15',
-          startTime: '09:00',
-          endDate: '2026-04-16',
-          endTime: '18:00',
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '수정 제목',
+            body: '갱신 설명',
+            location: '갱신 장소',
+            allDay: true,
+            startDate: '2026-04-15',
+            startTime: '09:00',
+            endDate: '2026-04-16',
+            endTime: '18:00',
+          },
+          event: null,
+          errorMessage: null,
+          isSubmitting: false,
+          onClose,
+          onDraftChange,
+          onSubmit,
+          onDelete,
         }}
-        event={null}
-        errorMessage={null}
-        isSubmitting={false}
-        onClose={onClose}
-        onDraftChange={onDraftChange}
-        onSubmit={onSubmit}
-        onDelete={onDelete}
       />
     );
 
@@ -148,35 +154,37 @@ describe('CalendarEventModal', () => {
     const onDelete = vi.fn().mockResolvedValue(undefined);
     render(
       <CalendarEventModal
-        isOpen
-        calendars={calendars}
-        draft={{
-          calendarId: 'cal-1',
-          title: '편집 일정',
-          body: '',
-          location: '',
-          allDay: false,
-          startDate: '2026-04-14',
-          startTime: '09:00',
-          endDate: '2026-04-14',
-          endTime: '10:00',
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            start: '2026-04-14T09:00:00+09:00',
+            end: '2026-04-14T10:00:00+09:00',
+            allDay: false,
+          },
+          errorMessage: null,
+          isSubmitting: false,
+          onClose: vi.fn(),
+          onDraftChange: vi.fn(),
+          onSubmit: vi.fn().mockResolvedValue(undefined),
+          onDelete,
         }}
-        event={{
-          id: 'schedule-1',
-          calendarId: 'cal-1',
-          title: '편집 일정',
-          body: '',
-          location: '',
-          start: '2026-04-14T09:00:00+09:00',
-          end: '2026-04-14T10:00:00+09:00',
-          allDay: false,
-        }}
-        errorMessage={null}
-        isSubmitting={false}
-        onClose={vi.fn()}
-        onDraftChange={vi.fn()}
-        onSubmit={vi.fn().mockResolvedValue(undefined)}
-        onDelete={onDelete}
       />
     );
 

@@ -1,37 +1,22 @@
-import type { CalendarMeta, CalendarViewMode } from '../types';
+import type {
+  CalendarFiltersModel,
+  CalendarNavigationModel,
+} from '../hooks/useCalendarSectionController';
 import { Button } from '../../../components/ui/Button';
 import { SegmentedControl } from '../../../components/ui/SegmentedControl';
 import { cn } from '../../../lib/utils/cn';
 
 type CalendarToolbarProps = {
-  label: string;
-  activeView: CalendarViewMode;
-  calendars: CalendarMeta[];
-  visibleCalendarIds: string[];
-  onToggleCalendar: (calendarId: string) => void;
-  onViewChange: (view: CalendarViewMode) => void;
-  onPrev: () => void;
-  onToday: () => void;
-  onNext: () => void;
-  onCreate: () => void;
+  navigation: CalendarNavigationModel;
+  filters: CalendarFiltersModel;
   onManageCalendars: () => void;
-  createDisabled?: boolean;
   className?: string;
 };
 
 export function CalendarToolbar({
-  label,
-  activeView,
-  calendars,
-  visibleCalendarIds,
-  onToggleCalendar,
-  onViewChange,
-  onPrev,
-  onToday,
-  onNext,
-  onCreate,
+  navigation,
+  filters,
   onManageCalendars,
-  createDisabled = false,
   className,
 }: CalendarToolbarProps) {
   return (
@@ -40,34 +25,38 @@ export function CalendarToolbar({
         <p className="slcn-calendar-toolbar__eyebrow">
           서울촌놈 나들이 일정 🗓️
         </p>
-        <h1 className="slcn-calendar-toolbar__title display-hand">{label}</h1>
+        <h1 className="slcn-calendar-toolbar__title display-hand">
+          {navigation.label}
+        </h1>
       </div>
       <div className="slcn-calendar-toolbar__controls">
         <div className="slcn-calendar-toolbar__nav">
-          <Button variant="ghost" size="sm" onClick={onPrev}>
+          <Button variant="ghost" size="sm" onClick={navigation.onPrev}>
             이전
           </Button>
-          <Button variant="secondary" size="sm" onClick={onToday}>
+          <Button variant="secondary" size="sm" onClick={navigation.onToday}>
             Today
           </Button>
-          <Button variant="ghost" size="sm" onClick={onNext}>
+          <Button variant="ghost" size="sm" onClick={navigation.onNext}>
             다음
           </Button>
         </div>
         <SegmentedControl
           className="slcn-calendar-toolbar__view-toggle"
-          value={activeView}
+          value={navigation.activeView}
           options={[
             { label: '월', value: 'month' },
             { label: '주', value: 'week' },
           ]}
-          onChange={(value) => onViewChange(value as CalendarViewMode)}
+          onChange={(value) =>
+            navigation.onViewChange(value as typeof navigation.activeView)
+          }
         />
         <Button
           variant="primary"
           size="sm"
-          disabled={createDisabled}
-          onClick={onCreate}
+          disabled={filters.createDisabled}
+          onClick={filters.onCreate}
         >
           일정 추가
         </Button>
@@ -80,8 +69,8 @@ export function CalendarToolbar({
           </Button>
         </div>
         <div className="slcn-calendar-toolbar__legend" aria-label="캘린더 필터">
-          {calendars.map((calendar) => {
-            const active = visibleCalendarIds.includes(calendar.id);
+          {filters.calendars.map((calendar) => {
+            const active = filters.visibleCalendarIds.includes(calendar.id);
 
             return (
               <button
@@ -89,7 +78,7 @@ export function CalendarToolbar({
                 type="button"
                 className="slcn-calendar-toolbar__chip"
                 data-active={active}
-                onClick={() => onToggleCalendar(calendar.id)}
+                onClick={() => filters.onToggleCalendar(calendar.id)}
               >
                 <span
                   className="slcn-calendar-toolbar__chip-dot"
