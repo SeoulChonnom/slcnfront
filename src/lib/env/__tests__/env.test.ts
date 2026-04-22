@@ -24,4 +24,18 @@ describe('parseAppEnv', () => {
       'VITE_API_URL is required'
     );
   });
+
+  it('derives mode flags when optional DEV and PROD values are omitted', () => {
+    expect(
+      parseAppEnv({
+        VITE_API_URL: 'http://localhost:8080/',
+      })
+    ).toEqual({
+      apiUrl: 'http://localhost:8080',
+      mode: 'production',
+      isDev: false,
+      isProd: true,
+      isTest: false,
+    });
+  });
 });

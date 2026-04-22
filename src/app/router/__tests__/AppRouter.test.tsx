@@ -98,4 +98,18 @@ describe('AppRouter', () => {
       expect(screen.getByText('페이지를 찾을 수 없어요.')).toBeTruthy();
     });
   });
+
+  it('treats removed public routes as top-level not-found paths', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: null,
+      userInfo: null,
+      restoreState: 'error',
+    });
+    renderAppRouter('/map');
+
+    await waitFor(() => {
+      expect(screen.getByText('페이지를 찾을 수 없어요.')).toBeTruthy();
+    });
+  });
 });

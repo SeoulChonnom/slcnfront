@@ -106,4 +106,49 @@ describe('createApiClient', () => {
 
     expect(response).toEqual({ unexpected: 123 });
   });
+
+  it('returns undefined for empty successful responses', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('', {
+        status: 200,
+      })
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+    });
+
+    const response = await client.get({
+      path: '/api/empty',
+    });
+
+    expect(response).toBeUndefined();
+  });
+
+  it('falls back to the HTTP status text for empty text error responses', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('', {
+        status: 502,
+        statusText: 'Bad Gateway',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      })
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+    });
+
+    await expect(
+      client.get({
+        path: '/api/error',
+      })
+    ).rejects.toMatchObject({
+      name: 'AppError',
+      code: 'HTTP_ERROR',
+      status: 502,
+      message: '502 Bad Gateway',
+    } satisfies Partial<AppError>);
+  });
 });
