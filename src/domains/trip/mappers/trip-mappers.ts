@@ -26,10 +26,10 @@ export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
   return {
     date: dto.date,
     firstMapPath: dto.firstMap,
-    secondMapPath: dto.secondMap || null,
-    nextButtonText: dto.nextButtonText || null,
-    previousButtonText: dto.previousButtonText || null,
-    driveUrl: dto.drive,
+    secondMapPath: dto.secondMap,
+    nextButtonText: dto.nextButtonText,
+    previousButtonText: dto.previousButtonText,
+    drive: dto.drive,
   };
 }
 

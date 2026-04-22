@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { rawGlobalShoes } from '../shoes-data';
-import { normalizeShoesCatalog } from '../shoes-normalizer';
+import { getShoesCatalog } from '../shoes-data';
 
-describe('normalizeShoesCatalog', () => {
-  it('converts legacy shoe data into a typed brand catalog', () => {
-    const catalog = normalizeShoesCatalog(rawGlobalShoes);
+describe('shoes-data', () => {
+  it('exports the shoes catalog in the final domain shape', () => {
+    const catalog = getShoesCatalog();
 
     expect(catalog).toHaveLength(3);
     expect(catalog[0]?.brandId).toBe('nb');

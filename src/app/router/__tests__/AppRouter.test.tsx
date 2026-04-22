@@ -23,20 +23,6 @@ vi.mock('../../../pages/main/CalendarWeekPage', () => ({
   CalendarWeekPage: () => <div>데스크톱 주간 캘린더</div>,
 }));
 
-function stubMatchMedia(matches: boolean) {
-  window.matchMedia = ((query: string) =>
-    ({
-      matches,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      addListener: () => {},
-      removeListener: () => {},
-      dispatchEvent: () => false,
-    }) satisfies MediaQueryList) as typeof window.matchMedia;
-}
-
 function renderAppRouter(route: string) {
   return renderWithMinimalProviders(<AppRouter />, { route });
 }
@@ -44,21 +30,20 @@ function renderAppRouter(route: string) {
 describe('AppRouter', () => {
   beforeEach(() => {
     resetAuthStore();
-    stubMatchMedia(false);
   });
 
   afterEach(() => {
     resetAuthStore();
   });
 
-  it('resolves public routes through device routing and guard redirects', async () => {
+  it('redirects unauthenticated internal routes to the device login page', async () => {
     useAuthStore.setState({
       hydrated: true,
       accessToken: null,
       userInfo: null,
       restoreState: 'error',
     });
-    renderAppRouter('/map');
+    renderAppRouter('/main/map');
 
     expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
   });
@@ -94,6 +79,20 @@ describe('AppRouter', () => {
       restoreState: 'error',
     });
     renderAppRouter('/main/not-a-route');
+
+    await waitFor(() => {
+      expect(screen.getByText('페이지를 찾을 수 없어요.')).toBeTruthy();
+    });
+  });
+
+  it('sends unknown top-level routes to the main not-found page', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: null,
+      userInfo: null,
+      restoreState: 'error',
+    });
+    renderAppRouter('/unknown-top-level-route');
 
     await waitFor(() => {
       expect(screen.getByText('페이지를 찾을 수 없어요.')).toBeTruthy();

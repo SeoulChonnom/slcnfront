@@ -32,9 +32,10 @@ describe('trip-mappers', () => {
       })
     ).toMatchObject({
       firstMapPath: '/map1.png',
-      secondMapPath: null,
-      nextButtonText: null,
+      secondMapPath: '',
+      nextButtonText: '',
       previousButtonText: '이전',
+      drive: 'https://drive.google.com/x',
     });
   });
 

@@ -177,7 +177,7 @@ describe('trip-api', () => {
       title: '정답',
       description: '설명',
     });
-    expect(registeredTrip.driveUrl).toBe('https://drive.google.com/x');
+    expect(registeredTrip.drive).toBe('https://drive.google.com/x');
     expect(await fileBlob.text()).toBe('file-content');
     expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trip');
     expect(fetchFn.mock.calls[1]?.[0]).toBe(

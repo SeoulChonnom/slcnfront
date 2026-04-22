@@ -1,14 +1,17 @@
-import { Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { renderMainRoutes } from './main-routes';
 import { renderMobileRoutes } from './mobile-routes';
-import { renderPublicEntryRoutes } from './public-entry-routes';
+import { buildDeviceNotFoundPath } from '../../lib/routing/route-builders';
 
 export function AppRouter() {
   return (
     <Routes>
-      {renderPublicEntryRoutes()}
       {renderMainRoutes()}
       {renderMobileRoutes()}
+      <Route
+        path="*"
+        element={<Navigate replace to={buildDeviceNotFoundPath('main')} />}
+      />
     </Routes>
   );
 }

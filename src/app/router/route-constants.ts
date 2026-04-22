@@ -16,19 +16,6 @@ export const RESERVED_SHOE_BRAND_SEGMENTS = [
   'mobile',
 ];
 
-export const PUBLIC_ROUTE_PATTERNS = {
-  root: '/',
-  login: '/login',
-  tripList: '/map',
-  tripRegister: '/map/register',
-  tripDetail: '/map/:id',
-  calendarMonth: '/calendar',
-  calendarWeek: '/calendar/week',
-  shoesCatalog: '/shoesRecom',
-  shoeDetail: '/:brand/:shoesName',
-  notFound: '*',
-} as const;
-
 export const MAIN_ROUTE_PATTERNS = {
   root: '/main',
   login: '/main/login',

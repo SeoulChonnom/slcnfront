@@ -15,24 +15,10 @@ const tripDetailShape = {
   secondMap: z.string().optional().default(''),
   nextButtonText: z.string().optional().default(''),
   previousButtonText: z.string().optional().default(''),
+  drive: z.string(),
 };
 
-const tripDetailSchema = z
-  .object({
-    ...tripDetailShape,
-    drive: z.string(),
-  })
-  .or(
-    z
-      .object({
-        ...tripDetailShape,
-        driveUrl: z.string(),
-      })
-      .transform(({ driveUrl, ...rest }) => ({
-        ...rest,
-        drive: driveUrl,
-      }))
-  );
+const tripDetailSchema = z.object(tripDetailShape);
 
 const tripQuizOptionSchema = z.object({
   id: z.string(),

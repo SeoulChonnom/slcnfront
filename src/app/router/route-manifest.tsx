@@ -53,19 +53,6 @@ export type DeviceRouteConfig = {
   protectedRoutes: DeviceProtectedRouteDefinition[];
 };
 
-export const PUBLIC_ENTRY_ROUTE_PATHS = [
-  '/login',
-  '/',
-  '/map/register',
-  '/map/:id',
-  '/map',
-  '/calendar/week',
-  '/calendar',
-  '/shoesRecom',
-  '/:brand/:shoesName',
-  '*',
-] as const;
-
 export function filterRoutesByShell(
   routes: DeviceProtectedRouteDefinition[],
   shell: DeviceShellKey

@@ -30,42 +30,6 @@ function buildDevicePath(device: DeviceType, ...segments: string[]) {
   return buildPath(DEVICE_PREFIX[device], ...segments);
 }
 
-export function buildPublicRootPath() {
-  return '/';
-}
-
-export function buildPublicLoginPath() {
-  return '/login';
-}
-
-export function buildPublicTripListPath() {
-  return '/map';
-}
-
-export function buildPublicTripRegisterPath() {
-  return '/map/register';
-}
-
-export function buildPublicTripDetailPath(id: string) {
-  return buildPath('map', encodeSegment(id));
-}
-
-export function buildPublicCalendarMonthPath() {
-  return '/calendar';
-}
-
-export function buildPublicCalendarWeekPath() {
-  return '/calendar/week';
-}
-
-export function buildPublicShoesCatalogPath() {
-  return '/shoesRecom';
-}
-
-export function buildPublicShoeDetailPath(brand: string, shoesName: string) {
-  return buildPath(encodeSegment(brand), encodeSegment(shoesName));
-}
-
 export function buildDeviceRootPath(device: DeviceType) {
   return buildDevicePath(device);
 }

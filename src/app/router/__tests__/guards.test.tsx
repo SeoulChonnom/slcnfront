@@ -27,7 +27,7 @@ describe('RequireAuth', () => {
     resetAuthStore();
   });
 
-  it('redirects unauthenticated routes to canonical login with a redirect target', async () => {
+  it('redirects unauthenticated main routes to the main login path with a redirect target', async () => {
     useAuthStore.setState({
       hydrated: true,
       accessToken: null,
@@ -38,15 +38,15 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <>
         <Routes>
-          <Route path="/login" element={<p>login-page</p>} />
+          <Route path="/main/login" element={<p>login-page</p>} />
           <Route element={<RequireAuth />}>
-            <Route path="/protected" element={<p>private-page</p>} />
+            <Route path="/main/protected" element={<p>private-page</p>} />
           </Route>
         </Routes>
         <LocationProbe />
       </>,
       {
-        route: '/protected',
+        route: '/main/protected',
       }
     );
 
@@ -55,7 +55,39 @@ describe('RequireAuth', () => {
     });
 
     expect(screen.getByTestId('location-probe').textContent).toBe(
-      '/login?redirect=%2Fprotected'
+      '/main/login?redirect=%2Fmain%2Fprotected'
+    );
+  });
+
+  it('redirects unauthenticated mobile routes to the mobile login path with a redirect target', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: null,
+      userInfo: null,
+      restoreState: 'error',
+    });
+
+    renderWithMinimalProviders(
+      <>
+        <Routes>
+          <Route path="/mobile/login" element={<p>mobile-login-page</p>} />
+          <Route element={<RequireAuth />}>
+            <Route path="/mobile/protected" element={<p>private-page</p>} />
+          </Route>
+        </Routes>
+        <LocationProbe />
+      </>,
+      {
+        route: '/mobile/protected',
+      }
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('mobile-login-page')).toBeTruthy();
+    });
+
+    expect(screen.getByTestId('location-probe').textContent).toBe(
+      '/mobile/login?redirect=%2Fmobile%2Fprotected'
     );
   });
 
@@ -70,11 +102,11 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
-          <Route path="/protected" element={<p>private-page</p>} />
+          <Route path="/main/protected" element={<p>private-page</p>} />
         </Route>
       </Routes>,
       {
-        route: '/protected',
+        route: '/main/protected',
       }
     );
 
@@ -98,11 +130,11 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
-          <Route path="/protected" element={<p>private-page</p>} />
+          <Route path="/main/protected" element={<p>private-page</p>} />
         </Route>
       </Routes>,
       {
-        route: '/protected',
+        route: '/main/protected',
       }
     );
 

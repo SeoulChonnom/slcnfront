@@ -4,7 +4,7 @@ import { renderWithProviders } from '../../../../test/helpers/render';
 import { TripDetailSection } from '../TripDetailSection';
 
 vi.mock('../../hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: (path: string | null | undefined) => ({
+  useTripAssetUrl: (path: string | undefined) => ({
     objectUrl: path ? `blob:${path}` : null,
     isPending: false,
   }),
@@ -17,10 +17,10 @@ describe('TripDetailSection', () => {
         tripDetail={{
           date: '20991231',
           firstMapPath: '/map1.png',
-          secondMapPath: null,
-          nextButtonText: null,
-          previousButtonText: null,
-          driveUrl: 'https://drive.google.com/x',
+          secondMapPath: '',
+          nextButtonText: '',
+          previousButtonText: '',
+          drive: 'https://drive.google.com/x',
         }}
       />
     );
@@ -40,7 +40,7 @@ describe('TripDetailSection', () => {
           secondMapPath: '/map2.png',
           nextButtonText: '1차 경로',
           previousButtonText: '2차 경로',
-          driveUrl: 'https://drive.google.com/x',
+          drive: 'https://drive.google.com/x',
         }}
       />
     );

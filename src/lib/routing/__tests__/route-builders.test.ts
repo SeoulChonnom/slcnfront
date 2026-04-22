@@ -6,24 +6,9 @@ import {
   buildDeviceRootPath,
   buildDeviceShoeDetailPath,
   buildDeviceTripDetailPath,
-  buildPublicCalendarMonthPath,
-  buildPublicCalendarWeekPath,
-  buildPublicLoginPath,
-  buildPublicShoeDetailPath,
-  buildPublicTripDetailPath,
 } from '../route-builders';
 
 describe('route builders', () => {
-  it('builds public urls', () => {
-    expect(buildPublicLoginPath()).toBe('/login');
-    expect(buildPublicCalendarMonthPath()).toBe('/calendar');
-    expect(buildPublicCalendarWeekPath()).toBe('/calendar/week');
-    expect(buildPublicTripDetailPath('20260101')).toBe('/map/20260101');
-    expect(buildPublicShoeDetailPath('nike', 'pegasus-41')).toBe(
-      '/nike/pegasus-41'
-    );
-  });
-
   it('builds main device urls', () => {
     expect(buildDeviceRootPath('main')).toBe('/main');
     expect(buildDeviceLoginPath('main')).toBe('/main/login');

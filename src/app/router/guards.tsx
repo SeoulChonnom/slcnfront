@@ -1,9 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { DEVICE_PREFIX } from './route-constants';
 import {
   selectAuthPhase,
   useAuthStore,
 } from '../../domains/auth/store/auth-store';
-import { buildPublicLoginPath } from '../../lib/routing/route-builders';
+import { buildDeviceLoginPath } from '../../lib/routing/route-builders';
+
+function resolveLoginPath(pathname: string) {
+  return pathname.startsWith(DEVICE_PREFIX.mobile)
+    ? buildDeviceLoginPath('mobile')
+    : buildDeviceLoginPath('main');
+}
 
 export function RequireAuth() {
   const location = useLocation();
@@ -27,7 +34,7 @@ export function RequireAuth() {
       <Navigate
         replace
         to={{
-          pathname: buildPublicLoginPath(),
+          pathname: resolveLoginPath(location.pathname),
           search: `?${searchParams.toString()}`,
         }}
       />

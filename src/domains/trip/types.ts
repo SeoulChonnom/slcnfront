@@ -49,10 +49,10 @@ export type TripListItem = {
 export type TripDetail = {
   date: string;
   firstMapPath: string;
-  secondMapPath: string | null;
-  nextButtonText: string | null;
-  previousButtonText: string | null;
-  driveUrl: string;
+  secondMapPath: string;
+  nextButtonText: string;
+  previousButtonText: string;
+  drive: string;
 };
 
 export type TripQuizOption = {

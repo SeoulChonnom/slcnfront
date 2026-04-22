@@ -64,7 +64,7 @@ describe('auth smoke', () => {
     vi.clearAllMocks();
   });
 
-  it('redirects unauthenticated protected routes to the public login URL', async () => {
+  it('redirects unauthenticated protected routes to the device login URL', async () => {
     restoreSession.mockRejectedValueOnce(new Error('refresh token missing'));
 
     renderApp('/main/map');
