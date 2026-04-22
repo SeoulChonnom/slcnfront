@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080/api",
+      "url": "http://localhost:9090/api",
       "description": "Generated server url"
     }
   ],
@@ -44,12 +44,6 @@
             "schema": {
               "$ref": "#/components/schemas/ScheduleSearchSdo"
             }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
           }
         ],
         "responses": {
@@ -66,21 +60,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "put": {
         "tags": ["일정 정보 API"],
         "summary": "일정 수정",
         "description": "일정 수정 API",
         "operationId": "modifySchedule",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -102,21 +93,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "post": {
         "tags": ["일정 정보 API"],
         "summary": "일정 등록",
         "description": "일정 등록 API",
         "operationId": "registerSchedule",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -138,7 +126,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/calendar": {
@@ -147,14 +140,6 @@
         "summary": "캘린더 목록 조회",
         "description": "표시 가능한 캘린더 목록 조회 API",
         "operationId": "getCalendars",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -169,21 +154,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "put": {
         "tags": ["캘린더 정보 API"],
         "summary": "캘린더 수정",
         "description": "캘린더 수정 API",
         "operationId": "modifyCalendar",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -205,21 +187,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "post": {
         "tags": ["캘린더 정보 API"],
         "summary": "캘린더 등록",
         "description": "캘린더 등록 API",
         "operationId": "registerCalendar",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -241,7 +220,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/user/token": {
@@ -288,14 +272,6 @@
         "summary": "회원 가입",
         "description": "회원 가입 API",
         "operationId": "registerUser",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -317,7 +293,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/user/logout": {
@@ -379,14 +360,6 @@
         "summary": "전체 나들이 조회",
         "description": "메인페이지 리스트 생성용 API",
         "operationId": "getAllTrips",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -401,21 +374,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "post": {
         "tags": ["나들이 정보 API"],
         "summary": "나들이 추가",
         "description": "나들이 추가용 API",
         "operationId": "createTrip",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -432,12 +402,17 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/TripInfoRdo"
+                  "$ref": "#/components/schemas/TripDetailRdo"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/file": {
@@ -454,12 +429,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
           }
         ],
         "responses": {
@@ -474,7 +443,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       },
       "post": {
         "tags": ["file-resource"],
@@ -489,12 +463,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
           }
         ],
         "requestBody": {
@@ -524,7 +492,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/schedule/{scheduleId}/hide": {
@@ -533,27 +506,17 @@
         "summary": "일정 삭제(숨김)",
         "description": "일정 목록 삭제 API",
         "operationId": "hideSchedule",
-        "parameters": [
-          {
-            "name": "scheduleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/calendar/{calendarId}/hide": {
@@ -570,30 +533,81 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
-    "/trip/detail": {
+    "/trip/{id}": {
       "get": {
         "tags": ["나들이 정보 API"],
         "summary": "나들이 상세정보 조회",
         "description": "나들이 상세페이지용 API",
-        "operationId": "getTripByDate",
+        "operationId": "getTripById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetailRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/trip/quiz/{tripId}": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 퀴즈 정보 API",
+        "operationId": "getTripQuiz",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripQuizRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/trip/quiz/check": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 퀴즈 검증 API",
+        "operationId": "checkTripQuizAnswer",
         "parameters": [
           {
-            "name": "tripDate",
+            "name": "arg0",
             "in": "query",
             "required": true,
             "schema": {
@@ -601,10 +615,12 @@
             }
           },
           {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
+            "name": "arg1",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -613,12 +629,17 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/TripInfoRdo"
+                  "$ref": "#/components/schemas/TripQuizDetailRdo"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/schedule/now": {
@@ -627,14 +648,6 @@
         "summary": "이번달 일정 조회",
         "description": "달력페이지 진입시 이번달 일정 조회 API",
         "operationId": "getSchedulesForNow",
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -649,7 +662,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/schedule/{scheduleId}": {
@@ -658,27 +676,17 @@
         "summary": "일정 완전 삭제",
         "description": "일정 데이터 삭제 API",
         "operationId": "deleteSchedule",
-        "parameters": [
-          {
-            "name": "scheduleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/calendar/{calendarId}": {
@@ -695,19 +703,18 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "AccessToken",
-            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     }
   },
@@ -927,20 +934,121 @@
           }
         }
       },
-      "QuizCdo": {
-        "type": "object",
-        "properties": {
-          "quizIndex": {
-            "type": "string"
-          },
-          "answer": {
-            "type": "string"
-          }
-        }
-      },
       "TripCdo": {
         "type": "object",
         "properties": {
+          "date": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(ryu|ayo)$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "logo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "firstMap": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secondMap": {
+            "type": "string"
+          },
+          "nextButtonText": {
+            "type": "string"
+          },
+          "previousButtonText": {
+            "type": "string"
+          },
+          "driveUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quiz": {
+            "$ref": "#/components/schemas/TripQuizCdo"
+          }
+        },
+        "required": [
+          "date",
+          "driveUrl",
+          "firstMap",
+          "logo",
+          "name",
+          "quiz",
+          "type"
+        ]
+      },
+      "TripQuizCdo": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TripQuizOptionCdo"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "answerText",
+          "answerTitle",
+          "errorText",
+          "errorTitle",
+          "options",
+          "title"
+        ]
+      },
+      "TripQuizOptionCdo": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isCorrect": {
+            "type": "boolean"
+          }
+        },
+        "required": ["sortOrder", "text"]
+      },
+      "TripDetailRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
           "date": {
             "type": "string"
           },
@@ -966,53 +1074,6 @@
             "type": "string"
           },
           "driveUrl": {
-            "type": "string"
-          },
-          "quizTitle": {
-            "type": "string"
-          },
-          "quizAnswer": {
-            "type": "string"
-          },
-          "quizAnswerTitle": {
-            "type": "string"
-          },
-          "quizAnswerText": {
-            "type": "string"
-          },
-          "quizErrorTitle": {
-            "type": "string"
-          },
-          "quizErrorText": {
-            "type": "string"
-          },
-          "quizCdoList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QuizCdo"
-            }
-          }
-        }
-      },
-      "TripInfoRdo": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string"
-          },
-          "firstMap": {
-            "type": "string"
-          },
-          "secondMap": {
-            "type": "string"
-          },
-          "nextButtonText": {
-            "type": "string"
-          },
-          "previousButtonText": {
-            "type": "string"
-          },
-          "drive": {
             "type": "string"
           }
         }
@@ -1108,17 +1169,6 @@
           }
         }
       },
-      "QuizRdo": {
-        "type": "object",
-        "properties": {
-          "quizIndex": {
-            "type": "string"
-          },
-          "answer": {
-            "type": "string"
-          }
-        }
-      },
       "TripListRdo": {
         "type": "object",
         "properties": {
@@ -1128,35 +1178,60 @@
           "date": {
             "type": "string"
           },
+          "type": {
+            "type": "string"
+          },
           "name": {
             "type": "string"
           },
           "logo": {
             "type": "string"
-          },
-          "quizTitle": {
+          }
+        }
+      },
+      "TripQuizOptionRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
           },
-          "quizAnswer": {
+          "text": {
             "type": "string"
           },
-          "quizAnswerTitle": {
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TripQuizRdo": {
+        "type": "object",
+        "properties": {
+          "title": {
             "type": "string"
           },
-          "quizAnswerText": {
-            "type": "string"
-          },
-          "quizErrorTitle": {
-            "type": "string"
-          },
-          "quizErrorText": {
-            "type": "string"
-          },
-          "quizList": {
+          "options": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QuizRdo"
+              "$ref": "#/components/schemas/TripQuizOptionRdo"
             }
+          }
+        }
+      },
+      "TripQuizDetailRdo": {
+        "type": "object",
+        "properties": {
+          "correct": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "title": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "text": {
+            "type": "string",
+            "writeOnly": true
           }
         }
       },
@@ -1175,6 +1250,14 @@
             "example": "2026-05-01T00:00:00+09:00"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "X-AUTH-TOKEN": {
+        "type": "apiKey",
+        "description": "AccessToken",
+        "name": "X-AUTH-TOKEN",
+        "in": "header"
       }
     }
   }
