@@ -95,6 +95,21 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
     () => new Map(state.calendars.map((calendar) => [calendar.id, calendar])),
     [state.calendars]
   );
+  const shouldRenderCalendarSurface =
+    !controller.isLoading && !controller.isError;
+  const supplementalEmptyState =
+    controller.calendars.length === 0
+      ? {
+          title: '캘린더가 아직 없어요.',
+          description:
+            '캘린더를 만들면 일정 화면에서 바로 추가하고 관리할 수 있어요.',
+        }
+      : controller.visibleCalendarIds.length === 0
+        ? {
+            title: '표시 중인 캘린더가 없어요.',
+            description: '상단 필터에서 하나 이상의 캘린더를 다시 켜주세요.',
+          }
+        : null;
 
   const openCreateCalendarManager = () => {
     setCalendarManager({
@@ -224,29 +239,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         />
       ) : null}
 
-      {!controller.isLoading &&
-      !controller.isError &&
-      controller.calendars.length === 0 ? (
-        <EmptyState
-          title="캘린더가 아직 없어요."
-          description="표시 가능한 캘린더가 준비되면 일정 화면을 바로 사용할 수 있어요."
-        />
-      ) : null}
-
-      {!controller.isLoading &&
-      !controller.isError &&
-      controller.calendars.length > 0 &&
-      controller.visibleCalendarIds.length === 0 ? (
-        <EmptyState
-          title="표시 중인 캘린더가 없어요."
-          description="상단 필터에서 하나 이상의 캘린더를 다시 켜주세요."
-        />
-      ) : null}
-
-      {!controller.isLoading &&
-      !controller.isError &&
-      controller.calendars.length > 0 &&
-      controller.visibleCalendarIds.length > 0 ? (
+      {shouldRenderCalendarSurface ? (
         <>
           {view === 'month' ? (
             <CalendarMonthView
@@ -275,6 +268,13 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
               onEventResize={controller.onEventResize}
             />
           )}
+
+          {supplementalEmptyState ? (
+            <EmptyState
+              title={supplementalEmptyState.title}
+              description={supplementalEmptyState.description}
+            />
+          ) : null}
         </>
       ) : null}
 

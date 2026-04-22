@@ -40,17 +40,19 @@ vi.mock('../../hooks/useCalendarMutations', () => ({
 
 vi.mock('../CalendarMonthView', () => ({
   CalendarMonthView: ({
+    events,
     selectable,
     onSelect,
     onDateClick,
     onEventClick,
   }: {
+    events: Array<{ id?: string }>;
     selectable?: boolean;
     onSelect: (selection: { start: Date; end: Date; allDay: boolean }) => void;
     onDateClick?: (selection: { date: Date; allDay: boolean }) => void;
     onEventClick: (event: { id: string }) => void;
   }) => (
-    <div>
+    <div data-testid="calendar-month-view">
       {selectable ? (
         <button
           type="button"
@@ -78,15 +80,20 @@ vi.mock('../CalendarMonthView', () => ({
           quick-create
         </button>
       ) : null}
-      <button type="button" onClick={() => onEventClick({ id: 'schedule-1' })}>
-        open-event
-      </button>
+      {events[0]?.id ? (
+        <button
+          type="button"
+          onClick={() => onEventClick({ id: events[0].id as string })}
+        >
+          open-event
+        </button>
+      ) : null}
     </div>
   ),
 }));
 
 vi.mock('../CalendarWeekView', () => ({
-  CalendarWeekView: () => null,
+  CalendarWeekView: () => <div data-testid="calendar-week-view" />,
 }));
 
 function createBaseState() {
@@ -340,6 +347,7 @@ describe('CalendarSection', () => {
 
     expect(screen.queryByText('캘린더가 아직 없어요.')).toBeNull();
     expect(screen.queryByText('표시 중인 캘린더가 없어요.')).toBeNull();
+    expect(screen.getByTestId('calendar-month-view')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'select-range' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'quick-create' })).toBeTruthy();
   });
@@ -367,21 +375,37 @@ describe('CalendarSection', () => {
     expect(screen.getByText('일정을 불러오지 못했어요.')).toBeTruthy();
   });
 
-  it('shows the no-calendar empty state when there are no calendars', () => {
+  it('keeps the calendar surface visible when there are no calendars', () => {
     renderSection({
       calendars: [],
       schedules: [],
     });
 
+    const createButton = screen.getByRole('button', {
+      name: '일정 추가',
+    }) as HTMLButtonElement;
+
     expect(screen.getByText('캘린더가 아직 없어요.')).toBeTruthy();
+    expect(screen.getByTestId('calendar-month-view')).toBeTruthy();
+    expect(createButton.disabled).toBe(true);
+    expect(screen.queryByRole('button', { name: 'select-range' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'quick-create' })).toBeNull();
   });
 
-  it('shows the no-visible-calendar empty state when all calendars are toggled off', async () => {
+  it('keeps the calendar surface visible when all calendars are toggled off', async () => {
     const { user } = renderSection({ schedules: [] });
 
     await user.click(screen.getByRole('button', { name: '아영' }));
 
+    const createButton = screen.getByRole('button', {
+      name: '일정 추가',
+    }) as HTMLButtonElement;
+
     expect(screen.getByText('표시 중인 캘린더가 없어요.')).toBeTruthy();
+    expect(screen.getByTestId('calendar-month-view')).toBeTruthy();
+    expect(createButton.disabled).toBe(true);
+    expect(screen.queryByRole('button', { name: 'select-range' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'quick-create' })).toBeNull();
   });
 
   it('shows mutation errors inside the modal', async () => {
