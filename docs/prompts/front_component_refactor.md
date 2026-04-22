@@ -25,7 +25,7 @@
 
 - **(A) 디자인 이미지**: docs/redesign/{PAGE_NAME}/screen.png
 - **(B) HTML**: docs/redesign/{PAGE_NAME}/code.html
-- **(C) 추가 메모(선택)**: ia_report.md, wireframe.md(임시 wireframe 문서임으로 참고만 최종 디자인은 A,B 문서로 채택)
+- **(C) 추가 메모(선택)**: `README.md`, `rules.md`, `docs/api_spec.json` (현재 구조/계약 참고)
 
 ---
 

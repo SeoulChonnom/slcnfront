@@ -16,8 +16,7 @@ Pencil 디자인을 React/Tailwind 컴포넌트 시스템으로 번역하는 단
 
 - `docs/design/design.pen`
 - `docs/redesign/*`
-- `docs/react_component_plan.md`
-- `docs/frontend_component_design.md`
+- 현재 React 구현 (`src/components/*`, `src/styles/*`, `src/app/shells/*`)
 
 ## 4. 확정 결정
 

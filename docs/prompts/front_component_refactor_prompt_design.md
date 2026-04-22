@@ -27,7 +27,7 @@
 
 - `docs/redesign/{PAGE_NAME}/screen.png` (스크린샷)
 - `docs/redesign/{PAGE_NAME}/code.html` (HTML 기준)
-- `docs/ia_report.md`, `docs/wireframe.md` (보조 참고; 최상위 근거는 A/B)
+- `README.md`, `rules.md`, `docs/api_spec.json` (보조 참고; 최상위 근거는 A/B)
 - 선택: 현재 라우트 목록, API 문서, 디자인 토큰(없으면 TBD 처리)
 
 ### 3.1 우선순위
@@ -139,7 +139,7 @@
 [입력]
 - 디자인 스크린샷: docs/redesign/{PAGE_NAME}/screen.png
 - HTML: docs/redesign/{PAGE_NAME}/code.html
-- 보조문서: docs/ia_report.md, docs/wireframe.md
+- 보조문서: README.md, rules.md, docs/api_spec.json
 
 [요구사항]
 1) 문서 목차는 기존 파일(front_component_refactor.md)의 0~12번 구조를 유지한다.
@@ -177,5 +177,5 @@ node scripts/run-doc-prompt.js \
 ## 11. 후속 액션 제안
 
 - 기존 `front_component_refactor.md`를 이 템플릿에 맞춰 LLM 호출용 프롬프트로 래핑
-- 결과물 정합성을 위해 `docs/redesign` 산출물과 `ia_report.md` 동기화
+- 결과물 정합성을 위해 `docs/redesign` 산출물과 현재 구현/규칙 문서를 동기화
 - 첫 1회 실행 결과를 기준으로 항목별 템플릿 보정(불필요한 항목/누락 항목 정리)
