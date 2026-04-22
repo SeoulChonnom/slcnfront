@@ -335,6 +335,55 @@ describe('CalendarSection', () => {
     expect(screen.queryByRole('button', { name: 'quick-create' })).toBeNull();
   });
 
+  it('keeps the calendar surface visible when calendars exist but schedules are empty', () => {
+    renderSection({ schedules: [] });
+
+    expect(screen.queryByText('캘린더가 아직 없어요.')).toBeNull();
+    expect(screen.queryByText('표시 중인 캘린더가 없어요.')).toBeNull();
+    expect(screen.getByRole('button', { name: 'select-range' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'quick-create' })).toBeTruthy();
+  });
+
+  it('shows the loading state while calendar data is loading', () => {
+    renderSection({
+      isLoading: true,
+      schedules: [],
+    });
+
+    expect(
+      screen.getAllByText(
+        (_, element) =>
+          element?.className.includes('slcn-calendar-loading__panel') ?? false
+      ).length
+    ).toBe(2);
+  });
+
+  it('shows the error state when calendar data fails to load', () => {
+    renderSection({
+      isError: true,
+      schedules: [],
+    });
+
+    expect(screen.getByText('일정을 불러오지 못했어요.')).toBeTruthy();
+  });
+
+  it('shows the no-calendar empty state when there are no calendars', () => {
+    renderSection({
+      calendars: [],
+      schedules: [],
+    });
+
+    expect(screen.getByText('캘린더가 아직 없어요.')).toBeTruthy();
+  });
+
+  it('shows the no-visible-calendar empty state when all calendars are toggled off', async () => {
+    const { user } = renderSection({ schedules: [] });
+
+    await user.click(screen.getByRole('button', { name: '아영' }));
+
+    expect(screen.getByText('표시 중인 캘린더가 없어요.')).toBeTruthy();
+  });
+
   it('shows mutation errors inside the modal', async () => {
     createSchedule.mockRejectedValueOnce(new Error('저장 실패'));
 
