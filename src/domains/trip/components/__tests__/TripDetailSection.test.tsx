@@ -20,7 +20,7 @@ describe('TripDetailSection', () => {
           secondMapPath: '',
           nextButtonText: '',
           previousButtonText: '',
-          drive: 'https://drive.google.com/x',
+          driveUrl: 'https://drive.google.com/x',
         }}
       />
     );
@@ -40,7 +40,7 @@ describe('TripDetailSection', () => {
           secondMapPath: '/map2.png',
           nextButtonText: '1차 경로',
           previousButtonText: '2차 경로',
-          drive: 'https://drive.google.com/x',
+          driveUrl: 'https://drive.google.com/x',
         }}
       />
     );

@@ -29,7 +29,7 @@ export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
     secondMapPath: dto.secondMap,
     nextButtonText: dto.nextButtonText,
     previousButtonText: dto.previousButtonText,
-    drive: dto.drive,
+    driveUrl: dto.driveUrl,
   };
 }
 

@@ -9,7 +9,7 @@ describe('trip-schemas', () => {
         {
           date: '2099-12-31',
           firstMap: '/map1.png',
-          drive: 'https://drive.google.com/x',
+          driveUrl: 'https://drive.google.com/x',
         },
         'detail'
       )
@@ -19,17 +19,17 @@ describe('trip-schemas', () => {
       secondMap: '',
       nextButtonText: '',
       previousButtonText: '',
-      drive: 'https://drive.google.com/x',
+      driveUrl: 'https://drive.google.com/x',
     });
   });
 
-  it('rejects legacy driveUrl-only payloads', () => {
+  it('rejects payloads that use drive instead of driveUrl', () => {
     expect(() =>
       parseTripDetailResponse(
         {
           date: '2099-12-31',
           firstMap: '/map1.png',
-          driveUrl: 'https://drive.google.com/x',
+          drive: 'https://drive.google.com/x',
         },
         'detail'
       )

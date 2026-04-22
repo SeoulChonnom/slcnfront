@@ -17,7 +17,7 @@ export type TripDetailDto = {
   secondMap: string;
   nextButtonText: string;
   previousButtonText: string;
-  drive: string;
+  driveUrl: string;
 };
 
 export type TripQuizOptionDto = {
@@ -52,7 +52,7 @@ export type TripDetail = {
   secondMapPath: string;
   nextButtonText: string;
   previousButtonText: string;
-  drive: string;
+  driveUrl: string;
 };
 
 export type TripQuizOption = {

@@ -71,7 +71,7 @@ describe('trip-api', () => {
             secondMap: '/map2.png',
             nextButtonText: '다음',
             previousButtonText: '이전',
-            drive: 'https://drive.google.com/x',
+            driveUrl: 'https://drive.google.com/x',
           }),
           {
             status: 200,
@@ -121,7 +121,7 @@ describe('trip-api', () => {
             secondMap: '/map2.png',
             nextButtonText: '다음',
             previousButtonText: '이전',
-            drive: 'https://drive.google.com/x',
+            driveUrl: 'https://drive.google.com/x',
           }),
           {
             status: 200,
@@ -177,7 +177,7 @@ describe('trip-api', () => {
       title: '정답',
       description: '설명',
     });
-    expect(registeredTrip.drive).toBe('https://drive.google.com/x');
+    expect(registeredTrip.driveUrl).toBe('https://drive.google.com/x');
     expect(await fileBlob.text()).toBe('file-content');
     expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trip');
     expect(fetchFn.mock.calls[1]?.[0]).toBe(
@@ -300,7 +300,7 @@ describe('trip-api', () => {
           secondMap: '/map2.png',
           nextButtonText: '다음',
           previousButtonText: '이전',
-          drive: 'https://drive.google.com/x',
+          driveUrl: 'https://drive.google.com/x',
         }),
         {
           status: 200,
@@ -333,7 +333,7 @@ describe('trip-api', () => {
           secondMap: '/map2.png',
           nextButtonText: '다음',
           previousButtonText: '이전',
-          drive: 123,
+          driveUrl: 123,
         }),
         {
           status: 200,

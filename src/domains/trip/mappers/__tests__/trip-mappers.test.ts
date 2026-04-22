@@ -28,14 +28,14 @@ describe('trip-mappers', () => {
         secondMap: '',
         nextButtonText: '',
         previousButtonText: '이전',
-        drive: 'https://drive.google.com/x',
+        driveUrl: 'https://drive.google.com/x',
       })
     ).toMatchObject({
       firstMapPath: '/map1.png',
       secondMapPath: '',
       nextButtonText: '',
       previousButtonText: '이전',
-      drive: 'https://drive.google.com/x',
+      driveUrl: 'https://drive.google.com/x',
     });
   });
 

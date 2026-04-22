@@ -15,7 +15,7 @@ const tripDetailShape = {
   secondMap: z.string().optional().default(''),
   nextButtonText: z.string().optional().default(''),
   previousButtonText: z.string().optional().default(''),
-  drive: z.string(),
+  driveUrl: z.string(),
 };
 
 const tripDetailSchema = z.object(tripDetailShape);

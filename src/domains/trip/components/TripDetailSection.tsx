@@ -67,7 +67,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
         </div>
         <Button
           onClick={() => {
-            window.open(tripDetail.drive, '_blank', 'noopener,noreferrer');
+            window.open(tripDetail.driveUrl, '_blank', 'noopener,noreferrer');
           }}
         >
           드라이브 링크
