@@ -1,23 +1,13 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/react';
-import type { TripListItem } from '../../types';
+import type { TripQuiz } from '../../types';
 import { TripQuizModal } from '../TripQuizModal';
 
-const trip: TripListItem = {
-  id: 'trip-1',
-  date: '20991231',
-  name: '연말 나들이',
-  displayDate: '2099.12.31',
-  logoPath: '/logo.png',
-  quizTitle: '정답은?',
-  quizAnswerIndex: 1,
-  quizAnswerTitle: '정답',
-  quizAnswerText: '맞았어요.',
-  quizErrorTitle: '오답',
-  quizErrorText: '다시 골라보세요.',
-  quizResponses: [
-    { quizIndex: '0', answer: '보기 1' },
-    { quizIndex: '1', answer: '보기 2' },
+const quiz: TripQuiz = {
+  title: '정답은?',
+  options: [
+    { id: 'option-1', text: '보기 1', sortOrder: 1 },
+    { id: 'option-2', text: '보기 2', sortOrder: 2 },
   ],
 };
 
@@ -25,11 +15,16 @@ describe('TripQuizModal', () => {
   it('focuses the first answer button in the answer state', async () => {
     render(
       <TripQuizModal
-        trip={trip}
+        tripName="연말 나들이"
         isOpen
+        quiz={quiz}
         feedback={null}
+        isLoading={false}
+        isSubmitting={false}
+        errorMessage={null}
         onClose={vi.fn()}
         onAnswer={vi.fn()}
+        onRetry={vi.fn()}
         onConfirmSuccess={vi.fn()}
       />
     );
@@ -71,11 +66,16 @@ describe('TripQuizModal', () => {
 
       render(
         <TripQuizModal
-          trip={trip}
+          tripName="연말 나들이"
           isOpen
+          quiz={quiz}
           feedback={feedback}
+          isLoading={false}
+          isSubmitting={false}
+          errorMessage={null}
           onClose={onClose}
           onAnswer={vi.fn()}
+          onRetry={vi.fn()}
           onConfirmSuccess={onConfirmSuccess}
         />
       );
@@ -98,4 +98,35 @@ describe('TripQuizModal', () => {
       expect(onConfirmSuccess).not.toHaveBeenCalled();
     }
   );
+
+  it('shows retry UI when quiz loading fails', async () => {
+    const user = userEvent.setup();
+    const onRetry = vi.fn();
+
+    render(
+      <TripQuizModal
+        tripName="연말 나들이"
+        isOpen
+        quiz={null}
+        feedback={null}
+        isLoading={false}
+        isSubmitting={false}
+        errorMessage="퀴즈를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
+        onClose={vi.fn()}
+        onAnswer={vi.fn()}
+        onRetry={onRetry}
+        onConfirmSuccess={vi.fn()}
+      />
+    );
+
+    const retryButton = screen.getByRole('button', { name: '다시 시도하기' });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(retryButton);
+    });
+
+    await user.click(retryButton);
+
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

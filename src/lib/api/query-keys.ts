@@ -6,7 +6,8 @@ export const authQueryKeys = {
 export const tripQueryKeys = {
   all: ['trip'] as const,
   list: () => [...tripQueryKeys.all, 'list'] as const,
-  detail: (date: string) => [...tripQueryKeys.all, 'detail', date] as const,
+  detail: (id: string) => [...tripQueryKeys.all, 'detail', id] as const,
+  quiz: (tripId: string) => [...tripQueryKeys.all, 'quiz', tripId] as const,
   file: (path: string) => [...tripQueryKeys.all, 'file', path] as const,
 };
 

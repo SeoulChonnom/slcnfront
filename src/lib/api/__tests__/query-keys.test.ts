@@ -15,6 +15,7 @@ describe('query-keys', () => {
       'detail',
       '2099-12-31',
     ]);
+    expect(tripQueryKeys.quiz('trip-1')).toEqual(['trip', 'quiz', 'trip-1']);
     expect(tripQueryKeys.file('/depot/logo.png')).toEqual([
       'trip',
       'file',

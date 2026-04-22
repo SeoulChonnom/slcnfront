@@ -46,8 +46,8 @@ export function buildPublicTripRegisterPath() {
   return '/map/register';
 }
 
-export function buildPublicTripDetailPath(date: string) {
-  return buildPath('map', encodeSegment(date));
+export function buildPublicTripDetailPath(id: string) {
+  return buildPath('map', encodeSegment(id));
 }
 
 export function buildPublicCalendarMonthPath() {
@@ -82,8 +82,8 @@ export function buildDeviceTripRegisterPath(device: DeviceType) {
   return buildDevicePath(device, 'map', 'register');
 }
 
-export function buildDeviceTripDetailPath(device: DeviceType, date: string) {
-  return buildDevicePath(device, 'map', encodeSegment(date));
+export function buildDeviceTripDetailPath(device: DeviceType, id: string) {
+  return buildDevicePath(device, 'map', encodeSegment(id));
 }
 
 export function buildDeviceCalendarMonthPath(device: DeviceType) {

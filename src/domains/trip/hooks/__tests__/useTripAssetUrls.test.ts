@@ -46,4 +46,53 @@ describe('useTripAssetUrls', () => {
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:_logo.png.png');
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:_map1.png.png');
   });
+
+  it('keeps successful assets when one download fails', async () => {
+    const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
+
+    downloadTripFile.mockImplementation(async (path: string) => {
+      if (path === '/broken.png') {
+        throw new Error('download failed');
+      }
+
+      return new File([path], `${path.replaceAll('/', '_')}.png`, {
+        type: 'image/png',
+      });
+    });
+
+    const { result } = renderHook(() =>
+      useTripAssetUrls(['/logo.png', '/broken.png'])
+    );
+
+    await waitFor(() => {
+      expect(result.current['/logo.png']).toBe('blob:_logo.png.png');
+    });
+
+    expect(result.current['/broken.png']).toBeUndefined();
+  });
+
+  it('replaces prior object urls when the path set changes', async () => {
+    const { result, rerender } = renderHook(
+      ({ paths }) => useTripAssetUrls(paths),
+      {
+        initialProps: {
+          paths: ['/logo.png'],
+        },
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current['/logo.png']).toBe('blob:_logo.png.png');
+    });
+
+    rerender({
+      paths: ['/map1.png'],
+    });
+
+    await waitFor(() => {
+      expect(result.current['/map1.png']).toBe('blob:_map1.png.png');
+    });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:_logo.png.png');
+  });
 });

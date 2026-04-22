@@ -45,7 +45,7 @@ export function TripListSection({ device }: TripListSectionProps) {
     }
 
     return data.filter((trip) =>
-      [trip.name, trip.displayDate, trip.quizTitle]
+      [trip.name, trip.displayDate, trip.type]
         .join(' ')
         .toLowerCase()
         .includes(normalizedQuery)
@@ -138,7 +138,9 @@ export function TripListSection({ device }: TripListSectionProps) {
               key={trip.id || trip.date}
               trip={trip}
               logoObjectUrl={logoObjectUrls[trip.logoPath] ?? null}
-              onOpenQuiz={quiz.openQuiz}
+              onOpenQuiz={(nextTrip) => {
+                void quiz.openQuiz(nextTrip);
+              }}
             />
           ))}
         </div>
@@ -151,19 +153,26 @@ export function TripListSection({ device }: TripListSectionProps) {
       ) : null}
 
       <TripQuizModal
-        trip={quiz.activeTrip}
+        tripName={quiz.activeTrip?.name}
         isOpen={quiz.isOpen}
+        quiz={quiz.quiz}
         feedback={quiz.feedback}
+        isLoading={quiz.isLoadingQuiz}
+        isSubmitting={quiz.isSubmittingAnswer}
+        errorMessage={quiz.errorMessage}
         onClose={quiz.closeQuiz}
-        onAnswer={(answerIndex) => {
-          quiz.submitAnswer(answerIndex);
+        onAnswer={(optionId) => {
+          void quiz.submitAnswer(optionId);
+        }}
+        onRetry={() => {
+          void quiz.retryQuiz();
         }}
         onConfirmSuccess={() => {
-          if (!quiz.activeTrip) {
+          if (!quiz.activeTrip || !quiz.feedback?.isCorrect) {
             return;
           }
 
-          navigate(buildDeviceTripDetailPath(device, quiz.activeTrip.date));
+          navigate(buildDeviceTripDetailPath(device, quiz.activeTrip.id));
           quiz.closeQuiz();
         }}
       />

@@ -11,20 +11,14 @@ describe('trip-mappers', () => {
       mapTripListItemDto({
         id: 'trip-1',
         date: '20991231',
+        type: 'year-end',
         name: '연말 나들이',
         logo: '/logo.png',
-        quizTitle: '퀴즈',
-        quizAnswer: '1',
-        quizAnswerTitle: '정답',
-        quizAnswerText: '설명',
-        quizErrorTitle: '오답',
-        quizErrorText: '다시',
-        quizList: [{ quizIndex: '0', answer: '보기1' }],
       })
     ).toMatchObject({
       displayDate: '2099.12.31',
       logoPath: '/logo.png',
-      quizAnswerIndex: 1,
+      type: 'year-end',
     });
 
     expect(

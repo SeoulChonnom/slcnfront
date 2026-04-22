@@ -4,6 +4,9 @@ import type {
   TripDetailDto,
   TripListItem,
   TripListItemDto,
+  TripQuiz,
+  TripQuizCheckDto,
+  TripQuizDto,
   TripRegisterPayload,
 } from '../types';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
@@ -12,16 +15,10 @@ export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
   return {
     id: dto.id,
     date: dto.date,
+    type: dto.type,
     name: dto.name,
     displayDate: dto.date.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3'),
     logoPath: dto.logo,
-    quizTitle: dto.quizTitle,
-    quizAnswerIndex: Number(dto.quizAnswer),
-    quizAnswerTitle: dto.quizAnswerTitle,
-    quizAnswerText: dto.quizAnswerText,
-    quizErrorTitle: dto.quizErrorTitle,
-    quizErrorText: dto.quizErrorText,
-    quizResponses: dto.quizList,
   };
 }
 
@@ -33,6 +30,23 @@ export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
     nextButtonText: dto.nextButtonText || null,
     previousButtonText: dto.previousButtonText || null,
     driveUrl: dto.drive,
+  };
+}
+
+export function mapTripQuizDto(dto: TripQuizDto): TripQuiz {
+  return {
+    title: dto.title,
+    options: dto.options.toSorted(
+      (left, right) => left.sortOrder - right.sortOrder
+    ),
+  };
+}
+
+export function mapTripQuizCheckDto(dto: TripQuizCheckDto) {
+  return {
+    isCorrect: dto.correct,
+    title: dto.title,
+    description: dto.text,
   };
 }
 

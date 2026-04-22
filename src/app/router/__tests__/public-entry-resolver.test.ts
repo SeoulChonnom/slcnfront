@@ -28,6 +28,7 @@ describe('public-entry-resolver', () => {
 
   it('routes reserved public paths before shoe detail matching', () => {
     expect(resolvePublicEntryPath('/map/register')).toBe('/main/map/register');
+    expect(resolvePublicEntryPath('/map/trip-1')).toBe('/main/map/trip-1');
     expect(resolvePublicEntryPath('/calendar/week')).toBe(
       '/main/calendar/week'
     );

@@ -6,15 +6,9 @@ export type TripQuizChoiceDto = {
 export type TripListItemDto = {
   id: string;
   date: string;
+  type: string;
   name: string;
   logo: string;
-  quizTitle: string;
-  quizAnswer: string;
-  quizAnswerTitle: string;
-  quizAnswerText: string;
-  quizErrorTitle: string;
-  quizErrorText: string;
-  quizList: TripQuizChoiceDto[];
 };
 
 export type TripDetailDto = {
@@ -26,19 +20,30 @@ export type TripDetailDto = {
   drive: string;
 };
 
+export type TripQuizOptionDto = {
+  id: string;
+  text: string;
+  sortOrder: number;
+};
+
+export type TripQuizDto = {
+  title: string;
+  options: TripQuizOptionDto[];
+};
+
+export type TripQuizCheckDto = {
+  correct: boolean;
+  title: string;
+  text: string;
+};
+
 export type TripListItem = {
   id: string;
   date: string;
+  type: string;
   name: string;
   displayDate: string;
   logoPath: string;
-  quizTitle: string;
-  quizAnswerIndex: number;
-  quizAnswerTitle: string;
-  quizAnswerText: string;
-  quizErrorTitle: string;
-  quizErrorText: string;
-  quizResponses: TripQuizChoiceDto[];
 };
 
 export type TripDetail = {
@@ -48,6 +53,23 @@ export type TripDetail = {
   nextButtonText: string | null;
   previousButtonText: string | null;
   driveUrl: string;
+};
+
+export type TripQuizOption = {
+  id: string;
+  text: string;
+  sortOrder: number;
+};
+
+export type TripQuiz = {
+  title: string;
+  options: TripQuizOption[];
+};
+
+export type TripQuizFeedback = {
+  isCorrect: boolean;
+  title: string;
+  description: string;
 };
 
 export type TripRegisterRequest = {

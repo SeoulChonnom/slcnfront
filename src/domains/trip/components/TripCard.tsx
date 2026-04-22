@@ -10,9 +10,7 @@ type TripCardProps = {
 };
 
 export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
-  const tags = [trip.displayDate, trip.quizResponses[0]?.answer]
-    .filter(Boolean)
-    .slice(0, 2);
+  const tags = [trip.displayDate, trip.type].filter(Boolean).slice(0, 2);
 
   return (
     <Card className="slcn-trip-card" tone="default">
@@ -35,7 +33,9 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
           <span className="slcn-trip-card__lock">퀴즈</span>
         </div>
         <h3 className="slcn-trip-card__title display-hand">{trip.name}</h3>
-        <p className="slcn-trip-card__caption">{trip.quizTitle}</p>
+        <p className="slcn-trip-card__caption">
+          퀴즈를 풀고 나들이 지도를 확인해보세요.
+        </p>
         <div className="slcn-trip-card__tags">
           {tags.map((tag) => (
             <span key={tag} className="slcn-trip-card__tag">

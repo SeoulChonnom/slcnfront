@@ -5,8 +5,8 @@ import { useTripDetail } from '../../domains/trip/hooks/useTripDetail';
 import { TripDetailSection } from '../../domains/trip/components/TripDetailSection';
 
 export function TripDetailPage() {
-  const params = useParams<{ date: string }>();
-  const tripDetailQuery = useTripDetail(params.date);
+  const params = useParams<{ id: string }>();
+  const tripDetailQuery = useTripDetail(params.id);
 
   if (tripDetailQuery.isPending) {
     return <Skeleton className="slcn-trip-detail-section__map-skeleton" />;
@@ -16,7 +16,7 @@ export function TripDetailPage() {
     return (
       <ErrorState
         title="나들이 상세를 불러오지 못했어요."
-        description="날짜 파라미터 또는 파일 경로를 다시 확인해주세요."
+        description="상세 경로 또는 파일 경로를 다시 확인해주세요."
         onRetry={() => {
           void tripDetailQuery.refetch();
         }}

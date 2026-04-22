@@ -1,36 +1,44 @@
 import { Button } from '../../../components/ui/Button';
 import { Modal } from '../../../components/ui/Modal';
-import type { TripListItem } from '../types';
+import type { TripQuiz, TripQuizFeedback } from '../types';
 
 type TripQuizModalProps = {
-  trip: TripListItem | null;
+  tripName?: string;
   isOpen: boolean;
-  feedback: {
-    isCorrect: boolean;
-    title: string;
-    description: string;
-  } | null;
+  quiz: TripQuiz | null;
+  feedback: TripQuizFeedback | null;
+  isLoading: boolean;
+  isSubmitting: boolean;
+  errorMessage: string | null;
   onClose: () => void;
-  onAnswer: (answerIndex: number) => void;
+  onAnswer: (optionId: string) => void;
+  onRetry: () => void;
   onConfirmSuccess: () => void;
 };
 
 export function TripQuizModal({
-  trip,
+  tripName,
   isOpen,
+  quiz,
   feedback,
+  isLoading,
+  isSubmitting,
+  errorMessage,
   onClose,
   onAnswer,
+  onRetry,
   onConfirmSuccess,
 }: TripQuizModalProps) {
-  const answers = trip?.quizResponses ?? [];
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={feedback ? feedback.title : '나들이 퀴즈'}
-      description={feedback ? feedback.description : trip?.quizTitle}
+      description={
+        feedback
+          ? feedback.description
+          : (quiz?.title ?? `${tripName ?? '나들이'} 퀴즈를 확인하고 있어요.`)
+      }
     >
       {feedback ? (
         <div className="slcn-trip-quiz-modal__feedback">
@@ -42,17 +50,29 @@ export function TripQuizModal({
             {feedback.isCorrect ? '지도 보러가기' : '목록으로 돌아가기'}
           </Button>
         </div>
+      ) : errorMessage ? (
+        <div className="slcn-trip-quiz-modal__feedback">
+          <p role="alert">{errorMessage}</p>
+          <Button fullWidth autoFocus onClick={onRetry}>
+            다시 시도하기
+          </Button>
+        </div>
+      ) : isLoading ? (
+        <div className="slcn-trip-quiz-modal__feedback">
+          <p role="status">퀴즈를 불러오는 중…</p>
+        </div>
       ) : (
         <div className="slcn-trip-quiz-modal__answers">
-          {answers.map((answer, index) => (
+          {quiz?.options.map((answer, index) => (
             <Button
-              key={answer.quizIndex}
+              key={answer.id}
               variant="secondary"
               fullWidth
+              disabled={isSubmitting}
               autoFocus={index === 0}
-              onClick={() => onAnswer(index)}
+              onClick={() => onAnswer(answer.id)}
             >
-              {index + 1}. {answer.answer}
+              {index + 1}. {answer.text}
             </Button>
           ))}
         </div>

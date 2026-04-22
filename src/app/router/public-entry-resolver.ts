@@ -118,11 +118,11 @@ export function resolvePublicEntryPath(
   }
 
   if (normalizedPathname.startsWith('/map/')) {
-    const date = normalizedPathname.slice('/map/'.length);
+    const tripId = normalizedPathname.slice('/map/'.length);
 
-    if (date.length > 0) {
+    if (tripId.length > 0) {
       return appendLocationParts(
-        buildDeviceTripDetailPath(device, date),
+        buildDeviceTripDetailPath(device, tripId),
         options.search,
         options.hash
       );
