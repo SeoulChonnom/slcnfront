@@ -110,6 +110,12 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.slcn-calendar-manage-modal__library-grid,
+.slcn-calendar-manage-modal__color-grid,
+.slcn-calendar-manage-modal__toggle-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .slcn-shoes-catalog-page__loading {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

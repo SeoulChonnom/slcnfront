@@ -119,6 +119,10 @@
   width: 100%;
 }
 
+.slcn-calendar-toolbar__legend-header > .slcn-button {
+  width: 100%;
+}
+
 .slcn-calendar-toolbar__nav > * {
   flex: 1 1 0;
 }

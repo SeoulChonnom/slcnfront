@@ -54,4 +54,73 @@ describe('calendar-api', () => {
       'http://localhost:8080/api/calendar'
     );
   });
+
+  it('calls create, update and delete calendar endpoints correctly', async () => {
+    const calendarBody = {
+      id: 'cal-1',
+      name: '아영',
+      backgroundColor: '#fe9fc8',
+      borderColor: '#fe9fc8',
+      textColor: '#111111',
+      visible: true,
+      editable: true,
+      startEditable: true,
+      durationEditable: true,
+      defaultSelected: true,
+      sortOrder: 1,
+    };
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(calendarBody), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(calendarBody), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+      .mockResolvedValueOnce(new Response(null, { status: 200 }));
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080/api',
+      getAccessToken: () => 'token-123',
+    });
+    const calendarApi = createCalendarApi(client);
+
+    await calendarApi.createCalendar({
+      name: '아영',
+      backgroundColor: '#fe9fc8',
+      borderColor: '#fe9fc8',
+      textColor: '#111111',
+      editable: true,
+      startEditable: true,
+      durationEditable: true,
+      defaultSelected: true,
+      sortOrder: 1,
+    });
+    await calendarApi.updateCalendar({
+      id: 'cal-1',
+      name: '아영',
+      backgroundColor: '#fe9fc8',
+      borderColor: '#fe9fc8',
+      textColor: '#111111',
+      editable: true,
+      startEditable: true,
+      durationEditable: true,
+      defaultSelected: true,
+      sortOrder: 1,
+    });
+    await calendarApi.deleteCalendar('cal-1');
+
+    expect(fetchFn.mock.calls[0]?.[1]?.method).toBe('POST');
+    expect(fetchFn.mock.calls[1]?.[1]?.method).toBe('PUT');
+    expect(fetchFn.mock.calls[2]?.[0]).toBe(
+      'http://localhost:8080/api/calendar/cal-1'
+    );
+    expect(fetchFn.mock.calls[2]?.[1]?.method).toBe('DELETE');
+  });
 });

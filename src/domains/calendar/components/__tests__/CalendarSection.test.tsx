@@ -4,10 +4,20 @@ import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CalendarSection } from '../CalendarSection';
 
-const { createSchedule, updateSchedule, deleteSchedule } = vi.hoisted(() => ({
+const {
+  createSchedule,
+  updateSchedule,
+  deleteSchedule,
+  createCalendar,
+  updateCalendar,
+  removeCalendar,
+} = vi.hoisted(() => ({
   createSchedule: vi.fn(),
   updateSchedule: vi.fn(),
   deleteSchedule: vi.fn(),
+  createCalendar: vi.fn(),
+  updateCalendar: vi.fn(),
+  removeCalendar: vi.fn(),
 }));
 
 vi.mock('../../hooks/useCalendarEventMutations', () => ({
@@ -15,6 +25,15 @@ vi.mock('../../hooks/useCalendarEventMutations', () => ({
     createSchedule,
     updateSchedule,
     deleteSchedule,
+    isSubmitting: false,
+  }),
+}));
+
+vi.mock('../../hooks/useCalendarMutations', () => ({
+  useCalendarMutations: () => ({
+    createCalendar,
+    updateCalendar,
+    deleteCalendar: removeCalendar,
     isSubmitting: false,
   }),
 }));
@@ -129,6 +148,9 @@ describe('CalendarSection', () => {
     createSchedule.mockReset();
     updateSchedule.mockReset();
     deleteSchedule.mockReset();
+    createCalendar.mockReset();
+    updateCalendar.mockReset();
+    removeCalendar.mockReset();
   });
 
   it('creates a schedule from a selected range and closes on success', async () => {
@@ -330,5 +352,39 @@ describe('CalendarSection', () => {
       expect(screen.getByRole('alert').textContent).toContain('저장 실패');
     });
     expect(screen.getByText('일정 만들기')).toBeTruthy();
+  });
+
+  it('creates and updates calendars from the calendar manager modal', async () => {
+    createCalendar.mockResolvedValueOnce({ id: 'cal-2' });
+    updateCalendar.mockResolvedValueOnce({ id: 'cal-1' });
+
+    const { user } = renderSection({ schedules: [] });
+
+    await user.click(screen.getByRole('button', { name: '캘린더 관리' }));
+    await screen.findByText('캘린더 만들기');
+
+    fireEvent.change(screen.getByRole('textbox', { name: '캘린더 이름' }), {
+      target: { value: '새 캘린더' },
+    });
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    await waitFor(() => {
+      expect(createCalendar).toHaveBeenCalledWith(
+        expect.objectContaining({ name: '새 캘린더' })
+      );
+    });
+
+    await user.click(screen.getByRole('button', { name: '캘린더 관리' }));
+    await user.click(screen.getByRole('button', { name: '아영 수정 가능' }));
+    fireEvent.change(screen.getByDisplayValue('아영'), {
+      target: { value: '아영 메인' },
+    });
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    await waitFor(() => {
+      expect(updateCalendar).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'cal-1', name: '아영 메인' })
+      );
+    });
   });
 });

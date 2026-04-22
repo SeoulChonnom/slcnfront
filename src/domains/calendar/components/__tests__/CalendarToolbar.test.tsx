@@ -9,6 +9,7 @@ describe('CalendarToolbar', () => {
     const onToday = vi.fn();
     const onNext = vi.fn();
     const onCreate = vi.fn();
+    const onManageCalendars = vi.fn();
     const onViewChange = vi.fn();
     const onToggleCalendar = vi.fn();
     const { user } = renderWithProviders(
@@ -37,6 +38,7 @@ describe('CalendarToolbar', () => {
         onToday={onToday}
         onNext={onNext}
         onCreate={onCreate}
+        onManageCalendars={onManageCalendars}
       />
     );
 
@@ -47,11 +49,13 @@ describe('CalendarToolbar', () => {
     await user.click(screen.getByRole('button', { name: '다음' }));
     await user.click(screen.getByRole('tab', { name: '주' }));
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
+    await user.click(screen.getByRole('button', { name: '캘린더 관리' }));
 
     expect(onPrev).toHaveBeenCalledTimes(1);
     expect(onToday).toHaveBeenCalledTimes(1);
     expect(onNext).toHaveBeenCalledTimes(1);
     expect(onViewChange).toHaveBeenCalledWith('week');
     expect(onCreate).toHaveBeenCalledTimes(1);
+    expect(onManageCalendars).toHaveBeenCalledTimes(1);
   });
 });

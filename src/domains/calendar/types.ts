@@ -18,6 +18,22 @@ export type CalendarMetaDto = {
 
 export type CalendarMeta = CalendarMetaDto;
 
+export type CalendarCreatePayload = {
+  name: string;
+  backgroundColor: string;
+  borderColor: string;
+  textColor: string;
+  editable: boolean;
+  startEditable: boolean;
+  durationEditable: boolean;
+  defaultSelected: boolean;
+  sortOrder: number;
+};
+
+export type CalendarUpdatePayload = CalendarCreatePayload & {
+  id: string;
+};
+
 export type ScheduleEventDto = {
   id: string;
   calendarId: string;

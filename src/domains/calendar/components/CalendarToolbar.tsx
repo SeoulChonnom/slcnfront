@@ -14,6 +14,7 @@ type CalendarToolbarProps = {
   onToday: () => void;
   onNext: () => void;
   onCreate: () => void;
+  onManageCalendars: () => void;
   createDisabled?: boolean;
   className?: string;
 };
@@ -29,6 +30,7 @@ export function CalendarToolbar({
   onToday,
   onNext,
   onCreate,
+  onManageCalendars,
   createDisabled = false,
   className,
 }: CalendarToolbarProps) {
@@ -70,27 +72,35 @@ export function CalendarToolbar({
           일정 추가
         </Button>
       </div>
-      <div className="slcn-calendar-toolbar__legend" aria-label="캘린더 필터">
-        {calendars.map((calendar) => {
-          const active = visibleCalendarIds.includes(calendar.id);
+      <div className="slcn-calendar-toolbar__legend-wrap">
+        <div className="slcn-calendar-toolbar__legend-header">
+          <p className="slcn-calendar-toolbar__legend-label">캘린더 필터</p>
+          <Button variant="secondary" size="sm" onClick={onManageCalendars}>
+            캘린더 관리
+          </Button>
+        </div>
+        <div className="slcn-calendar-toolbar__legend" aria-label="캘린더 필터">
+          {calendars.map((calendar) => {
+            const active = visibleCalendarIds.includes(calendar.id);
 
-          return (
-            <button
-              key={calendar.id}
-              type="button"
-              className="slcn-calendar-toolbar__chip"
-              data-active={active}
-              onClick={() => onToggleCalendar(calendar.id)}
-            >
-              <span
-                className="slcn-calendar-toolbar__chip-dot"
-                style={{ backgroundColor: calendar.backgroundColor }}
-                aria-hidden="true"
-              />
-              <span>{calendar.name}</span>
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={calendar.id}
+                type="button"
+                className="slcn-calendar-toolbar__chip"
+                data-active={active}
+                onClick={() => onToggleCalendar(calendar.id)}
+              >
+                <span
+                  className="slcn-calendar-toolbar__chip-dot"
+                  style={{ backgroundColor: calendar.backgroundColor }}
+                  aria-hidden="true"
+                />
+                <span>{calendar.name}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
