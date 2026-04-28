@@ -20,18 +20,17 @@ const tripDetailShape = {
 
 const tripDetailSchema = z.object(tripDetailShape);
 
-const tripQuizOptionSchema = z.object({
+const optionRdoSchema = z.object({
   id: z.string(),
   text: z.string(),
-  sortOrder: z.number(),
 });
 
-const tripQuizSchema = z.object({
+const quizRdoSchema = z.object({
   title: z.string(),
-  options: z.array(tripQuizOptionSchema),
+  options: z.array(optionRdoSchema),
 });
 
-const tripQuizCheckSchema = z.object({
+const quizResultRdoSchema = z.object({
   correct: z.boolean(),
   title: z.string(),
   text: z.string(),
@@ -39,8 +38,9 @@ const tripQuizCheckSchema = z.object({
 
 export type TripListItemDto = z.infer<typeof tripListItemSchema>;
 export type TripDetailDto = z.infer<typeof tripDetailSchema>;
-export type TripQuizDto = z.infer<typeof tripQuizSchema>;
-export type TripQuizCheckDto = z.infer<typeof tripQuizCheckSchema>;
+export type OptionRdo = z.infer<typeof optionRdoSchema>;
+export type QuizRdo = z.infer<typeof quizRdoSchema>;
+export type QuizResultRdo = z.infer<typeof quizResultRdoSchema>;
 
 export function parseTripListResponse(payload: unknown) {
   const result = z.array(tripListItemSchema).safeParse(payload);
@@ -75,7 +75,7 @@ export function parseTripDetailResponse(
 }
 
 export function parseTripQuizResponse(payload: unknown) {
-  const result = tripQuizSchema.safeParse(payload);
+  const result = quizRdoSchema.safeParse(payload);
 
   if (!result.success) {
     throw createInvalidResponseError('Trip quiz', {
@@ -88,7 +88,7 @@ export function parseTripQuizResponse(payload: unknown) {
 }
 
 export function parseTripQuizCheckResponse(payload: unknown) {
-  const result = tripQuizCheckSchema.safeParse(payload);
+  const result = quizResultRdoSchema.safeParse(payload);
 
   if (!result.success) {
     throw createInvalidResponseError('Trip quiz check', {

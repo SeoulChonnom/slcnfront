@@ -6,8 +6,8 @@ import { TripQuizModal } from '../TripQuizModal';
 const quiz: TripQuiz = {
   title: '정답은?',
   options: [
-    { id: 'option-1', text: '보기 1', sortOrder: 1 },
-    { id: 'option-2', text: '보기 2', sortOrder: 2 },
+    { id: 'option-1', text: '보기 1' },
+    { id: 'option-2', text: '보기 2' },
   ],
 };
 

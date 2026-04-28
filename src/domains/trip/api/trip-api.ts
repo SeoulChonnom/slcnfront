@@ -6,11 +6,13 @@ import {
   mapTripQuizDto,
 } from '../mappers/trip-mappers';
 import type {
+  QuizRdo,
+  QuizResultRdo,
   TripDetail,
+  TripCdo,
   TripListItem,
   TripQuiz,
   TripQuizFeedback,
-  TripRegisterPayload,
 } from '../types';
 import {
   parseTripDetailResponse,
@@ -19,34 +21,9 @@ import {
   parseTripQuizResponse,
   type TripDetailDto,
   type TripListItemDto,
-  type TripQuizCheckDto,
-  type TripQuizDto,
 } from './trip-schemas';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
-
-export function buildTripRegisterFormData(payload: TripRegisterPayload) {
-  const formData = new FormData();
-  const requestBlob = new Blob([JSON.stringify(payload.request)], {
-    type: 'application/json',
-  });
-
-  formData.append('tripRegisterRequest', requestBlob);
-
-  if (payload.files.logo) {
-    formData.append('logo', payload.files.logo);
-  }
-
-  if (payload.files.map1) {
-    formData.append('map1', payload.files.map1);
-  }
-
-  if (payload.files.map2) {
-    formData.append('map2', payload.files.map2);
-  }
-
-  return formData;
-}
 
 export function createTripApi(client: ApiClientLike = apiClient) {
   return {
@@ -65,7 +42,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
       return mapTripDetailDto(parseTripDetailResponse(response, 'detail'));
     },
     async getTripQuiz(tripId: string): Promise<TripQuiz> {
-      const response = await client.get<TripQuizDto>({
+      const response = await client.get<QuizRdo>({
         path: `/trip/quiz/${encodeURIComponent(tripId)}`,
       });
 
@@ -75,7 +52,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
       tripId: string,
       optionId: string
     ): Promise<TripQuizFeedback> {
-      const response = await client.get<TripQuizCheckDto>({
+      const response = await client.get<QuizResultRdo>({
         path: '/trip/quiz/check',
         query: {
           arg0: tripId,
@@ -85,10 +62,10 @@ export function createTripApi(client: ApiClientLike = apiClient) {
 
       return mapTripQuizCheckDto(parseTripQuizCheckResponse(response));
     },
-    async registerTrip(payload: TripRegisterPayload): Promise<TripDetail> {
+    async registerTrip(payload: TripCdo): Promise<TripDetail> {
       const response = await client.post<TripDetailDto>({
         path: '/trip',
-        body: buildTripRegisterFormData(payload),
+        body: payload,
       });
 
       return mapTripDetailDto(parseTripDetailResponse(response, 'register'));

@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
 import type {
+  OptionCdo,
+  TripCdo,
+  QuizRdo,
+  QuizResultRdo,
   TripDetail,
   TripDetailDto,
+  TripRegisterAssetPaths,
   TripListItem,
   TripListItemDto,
   TripQuiz,
-  TripQuizCheckDto,
-  TripQuizDto,
-  TripRegisterPayload,
 } from '../types';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 
@@ -33,16 +35,14 @@ export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
   };
 }
 
-export function mapTripQuizDto(dto: TripQuizDto): TripQuiz {
+export function mapTripQuizDto(dto: QuizRdo): TripQuiz {
   return {
     title: dto.title,
-    options: dto.options.toSorted(
-      (left, right) => left.sortOrder - right.sortOrder
-    ),
+    options: dto.options,
   };
 }
 
-export function mapTripQuizCheckDto(dto: TripQuizCheckDto) {
+export function mapTripQuizCheckDto(dto: QuizResultRdo) {
   return {
     isCorrect: dto.correct,
     title: dto.title,
@@ -51,36 +51,61 @@ export function mapTripQuizCheckDto(dto: TripQuizCheckDto) {
 }
 
 export function buildTripRegisterPayload(
-  values: TripRegisterWizardValues
-): TripRegisterPayload {
+  values: TripRegisterWizardValues,
+  assetPaths: TripRegisterAssetPaths
+): TripCdo {
+  const selectedAnswerIndex =
+    values.quizAnswer.trim() === '' ? null : Number(values.quizAnswer) - 1;
   const filteredQuizOptions = values.quizOptions
-    .map((answer, index) => ({
-      answer: answer.trim(),
-      quizIndex: String(index),
+    .map((option, index) => ({
+      text: option.trim(),
+      originalIndex: index,
     }))
-    .filter((option) => option.answer !== '');
+    .filter((option) => option.text !== '');
 
   return {
-    request: {
-      date: dayjs(values.date).format('YYYYMMDD'),
-      type: values.type,
-      info1: dayjs(values.date).format('YYYY.MM.DD'),
-      info2: values.info2.trim(),
-      button1: values.hasSecondMap ? values.button1.trim() : '',
-      button2: values.hasSecondMap ? values.button2.trim() : '',
-      drive: values.drive.trim(),
-      quizTitle: values.quizTitle.trim(),
-      quizAnswer: String(Number(values.quizAnswer) - 1),
-      quizAnswerTitle: values.quizAnswerTitle.trim(),
-      quizAnswerText: values.quizAnswerText.trim(),
-      quizErrorTitle: values.quizErrorTitle.trim(),
-      quizErrorText: values.quizErrorText.trim(),
-      quizRegisterRequestList: filteredQuizOptions,
-    },
-    files: {
-      logo: values.logo,
-      map1: values.map1,
-      map2: values.hasSecondMap ? values.map2 : null,
+    date: dayjs(values.date).format('YYYY-MM-DD'),
+    type: values.type,
+    name: values.info2.trim(),
+    logo: assetPaths.logo,
+    firstMap: assetPaths.firstMap,
+    ...(toOptionalTrimmedEntry('secondMap', assetPaths.secondMap) ?? {}),
+    ...(values.hasSecondMap
+      ? {
+          ...(toOptionalTrimmedEntry('nextButtonText', values.button1) ?? {}),
+          ...(toOptionalTrimmedEntry('previousButtonText', values.button2) ??
+            {}),
+        }
+      : {}),
+    driveUrl: values.drive.trim(),
+    quiz: {
+      title: values.quizTitle.trim(),
+      answerTitle: values.quizAnswerTitle.trim(),
+      answerText: values.quizAnswerText.trim(),
+      errorTitle: values.quizErrorTitle.trim(),
+      errorText: values.quizErrorText.trim(),
+      options: filteredQuizOptions.map<OptionCdo>((option) => ({
+        text: option.text,
+        isCorrect:
+          selectedAnswerIndex === null
+            ? false
+            : option.originalIndex === selectedAnswerIndex,
+      })),
     },
   };
+}
+
+function toOptionalTrimmedEntry<Key extends string>(
+  key: Key,
+  value: string | undefined | null
+): Record<Key, string> | undefined {
+  const trimmedValue = value?.trim();
+
+  if (!trimmedValue) {
+    return undefined;
+  }
+
+  return {
+    [key]: trimmedValue,
+  } as Record<Key, string>;
 }

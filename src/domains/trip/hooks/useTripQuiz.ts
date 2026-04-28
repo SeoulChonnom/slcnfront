@@ -2,6 +2,20 @@ import { useRef, useState } from 'react';
 import { tripApi } from '../api/trip-api';
 import type { TripListItem, TripQuiz, TripQuizFeedback } from '../types';
 
+function shuffleQuizOptions(quiz: TripQuiz): TripQuiz {
+  const options = [...quiz.options];
+
+  for (let index = options.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [options[index], options[swapIndex]] = [options[swapIndex], options[index]];
+  }
+
+  return {
+    ...quiz,
+    options,
+  };
+}
+
 export function useTripQuiz() {
   const [activeTrip, setActiveTrip] = useState<TripListItem | null>(null);
   const [quiz, setQuiz] = useState<TripQuiz | null>(null);
@@ -25,7 +39,7 @@ export function useTripQuiz() {
         return null;
       }
 
-      setQuiz(nextQuiz);
+      setQuiz(shuffleQuizOptions(nextQuiz));
 
       return nextQuiz;
     } catch {

@@ -140,10 +140,15 @@ export function validateTripRegisterStep(
       errors.quizAnswer = '정답 번호를 선택해주세요.';
     }
 
+    const selectedAnswerIndex = Number(values.quizAnswer) - 1;
+    const selectedOption = values.quizOptions[selectedAnswerIndex];
+
     if (
       values.quizAnswer &&
-      filledOptions.length > 0 &&
-      Number(values.quizAnswer) > filledOptions.length
+      (!Number.isInteger(selectedAnswerIndex) ||
+        selectedAnswerIndex < 0 ||
+        selectedOption === undefined ||
+        selectedOption.trim() === '')
     ) {
       errors.quizAnswer = '정답 번호가 입력한 보기 수를 초과했습니다.';
     }

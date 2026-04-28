@@ -1,46 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { AppError } from '../../../../lib/api/errors';
 import { createApiClient } from '../../../../lib/api/api-client';
-import { createTripApi, buildTripRegisterFormData } from '../trip-api';
+import { createTripApi } from '../trip-api';
 import { createTripFilesApi } from '../trip-files-api';
 
 describe('trip-api', () => {
-  it('builds multipart payload with json blob and file fields', async () => {
-    const payload = buildTripRegisterFormData({
-      request: {
-        date: '2099-12-31',
-        type: 'year-end',
-        info1: '2099.12.31',
-        info2: '연말 나들이',
-        button1: '다음',
-        button2: '이전',
-        drive: 'https://drive.google.com/x',
-        quizTitle: '정답은?',
-        quizAnswer: '2',
-        quizAnswerTitle: '정답',
-        quizAnswerText: '설명',
-        quizErrorTitle: '오답',
-        quizErrorText: '다시 시도',
-        quizRegisterRequestList: [{ quizIndex: '0', answer: '보기1' }],
-      },
-      files: {
-        logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
-        map1: new File(['map-1'], 'map1.png', { type: 'image/png' }),
-      },
-    });
-
-    const requestBlob = payload.get('tripRegisterRequest');
-
-    expect(requestBlob).toBeInstanceOf(File);
-    expect(JSON.parse(await (requestBlob as File).text())).toMatchObject({
-      date: '2099-12-31',
-      quizTitle: '정답은?',
-    });
-    expect(payload.get('logo')).toBeInstanceOf(File);
-    expect(payload.get('map1')).toBeInstanceOf(File);
-    expect(payload.get('map2')).toBeNull();
-  });
-
   it('calls trip endpoints with the expected request shapes', async () => {
     const fetchFn = vi
       .fn<typeof fetch>()
@@ -86,8 +50,8 @@ describe('trip-api', () => {
           JSON.stringify({
             title: '정답은?',
             options: [
-              { id: 'option-1', text: '보기1', sortOrder: 1 },
-              { id: 'option-2', text: '보기2', sortOrder: 2 },
+              { id: 'option-1', text: '보기1' },
+              { id: 'option-2', text: '보기2' },
             ],
           }),
           {
@@ -131,7 +95,11 @@ describe('trip-api', () => {
           }
         )
       )
-      .mockResolvedValueOnce(new Response('file-content', { status: 200 }));
+      .mockResolvedValueOnce(new Response('file-content', { status: 200 }))
+      .mockResolvedValueOnce(new Response('/uploads/logo.png', { status: 200 }))
+      .mockResolvedValueOnce(
+        new Response('/uploads/map2.png', { status: 200 })
+      );
     const client = createApiClient({
       fetchFn,
       getBaseUrl: () => 'http://localhost:8080/api',
@@ -148,30 +116,41 @@ describe('trip-api', () => {
       'option-2'
     );
     const registeredTrip = await tripApi.registerTrip({
-      request: {
-        date: '2099-12-31',
-        type: 'year-end',
-        info1: '2099.12.31',
-        info2: '연말 나들이',
-        button1: '다음',
-        button2: '이전',
-        drive: 'https://drive.google.com/x',
-        quizTitle: '정답은?',
-        quizAnswer: '2',
-        quizAnswerTitle: '정답',
-        quizAnswerText: '설명',
-        quizErrorTitle: '오답',
-        quizErrorText: '다시 시도',
-        quizRegisterRequestList: [{ quizIndex: '0', answer: '보기1' }],
+      date: '2099-12-31',
+      type: 'year-end',
+      name: '연말 나들이',
+      logo: '/uploads/logo.png',
+      firstMap: '/uploads/map1.png',
+      secondMap: '/uploads/map2.png',
+      nextButtonText: '다음',
+      previousButtonText: '이전',
+      driveUrl: 'https://drive.google.com/x',
+      quiz: {
+        title: '정답은?',
+        answerTitle: '정답',
+        answerText: '설명',
+        errorTitle: '오답',
+        errorText: '다시 시도',
+        options: [{ text: '보기1', isCorrect: true }],
       },
-      files: {},
     });
     const fileBlob = await tripFilesApi.downloadTripFile('/logo.png');
+    const uploadedLogoPath = await tripFilesApi.uploadTripFile(
+      'logo',
+      new File(['logo'], 'logo.png', { type: 'image/png' })
+    );
+    const uploadedPath = await tripFilesApi.uploadTripFile(
+      'map2',
+      new File(['map-2'], 'map2.png', { type: 'image/png' })
+    );
 
     expect(tripList[0]?.logoPath).toBe('/logo.png');
     expect(tripList[0]?.type).toBe('year-end');
     expect(tripDetail.firstMapPath).toBe('/map1.png');
-    expect(tripQuiz.options).toHaveLength(2);
+    expect(tripQuiz.options).toEqual([
+      { id: 'option-1', text: '보기1' },
+      { id: 'option-2', text: '보기2' },
+    ]);
     expect(quizFeedback).toEqual({
       isCorrect: true,
       title: '정답',
@@ -193,7 +172,52 @@ describe('trip-api', () => {
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
       'http://localhost:8080/api/file?path=%2Flogo.png'
     );
-    expect(fetchFn.mock.calls[4]?.[1]?.body).toBeInstanceOf(FormData);
+    expect(fetchFn.mock.calls[6]?.[0]).toBe(
+      'http://localhost:8080/api/file?path=logo'
+    );
+    expect(fetchFn.mock.calls[7]?.[0]).toBe(
+      'http://localhost:8080/api/file?path=map'
+    );
+
+    const registerInit = fetchFn.mock.calls[4]?.[1];
+    const uploadLogoInit = fetchFn.mock.calls[6]?.[1];
+    const uploadMapInit = fetchFn.mock.calls[7]?.[1];
+
+    expect(new Headers(registerInit?.headers).get('content-type')).toBe(
+      'application/json'
+    );
+    expect(registerInit?.body).toBe(
+      JSON.stringify({
+        date: '2099-12-31',
+        type: 'year-end',
+        name: '연말 나들이',
+        logo: '/uploads/logo.png',
+        firstMap: '/uploads/map1.png',
+        secondMap: '/uploads/map2.png',
+        nextButtonText: '다음',
+        previousButtonText: '이전',
+        driveUrl: 'https://drive.google.com/x',
+        quiz: {
+          title: '정답은?',
+          answerTitle: '정답',
+          answerText: '설명',
+          errorTitle: '오답',
+          errorText: '다시 시도',
+          options: [{ text: '보기1', isCorrect: true }],
+        },
+      })
+    );
+
+    expect(uploadedLogoPath).toBe('/uploads/logo.png');
+    expect(uploadedPath).toBe('/uploads/map2.png');
+    expect(uploadLogoInit?.method).toBe('POST');
+    expect(uploadLogoInit?.body).toBeInstanceOf(FormData);
+    expect(new Headers(uploadLogoInit?.headers).get('content-type')).toBeNull();
+    expect((uploadLogoInit?.body as FormData).get('file')).toBeInstanceOf(File);
+    expect(uploadMapInit?.method).toBe('POST');
+    expect(uploadMapInit?.body).toBeInstanceOf(FormData);
+    expect(new Headers(uploadMapInit?.headers).get('content-type')).toBeNull();
+    expect((uploadMapInit?.body as FormData).get('file')).toBeInstanceOf(File);
   });
 
   it('rejects malformed trip list payloads as INVALID_RESPONSE', async () => {
@@ -235,7 +259,7 @@ describe('trip-api', () => {
       new Response(
         JSON.stringify({
           title: '정답은?',
-          options: [{ id: 'option-1', text: '보기1', sortOrder: '1' }],
+          options: [{ id: 'option-1', text: 123 }],
         }),
         {
           status: 200,
@@ -352,23 +376,23 @@ describe('trip-api', () => {
 
     await expect(
       tripApi.registerTrip({
-        request: {
-          date: '2099-12-31',
-          type: 'year-end',
-          info1: '2099.12.31',
-          info2: '연말 나들이',
-          button1: '다음',
-          button2: '이전',
-          drive: 'https://drive.google.com/x',
-          quizTitle: '정답은?',
-          quizAnswer: '2',
-          quizAnswerTitle: '정답',
-          quizAnswerText: '설명',
-          quizErrorTitle: '오답',
-          quizErrorText: '다시 시도',
-          quizRegisterRequestList: [{ quizIndex: '0', answer: '보기1' }],
+        date: '2099-12-31',
+        type: 'year-end',
+        name: '연말 나들이',
+        logo: '/uploads/logo.png',
+        firstMap: '/uploads/map1.png',
+        secondMap: '/uploads/map2.png',
+        nextButtonText: '다음',
+        previousButtonText: '이전',
+        driveUrl: 'https://drive.google.com/x',
+        quiz: {
+          title: '정답은?',
+          answerTitle: '정답',
+          answerText: '설명',
+          errorTitle: '오답',
+          errorText: '다시 시도',
+          options: [{ text: '보기1', isCorrect: true }],
         },
-        files: {},
       })
     ).rejects.toMatchObject({
       name: 'AppError',

@@ -60,6 +60,47 @@ describe('createApiClient', () => {
     expect(await blob.text()).toBe('file-content');
   });
 
+  it('passes through FormData bodies without json encoding', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('uploaded-path', {
+        status: 200,
+      })
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+      getAccessToken: () => 'token-123',
+    });
+
+    const formData = new FormData();
+    formData.append(
+      'file',
+      new File(['logo'], 'logo.png', { type: 'image/png' })
+    );
+
+    const response = await client.post<string>({
+      path: '/api/file',
+      query: {
+        path: 'logo',
+      },
+      body: formData,
+      responseType: 'text',
+    });
+
+    expect(response).toBe('uploaded-path');
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(fetchFn.mock.calls[0]?.[0]).toBe(
+      'http://localhost:8080/api/file?path=logo'
+    );
+
+    const init = fetchFn.mock.calls[0]?.[1];
+
+    expect(init?.method).toBe('POST');
+    expect(new Headers(init?.headers).get('x-auth-token')).toBe('token-123');
+    expect(new Headers(init?.headers).get('content-type')).toBeNull();
+    expect(init?.body).toBe(formData);
+  });
+
   it('normalizes non-ok responses into AppError', async () => {
     const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(JSON.stringify({ message: 'Bad request payload' }), {

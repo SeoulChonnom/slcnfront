@@ -1,8 +1,3 @@
-export type TripQuizChoiceDto = {
-  quizIndex: string;
-  answer: string;
-};
-
 export type TripListItemDto = {
   id: string;
   date: string;
@@ -20,18 +15,17 @@ export type TripDetailDto = {
   driveUrl: string;
 };
 
-export type TripQuizOptionDto = {
+export type OptionRdo = {
   id: string;
   text: string;
-  sortOrder: number;
 };
 
-export type TripQuizDto = {
+export type QuizRdo = {
   title: string;
-  options: TripQuizOptionDto[];
+  options: OptionRdo[];
 };
 
-export type TripQuizCheckDto = {
+export type QuizResultRdo = {
   correct: boolean;
   title: string;
   text: string;
@@ -58,7 +52,6 @@ export type TripDetail = {
 export type TripQuizOption = {
   id: string;
   text: string;
-  sortOrder: number;
 };
 
 export type TripQuiz = {
@@ -72,28 +65,35 @@ export type TripQuizFeedback = {
   description: string;
 };
 
-export type TripRegisterRequest = {
-  date: string;
-  type: string;
-  info1: string;
-  info2: string;
-  button1: string;
-  button2: string;
-  drive: string;
-  quizTitle: string;
-  quizAnswer: string;
-  quizAnswerTitle: string;
-  quizAnswerText: string;
-  quizErrorTitle: string;
-  quizErrorText: string;
-  quizRegisterRequestList: TripQuizChoiceDto[];
+export type OptionCdo = {
+  text: string;
+  isCorrect?: boolean;
 };
 
-export type TripRegisterPayload = {
-  request: TripRegisterRequest;
-  files: {
-    logo?: File | null;
-    map1?: File | null;
-    map2?: File | null;
-  };
+export type QuizCdo = {
+  title: string;
+  answerTitle: string;
+  answerText: string;
+  errorTitle: string;
+  errorText: string;
+  options: OptionCdo[];
+};
+
+export type TripCdo = {
+  date: string;
+  type: string;
+  name: string;
+  logo: string;
+  firstMap: string;
+  secondMap?: string;
+  nextButtonText?: string;
+  previousButtonText?: string;
+  driveUrl: string;
+  quiz: QuizCdo;
+};
+
+export type TripRegisterAssetPaths = {
+  logo: string;
+  firstMap: string;
+  secondMap?: string;
 };

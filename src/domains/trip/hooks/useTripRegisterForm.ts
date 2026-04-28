@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { tripFilesApi } from '../api/trip-files-api';
 import { tripApi } from '../api/trip-api';
 import { buildTripRegisterPayload } from '../mappers/trip-mappers';
 import { tripQueryKeys } from '../../../lib/api/query-keys';
@@ -33,7 +34,30 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
         return;
       }
 
-      await tripApi.registerTrip(buildTripRegisterPayload(nextValues));
+      if (!nextValues.logo || !nextValues.map1) {
+        throw new Error('Trip registration requires logo and first map files.');
+      }
+
+      const logoPath = await tripFilesApi.uploadTripFile(
+        'logo',
+        nextValues.logo
+      );
+      const firstMapPath = await tripFilesApi.uploadTripFile(
+        'map1',
+        nextValues.map1
+      );
+      const secondMapPath =
+        nextValues.hasSecondMap && nextValues.map2
+          ? await tripFilesApi.uploadTripFile('map2', nextValues.map2)
+          : undefined;
+
+      await tripApi.registerTrip(
+        buildTripRegisterPayload(nextValues, {
+          logo: logoPath,
+          firstMap: firstMapPath,
+          secondMap: secondMapPath,
+        })
+      );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -105,9 +129,13 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
       return false;
     }
 
-    await mutation.mutateAsync(values);
+    try {
+      await mutation.mutateAsync(values);
 
-    return true;
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   return {

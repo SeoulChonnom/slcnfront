@@ -24,19 +24,29 @@ vi.mock('../../api/trip-api', () => ({
 }));
 
 describe('useTripQuiz', () => {
+  let randomSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
+    randomSpy = vi.spyOn(Math, 'random');
     getTripQuiz.mockReset();
     checkTripQuizAnswer.mockReset();
+    randomSpy.mockReset();
   });
 
-  it('loads quiz data and returns success feedback for a correct answer', async () => {
+  afterEach(() => {
+    randomSpy.mockRestore();
+  });
+
+  it('shuffles quiz options once per load and keeps the order stable during the open session', async () => {
     getTripQuiz.mockResolvedValue({
       title: '정답은?',
       options: [
-        { id: 'option-1', text: '보기 1', sortOrder: 1 },
-        { id: 'option-2', text: '보기 2', sortOrder: 2 },
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-3', text: '보기 3' },
       ],
     });
+    randomSpy.mockReturnValueOnce(0.9).mockReturnValueOnce(0.1);
     checkTripQuizAnswer.mockResolvedValue({
       isCorrect: true,
       title: '정답',
@@ -50,7 +60,11 @@ describe('useTripQuiz', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.quiz?.title).toBe('정답은?');
+      expect(result.current.quiz?.options).toEqual([
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-3', text: '보기 3' },
+      ]);
     });
 
     await act(async () => {
@@ -63,14 +77,80 @@ describe('useTripQuiz', () => {
       title: '정답',
       description: '맞았어요.',
     });
+
+    expect(result.current.quiz?.options).toEqual([
+      { id: 'option-2', text: '보기 2' },
+      { id: 'option-1', text: '보기 1' },
+      { id: 'option-3', text: '보기 3' },
+    ]);
+  });
+
+  it('reshuffles quiz options on retry and on reopen after close', async () => {
+    getTripQuiz.mockResolvedValue({
+      title: '정답은?',
+      options: [
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-3', text: '보기 3' },
+      ],
+    });
+    randomSpy
+      .mockReturnValueOnce(0.9)
+      .mockReturnValueOnce(0.1)
+      .mockReturnValueOnce(0.1)
+      .mockReturnValueOnce(0.9)
+      .mockReturnValueOnce(0.99)
+      .mockReturnValueOnce(0.99);
+
+    const { result } = renderHook(() => useTripQuiz());
+
+    await act(async () => {
+      await result.current.openQuiz(trip);
+    });
+
+    await waitFor(() => {
+      expect(result.current.quiz?.options).toEqual([
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-3', text: '보기 3' },
+      ]);
+    });
+
+    await act(async () => {
+      await result.current.retryQuiz();
+    });
+
+    await waitFor(() => {
+      expect(result.current.quiz?.options).toEqual([
+        { id: 'option-3', text: '보기 3' },
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-1', text: '보기 1' },
+      ]);
+    });
+
+    act(() => {
+      result.current.closeQuiz();
+    });
+
+    await act(async () => {
+      await result.current.openQuiz(trip);
+    });
+
+    await waitFor(() => {
+      expect(result.current.quiz?.options).toEqual([
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-2', text: '보기 2' },
+        { id: 'option-3', text: '보기 3' },
+      ]);
+    });
   });
 
   it('returns error feedback and resets on close', async () => {
     getTripQuiz.mockResolvedValue({
       title: '정답은?',
       options: [
-        { id: 'option-1', text: '보기 1', sortOrder: 1 },
-        { id: 'option-2', text: '보기 2', sortOrder: 2 },
+        { id: 'option-1', text: '보기 1' },
+        { id: 'option-2', text: '보기 2' },
       ],
     });
     checkTripQuizAnswer.mockResolvedValue({
@@ -78,6 +158,8 @@ describe('useTripQuiz', () => {
       title: '오답',
       description: '다시 골라보세요.',
     });
+
+    randomSpy.mockReturnValueOnce(0.1);
 
     const { result } = renderHook(() => useTripQuiz());
 
