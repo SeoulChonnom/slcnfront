@@ -467,7 +467,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -586,7 +586,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/TripQuizRdo"
+                  "$ref": "#/components/schemas/QuizRdo"
                 }
               }
             }
@@ -629,7 +629,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/TripQuizDetailRdo"
+                  "$ref": "#/components/schemas/QuizResultRdo"
                 }
               }
             }
@@ -934,6 +934,59 @@
           }
         }
       },
+      "OptionCdo": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isCorrect": {
+            "type": "boolean"
+          }
+        },
+        "required": ["text"]
+      },
+      "QuizCdo": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionCdo"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "answerText",
+          "answerTitle",
+          "errorText",
+          "errorTitle",
+          "options",
+          "title"
+        ]
+      },
       "TripCdo": {
         "type": "object",
         "properties": {
@@ -973,7 +1026,7 @@
             "minLength": 1
           },
           "quiz": {
-            "$ref": "#/components/schemas/TripQuizCdo"
+            "$ref": "#/components/schemas/QuizCdo"
           }
         },
         "required": [
@@ -985,63 +1038,6 @@
           "quiz",
           "type"
         ]
-      },
-      "TripQuizCdo": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "answerTitle": {
-            "type": "string",
-            "minLength": 1
-          },
-          "answerText": {
-            "type": "string",
-            "minLength": 1
-          },
-          "errorTitle": {
-            "type": "string",
-            "minLength": 1
-          },
-          "errorText": {
-            "type": "string",
-            "minLength": 1
-          },
-          "options": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TripQuizOptionCdo"
-            },
-            "minItems": 1
-          }
-        },
-        "required": [
-          "answerText",
-          "answerTitle",
-          "errorText",
-          "errorTitle",
-          "options",
-          "title"
-        ]
-      },
-      "TripQuizOptionCdo": {
-        "type": "object",
-        "properties": {
-          "text": {
-            "type": "string",
-            "minLength": 1
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isCorrect": {
-            "type": "boolean"
-          }
-        },
-        "required": ["sortOrder", "text"]
       },
       "TripDetailRdo": {
         "type": "object",
@@ -1189,7 +1185,7 @@
           }
         }
       },
-      "TripQuizOptionRdo": {
+      "OptionRdo": {
         "type": "object",
         "properties": {
           "id": {
@@ -1197,14 +1193,10 @@
           },
           "text": {
             "type": "string"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
-      "TripQuizRdo": {
+      "QuizRdo": {
         "type": "object",
         "properties": {
           "title": {
@@ -1213,25 +1205,22 @@
           "options": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TripQuizOptionRdo"
+              "$ref": "#/components/schemas/OptionRdo"
             }
           }
         }
       },
-      "TripQuizDetailRdo": {
+      "QuizResultRdo": {
         "type": "object",
         "properties": {
           "correct": {
-            "type": "boolean",
-            "writeOnly": true
+            "type": "boolean"
           },
           "title": {
-            "type": "string",
-            "writeOnly": true
+            "type": "string"
           },
           "text": {
-            "type": "string",
-            "writeOnly": true
+            "type": "string"
           }
         }
       },
