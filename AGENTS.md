@@ -30,8 +30,8 @@ Use Node.js 24 and `pnpm`.
 ## Coding Style & Naming Conventions
 
 Follow existing TypeScript + React patterns with 2-space indentation and ES module imports. Use `PascalCase` for components and pages (`TripRegisterPage.tsx`), `camelCase` for hooks and utilities (`useRestoreSession.ts`, `trip-validation.ts`), and colocate tests in `__tests__/`.
-
-ESLint is configured in `eslint.config.js`; there is no separate formatter in this repo, so keep imports, spacing, and JSX consistent with surrounding files. Prefer small domain-focused modules over large shared abstractions.
+Biome is configured in `biome.json`. Before commit, please run `npx @biomejs/biome check --write` for formatting and linting.
+Before commit, please run `pnpm run knip` for checking unused files, dependencies, and exports. It is configured and executable, but currently reports known existing unused files, dependencies, and exports. Do not treat those as newly introduced unless a change adds to them.
 
 ## Testing Guidelines
 
