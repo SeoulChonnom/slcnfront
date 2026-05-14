@@ -98,8 +98,8 @@ describe('CalendarManageModal', () => {
           defaultSelected: true,
           sortOrder: 1,
         }}
-        editingCalendarId="cal-1"
-        errorMessage="삭제 전 확인"
+        editingCalendarId='cal-1'
+        errorMessage='삭제 전 확인'
         isSubmitting={false}
         onClose={vi.fn()}
         onDraftChange={vi.fn()}

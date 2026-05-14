@@ -1,5 +1,5 @@
-import { getAppEnv } from '../env/env';
 import { getAccessToken } from '../../domains/auth/store/auth-store';
+import { getAppEnv } from '../env/env';
 import { AppError } from './errors';
 
 type Primitive = string | number | boolean;

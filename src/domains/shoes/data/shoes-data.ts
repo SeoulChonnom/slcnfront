@@ -14,7 +14,7 @@ import mjV2KVideo from '../../../assets/video/mjV2K.mp4';
 import mjZB5Video from '../../../assets/video/mjZB5.mp4';
 import type { ShoeBrand } from '../types';
 
-export const globalShoes: ShoeBrand[] = [
+const globalShoes: ShoeBrand[] = [
   {
     id: 1,
     brandId: 'nb',

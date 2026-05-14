@@ -11,7 +11,7 @@ function LocationProbe() {
   const location = useLocation();
 
   return (
-    <p data-testid="location-probe">
+    <p data-testid='location-probe'>
       {location.pathname}
       {location.search}
     </p>
@@ -38,9 +38,9 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <>
         <Routes>
-          <Route path="/main/login" element={<p>login-page</p>} />
+          <Route path='/main/login' element={<p>login-page</p>} />
           <Route element={<RequireAuth />}>
-            <Route path="/main/protected" element={<p>private-page</p>} />
+            <Route path='/main/protected' element={<p>private-page</p>} />
           </Route>
         </Routes>
         <LocationProbe />
@@ -70,9 +70,9 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <>
         <Routes>
-          <Route path="/mobile/login" element={<p>mobile-login-page</p>} />
+          <Route path='/mobile/login' element={<p>mobile-login-page</p>} />
           <Route element={<RequireAuth />}>
-            <Route path="/mobile/protected" element={<p>private-page</p>} />
+            <Route path='/mobile/protected' element={<p>private-page</p>} />
           </Route>
         </Routes>
         <LocationProbe />
@@ -102,7 +102,7 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
-          <Route path="/main/protected" element={<p>private-page</p>} />
+          <Route path='/main/protected' element={<p>private-page</p>} />
         </Route>
       </Routes>,
       {
@@ -130,7 +130,7 @@ describe('RequireAuth', () => {
     renderWithMinimalProviders(
       <Routes>
         <Route element={<RequireAuth />}>
-          <Route path="/main/protected" element={<p>private-page</p>} />
+          <Route path='/main/protected' element={<p>private-page</p>} />
         </Route>
       </Routes>,
       {

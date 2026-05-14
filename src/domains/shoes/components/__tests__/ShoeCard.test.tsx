@@ -6,10 +6,19 @@ import { ShoeCard } from '../ShoeCard';
 
 describe('ShoeCard', () => {
   it('renders shoe info and links to the device detail route', () => {
-    const brand = getShoesCatalog()[1]!;
-    const shoe = brand.shoes[1]!;
+    const brand = getShoesCatalog()[1];
 
-    renderWithProviders(<ShoeCard device="main" brand={brand} shoe={shoe} />);
+    if (!brand) {
+      throw new Error('Expected second shoe brand fixture to exist.');
+    }
+
+    const shoe = brand.shoes[1];
+
+    if (!shoe) {
+      throw new Error('Expected second shoe fixture to exist.');
+    }
+
+    renderWithProviders(<ShoeCard device='main' brand={brand} shoe={shoe} />);
 
     expect(screen.getByText('나이키')).toBeTruthy();
     expect(screen.getByText('V2K 런')).toBeTruthy();

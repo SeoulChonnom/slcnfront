@@ -1,13 +1,13 @@
-import { useCallback } from 'react';
 import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
+import { useCallback } from 'react';
 import { mapEventApiToSchedulePayload } from '../../mappers/fullcalendar-event-mappers';
-import { buildQuickCreateSelection } from '../../utils/calendar-controller-helpers';
 import type {
   CalendarMeta,
   ScheduleEvent,
   ScheduleMutationPayload,
 } from '../../types';
+import { buildQuickCreateSelection } from '../../utils/calendar-controller-helpers';
 
 type UseCalendarEventInteractionsOptions = {
   schedules: ScheduleEvent[];
@@ -76,7 +76,7 @@ export function useCalendarEventInteractions({
 
   const onEventDrop = useCallback(
     async (arg: EventDropArg) => {
-      const calendarId = String(arg.event.extendedProps['calendarId'] ?? '');
+      const calendarId = String(arg.event.extendedProps.calendarId ?? '');
       const calendar = calendarById.get(calendarId);
 
       if (!calendar?.editable || !calendar.startEditable) {
@@ -91,7 +91,7 @@ export function useCalendarEventInteractions({
 
   const onEventResize = useCallback(
     async (arg: EventResizeDoneArg) => {
-      const calendarId = String(arg.event.extendedProps['calendarId'] ?? '');
+      const calendarId = String(arg.event.extendedProps.calendarId ?? '');
       const calendar = calendarById.get(calendarId);
 
       if (!calendar?.editable || !calendar.durationEditable) {

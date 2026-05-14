@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { MobileTopBar } from '../../components/layout/MobileTopBar';
 import { buildDeviceRootPath } from '../../lib/routing/route-builders';
 import { cn } from '../../lib/utils/cn';
-import { MobileTopBar } from '../../components/layout/MobileTopBar';
 
 type DetailMobileShellProps = PropsWithChildren<{
   className?: string;
@@ -40,7 +40,7 @@ export function DetailMobileShell({
         title={resolvedTitle}
         backHref={buildDeviceRootPath('mobile')}
       />
-      <main className="slcn-shell-detail-mobile__main">
+      <main className='slcn-shell-detail-mobile__main'>
         {children ?? <Outlet />}
       </main>
     </div>

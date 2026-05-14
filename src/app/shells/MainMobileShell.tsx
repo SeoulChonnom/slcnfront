@@ -30,9 +30,9 @@ export function MainMobileShell({ children, className }: MainMobileShellProps) {
   return (
     <div className={cn('slcn-shell-mobile pink-mesh', className)}>
       <MobileTopBar title={getMainMobileTitle(pathname)} />
-      <main className="slcn-shell-mobile__main">{children ?? <Outlet />}</main>
-      <MobileBottomNav device="mobile" />
-      <div className="slcn-shell-mobile__bottom-spacer" aria-hidden="true" />
+      <main className='slcn-shell-mobile__main'>{children ?? <Outlet />}</main>
+      <MobileBottomNav device='mobile' />
+      <div className='slcn-shell-mobile__bottom-spacer' aria-hidden='true' />
     </div>
   );
 }

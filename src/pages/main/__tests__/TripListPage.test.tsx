@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
+import { useAuthStore } from '../../../domains/auth/store/auth-store';
 import { renderWithProviders } from '../../../test/helpers/render';
 import { TripListPage } from '../TripListPage';
-import { useAuthStore } from '../../../domains/auth/store/auth-store';
 
 const useTripListMock = vi.fn();
 

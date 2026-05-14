@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 import { Link, type LinkProps } from 'react-router-dom';
 import {
-  getButtonClassName,
   type ButtonSize,
   type ButtonVariant,
+  getButtonClassName,
 } from './button-class-name';
 
 type SharedButtonProps = {
@@ -31,7 +31,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      type="button"
+      type='button'
       className={getButtonClassName({ variant, size, fullWidth, className })}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

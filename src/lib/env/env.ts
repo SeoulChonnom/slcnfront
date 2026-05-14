@@ -46,7 +46,3 @@ export function getAppEnv() {
 
   return cachedEnv;
 }
-
-export function resetAppEnvForTests() {
-  cachedEnv = null;
-}

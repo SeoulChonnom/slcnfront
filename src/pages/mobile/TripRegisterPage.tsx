@@ -1,5 +1,5 @@
 import { TripRegisterWizard } from '../../domains/trip/components/TripRegisterWizard';
 
 export function TripRegisterPage() {
-  return <TripRegisterWizard device="mobile" />;
+  return <TripRegisterWizard device='mobile' />;
 }

@@ -1,12 +1,12 @@
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, {
-  type EventResizeDoneArg,
-} from '@fullcalendar/interaction';
 import type {
   EventClickArg,
   EventDropArg,
   EventInput,
 } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, {
+  type EventResizeDoneArg,
+} from '@fullcalendar/interaction';
 import { CalendarTimelineView } from './CalendarTimelineView';
 
 type CalendarMonthViewProps = {
@@ -34,9 +34,9 @@ export function CalendarMonthView({
     <CalendarTimelineView
       currentDate={currentDate}
       events={events}
-      className="slcn-calendar-surface slcn-calendar-surface--month"
+      className='slcn-calendar-surface slcn-calendar-surface--month'
       plugins={[dayGridPlugin, interactionPlugin]}
-      initialView="dayGridMonth"
+      initialView='dayGridMonth'
       selectable={selectable}
       dayMaxEvents={3}
       fixedWeekCount={false}

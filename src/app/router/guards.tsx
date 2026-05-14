@@ -1,10 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { DEVICE_PREFIX } from './route-constants';
 import {
   selectAuthPhase,
   useAuthStore,
 } from '../../domains/auth/store/auth-store';
 import { buildDeviceLoginPath } from '../../lib/routing/route-builders';
+import { DEVICE_PREFIX } from './route-constants';
 
 function resolveLoginPath(pathname: string) {
   return pathname.startsWith(DEVICE_PREFIX.mobile)
@@ -18,7 +18,7 @@ export function RequireAuth() {
 
   if (authPhase === 'hydrating' || authPhase === 'restoring') {
     return (
-      <div className="slcn-guard-pending" role="status" aria-live="polite">
+      <div className='slcn-guard-pending' role='status' aria-live='polite'>
         세션을 확인하고 있어요.
       </div>
     );

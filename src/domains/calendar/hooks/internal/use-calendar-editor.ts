@@ -1,17 +1,17 @@
 import { useCallback, useMemo, useState } from 'react';
-import type {
-  CalendarMeta,
-  ScheduleEvent,
-  ScheduleMutationPayload,
-} from '../../types';
 import {
+  type CalendarEventDraft,
   createDraftFromRange,
   createDraftFromSchedule,
   createEmptyCalendarEventDraft,
   mapDraftToSchedulePayload,
   validateCalendarEventDraft,
-  type CalendarEventDraft,
 } from '../../mappers/schedule-event-mappers';
+import type {
+  CalendarMeta,
+  ScheduleEvent,
+  ScheduleMutationPayload,
+} from '../../types';
 import { getMutationErrorMessage } from '../../utils/calendar-controller-helpers';
 
 type CalendarEditorState = {

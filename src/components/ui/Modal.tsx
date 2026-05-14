@@ -1,9 +1,9 @@
 import {
+  type HTMLAttributes,
+  type PropsWithChildren,
   useEffect,
   useId,
   useRef,
-  type HTMLAttributes,
-  type PropsWithChildren,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils/cn';
@@ -116,18 +116,18 @@ export function Modal({
   }
 
   return createPortal(
-    <div
-      className="slcn-modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
-      }}
-    >
+    <div className='slcn-modal-backdrop'>
+      <button
+        type='button'
+        aria-label='배경으로 모달 닫기'
+        className='slcn-modal-backdrop__dismiss'
+        tabIndex={-1}
+        onMouseDown={onClose}
+      />
       <div
         {...props}
-        role="dialog"
-        aria-modal="true"
+        role='dialog'
+        aria-modal='true'
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         className={cn('slcn-modal', className)}
@@ -175,29 +175,29 @@ export function Modal({
         tabIndex={-1}
       >
         <button
-          type="button"
-          aria-label="모달 닫기"
+          type='button'
+          aria-label='모달 닫기'
           onClick={onClose}
-          className="slcn-modal__close"
+          className='slcn-modal__close'
         >
           ✕
         </button>
-        <div className="slcn-modal__sticker">
-          <span aria-hidden="true">⌘</span>
+        <div className='slcn-modal__sticker'>
+          <span aria-hidden='true'>⌘</span>
         </div>
-        <div className="slcn-modal__headline">
-          <div className="slcn-modal__title-wrap">
-            <h2 id={titleId} className="slcn-modal__title display-hand">
+        <div className='slcn-modal__headline'>
+          <div className='slcn-modal__title-wrap'>
+            <h2 id={titleId} className='slcn-modal__title display-hand'>
               {title}
             </h2>
           </div>
           {description ? (
-            <p id={descriptionId} className="slcn-modal__description">
+            <p id={descriptionId} className='slcn-modal__description'>
               {description}
             </p>
           ) : null}
         </div>
-        <div className="slcn-modal__body">{children}</div>
+        <div className='slcn-modal__body'>{children}</div>
       </div>
     </div>,
     document.body

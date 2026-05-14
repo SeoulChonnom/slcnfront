@@ -49,8 +49,10 @@ export function useTripAssetObjectUrls(
       const nextObjectUrls: Record<string, string> = {};
 
       results.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          nextObjectUrls[nextPaths[index]!] = URL.createObjectURL(result.value);
+        const path = nextPaths[index];
+
+        if (result.status === 'fulfilled' && path) {
+          nextObjectUrls[path] = URL.createObjectURL(result.value);
         }
       });
 

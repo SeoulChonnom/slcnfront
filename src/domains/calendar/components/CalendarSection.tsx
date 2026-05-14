@@ -1,8 +1,13 @@
 import { useMemo, useState } from 'react';
+import type { DeviceType } from '../../../app/router/route-constants';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { ErrorState } from '../../../components/ui/ErrorState';
 import { Skeleton } from '../../../components/ui/Skeleton';
-import type { DeviceType } from '../../../app/router/route-constants';
+import { useCalendarMutations } from '../hooks/useCalendarMutations';
+import {
+  type CalendarSectionState,
+  useCalendarSectionController,
+} from '../hooks/useCalendarSectionController';
 import type {
   CalendarCreatePayload,
   CalendarMeta,
@@ -10,17 +15,12 @@ import type {
 } from '../types';
 import { CalendarEventModal } from './CalendarEventModal';
 import {
-  CalendarManageModal,
   type CalendarManageDraft,
+  CalendarManageModal,
 } from './CalendarManageModal';
 import { CalendarMonthView } from './CalendarMonthView';
 import { CalendarToolbar } from './CalendarToolbar';
 import { CalendarWeekView } from './CalendarWeekView';
-import { useCalendarMutations } from '../hooks/useCalendarMutations';
-import {
-  type CalendarSectionState,
-  useCalendarSectionController,
-} from '../hooks/useCalendarSectionController';
 
 type CalendarManagerState = {
   isOpen: boolean;
@@ -206,7 +206,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
   };
 
   return (
-    <section className="slcn-calendar-page">
+    <section className='slcn-calendar-page'>
       <CalendarToolbar
         navigation={controller.navigation}
         filters={controller.filters}
@@ -214,16 +214,16 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
       />
 
       {controller.status.isLoading ? (
-        <div className="slcn-calendar-loading">
-          <Skeleton className="slcn-calendar-loading__panel" />
-          <Skeleton className="slcn-calendar-loading__panel" />
+        <div className='slcn-calendar-loading'>
+          <Skeleton className='slcn-calendar-loading__panel' />
+          <Skeleton className='slcn-calendar-loading__panel' />
         </div>
       ) : null}
 
       {!controller.status.isLoading && controller.status.isError ? (
         <ErrorState
-          title="일정을 불러오지 못했어요."
-          description="잠시 후 다시 시도하거나, 네트워크 상태를 확인해주세요."
+          title='일정을 불러오지 못했어요.'
+          description='잠시 후 다시 시도하거나, 네트워크 상태를 확인해주세요.'
           onRetry={() => {
             controller.status.onRetry();
           }}

@@ -1,6 +1,6 @@
 import {
-  apiClient,
   type ApiRequestOptions,
+  apiClient,
   type createApiClient,
 } from '../../../lib/api/api-client';
 import type { LoginFormValues, Role, UserInfo } from '../types';
@@ -29,7 +29,7 @@ function mapRole(role: string): Role | null {
   }
 }
 
-export function mapUserResponse(dto: UserResponseDto): AuthSuccess {
+function mapUserResponse(dto: UserResponseDto): AuthSuccess {
   return {
     accessToken: dto.accessToken,
     userInfo: {

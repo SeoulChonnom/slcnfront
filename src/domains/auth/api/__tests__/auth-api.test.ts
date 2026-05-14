@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { AppError } from '../../../../lib/api/errors';
 import { createApiClient } from '../../../../lib/api/api-client';
+import type { AppError } from '../../../../lib/api/errors';
 import { createAuthApi, toLoginRequest } from '../auth-api';
 
 describe('auth-api', () => {

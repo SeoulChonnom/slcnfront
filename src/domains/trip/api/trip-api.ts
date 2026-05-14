@@ -8,8 +8,8 @@ import {
 import type {
   QuizRdo,
   QuizResultRdo,
-  TripDetail,
   TripCdo,
+  TripDetail,
   TripListItem,
   TripQuiz,
   TripQuizFeedback,

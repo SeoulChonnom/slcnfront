@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import { MobileBottomNav } from '../MobileBottomNav';
 import { renderWithProviders } from '../../../test/helpers/render';
+import { MobileBottomNav } from '../MobileBottomNav';
 
 describe('MobileBottomNav', () => {
   it('renders labels and marks the active route', () => {

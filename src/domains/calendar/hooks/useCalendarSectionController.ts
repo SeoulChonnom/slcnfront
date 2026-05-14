@@ -1,14 +1,18 @@
 import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import type { DeviceType } from '../../../app/router/route-constants';
-import type { CalendarViewMode, ScheduleEvent } from '../types';
-import { useCalendarEventMutations } from './useCalendarEventMutations';
-import { type CalendarEventDraft } from '../mappers/schedule-event-mappers';
-import type { CalendarEventInput, CalendarMeta } from '../types';
-import { useCalendarVisibility } from './internal/use-calendar-visibility';
-import { useCalendarNavigation } from './internal/use-calendar-navigation';
+import type { CalendarEventDraft } from '../mappers/schedule-event-mappers';
+import type {
+  CalendarEventInput,
+  CalendarMeta,
+  CalendarViewMode,
+  ScheduleEvent,
+} from '../types';
 import { useCalendarEditor } from './internal/use-calendar-editor';
 import { useCalendarEventInteractions } from './internal/use-calendar-event-interactions';
+import { useCalendarNavigation } from './internal/use-calendar-navigation';
+import { useCalendarVisibility } from './internal/use-calendar-visibility';
+import { useCalendarEventMutations } from './useCalendarEventMutations';
 
 export type CalendarSectionState = {
   label: string;
@@ -25,7 +29,7 @@ type CalendarSectionControllerProps = {
   state: CalendarSectionState;
 };
 
-export type CalendarStatusModel = {
+type CalendarStatusModel = {
   isLoading: boolean;
   isError: boolean;
   isSubmitting: boolean;
@@ -50,7 +54,7 @@ export type CalendarFiltersModel = {
   onCreate: () => void;
 };
 
-export type CalendarEventsModel = {
+type CalendarEventsModel = {
   items: CalendarEventInput[];
   selectable: boolean;
   onSelectRange: (selection: {

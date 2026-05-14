@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { createAppQueryClient } from '../../app/providers/create-app-query-client';
 
 export function createTestQueryClient() {
@@ -17,8 +16,4 @@ export function createTestQueryClient() {
   });
 
   return client;
-}
-
-export function clearQueryClient(client: QueryClient) {
-  client.clear();
 }

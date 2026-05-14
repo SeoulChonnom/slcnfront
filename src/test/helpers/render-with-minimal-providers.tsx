@@ -1,11 +1,11 @@
-import { render, type RenderOptions } from '@testing-library/react';
+import { type RenderOptions, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { PropsWithChildren, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryProvider } from '../../app/providers/QueryProvider';
 import { createTestQueryClient } from './query-client';
 
-export type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
+type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
   route?: string;
 };
 

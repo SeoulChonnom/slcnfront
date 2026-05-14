@@ -1,6 +1,6 @@
 import { Button } from '../../../components/ui/Button';
 import { Modal } from '../../../components/ui/Modal';
-import { TextField, TextareaField } from '../../../components/ui/TextField';
+import { TextareaField, TextField } from '../../../components/ui/TextField';
 import type { CalendarEditorModel } from '../hooks/useCalendarSectionController';
 
 type CalendarEventModalProps = {
@@ -28,21 +28,21 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       title={title}
-      description="일정 내용을 입력하고 바로 저장할 수 있어요."
-      className="slcn-calendar-modal"
+      description='일정 내용을 입력하고 바로 저장할 수 있어요.'
+      className='slcn-calendar-modal'
     >
       <form
-        className="slcn-calendar-modal__form"
+        className='slcn-calendar-modal__form'
         onSubmit={async (submitEvent) => {
           submitEvent.preventDefault();
           await onSubmit();
         }}
       >
-        <label className="slcn-calendar-modal__select-field">
-          <span className="slcn-field__label">캘린더</span>
+        <label className='slcn-calendar-modal__select-field'>
+          <span className='slcn-field__label'>캘린더</span>
           <select
             value={draft.calendarId}
-            className="slcn-calendar-modal__select"
+            className='slcn-calendar-modal__select'
             disabled={isSubmitting || editableCalendars.length === 0}
             onChange={(changeEvent) => {
               onDraftChange({
@@ -58,7 +58,7 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           </select>
         </label>
         <TextField
-          label="제목"
+          label='제목'
           value={draft.title}
           autoFocus
           onChange={(changeEvent) => {
@@ -69,7 +69,7 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           required
         />
         <TextareaField
-          label="설명"
+          label='설명'
           value={draft.body}
           onChange={(changeEvent) => {
             onDraftChange({
@@ -79,7 +79,7 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           rows={4}
         />
         <TextField
-          label="장소"
+          label='장소'
           value={draft.location}
           onChange={(changeEvent) => {
             onDraftChange({
@@ -87,9 +87,9 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
             });
           }}
         />
-        <label className="slcn-calendar-modal__checkbox">
+        <label className='slcn-calendar-modal__checkbox'>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={draft.allDay}
             onChange={(changeEvent) => {
               onDraftChange({
@@ -99,10 +99,10 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           />
           <span>종일 일정</span>
         </label>
-        <div className="slcn-calendar-modal__datetime-grid">
+        <div className='slcn-calendar-modal__datetime-grid'>
           <TextField
-            label="시작일"
-            type="date"
+            label='시작일'
+            type='date'
             value={draft.startDate}
             onChange={(changeEvent) => {
               onDraftChange({
@@ -113,8 +113,8 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           />
           {!draft.allDay ? (
             <TextField
-              label="시작 시각"
-              type="time"
+              label='시작 시각'
+              type='time'
               value={draft.startTime}
               onChange={(changeEvent) => {
                 onDraftChange({
@@ -125,8 +125,8 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
             />
           ) : null}
           <TextField
-            label="종료일"
-            type="date"
+            label='종료일'
+            type='date'
             value={draft.endDate}
             onChange={(changeEvent) => {
               onDraftChange({
@@ -137,8 +137,8 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           />
           {!draft.allDay ? (
             <TextField
-              label="종료 시각"
-              type="time"
+              label='종료 시각'
+              type='time'
               value={draft.endTime}
               onChange={(changeEvent) => {
                 onDraftChange({
@@ -150,15 +150,15 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           ) : null}
         </div>
         {errorMessage ? (
-          <p className="slcn-calendar-modal__error" role="alert">
+          <p className='slcn-calendar-modal__error' role='alert'>
             {errorMessage}
           </p>
         ) : null}
-        <div className="slcn-calendar-modal__actions">
+        <div className='slcn-calendar-modal__actions'>
           {event && onDelete ? (
             <Button
-              variant="danger"
-              type="button"
+              variant='danger'
+              type='button'
               disabled={isSubmitting}
               onClick={async () => {
                 await onDelete();
@@ -168,14 +168,14 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
             </Button>
           ) : null}
           <Button
-            variant="secondary"
-            type="button"
+            variant='secondary'
+            type='button'
             disabled={isSubmitting}
             onClick={onClose}
           >
             취소
           </Button>
-          <Button type="submit" loading={isSubmitting}>
+          <Button type='submit' loading={isSubmitting}>
             저장
           </Button>
         </div>

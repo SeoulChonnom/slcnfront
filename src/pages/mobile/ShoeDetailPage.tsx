@@ -6,7 +6,7 @@ export function ShoeDetailPage() {
 
   return (
     <ShoeDetailSection
-      device="mobile"
+      device='mobile'
       brandSlug={brand}
       shoesSlug={shoesName}
     />

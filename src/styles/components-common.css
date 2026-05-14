@@ -181,8 +181,17 @@
   backdrop-filter: blur(4px);
 }
 
+.slcn-modal-backdrop__dismiss {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
 .slcn-modal {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 26.25rem;
   padding: 1.5rem;

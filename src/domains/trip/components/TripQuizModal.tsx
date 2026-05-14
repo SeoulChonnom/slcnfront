@@ -41,7 +41,7 @@ export function TripQuizModal({
       }
     >
       {feedback ? (
-        <div className="slcn-trip-quiz-modal__feedback">
+        <div className='slcn-trip-quiz-modal__feedback'>
           <Button
             fullWidth
             autoFocus
@@ -51,22 +51,22 @@ export function TripQuizModal({
           </Button>
         </div>
       ) : errorMessage ? (
-        <div className="slcn-trip-quiz-modal__feedback">
-          <p role="alert">{errorMessage}</p>
+        <div className='slcn-trip-quiz-modal__feedback'>
+          <p role='alert'>{errorMessage}</p>
           <Button fullWidth autoFocus onClick={onRetry}>
             다시 시도하기
           </Button>
         </div>
       ) : isLoading ? (
-        <div className="slcn-trip-quiz-modal__feedback">
-          <p role="status">퀴즈를 불러오는 중…</p>
+        <div className='slcn-trip-quiz-modal__feedback'>
+          <p role='status'>퀴즈를 불러오는 중…</p>
         </div>
       ) : (
-        <div className="slcn-trip-quiz-modal__answers">
+        <div className='slcn-trip-quiz-modal__answers'>
           {quiz?.options.map((answer, index) => (
             <Button
               key={answer.id}
-              variant="secondary"
+              variant='secondary'
               fullWidth
               disabled={isSubmitting}
               autoFocus={index === 0}

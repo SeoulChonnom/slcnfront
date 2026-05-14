@@ -16,31 +16,31 @@ export function MobileTopBar({
 }: MobileTopBarProps) {
   return (
     <header className={cn('slcn-mobile-topbar pink-mesh', className)}>
-      <div className="slcn-mobile-topbar__inner">
+      <div className='slcn-mobile-topbar__inner'>
         {backHref ? (
           <Link
             to={backHref}
-            aria-label="이전 화면으로 이동"
-            className="slcn-mobile-topbar__leading"
+            aria-label='이전 화면으로 이동'
+            className='slcn-mobile-topbar__leading'
           >
             ←
           </Link>
         ) : (
-          <span className="slcn-mobile-topbar__leading" aria-hidden="true" />
+          <span className='slcn-mobile-topbar__leading' aria-hidden='true' />
         )}
-        <div className="slcn-mobile-topbar__title">
-          <p className="slcn-mobile-topbar__title-text display-hand">{title}</p>
+        <div className='slcn-mobile-topbar__title'>
+          <p className='slcn-mobile-topbar__title-text display-hand'>{title}</p>
         </div>
         {showTrailingAction ? (
           <button
-            type="button"
-            aria-label="더 보기"
-            className="slcn-mobile-topbar__trailing"
+            type='button'
+            aria-label='더 보기'
+            className='slcn-mobile-topbar__trailing'
           >
             …
           </button>
         ) : (
-          <span className="slcn-mobile-topbar__trailing" aria-hidden="true" />
+          <span className='slcn-mobile-topbar__trailing' aria-hidden='true' />
         )}
       </div>
     </header>

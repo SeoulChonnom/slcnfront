@@ -4,8 +4,8 @@ import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { PageSectionHeader } from '../../../components/ui/PageSectionHeader';
 import { Skeleton } from '../../../components/ui/Skeleton';
-import type { TripDetail } from '../types';
 import { useTripAssetUrl } from '../hooks/useTripAssetUrl';
+import type { TripDetail } from '../types';
 import { TripMapSwitcher } from './TripMapSwitcher';
 
 type TripDetailSectionProps = {
@@ -21,10 +21,10 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
     activeMap === 'map1' ? map1Asset.objectUrl : map2Asset.objectUrl;
 
   return (
-    <section className="slcn-trip-detail-section">
+    <section className='slcn-trip-detail-section'>
       <PageSectionHeader
-        title="서울 촌놈 나들이 경로"
-        description="사진은 드라이브에서 📷"
+        title='서울 촌놈 나들이 경로'
+        description='사진은 드라이브에서 📷'
       />
 
       {hasSecondMap ? (
@@ -36,32 +36,32 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
         />
       ) : null}
 
-      <Card className="slcn-trip-detail-section__map-card">
+      <Card className='slcn-trip-detail-section__map-card'>
         {activeMapUrl ? (
           <img
             src={activeMapUrl}
-            alt="나들이 지도"
-            className="slcn-trip-detail-section__map-image"
+            alt='나들이 지도'
+            className='slcn-trip-detail-section__map-image'
           />
         ) : map1Asset.isPending || map2Asset.isPending ? (
-          <Skeleton className="slcn-trip-detail-section__map-skeleton" />
+          <Skeleton className='slcn-trip-detail-section__map-skeleton' />
         ) : (
           <EmptyState
-            title="지도를 불러오지 못했어요."
-            description="파일 경로를 다시 확인해주세요."
+            title='지도를 불러오지 못했어요.'
+            description='파일 경로를 다시 확인해주세요.'
           />
         )}
       </Card>
 
-      <Card className="slcn-trip-detail-section__drive-card" tone="pink">
+      <Card className='slcn-trip-detail-section__drive-card' tone='pink'>
         <div>
-          <p className="slcn-trip-detail-section__drive-kicker display-hand">
+          <p className='slcn-trip-detail-section__drive-kicker display-hand'>
             SLCN Drive
           </p>
-          <h3 className="slcn-trip-detail-section__drive-title display-hand">
+          <h3 className='slcn-trip-detail-section__drive-title display-hand'>
             사진은 드라이브에서 📷
           </h3>
-          <p className="slcn-trip-detail-section__drive-copy">
+          <p className='slcn-trip-detail-section__drive-copy'>
             암호 🔒 : 입사일
           </p>
         </div>

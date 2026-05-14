@@ -5,5 +5,5 @@ type SkeletonProps = {
 };
 
 export function Skeleton({ className }: SkeletonProps) {
-  return <div aria-hidden="true" className={cn('slcn-skeleton', className)} />;
+  return <div aria-hidden='true' className={cn('slcn-skeleton', className)} />;
 }

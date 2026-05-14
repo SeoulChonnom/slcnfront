@@ -1,8 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
-import { tripFilesApi } from '../../api/trip-files-api';
 import { tripApi } from '../../api/trip-api';
+import { tripFilesApi } from '../../api/trip-files-api';
 import { TripRegisterWizard } from '../TripRegisterWizard';
 
 vi.mock('../../api/trip-files-api', () => ({
@@ -104,7 +104,7 @@ describe('TripRegisterWizard', () => {
   it('blocks step navigation until required fields are filled and submits on the last step', async () => {
     const onSubmit = vi.fn();
     const { user, container } = renderWithProviders(
-      <TripRegisterWizard device="main" onSubmit={onSubmit} />,
+      <TripRegisterWizard device='main' onSubmit={onSubmit} />,
       {
         route: '/main/map/register',
       }
@@ -149,7 +149,7 @@ describe('TripRegisterWizard', () => {
     });
 
     const { user, container } = renderWithProviders(
-      <TripRegisterWizard device="main" />,
+      <TripRegisterWizard device='main' />,
       {
         route: '/main/map/register',
       }
@@ -198,7 +198,7 @@ describe('TripRegisterWizard', () => {
     uploadTripFileMock.mockRejectedValueOnce(new Error('logo upload failed'));
 
     const { user, container } = renderWithProviders(
-      <TripRegisterWizard device="main" />,
+      <TripRegisterWizard device='main' />,
       {
         route: '/main/map/register',
       }
@@ -224,7 +224,7 @@ describe('TripRegisterWizard', () => {
     registerTripMock.mockRejectedValueOnce(new Error('trip create failed'));
 
     const { user, container } = renderWithProviders(
-      <TripRegisterWizard device="main" />,
+      <TripRegisterWizard device='main' />,
       {
         route: '/main/map/register',
       }

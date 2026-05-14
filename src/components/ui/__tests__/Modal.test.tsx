@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import userEvent from '@testing-library/user-event';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { Modal } from '../Modal';
 
 describe('Modal', () => {
   it('does not render the dialog when closed', () => {
     render(
-      <Modal isOpen={false} onClose={vi.fn()} title="퀴즈 풀기">
-        <button type="button">확인</button>
+      <Modal isOpen={false} onClose={vi.fn()} title='퀴즈 풀기'>
+        <button type='button'>확인</button>
       </Modal>
     );
 
@@ -19,11 +19,16 @@ describe('Modal', () => {
       <Modal
         isOpen
         onClose={vi.fn()}
-        title="퀴즈 풀기"
-        description="정답을 맞춰야 입장할 수 있어요."
+        title='퀴즈 풀기'
+        description='정답을 맞춰야 입장할 수 있어요.'
       >
-        <input aria-label="정답 입력" autoFocus />
-        <button type="button">확인</button>
+        <input
+          aria-label='정답 입력'
+          ref={(element) => {
+            element?.setAttribute('autofocus', '');
+          }}
+        />
+        <button type='button'>확인</button>
       </Modal>
     );
 
@@ -42,9 +47,9 @@ describe('Modal', () => {
     const user = userEvent.setup();
 
     render(
-      <Modal isOpen onClose={vi.fn()} title="퀴즈 풀기">
-        <button type="button">확인</button>
-        <button type="button">취소</button>
+      <Modal isOpen onClose={vi.fn()} title='퀴즈 풀기'>
+        <button type='button'>확인</button>
+        <button type='button'>취소</button>
       </Modal>
     );
 
@@ -77,15 +82,15 @@ describe('Modal', () => {
 
       return (
         <>
-          <button type="button" onClick={() => setIsOpen(true)}>
+          <button type='button' onClick={() => setIsOpen(true)}>
             열기
           </button>
           <Modal
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
-            title="퀴즈 풀기"
+            title='퀴즈 풀기'
           >
-            <button type="button">확인</button>
+            <button type='button'>확인</button>
           </Modal>
         </>
       );
@@ -111,17 +116,17 @@ describe('Modal', () => {
     const onClose = vi.fn();
 
     render(
-      <Modal isOpen onClose={onClose} title="퀴즈 풀기">
-        <button type="button">확인</button>
+      <Modal isOpen onClose={onClose} title='퀴즈 풀기'>
+        <button type='button'>확인</button>
       </Modal>
     );
 
-    const dialog = screen.getByRole('dialog', { name: '퀴즈 풀기' });
-    const backdrop = dialog.parentElement;
+    screen.getByRole('dialog', { name: '퀴즈 풀기' });
+    const backdropDismissButton = screen.getByRole('button', {
+      name: '배경으로 모달 닫기',
+    });
 
-    expect(backdrop).toBeTruthy();
-
-    fireEvent.mouseDown(backdrop!);
+    fireEvent.mouseDown(backdropDismissButton);
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -131,8 +136,8 @@ describe('Modal', () => {
     const user = userEvent.setup();
 
     render(
-      <Modal isOpen onClose={onClose} title="퀴즈 풀기">
-        <button type="button">확인</button>
+      <Modal isOpen onClose={onClose} title='퀴즈 풀기'>
+        <button type='button'>확인</button>
       </Modal>
     );
 
@@ -149,7 +154,7 @@ describe('Modal', () => {
 
   it('falls back to the dialog when no focusable elements remain', async () => {
     render(
-      <Modal isOpen onClose={vi.fn()} title="퀴즈 풀기">
+      <Modal isOpen onClose={vi.fn()} title='퀴즈 풀기'>
         <div>내용</div>
       </Modal>
     );

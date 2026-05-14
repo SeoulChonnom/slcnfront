@@ -9,5 +9,5 @@ export function CalendarMonthPage() {
     normalizeCalendarDateKey(searchParams.get('date'))
   );
 
-  return <CalendarSection device="mobile" view="month" state={state} />;
+  return <CalendarSection device='mobile' view='month' state={state} />;
 }

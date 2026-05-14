@@ -15,12 +15,12 @@ export function EmptyState({
   actionTo,
 }: EmptyStateProps) {
   return (
-    <Card blob className="slcn-empty-state pink-mesh">
-      <p className="slcn-empty-state__icon display-hand">◌</p>
-      <h3 className="slcn-empty-state__title display-hand">{title}</h3>
-      <p className="slcn-empty-state__description">{description}</p>
+    <Card blob className='slcn-empty-state pink-mesh'>
+      <p className='slcn-empty-state__icon display-hand'>◌</p>
+      <h3 className='slcn-empty-state__title display-hand'>{title}</h3>
+      <p className='slcn-empty-state__description'>{description}</p>
       {actionLabel && actionTo ? (
-        <div className="slcn-empty-state__action">
+        <div className='slcn-empty-state__action'>
           <LinkButton to={actionTo}>{actionLabel}</LinkButton>
         </div>
       ) : null}

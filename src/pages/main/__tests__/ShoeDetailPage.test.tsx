@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
 import { Route, Routes } from 'react-router-dom';
+import { describe, expect, it } from 'vitest';
 import { renderWithProviders } from '../../../test/helpers/render';
 import { ShoeDetailPage } from '../ShoeDetailPage';
 
@@ -8,7 +8,7 @@ describe('ShoeDetailPage', () => {
   it('renders the video panel when the shoe has video data', async () => {
     renderWithProviders(
       <Routes>
-        <Route path="/main/:brand/:shoesName" element={<ShoeDetailPage />} />
+        <Route path='/main/:brand/:shoesName' element={<ShoeDetailPage />} />
       </Routes>,
       {
         route: '/main/nike/v2k',
@@ -23,7 +23,7 @@ describe('ShoeDetailPage', () => {
   it('hides the video panel when the shoe does not have video data', async () => {
     renderWithProviders(
       <Routes>
-        <Route path="/main/:brand/:shoesName" element={<ShoeDetailPage />} />
+        <Route path='/main/:brand/:shoesName' element={<ShoeDetailPage />} />
       </Routes>,
       {
         route: '/main/asics/jog100',
@@ -37,7 +37,7 @@ describe('ShoeDetailPage', () => {
   it('renders a fallback card when the slug is invalid', async () => {
     renderWithProviders(
       <Routes>
-        <Route path="/main/:brand/:shoesName" element={<ShoeDetailPage />} />
+        <Route path='/main/:brand/:shoesName' element={<ShoeDetailPage />} />
       </Routes>,
       {
         route: '/main/nike/missing',

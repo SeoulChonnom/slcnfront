@@ -25,7 +25,7 @@ export function FileDropzone({
   }
 
   return (
-    <div className="slcn-file-dropzone">
+    <div className='slcn-file-dropzone'>
       <label
         htmlFor={inputId}
         onDragEnter={preventDefault}
@@ -36,15 +36,15 @@ export function FileDropzone({
           className
         )}
       >
-        <span className="slcn-file-dropzone__title display-hand">{label}</span>
-        <span className="slcn-file-dropzone__hint">
+        <span className='slcn-file-dropzone__title display-hand'>{label}</span>
+        <span className='slcn-file-dropzone__hint'>
           {hint ?? '파일을 선택하거나 이 영역으로 끌어오세요.'}
         </span>
       </label>
       <input
         id={inputId}
-        type="file"
-        className="slcn-file-dropzone__input"
+        type='file'
+        className='slcn-file-dropzone__input'
         {...props}
       />
     </div>

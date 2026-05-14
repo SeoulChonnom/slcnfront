@@ -17,15 +17,15 @@ export function PageSectionHeader({
   return (
     <div className={cn('slcn-page-section-header', className)}>
       <div>
-        <h2 className="slcn-page-section-header__title display-hand">
+        <h2 className='slcn-page-section-header__title display-hand'>
           {title}
         </h2>
         {description ? (
-          <p className="slcn-page-section-header__description">{description}</p>
+          <p className='slcn-page-section-header__description'>{description}</p>
         ) : null}
       </div>
       {action ? (
-        <div className="slcn-page-section-header__action">{action}</div>
+        <div className='slcn-page-section-header__action'>{action}</div>
       ) : null}
     </div>
   );

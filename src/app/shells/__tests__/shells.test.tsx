@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
+import { renderWithProviders } from '../../../test/helpers/render';
+import { DetailMobileShell } from '../DetailMobileShell';
 import { MainDesktopShell } from '../MainDesktopShell';
 import { MainMobileShell } from '../MainMobileShell';
-import { DetailMobileShell } from '../DetailMobileShell';
 import { PublicShell } from '../PublicShell';
-import { renderWithProviders } from '../../../test/helpers/render';
 
 describe('shell components', () => {
   it('renders the desktop shell with header and footer', () => {
@@ -40,7 +40,7 @@ describe('shell components', () => {
 
   it('renders the detail mobile shell without the bottom navigation', () => {
     renderWithProviders(
-      <DetailMobileShell title="DETAIL">
+      <DetailMobileShell title='DETAIL'>
         <p>detail-content</p>
       </DetailMobileShell>,
       {

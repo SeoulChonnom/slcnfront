@@ -1,12 +1,12 @@
-import interactionPlugin, {
-  type EventResizeDoneArg,
-} from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import type {
   EventClickArg,
   EventDropArg,
   EventInput,
 } from '@fullcalendar/core';
+import interactionPlugin, {
+  type EventResizeDoneArg,
+} from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import { CalendarTimelineView } from './CalendarTimelineView';
 
 type CalendarWeekViewProps = {
@@ -34,14 +34,14 @@ export function CalendarWeekView({
     <CalendarTimelineView
       currentDate={currentDate}
       events={events}
-      className="slcn-calendar-surface slcn-calendar-surface--week"
+      className='slcn-calendar-surface slcn-calendar-surface--week'
       plugins={[timeGridPlugin, interactionPlugin]}
-      initialView="timeGridWeek"
+      initialView='timeGridWeek'
       selectable={selectable}
       nowIndicator
       allDaySlot
-      slotMinTime="07:00:00"
-      slotMaxTime="23:00:00"
+      slotMinTime='07:00:00'
+      slotMaxTime='23:00:00'
       onSelect={onSelect}
       onDateClick={onDateClick}
       onEventClick={onEventClick}

@@ -1,8 +1,8 @@
 import { Button } from '../../../components/ui/Button';
 import { FileDropzone } from '../../../components/ui/FileDropzone';
 import { TextField } from '../../../components/ui/TextField';
-import type { TripValidationErrors } from '../utils/trip-validation';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
+import type { TripValidationErrors } from '../utils/trip-validation';
 
 type TripRegisterMapsFieldKey =
   | 'map1'
@@ -44,22 +44,22 @@ export function TripRegisterStepMaps({
   onFieldChange,
 }: TripRegisterStepMapsProps) {
   return (
-    <div className="slcn-trip-register-step">
+    <div className='slcn-trip-register-step'>
       <FileDropzone
-        label="지도"
-        accept=".jpg,.jpeg,.png,.gif,.svg"
+        label='지도'
+        accept='.jpg,.jpeg,.png,.gif,.svg'
         onChange={(event) =>
           onFieldChange('map1', event.target.files?.[0] ?? null)
         }
       />
       {values.map1 ? (
-        <p className="slcn-trip-register-step__file-name">{values.map1.name}</p>
+        <p className='slcn-trip-register-step__file-name'>{values.map1.name}</p>
       ) : null}
       {errors.map1 ? (
-        <p className="slcn-trip-register-step__error">{errors.map1}</p>
+        <p className='slcn-trip-register-step__error'>{errors.map1}</p>
       ) : null}
       <Button
-        variant="secondary"
+        variant='secondary'
         onClick={() => {
           onFieldChange('hasSecondMap', !values.hasSecondMap);
 
@@ -75,30 +75,30 @@ export function TripRegisterStepMaps({
       {values.hasSecondMap ? (
         <>
           <FileDropzone
-            label="지도 2"
-            accept=".jpg,.jpeg,.png,.gif,.svg"
+            label='지도 2'
+            accept='.jpg,.jpeg,.png,.gif,.svg'
             onChange={(event) =>
               onFieldChange('map2', event.target.files?.[0] ?? null)
             }
           />
           {values.map2 ? (
-            <p className="slcn-trip-register-step__file-name">
+            <p className='slcn-trip-register-step__file-name'>
               {values.map2.name}
             </p>
           ) : null}
           {errors.map2 ? (
-            <p className="slcn-trip-register-step__error">{errors.map2}</p>
+            <p className='slcn-trip-register-step__error'>{errors.map2}</p>
           ) : null}
           <TextField
-            label="버튼 1"
-            placeholder="버튼 1"
+            label='버튼 1'
+            placeholder='버튼 1'
             value={values.button1}
             error={errors.button1}
             onChange={(event) => onFieldChange('button1', event.target.value)}
           />
           <TextField
-            label="버튼 2"
-            placeholder="버튼 2"
+            label='버튼 2'
+            placeholder='버튼 2'
             value={values.button2}
             error={errors.button2}
             onChange={(event) => onFieldChange('button2', event.target.value)}
@@ -106,13 +106,13 @@ export function TripRegisterStepMaps({
         </>
       ) : null}
       <TextField
-        label="드라이브 링크"
-        placeholder="드라이브 링크"
+        label='드라이브 링크'
+        placeholder='드라이브 링크'
         value={values.drive}
         error={errors.drive}
         onChange={(event) => onFieldChange('drive', event.target.value)}
       />
-      <p className="slcn-trip-register-step__hint">
+      <p className='slcn-trip-register-step__hint'>
         드라이브 비밀번호는 상세 화면에서 입사일로 안내됩니다.
       </p>
     </div>

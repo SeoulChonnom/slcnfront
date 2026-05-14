@@ -4,8 +4,8 @@ import {
   resetAuthStore,
   useAuthStore,
 } from '../../../domains/auth/store/auth-store';
-import { AppRouter } from '../AppRouter';
 import { renderWithMinimalProviders } from '../../../test/helpers/render';
+import { AppRouter } from '../AppRouter';
 
 vi.mock('../../../pages/mobile/CalendarMonthPage', () => ({
   CalendarMonthPage: () => <div>모바일 월간 캘린더</div>,

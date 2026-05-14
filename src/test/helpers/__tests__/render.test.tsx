@@ -3,14 +3,14 @@ import { screen } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  resetAuthStore,
+  useAuthStore,
+} from '../../../domains/auth/store/auth-store';
+import {
   renderWithAppProviders,
   renderWithMinimalProviders,
   renderWithProviders,
 } from '../render';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
 
 const { restoreSession } = vi.hoisted(() => ({
   restoreSession: vi.fn(),

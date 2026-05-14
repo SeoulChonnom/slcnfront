@@ -1,7 +1,7 @@
-import { lazy, Suspense, type ComponentType, type ReactElement } from 'react';
+import { type ComponentType, lazy, type ReactElement, Suspense } from 'react';
+import { RouteLoadingFallback } from '../../pages/shared/RouteLoadingFallback';
 import type { DeviceType } from './route-constants';
 import type { RoutePageKey } from './route-manifest';
-import { RouteLoadingFallback } from '../../pages/shared/RouteLoadingFallback';
 
 type PageModule = {
   default: ComponentType;

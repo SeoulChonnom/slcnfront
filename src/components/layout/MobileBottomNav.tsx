@@ -1,9 +1,9 @@
-import type { DeviceType } from '../../app/router/route-constants';
 import { NavLink } from 'react-router-dom';
+import type { DeviceType } from '../../app/router/route-constants';
 import { cn } from '../../lib/utils/cn';
 import { getPrimaryNavigationItems } from './navigation-items';
 
-export type MobileNavItem = {
+type MobileNavItem = {
   label: string;
   to: string;
   icon: string;
@@ -39,26 +39,26 @@ export function MobileBottomNav({
 
   return (
     <nav
-      aria-label="모바일 하단 내비게이션"
+      aria-label='모바일 하단 내비게이션'
       className={cn('slcn-mobile-bottom-nav pink-mesh', className)}
     >
-      <ul className="slcn-mobile-bottom-nav__list">
+      <ul className='slcn-mobile-bottom-nav__list'>
         {navigationItems.map((item) => (
           <li key={item.label}>
             {item.external ? (
               <a
                 href={item.to}
-                target="_blank"
-                rel="noreferrer"
-                className="slcn-mobile-bottom-nav__link"
+                target='_blank'
+                rel='noreferrer'
+                className='slcn-mobile-bottom-nav__link'
               >
                 <span
-                  aria-hidden="true"
-                  className="slcn-mobile-bottom-nav__icon"
+                  aria-hidden='true'
+                  className='slcn-mobile-bottom-nav__icon'
                 >
                   {item.icon}
                 </span>
-                <span className="slcn-mobile-bottom-nav__label">
+                <span className='slcn-mobile-bottom-nav__label'>
                   {item.label}
                 </span>
               </a>
@@ -73,17 +73,15 @@ export function MobileBottomNav({
                   )
                 }
               >
-                <>
-                  <span
-                    aria-hidden="true"
-                    className="slcn-mobile-bottom-nav__icon"
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="slcn-mobile-bottom-nav__label">
-                    {item.label}
-                  </span>
-                </>
+                <span
+                  aria-hidden='true'
+                  className='slcn-mobile-bottom-nav__icon'
+                >
+                  {item.icon}
+                </span>
+                <span className='slcn-mobile-bottom-nav__label'>
+                  {item.label}
+                </span>
               </NavLink>
             )}
           </li>

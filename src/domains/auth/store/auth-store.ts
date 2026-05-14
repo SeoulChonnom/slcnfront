@@ -2,14 +2,9 @@ import { create } from 'zustand';
 import type { AuthSession, UserInfo } from '../types';
 
 export const AUTH_USER_INFO_STORAGE_KEY = 'slcn.auth.user-info';
-export const AUTH_RESTORE_STATES = [
-  'idle',
-  'pending',
-  'success',
-  'error',
-] as const;
+const AUTH_RESTORE_STATES = ['idle', 'pending', 'success', 'error'] as const;
 
-export type AuthRestoreState = (typeof AUTH_RESTORE_STATES)[number];
+type AuthRestoreState = (typeof AUTH_RESTORE_STATES)[number];
 
 export type AuthStoreState = AuthSession & {
   restoreState: AuthRestoreState;
@@ -77,7 +72,7 @@ function writeStoredUserInfo(userInfo: UserInfo | null) {
   );
 }
 
-export function selectHasSession(
+function selectHasSession(
   state: Pick<AuthStoreState, 'accessToken' | 'userInfo'>
 ) {
   return Boolean(state.accessToken && state.userInfo);

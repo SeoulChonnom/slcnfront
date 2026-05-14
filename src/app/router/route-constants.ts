@@ -1,4 +1,4 @@
-export const DEVICE_TYPES = ['main', 'mobile'] as const;
+const DEVICE_TYPES = ['main', 'mobile'] as const;
 
 export type DeviceType = (typeof DEVICE_TYPES)[number];
 

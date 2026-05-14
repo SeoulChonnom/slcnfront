@@ -1,14 +1,14 @@
 import { apiClient, type createApiClient } from '../../../lib/api/api-client';
 import {
-  mapCalendarMetaDto,
   type CalendarCreatePayload,
   type CalendarMeta,
   type CalendarUpdatePayload,
+  mapCalendarMetaDto,
 } from '../types';
 import {
+  type CalendarMetaDto,
   parseCalendarListResponse,
   parseCalendarResponse,
-  type CalendarMetaDto,
 } from './calendar-schemas';
 
 type ApiClientLike = Pick<

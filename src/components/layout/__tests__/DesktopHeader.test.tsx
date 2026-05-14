@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import { DesktopHeader } from '../DesktopHeader';
 import { renderWithProviders } from '../../../test/helpers/render';
+import { DesktopHeader } from '../DesktopHeader';
 
 describe('DesktopHeader', () => {
   it('renders the primary navigation items', () => {

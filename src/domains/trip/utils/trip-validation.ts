@@ -10,7 +10,7 @@ const IMAGE_MIME_TYPES = [
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export type TripRegisterStep = 1 | 2 | 3;
-export type TripValidationErrorKey =
+type TripValidationErrorKey =
   | 'type'
   | 'date'
   | 'info2'
@@ -32,7 +32,7 @@ export type TripValidationErrors = Partial<
   Record<TripValidationErrorKey, string>
 >;
 
-export function validateTripFile(file: File | null | undefined) {
+function validateTripFile(file: File | null | undefined) {
   if (!file) {
     return '파일을 선택해주세요.';
   }

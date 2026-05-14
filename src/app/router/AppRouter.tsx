@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { buildDeviceNotFoundPath } from '../../lib/routing/route-builders';
 import { renderMainRoutes } from './main-routes';
 import { renderMobileRoutes } from './mobile-routes';
-import { buildDeviceNotFoundPath } from '../../lib/routing/route-builders';
 
 export function AppRouter() {
   return (
@@ -9,7 +9,7 @@ export function AppRouter() {
       {renderMainRoutes()}
       {renderMobileRoutes()}
       <Route
-        path="*"
+        path='*'
         element={<Navigate replace to={buildDeviceNotFoundPath('main')} />}
       />
     </Routes>

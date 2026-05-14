@@ -5,6 +5,6 @@ export function ShoeDetailPage() {
   const { brand, shoesName } = useParams();
 
   return (
-    <ShoeDetailSection device="main" brandSlug={brand} shoesSlug={shoesName} />
+    <ShoeDetailSection device='main' brandSlug={brand} shoesSlug={shoesName} />
   );
 }

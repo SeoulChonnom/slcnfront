@@ -1,15 +1,15 @@
 import '@fullcalendar/core/internal';
 import '@fullcalendar/daygrid/internal';
 import '@fullcalendar/timegrid/internal';
-import FullCalendar from '@fullcalendar/react';
-import koLocale from '@fullcalendar/core/locales/ko';
 import type {
   DateSelectArg,
   EventClickArg,
   EventDropArg,
   EventInput,
 } from '@fullcalendar/core';
+import koLocale from '@fullcalendar/core/locales/ko';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
+import FullCalendar from '@fullcalendar/react';
 import type { ComponentProps } from 'react';
 
 type CalendarTimelineViewProps = {
@@ -71,7 +71,7 @@ export function CalendarTimelineView({
         allDaySlot={allDaySlot}
         slotMinTime={slotMinTime}
         slotMaxTime={slotMaxTime}
-        eventDisplay="block"
+        eventDisplay='block'
         select={(selection: DateSelectArg) => {
           onSelect({
             start: selection.start,

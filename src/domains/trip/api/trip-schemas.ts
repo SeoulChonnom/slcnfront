@@ -38,9 +38,6 @@ const quizResultRdoSchema = z.object({
 
 export type TripListItemDto = z.infer<typeof tripListItemSchema>;
 export type TripDetailDto = z.infer<typeof tripDetailSchema>;
-export type OptionRdo = z.infer<typeof optionRdoSchema>;
-export type QuizRdo = z.infer<typeof quizRdoSchema>;
-export type QuizResultRdo = z.infer<typeof quizResultRdoSchema>;
 
 export function parseTripListResponse(payload: unknown) {
   const result = z.array(tripListItemSchema).safeParse(payload);

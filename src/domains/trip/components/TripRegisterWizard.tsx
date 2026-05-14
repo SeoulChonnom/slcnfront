@@ -77,15 +77,15 @@ export function TripRegisterWizard({
   );
 
   return (
-    <section className="slcn-trip-register-wizard">
+    <section className='slcn-trip-register-wizard'>
       {device === 'main' ? (
         <PageSectionHeader
-          title="서울 촌놈 나들이 추가"
-          description="날짜, 지도, 퀴즈 정보를 차례대로 입력해 나들이 기록을 남겨보세요."
+          title='서울 촌놈 나들이 추가'
+          description='날짜, 지도, 퀴즈 정보를 차례대로 입력해 나들이 기록을 남겨보세요.'
         />
       ) : null}
-      <Card className="slcn-trip-register-wizard__card">
-        <div className="slcn-trip-register-wizard__step-indicator">
+      <Card className='slcn-trip-register-wizard__card'>
+        <div className='slcn-trip-register-wizard__step-indicator'>
           {TRIP_REGISTER_STEP_CONFIGS.map((config) => (
             <span key={config.step} data-active={form.step === config.step}>
               {config.label}
@@ -96,14 +96,14 @@ export function TripRegisterWizard({
         {activeStep ? activeStep.render(form) : null}
 
         {form.submitError ? (
-          <p className="slcn-trip-register-step__error" role="alert">
+          <p className='slcn-trip-register-step__error' role='alert'>
             {form.submitError.message}
           </p>
         ) : null}
 
-        <div className="slcn-trip-register-wizard__actions">
+        <div className='slcn-trip-register-wizard__actions'>
           {form.step > 1 ? (
-            <Button variant="secondary" onClick={form.goPrev}>
+            <Button variant='secondary' onClick={form.goPrev}>
               이전
             </Button>
           ) : null}

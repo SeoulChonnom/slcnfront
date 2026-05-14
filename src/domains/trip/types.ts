@@ -15,7 +15,7 @@ export type TripDetailDto = {
   driveUrl: string;
 };
 
-export type OptionRdo = {
+type OptionRdo = {
   id: string;
   text: string;
 };
@@ -49,7 +49,7 @@ export type TripDetail = {
   driveUrl: string;
 };
 
-export type TripQuizOption = {
+type TripQuizOption = {
   id: string;
   text: string;
 };
@@ -70,7 +70,7 @@ export type OptionCdo = {
   isCorrect?: boolean;
 };
 
-export type QuizCdo = {
+type QuizCdo = {
   title: string;
   answerTitle: string;
   answerText: string;

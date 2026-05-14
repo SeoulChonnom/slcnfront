@@ -1,14 +1,14 @@
 import { Fragment, type ReactElement, type ReactNode } from 'react';
 import { Navigate, Route } from 'react-router-dom';
-import type { DeviceType } from './route-constants';
-import {
-  filterRoutesByShell,
-  getRouteDefinitionKey,
-  type DeviceRouteConfig,
-  type DeviceShellKey,
-} from './route-manifest';
 import { RequireAuth } from './guards';
 import { renderLazyRoutePage } from './lazy-route-pages';
+import type { DeviceType } from './route-constants';
+import {
+  type DeviceRouteConfig,
+  type DeviceShellKey,
+  filterRoutesByShell,
+  getRouteDefinitionKey,
+} from './route-manifest';
 
 type ShellDefinition = {
   key: DeviceShellKey;
@@ -48,15 +48,15 @@ export function renderDeviceRoutes(
         >
           {shell.key === 'main' ? (
             <>
-              <Route path="404" element={routeConfig.notFoundElement} />
+              <Route path='404' element={routeConfig.notFoundElement} />
               <Route
-                path="*"
+                path='*'
                 element={<Navigate replace to={routeConfig.notFoundPath} />}
               />
             </>
           ) : (
             <Route
-              path="*"
+              path='*'
               element={<Navigate replace to={routeConfig.notFoundPath} />}
             />
           )}

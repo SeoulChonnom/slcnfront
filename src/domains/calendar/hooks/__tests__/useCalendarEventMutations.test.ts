@@ -3,8 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createTestQueryClient } from '../../../../test/helpers/query-client';
-import { useCalendarEventMutations } from '../useCalendarEventMutations';
 import { calendarScheduleQueryKeys } from '../../query-keys';
+import { useCalendarEventMutations } from '../useCalendarEventMutations';
 
 const { createSchedule, updateSchedule, deleteSchedule } = vi.hoisted(() => ({
   createSchedule: vi.fn(),

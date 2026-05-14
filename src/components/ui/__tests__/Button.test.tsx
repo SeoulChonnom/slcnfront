@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { Button } from '../Button';
 import { renderWithProviders } from '../../../test/helpers/render';
+import { Button } from '../Button';
 
 describe('Button', () => {
   it('renders variants and handles click', async () => {
     const onClick = vi.fn();
     const { user } = renderWithProviders(
-      <Button variant="primary" onClick={onClick}>
+      <Button variant='primary' onClick={onClick}>
         저장하기
       </Button>
     );
@@ -24,7 +24,7 @@ describe('Button', () => {
 
   it('respects disabled and aria-busy state', () => {
     renderWithProviders(
-      <Button variant="danger" disabled loading>
+      <Button variant='danger' disabled loading>
         삭제
       </Button>
     );

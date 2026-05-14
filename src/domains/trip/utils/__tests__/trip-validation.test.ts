@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { validateTripRegisterStep } from '../trip-validation';
 import { createInitialTripRegisterValues } from '../trip-form-data';
+import { validateTripRegisterStep } from '../trip-validation';
 
 describe('trip-validation', () => {
   it('returns typed keys for each step', () => {

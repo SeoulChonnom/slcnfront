@@ -9,7 +9,7 @@ dayjs.locale('ko');
 
 export const API_DATE_FORMAT = 'YYYY-MM-DD';
 export const API_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
-export const CALENDAR_QUERY_DATE_FORMAT = 'YYYY-MM-DD';
+const CALENDAR_QUERY_DATE_FORMAT = 'YYYY-MM-DD';
 
 export type CalendarRange = {
   start: string;
@@ -90,27 +90,6 @@ export function formatDraftDateTime(
   }
 
   return dayjs(`${dateValue}T${timeValue}`).format(API_DATE_TIME_FORMAT);
-}
-
-export function ensureCalendarEventEnd(
-  startValue: string,
-  endValue: string,
-  allDay: boolean
-) {
-  const start = dayjs(startValue);
-  const end = dayjs(endValue);
-
-  if (!start.isValid() || !end.isValid()) {
-    return endValue;
-  }
-
-  if (end.isAfter(start) || end.isSame(start)) {
-    return endValue;
-  }
-
-  return allDay
-    ? start.format(API_DATE_FORMAT)
-    : start.add(1, 'hour').format(API_DATE_TIME_FORMAT);
 }
 
 export function toExclusiveAllDayEnd(endValue: string) {

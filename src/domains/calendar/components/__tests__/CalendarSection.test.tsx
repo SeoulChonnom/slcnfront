@@ -52,10 +52,10 @@ vi.mock('../CalendarMonthView', () => ({
     onDateClick?: (selection: { date: Date; allDay: boolean }) => void;
     onEventClick: (event: { id: string }) => void;
   }) => (
-    <div data-testid="calendar-month-view">
+    <div data-testid='calendar-month-view'>
       {selectable ? (
         <button
-          type="button"
+          type='button'
           onClick={() => {
             onSelect({
               start: new Date(2026, 3, 14, 9, 0, 0),
@@ -69,7 +69,7 @@ vi.mock('../CalendarMonthView', () => ({
       ) : null}
       {onDateClick ? (
         <button
-          type="button"
+          type='button'
           onClick={() => {
             onDateClick({
               date: new Date(2026, 3, 16, 13, 0, 0),
@@ -82,7 +82,7 @@ vi.mock('../CalendarMonthView', () => ({
       ) : null}
       {events[0]?.id ? (
         <button
-          type="button"
+          type='button'
           onClick={() => onEventClick({ id: events[0].id as string })}
         >
           open-event
@@ -93,7 +93,7 @@ vi.mock('../CalendarMonthView', () => ({
 }));
 
 vi.mock('../CalendarWeekView', () => ({
-  CalendarWeekView: () => <div data-testid="calendar-week-view" />,
+  CalendarWeekView: () => <div data-testid='calendar-week-view' />,
 }));
 
 function createBaseState() {
@@ -144,7 +144,7 @@ function renderSection(
     user: userEvent.setup(),
     ...render(
       <MemoryRouter initialEntries={['/main/calendar/month?date=2026-04-14']}>
-        <CalendarSection device="main" view="month" state={state} />
+        <CalendarSection device='main' view='month' state={state} />
       </MemoryRouter>
     ),
   };

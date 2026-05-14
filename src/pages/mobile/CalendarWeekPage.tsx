@@ -9,5 +9,5 @@ export function CalendarWeekPage() {
     normalizeCalendarDateKey(searchParams.get('date'))
   );
 
-  return <CalendarSection device="mobile" view="week" state={state} />;
+  return <CalendarSection device='mobile' view='week' state={state} />;
 }

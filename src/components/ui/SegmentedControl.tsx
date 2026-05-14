@@ -1,6 +1,6 @@
 import { cn } from '../../lib/utils/cn';
 
-export type SegmentOption = {
+type SegmentOption = {
   label: string;
   value: string;
 };
@@ -19,17 +19,17 @@ export function SegmentedControl({
   className,
 }: SegmentedControlProps) {
   return (
-    <div className={cn('slcn-segmented-control', className)} role="tablist">
+    <div className={cn('slcn-segmented-control', className)} role='tablist'>
       {options.map((option) => {
         const active = option.value === value;
 
         return (
           <button
             key={option.value}
-            type="button"
-            role="tab"
+            type='button'
+            role='tab'
             aria-selected={active}
-            className="slcn-segmented-control__button display-hand"
+            className='slcn-segmented-control__button display-hand'
             data-active={active}
             onClick={() => onChange(option.value)}
           >

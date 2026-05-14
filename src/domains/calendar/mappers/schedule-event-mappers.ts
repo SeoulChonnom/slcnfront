@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import type {
   CalendarEventInput,
   CalendarMeta,
@@ -12,7 +13,6 @@ import {
   toExclusiveAllDayEnd,
   toInclusiveAllDayEnd,
 } from '../utils/calendar-date';
-import dayjs from 'dayjs';
 
 export type CalendarEventDraft = {
   calendarId: string;

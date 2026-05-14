@@ -14,8 +14,8 @@ export function MainDesktopShell({
 }: MainDesktopShellProps) {
   return (
     <div className={cn('slcn-shell-desktop pink-mesh', className)}>
-      <DesktopHeader device="main" />
-      <main className="slcn-shell-desktop__main">{children ?? <Outlet />}</main>
+      <DesktopHeader device='main' />
+      <main className='slcn-shell-desktop__main'>{children ?? <Outlet />}</main>
       <Footer />
     </div>
   );
