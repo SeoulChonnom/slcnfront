@@ -1,0 +1,36 @@
+.surface-card {
+  background: var(--color-surface);
+  border: var(--border-thick) solid var(--color-border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.surface-card-soft {
+  background: var(--color-surface);
+  border: var(--border-medium) solid var(--color-border-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.surface-blob {
+  border-radius: var(--radius-blob);
+}
+
+.display-hand {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+.body-copy {
+  font-family: var(--font-body);
+}
+
+.pink-mesh {
+  background: linear-gradient(180deg, #fe9fc8 0%, #f793c2 100%);
+}
+
+.dot-grid {
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.12) 0.8px,
+    transparent 0.8px
+  );
+  background-size: 18px 18px;
+}
