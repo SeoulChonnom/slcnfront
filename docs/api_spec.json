@@ -1,0 +1,1253 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SLCN API Test",
+    "description": "SLCN API description",
+    "version": "1.0.o"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9090/api",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "일정 정보 API",
+      "description": "일정 정보 조회"
+    },
+    {
+      "name": "캘린더 정보 API",
+      "description": "캘린더 정보 관리"
+    },
+    {
+      "name": "나들이 정보 API",
+      "description": "나들이 상세정보 및 전체 정보 조회"
+    },
+    {
+      "name": "회원 관리 API",
+      "description": "회원 가입 및 로그인"
+    }
+  ],
+  "paths": {
+    "/schedule": {
+      "get": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 범위 조회",
+        "description": "보이는 범위와 겹치는 일정 조회 API",
+        "operationId": "getSchedulesForYearAndMonth",
+        "parameters": [
+          {
+            "name": "arg0",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ScheduleSearchSdo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleRdo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 수정",
+        "description": "일정 수정 API",
+        "operationId": "modifySchedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 등록",
+        "description": "일정 등록 API",
+        "operationId": "registerSchedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/calendar": {
+      "get": {
+        "tags": ["캘린더 정보 API"],
+        "summary": "캘린더 목록 조회",
+        "description": "표시 가능한 캘린더 목록 조회 API",
+        "operationId": "getCalendars",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarRdo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["캘린더 정보 API"],
+        "summary": "캘린더 수정",
+        "description": "캘린더 수정 API",
+        "operationId": "modifyCalendar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["캘린더 정보 API"],
+        "summary": "캘린더 등록",
+        "description": "캘린더 등록 API",
+        "operationId": "registerCalendar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/user/token": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "토큰 갱신",
+        "description": "RefreshToken 갱신",
+        "operationId": "reissueToken",
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "회원 가입",
+        "description": "회원 가입 API",
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "로그아웃",
+        "description": "현재 세션 로그아웃",
+        "operationId": "logoutUser",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "로그인",
+        "description": "로그인 API",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trip": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "전체 나들이 조회",
+        "description": "메인페이지 리스트 생성용 API",
+        "operationId": "getAllTrips",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TripListRdo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 추가용 API",
+        "operationId": "createTrip",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetailRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/file": {
+      "get": {
+        "tags": ["file-resource"],
+        "summary": "파일 조회 API",
+        "description": "파일 경로를 통해 파일을 조회합니다.",
+        "operationId": "getFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "파일 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["file-resource"],
+        "summary": "파일 업로드 API",
+        "description": "파일을 업로드합니다.",
+        "operationId": "uploadFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "파일 업로드 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/schedule/{scheduleId}/hide": {
+      "patch": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 삭제(숨김)",
+        "description": "일정 목록 삭제 API",
+        "operationId": "hideSchedule",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/calendar/{calendarId}/hide": {
+      "patch": {
+        "tags": ["캘린더 정보 API"],
+        "summary": "캘린더 삭제(숨김)",
+        "description": "캘린더 목록 삭제 API",
+        "operationId": "hideCalendar",
+        "parameters": [
+          {
+            "name": "calendarId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/trip/{id}": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 상세정보 조회",
+        "description": "나들이 상세페이지용 API",
+        "operationId": "getTripById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetailRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/trip/quiz/{tripId}": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 퀴즈 정보 API",
+        "operationId": "getTripQuiz",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/trip/quiz/check": {
+      "get": {
+        "tags": ["나들이 정보 API"],
+        "summary": "나들이 추가",
+        "description": "나들이 퀴즈 검증 API",
+        "operationId": "checkTripQuizAnswer",
+        "parameters": [
+          {
+            "name": "arg0",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "arg1",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizResultRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/schedule/now": {
+      "get": {
+        "tags": ["일정 정보 API"],
+        "summary": "이번달 일정 조회",
+        "description": "달력페이지 진입시 이번달 일정 조회 API",
+        "operationId": "getSchedulesForNow",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleRdo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/schedule/{scheduleId}": {
+      "delete": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 완전 삭제",
+        "description": "일정 데이터 삭제 API",
+        "operationId": "deleteSchedule",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/calendar/{calendarId}": {
+      "delete": {
+        "tags": ["캘린더 정보 API"],
+        "summary": "캘린더 완전 삭제",
+        "description": "캘린더 데이터 삭제 API",
+        "operationId": "deleteCalendar",
+        "parameters": [
+          {
+            "name": "calendarId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScheduleUdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "스케쥴 ID"
+          },
+          "calendarId": {
+            "type": "string",
+            "description": "캘린더 ID",
+            "example": "cal1"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "title"
+          },
+          "body": {
+            "type": "string",
+            "description": "설명",
+            "example": "body"
+          },
+          "start": {
+            "type": "string",
+            "description": "시작 일시(ISO 8601, 종일 일정은 yyyy-MM-dd)",
+            "example": "2025-03-01T00:00:00+09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "종료 일시(ISO 8601, 종일 일정은 yyyy-MM-dd)",
+            "example": "2025-03-01T01:00:00+09:00"
+          },
+          "allDay": {
+            "type": "boolean",
+            "description": "종일 일정 여부",
+            "example": false
+          },
+          "location": {
+            "type": "string",
+            "description": "장소",
+            "example": "location"
+          }
+        }
+      },
+      "ScheduleRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "calendarId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "allDay": {
+            "type": "boolean"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      },
+      "CalendarUdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "캘린더 ID",
+            "example": "CALENDAR-0001"
+          },
+          "name": {
+            "type": "string",
+            "description": "캘린더 이름",
+            "example": "아영"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "배경 색상",
+            "example": "#FE9FC8"
+          },
+          "borderColor": {
+            "type": "string",
+            "description": "테두리 색상",
+            "example": "#FE9FC8"
+          },
+          "textColor": {
+            "type": "string",
+            "description": "텍스트 색상",
+            "example": "#111111"
+          },
+          "editable": {
+            "type": "boolean",
+            "description": "편집 가능 여부",
+            "example": true
+          },
+          "startEditable": {
+            "type": "boolean",
+            "description": "시작 시각 수정 가능 여부",
+            "example": true
+          },
+          "durationEditable": {
+            "type": "boolean",
+            "description": "기간 수정 가능 여부",
+            "example": true
+          },
+          "defaultSelected": {
+            "type": "boolean",
+            "description": "기본 선택 여부",
+            "example": true
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "description": "정렬 순서",
+            "example": 1
+          }
+        }
+      },
+      "CalendarRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "borderColor": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "startEditable": {
+            "type": "boolean"
+          },
+          "durationEditable": {
+            "type": "boolean"
+          },
+          "defaultSelected": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UserRdo": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roleList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["USER", "ADMIN"]
+            }
+          }
+        }
+      },
+      "UserCdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLoginCdo": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "OptionCdo": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isCorrect": {
+            "type": "boolean"
+          }
+        },
+        "required": ["text"]
+      },
+      "QuizCdo": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorTitle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "errorText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionCdo"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "answerText",
+          "answerTitle",
+          "errorText",
+          "errorTitle",
+          "options",
+          "title"
+        ]
+      },
+      "TripCdo": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(ryu|ayo)$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "logo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "firstMap": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secondMap": {
+            "type": "string"
+          },
+          "nextButtonText": {
+            "type": "string"
+          },
+          "previousButtonText": {
+            "type": "string"
+          },
+          "driveUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quiz": {
+            "$ref": "#/components/schemas/QuizCdo"
+          }
+        },
+        "required": [
+          "date",
+          "driveUrl",
+          "firstMap",
+          "logo",
+          "name",
+          "quiz",
+          "type"
+        ]
+      },
+      "TripDetailRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "firstMap": {
+            "type": "string"
+          },
+          "secondMap": {
+            "type": "string"
+          },
+          "nextButtonText": {
+            "type": "string"
+          },
+          "previousButtonText": {
+            "type": "string"
+          },
+          "driveUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ScheduleCdo": {
+        "type": "object",
+        "properties": {
+          "calendarId": {
+            "type": "string",
+            "description": "캘린더 ID",
+            "example": "cal1"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "title"
+          },
+          "body": {
+            "type": "string",
+            "description": "설명",
+            "example": "body"
+          },
+          "start": {
+            "type": "string",
+            "description": "시작 일시(ISO 8601, 종일 일정은 yyyy-MM-dd)",
+            "example": "2025-03-01T00:00:00+09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "종료 일시(ISO 8601, 종일 일정은 yyyy-MM-dd)",
+            "example": "2025-03-01T01:00:00+09:00"
+          },
+          "allDay": {
+            "type": "boolean",
+            "description": "종일 일정 여부",
+            "example": false
+          },
+          "location": {
+            "type": "string",
+            "description": "장소",
+            "example": "location"
+          }
+        }
+      },
+      "CalendarCdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "캘린더 이름",
+            "example": "아영"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "배경 색상",
+            "example": "#FE9FC8"
+          },
+          "borderColor": {
+            "type": "string",
+            "description": "테두리 색상",
+            "example": "#FE9FC8"
+          },
+          "textColor": {
+            "type": "string",
+            "description": "텍스트 색상",
+            "example": "#111111"
+          },
+          "editable": {
+            "type": "boolean",
+            "description": "편집 가능 여부",
+            "example": true
+          },
+          "startEditable": {
+            "type": "boolean",
+            "description": "시작 시각 수정 가능 여부",
+            "example": true
+          },
+          "durationEditable": {
+            "type": "boolean",
+            "description": "기간 수정 가능 여부",
+            "example": true
+          },
+          "defaultSelected": {
+            "type": "boolean",
+            "description": "기본 선택 여부",
+            "example": true
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "description": "정렬 순서",
+            "example": 1
+          }
+        }
+      },
+      "TripListRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          }
+        }
+      },
+      "OptionRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "QuizRdo": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionRdo"
+            }
+          }
+        }
+      },
+      "QuizResultRdo": {
+        "type": "object",
+        "properties": {
+          "correct": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "ScheduleSearchSdo": {
+        "type": "object",
+        "description": "알림 송신 DTO",
+        "properties": {
+          "start": {
+            "type": "string",
+            "description": "검색 시작 일시(ISO 8601)",
+            "example": "2026-04-01T00:00:00+09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "검색 종료 일시(ISO 8601)",
+            "example": "2026-05-01T00:00:00+09:00"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "X-AUTH-TOKEN": {
+        "type": "apiKey",
+        "description": "AccessToken",
+        "name": "X-AUTH-TOKEN",
+        "in": "header"
+      }
+    }
+  }
+}
