@@ -6,7 +6,7 @@
     "indentWidth": 2
   },
   "files": {
-    "includes": ["**", "!dist", "!build", "!node_modules"]
+    "includes": ["**", "!dist", "!build", "!node_modules", "!docs"]
   },
   "javascript": {
     "formatter": {
