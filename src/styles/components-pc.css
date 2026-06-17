@@ -4,7 +4,7 @@
   z-index: 30;
   border-bottom: 1px solid var(--color-divider-soft);
   background: rgba(255, 248, 248, 0.85);
-  backdrop-filter: blur(12px);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
 .slcn-desktop-header__inner {
@@ -14,7 +14,7 @@
   gap: 1.5rem;
   width: 100%;
   max-width: 72rem;
-  height: 4rem;
+  height: 3.5rem;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
@@ -51,9 +51,10 @@
   justify-content: center;
   width: 2.125rem;
   height: 2.125rem;
-  border: 1px solid var(--color-hairline);
+  border: 1px solid rgba(27, 27, 27, 0.06);
   border-radius: 999px;
-  background: #f4f0ea;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
 }
 
 .slcn-footer {
@@ -83,7 +84,7 @@
 
 .slcn-footer__caption {
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 400;
   color: rgb(0 0 0 / 60%);
 }
 

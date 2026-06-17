@@ -6,7 +6,7 @@
   border: none;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: 400;
   transition:
     opacity var(--duration-fast) ease,
     background-color var(--duration-fast) ease,
@@ -137,7 +137,7 @@
   border: none;
   background: transparent;
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 400;
   outline: none;
 }
 
@@ -155,7 +155,7 @@
 }
 
 .slcn-field__message[data-kind="error"] {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-error);
 }
 
@@ -345,15 +345,14 @@
   padding: 0 0.875rem;
   border: 1px solid var(--color-hairline);
   border-radius: 999px;
-  background: rgb(255 255 255 / 72%);
-  color: rgb(27 27 27 / 45%);
+  background: var(--color-surface-soft);
+  color: var(--color-ink);
   font-size: 0.875rem;
   font-weight: 700;
 }
 
 .slcn-calendar-toolbar__chip[data-active="true"] {
-  color: var(--color-ink);
-  background: var(--color-surface);
+  color: var(--color-on-dark);
   box-shadow: none;
 }
 
@@ -514,7 +513,7 @@
 
 .slcn-calendar-manage-modal__library {
   padding: 1rem;
-  border: 1px dashed var(--color-divider-soft);
+  border: 1px solid var(--color-divider-soft);
   border-radius: var(--radius-md);
   background: rgb(254 159 200 / 10%);
 }
@@ -1168,7 +1167,7 @@
 }
 
 .slcn-error-state {
-  background: #fff1f1;
+  background: var(--color-error-surface);
 }
 
 .slcn-file-dropzone {
@@ -1214,32 +1213,25 @@
 }
 
 .slcn-logo-blob {
-  display: inline-grid;
-  place-items: center;
-  border-radius: var(--radius-xl);
-  background: var(--color-ink);
-  color: var(--color-surface);
-  font-weight: 700;
-  line-height: 0.85;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
 }
 
-.slcn-logo-blob[data-size="sm"] {
-  width: 2rem;
+.slcn-logo-blob img {
+  width: auto;
+  display: block;
+}
+
+.slcn-logo-blob[data-size="sm"] img {
+  height: 1.75rem;
+}
+
+.slcn-logo-blob[data-size="md"] img {
   height: 2rem;
-  font-size: 0.5rem;
 }
 
-.slcn-logo-blob[data-size="md"] {
-  width: 2.5rem;
+.slcn-logo-blob[data-size="lg"] img {
   height: 2.5rem;
-  font-size: 0.6rem;
-}
-
-.slcn-logo-blob[data-size="lg"] {
-  width: 4rem;
-  height: 4rem;
-  font-size: 0.75rem;
 }
 
 .slcn-foundation-page {
@@ -1281,7 +1273,7 @@
 .slcn-foundation-page__kicker {
   margin-top: 0.75rem;
   font-size: 0.625rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgb(0 0 0 / 60%);
@@ -1425,7 +1417,7 @@
   border: 1px solid var(--color-hairline);
   border-radius: 999px;
   background: rgb(255 255 255 / 92%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
 .slcn-shoes-catalog-page__brand-link {
@@ -1846,16 +1838,9 @@
 }
 
 .slcn-home-hub__desktop-mini-logo {
-  display: inline-grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-ink);
-  color: var(--color-brand-pink);
-  font-size: 0.55rem;
-  line-height: 0.86;
-  box-shadow: none;
+  display: block;
+  height: 1.75rem;
+  width: auto;
 }
 
 .slcn-home-hub__desktop-logo-wrap {
@@ -1873,11 +1858,12 @@
   border: none;
   border-radius: var(--radius-xl);
   background: var(--color-surface-dark-1);
-  color: var(--color-brand-pink);
-  font-size: clamp(3.5rem, 8vw, 5rem);
-  line-height: 0.9;
-  text-align: center;
   box-shadow: var(--shadow-floating);
+}
+
+.slcn-home-hub__desktop-logo img {
+  max-width: 60%;
+  height: auto;
 }
 
 .slcn-home-hub__desktop-orb {
@@ -2021,7 +2007,7 @@
   justify-content: center;
   min-height: 1.8rem;
   padding: 0 0.75rem;
-  border: 1.5px solid currentColor;
+  border: 1px solid currentColor;
   border-radius: 999px;
   font-size: 0.65rem;
   font-weight: 800;
@@ -2064,7 +2050,7 @@
   align-items: center;
   justify-content: center;
   padding-bottom: 0.2rem;
-  border-bottom: 2px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
   font-size: 1.1rem;
   line-height: 1;
 }

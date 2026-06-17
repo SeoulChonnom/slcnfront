@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from '../../assets/img/SLCN.png';
 import { cn } from '../../lib/utils/cn';
 
 type MobileTopBarProps = {
@@ -26,7 +27,13 @@ export function MobileTopBar({
             ←
           </Link>
         ) : (
-          <span className='slcn-mobile-topbar__leading' aria-hidden='true' />
+          <span className='slcn-mobile-topbar__leading'>
+            <img
+              src={logo}
+              alt='Seoul Chonnom'
+              className='slcn-mobile-topbar__logo'
+            />
+          </span>
         )}
         <div className='slcn-mobile-topbar__title'>
           <p className='slcn-mobile-topbar__title-text display-hand'>{title}</p>

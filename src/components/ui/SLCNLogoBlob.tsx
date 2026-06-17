@@ -8,12 +8,8 @@ type SLCNLogoBlobProps = {
 
 export function SLCNLogoBlob({ className, size = 'md' }: SLCNLogoBlobProps) {
   return (
-    <span
-      aria-hidden='true'
-      className={cn('slcn-logo-blob display-hand', className)}
-      data-size={size}
-    >
-      <img src={logo} alt='SLCN' />
+    <span className={cn('slcn-logo-blob', className)} data-size={size}>
+      <img src={logo} alt='Seoul Chonnom' />
     </span>
   );
 }

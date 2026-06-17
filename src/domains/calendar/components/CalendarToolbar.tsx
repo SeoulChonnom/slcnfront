@@ -76,6 +76,11 @@ export function CalendarToolbar({
                 type='button'
                 className='slcn-calendar-toolbar__chip'
                 data-active={active}
+                style={
+                  active
+                    ? { backgroundColor: calendar.backgroundColor }
+                    : undefined
+                }
                 onClick={() => filters.onToggleCalendar(calendar.id)}
               >
                 <span

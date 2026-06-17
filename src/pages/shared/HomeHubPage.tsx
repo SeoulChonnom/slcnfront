@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
+import logo from '../../assets/img/SLCN.png';
 import { LinkButton } from '../../components/ui/Button';
 import { getButtonClassName } from '../../components/ui/button-class-name';
 import { Card } from '../../components/ui/Card';
@@ -166,14 +167,11 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
 
         <header className='slcn-home-hub__desktop-intro'>
           <div className='slcn-home-hub__desktop-mark'>
-            <span
-              className='slcn-home-hub__desktop-mini-logo display-hand'
-              aria-hidden='true'
-            >
-              SL
-              <br />
-              CN
-            </span>
+            <img
+              src={logo}
+              alt='Seoul Chonnom'
+              className='slcn-home-hub__desktop-mini-logo'
+            />
 
             <div className='slcn-home-hub__desktop-logo-wrap'>
               <div
@@ -184,22 +182,13 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 className='slcn-home-hub__desktop-orb slcn-home-hub__desktop-orb--left'
                 aria-hidden='true'
               />
-              <div
-                className='slcn-home-hub__desktop-logo display-hand'
-                aria-hidden='true'
-              >
-                <span>
-                  SL
-                  <br />
-                  CN
-                </span>
+              <div className='slcn-home-hub__desktop-logo'>
+                <img src={logo} alt='Seoul Chonnom' />
               </div>
             </div>
           </div>
 
-          <p className='slcn-home-hub__desktop-caption display-hand'>
-            © Seoul Chonnom.
-          </p>
+          <p className='slcn-home-hub__desktop-caption'>© Seoul Chonnom.</p>
           <p className='slcn-home-hub__desktop-subtitle'>
             서울 촌놈 나들이 기록 📷
           </p>
