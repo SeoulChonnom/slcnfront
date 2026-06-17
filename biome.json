@@ -5,6 +5,9 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "files": {
+    "includes": ["**", "!dist", "!build", "!node_modules"]
+  },
   "javascript": {
     "formatter": {
       "semicolons": "always",
