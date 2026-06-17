@@ -2,7 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 2px solid var(--color-border-strong);
+  border-bottom: 1px solid var(--color-divider-soft);
+  background: rgba(255, 248, 248, 0.85);
+  backdrop-filter: blur(12px);
 }
 
 .slcn-mobile-topbar__inner {
@@ -46,7 +48,9 @@
   bottom: 0;
   left: 0;
   z-index: 30;
-  border-top: 2px solid var(--color-border-strong);
+  border-top: 1px solid var(--color-divider-soft);
+  background: rgba(255, 248, 248, 0.85);
+  backdrop-filter: blur(12px);
 }
 
 .slcn-mobile-bottom-nav__list {
@@ -129,7 +133,7 @@
 
 .slcn-calendar-surface {
   padding: 0.75rem;
-  border-radius: 1.25rem;
+  border-radius: var(--radius-md);
 }
 
 .slcn-calendar-surface .fc .fc-col-header-cell-cushion,
