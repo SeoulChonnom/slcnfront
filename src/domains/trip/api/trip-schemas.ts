@@ -18,8 +18,14 @@ const tripDetailShape = {
   date: z.string(),
   firstMap: fileRefSchema,
   secondMap: fileRefSchema.nullable().default(null),
-  nextButtonText: z.string().optional().default(''),
-  previousButtonText: z.string().optional().default(''),
+  nextButtonText: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  previousButtonText: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
   driveUrl: z.string(),
 };
 

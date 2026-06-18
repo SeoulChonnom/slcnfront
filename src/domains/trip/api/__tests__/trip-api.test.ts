@@ -177,7 +177,7 @@ describe('trip-api', () => {
       'http://localhost:8080/api/trip/quiz/trip-1'
     );
     expect(fetchFn.mock.calls[3]?.[0]).toBe(
-      'http://localhost:8080/api/trip/quiz/check?arg0=trip-1&arg1=option-2'
+      'http://localhost:8080/api/trip/quiz/check?tripId=trip-1&optionId=option-2'
     );
     expect(fetchFn.mock.calls[4]?.[0]).toBe('http://localhost:8080/api/trip');
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
