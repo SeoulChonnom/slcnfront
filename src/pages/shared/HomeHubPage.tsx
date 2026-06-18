@@ -36,8 +36,6 @@ type MobileTile = {
 type DesktopPanel = {
   eyebrow: string;
   title: string;
-  description: string;
-  label: string;
   to: string;
   icon: string;
   kind: 'anniversary' | 'calendar' | 'outing' | 'shoes' | 'film' | 'new-log';
@@ -79,7 +77,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     {
       eyebrow: '신발',
       title: 'recom',
-      description: '서울 촌놈의 신발 추천 👟',
+      description: "서울 촌놈's 신발 추천 👟",
       to: shoesPath,
       tone: 'default' as const,
     },
@@ -87,36 +85,28 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
   const desktopPanels: DesktopPanel[] = [
     {
       eyebrow: 'D-day',
-      title: '만난지',
-      description: `${ddayDays} 일째`,
-      label: '만난지',
+      title: `만난지 ${ddayDays} 일째`,
       to: tripListPath,
       icon: '♥',
       kind: 'anniversary',
     },
     {
       eyebrow: 'Calendar',
-      title: 'calendar',
-      description: '서울촌놈 나들이 일정 🗓️',
-      label: 'calendar',
+      title: '서울촌놈 나들이 일정 🗓️',
       to: calendarPath,
       icon: '◫',
       kind: 'calendar',
     },
     {
       eyebrow: 'Map',
-      title: 'map',
-      description: '서울 촌놈 나들이 기록 📷',
-      label: 'map',
+      title: '서울 촌놈 나들이 기록 📷',
       to: tripListPath,
       icon: '◉',
       kind: 'outing',
     },
     {
       eyebrow: 'Shoes',
-      title: 'recom',
-      description: '서울 촌놈의 신발 추천~👟',
-      label: 'recom',
+      title: "서울 촌놈's 신발 추천~👟",
       to: shoesPath,
       icon: '♞',
       kind: 'shoes',
@@ -124,8 +114,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     {
       eyebrow: 'Film',
       title: "Choi's Film Art~🎞",
-      description: '',
-      label: "Choi's Film Art~🎞",
       to: filmArtUrl,
       icon: '▣',
       kind: 'film',
@@ -134,8 +122,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     {
       eyebrow: 'Trip',
       title: '새 나들이 기록하기',
-      description: '서울 촌놈 나들이는 계속 될 예정....🥳',
-      label: '새 나들이 기록하기',
       to: tripRegisterPath,
       icon: '+',
       kind: 'new-log',
@@ -146,49 +132,16 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
   if (!isMobile) {
     return (
       <section className='slcn-home-hub slcn-home-hub--desktop'>
-        <span
-          className='slcn-home-hub__decor slcn-home-hub__decor--top-left'
-          aria-hidden='true'
-        >
-          ◎
-        </span>
-        <span
-          className='slcn-home-hub__decor slcn-home-hub__decor--top-right'
-          aria-hidden='true'
-        >
-          ●
-        </span>
-        <span
-          className='slcn-home-hub__decor slcn-home-hub__decor--bottom-right'
-          aria-hidden='true'
-        >
-          ∿
-        </span>
-
         <header className='slcn-home-hub__desktop-intro'>
           <div className='slcn-home-hub__desktop-mark'>
-            <img
-              src={logo}
-              alt='Seoul Chonnom'
-              className='slcn-home-hub__desktop-mini-logo'
-            />
-
             <div className='slcn-home-hub__desktop-logo-wrap'>
-              <div
-                className='slcn-home-hub__desktop-orb slcn-home-hub__desktop-orb--top'
-                aria-hidden='true'
-              />
-              <div
-                className='slcn-home-hub__desktop-orb slcn-home-hub__desktop-orb--left'
-                aria-hidden='true'
-              />
               <div className='slcn-home-hub__desktop-logo'>
                 <img src={logo} alt='Seoul Chonnom' />
               </div>
             </div>
           </div>
 
-          <p className='slcn-home-hub__desktop-caption'>© Seoul Chonnom.</p>
+          <p className='slcn-home-hub__desktop-caption'>Seoul Chonnom</p>
           <p className='slcn-home-hub__desktop-subtitle'>
             서울 촌놈 나들이 기록 📷
           </p>
@@ -216,9 +169,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                   <h2 className='slcn-home-hub__desktop-panel-title display-hand'>
                     {panel.title}
                   </h2>
-                  <p className='slcn-home-hub__desktop-panel-description'>
-                    {panel.description}
-                  </p>
                   {panel.meta ? (
                     <span className='slcn-home-hub__desktop-panel-meta'>
                       {panel.meta}
@@ -251,10 +201,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                     </span>
                   ) : null}
                 </div>
-
-                <span className='slcn-home-hub__desktop-panel-label display-hand'>
-                  {panel.label}
-                </span>
               </>
             );
 
@@ -306,7 +252,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
         </div>
         <div className='slcn-home-hub__hero-stats'>
           <div className='slcn-home-hub__stat'>
-            <span className='slcn-home-hub__stat-label'>만난지</span>
+            <span className='slcn-home-hub__stat-label'>D-day</span>
             <strong className='slcn-home-hub__stat-value display-hand'>
               {ddayDays}
             </strong>

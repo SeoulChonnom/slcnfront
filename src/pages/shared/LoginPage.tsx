@@ -60,8 +60,7 @@ export function LoginPage({ device }: LoginPageProps) {
     <Card className='slcn-login-page' tone='default'>
       <div className='slcn-login-page__hero'>
         <div className='slcn-login-page__brand'>
-          <SLCNLogoBlob size='sm' />
-          <span className='slcn-login-page__brand-text'>SLCN</span>
+          <SLCNLogoBlob size='md' />
         </div>
       </div>
       <form className='slcn-login-page__form' onSubmit={handleSubmit}>

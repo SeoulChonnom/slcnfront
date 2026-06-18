@@ -19,7 +19,7 @@ function getDetailMobileTitle(pathname: string) {
   }
 
   if (pathname.startsWith('/mobile/')) {
-    return '서울 촌놈의 신발 추천 👟';
+    return "서울 촌놈's 신발 추천 👟";
   }
 
   return 'DETAIL';

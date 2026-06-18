@@ -49,7 +49,7 @@ export function ShoeDetailSection({
       {device === 'main' ? (
         <div className='slcn-shoe-detail-page__header'>
           <p className='slcn-shoe-detail-page__eyebrow'>
-            서울 촌놈의 신발 추천 👟
+            서울 촌놈\'s 신발 추천 👟
           </p>
           <LinkButton
             to={buildDeviceShoesCatalogPath(device)}

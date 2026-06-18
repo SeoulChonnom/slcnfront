@@ -98,7 +98,7 @@ describe('auth smoke', () => {
     await waitFor(() => {
       expect(restoreSession).toHaveBeenCalledTimes(1);
     });
-    expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
+    expect(await screen.findByText("서울 촌놈's 신발 추천 👟")).toBeTruthy();
     expect(screen.getByTestId('location-probe').textContent).toBe(
       '/main/shoesRecom'
     );

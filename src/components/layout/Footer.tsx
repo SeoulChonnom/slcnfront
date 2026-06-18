@@ -9,11 +9,9 @@ export function Footer({ className }: FooterProps) {
     <footer className={cn('slcn-footer pink-mesh', className)}>
       <div className='slcn-footer__inner'>
         <p className='slcn-footer__headline display-hand'>
-          Contact . Terms . Privacy
+          This is for Seoul Trip Records.
         </p>
-        <p className='slcn-footer__caption'>
-          © 2024 SLCN. Hand-crafted with love in Seoul.
-        </p>
+        <p className='slcn-footer__caption'>© 2024 SLCN.</p>
       </div>
     </footer>
   );

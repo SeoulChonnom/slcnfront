@@ -24,7 +24,7 @@
 }
 
 .pink-mesh {
-  background: var(--color-canvas);
+  background: linear-gradient(180deg, #fe9fc8 0%, #f793c2 100%);
 }
 
 .dot-grid {

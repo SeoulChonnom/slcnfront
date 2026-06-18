@@ -31,6 +31,8 @@ colors:
   on-primary: "#1B1B1B"
   on-dark: "#FFFFFF"
 
+  pink-mesh-end: "#F793C2"
+
 typography:
   font-stack-display: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   font-stack-body: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -427,6 +429,9 @@ The original project palette is retained. External blue accent systems are not i
 - **Seoul Pink — `{colors.primary}` `#FE9FC8`**  
   The primary action and selection color. Use for primary buttons, selected chips, progress indicators, small highlights, and occasional section emphasis.
 
+- **Pink Mesh — `linear-gradient(180deg, {colors.primary} 0%, {colors.pink-mesh-end} 100%)`**  
+  The signature background surface. Used on navigation shells (header, mobile nav), card accent sections, and surface-level backgrounds that need a warm tonal identity. Applied via the `.pink-mesh` utility class.
+
 - **Warm Paper — `{colors.canvas}` `#FFF8F8`**  
   The default page canvas. It replaces pure white as the dominant background and gives the diary a softer reading environment.
 
@@ -447,7 +452,7 @@ The original project palette is retained. External blue accent systems are not i
 4. Use **Ink** for typography and occasional full-width dark sections.
 5. Use surface shifts and whitespace before adding borders.
 6. Do not introduce additional brand colors without a functional requirement.
-7. Avoid decorative gradients.
+7. Use the **pink-mesh gradient** only for navigation shells and designated accent surfaces. Avoid other arbitrary decorative gradients.
 
 ### Contrast
 
