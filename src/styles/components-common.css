@@ -655,6 +655,12 @@
   flex-shrink: 0;
 }
 
+.slcn-shell-desktop {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .slcn-shell-public {
   min-height: 100vh;
 }
@@ -672,7 +678,11 @@
   max-width: 34rem;
 }
 
-.slcn-shell-desktop__main,
+.slcn-shell-desktop__main {
+  flex: 1;
+  width: 100%;
+}
+
 .slcn-shell-mobile__main,
 .slcn-shell-detail-mobile__main {
   width: 100%;
