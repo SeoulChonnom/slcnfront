@@ -74,7 +74,7 @@ describe('auth smoke', () => {
         '/main/login?redirect=%2Fmain%2Fmap'
       );
     });
-    expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: '로그인' })).toBeTruthy();
   });
 
   it('restores a session from refresh token before entering the protected route', async () => {

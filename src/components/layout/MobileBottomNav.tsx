@@ -1,89 +1,112 @@
 import { NavLink } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
 import { cn } from '../../lib/utils/cn';
-import { getPrimaryNavigationItems } from './navigation-items';
-
-type MobileNavItem = {
-  label: string;
-  to: string;
-  icon: string;
-  external?: boolean;
-  end?: boolean;
-};
+import { getMobileNavigationItems } from './navigation-items';
 
 type MobileBottomNavProps = {
-  items?: MobileNavItem[];
   className?: string;
   device?: DeviceType;
 };
 
-const iconByLabel: Record<string, string> = {
-  홈: '⌂',
-  나들이: '⌖',
-  달력: '☷',
-  신발: '⌁',
-  필름: '◫',
-};
+function NavIcon({ label }: { label: string }) {
+  if (label === '홈') {
+    return (
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.9'
+        aria-hidden='true'
+      >
+        <path d='M4 10.5L12 4l8 6.5' />
+        <path d='M6 9.5V20h12V9.5' />
+      </svg>
+    );
+  }
+  if (label === '기록') {
+    return (
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.9'
+        aria-hidden='true'
+      >
+        <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
+        <circle cx='12' cy='10' r='2.2' />
+      </svg>
+    );
+  }
+  if (label === '일정') {
+    return (
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.9'
+        aria-hidden='true'
+      >
+        <rect x='4' y='5' width='16' height='15' rx='2.5' />
+        <path d='M4 9h16M8 3v4M16 3v4' />
+      </svg>
+    );
+  }
+  if (label === '신발') {
+    return (
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.9'
+        aria-hidden='true'
+      >
+        <path d='M3 16h16a2 2 0 002-2c0-1-1-1.6-2.5-2.2L13 9l-2-3H6v8l-3 2z' />
+        <path d='M3 16v2h18' />
+      </svg>
+    );
+  }
+  return null;
+}
 
 export function MobileBottomNav({
-  items,
   className,
   device = 'mobile',
 }: MobileBottomNavProps) {
-  const navigationItems =
-    items ??
-    getPrimaryNavigationItems(device).map((item) => ({
-      ...item,
-      icon: iconByLabel[item.label] ?? '•',
-    }));
+  const navigationItems = getMobileNavigationItems(device);
 
   return (
     <nav
       aria-label='모바일 하단 내비게이션'
-      className={cn('slcn-mobile-bottom-nav pink-mesh', className)}
+      className={cn('slcn-mobile-bottom-nav', className)}
     >
       <ul className='slcn-mobile-bottom-nav__list'>
         {navigationItems.map((item) => (
           <li key={item.label}>
-            {item.external ? (
-              <a
-                href={item.to}
-                target='_blank'
-                rel='noreferrer'
-                className='slcn-mobile-bottom-nav__link'
-              >
-                <span
-                  aria-hidden='true'
-                  className='slcn-mobile-bottom-nav__icon'
-                >
-                  {item.icon}
-                </span>
-                <span className='slcn-mobile-bottom-nav__label'>
-                  {item.label}
-                </span>
-              </a>
-            ) : (
-              <NavLink
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  cn(
-                    'slcn-mobile-bottom-nav__link',
-                    isActive && 'slcn-mobile-bottom-nav__link--active'
-                  )
-                }
-              >
-                <span
-                  aria-hidden='true'
-                  className='slcn-mobile-bottom-nav__icon'
-                >
-                  {item.icon}
-                </span>
-                <span className='slcn-mobile-bottom-nav__label'>
-                  {item.label}
-                </span>
-              </NavLink>
-            )}
+            <NavLink
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                cn(
+                  'slcn-mobile-bottom-nav__link',
+                  isActive && 'slcn-mobile-bottom-nav__link--active'
+                )
+              }
+            >
+              <span className='slcn-mobile-bottom-nav__icon'>
+                <NavIcon label={item.label} />
+              </span>
+              <span className='slcn-mobile-bottom-nav__label'>
+                {item.label}
+              </span>
+            </NavLink>
           </li>
         ))}
       </ul>

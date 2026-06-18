@@ -18,7 +18,7 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
         <Card className='slcn-shoes-catalog-page__intro' tone='pink' blob>
           <p className='slcn-shoes-catalog-page__eyebrow'>SLCN Shoes</p>
           <h1 className='slcn-shoes-catalog-page__title display-hand'>
-            서울 촌놈\'s 신발 추천 👟
+            서울 촌놈's 신발 추천 👟
           </h1>
           <p className='slcn-shoes-catalog-page__description'>
             오래 걸어도 편한 신발들만 골랐습니다~ 🎶

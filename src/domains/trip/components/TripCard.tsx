@@ -1,6 +1,4 @@
 import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Skeleton } from '../../../components/ui/Skeleton';
 import type { TripListItem } from '../types';
 
 type TripCardProps = {
@@ -10,45 +8,71 @@ type TripCardProps = {
 };
 
 export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
-  const tags = [trip.displayDate, trip.type].filter(Boolean).slice(0, 2);
-
   return (
-    <Card className='slcn-trip-card' tone='default'>
-      <div className='slcn-trip-card__media'>
+    <div className='slcn-trip-card'>
+      <div className='slcn-trip-card__thumb slcn-stripe'>
         {logoObjectUrl ? (
           <img
             src={logoObjectUrl}
             alt={`${trip.name} 로고`}
-            className='slcn-trip-card__image'
+            className='slcn-trip-card__thumb-img'
           />
         ) : (
-          <Skeleton className='slcn-trip-card__skeleton' />
+          <svg
+            width='34'
+            height='34'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#D8A9BC'
+            strokeWidth='1.6'
+            aria-hidden='true'
+          >
+            <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
+            <circle cx='12' cy='10' r='2.4' />
+          </svg>
         )}
+        <span className='slcn-trip-card__lock-badge'>
+          <svg
+            width='9'
+            height='9'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#fff'
+            strokeWidth='2.5'
+            aria-hidden='true'
+          >
+            <rect x='5' y='11' width='14' height='9' rx='2' />
+            <path d='M8 11V8a4 4 0 018 0v3' />
+          </svg>
+          퀴즈
+        </span>
       </div>
       <div className='slcn-trip-card__body'>
         <div className='slcn-trip-card__meta'>
-          <p className='slcn-trip-card__date display-hand'>
-            {trip.displayDate}
-          </p>
-          <span className='slcn-trip-card__lock'>퀴즈</span>
+          <span className='slcn-trip-card__date'>{trip.displayDate}</span>
+          {trip.type ? (
+            <span className='slcn-trip-card__type-badge'>{trip.type}</span>
+          ) : null}
         </div>
-        <h3 className='slcn-trip-card__title display-hand'>{trip.name}</h3>
-        <p className='slcn-trip-card__caption'>
-          퀴즈를 풀고 나들이 지도를 확인해보세요.
-        </p>
-        <div className='slcn-trip-card__tags'>
-          {tags.map((tag) => (
-            <span key={tag} className='slcn-trip-card__tag'>
-              #{tag}
-            </span>
-          ))}
+        <h3 className='slcn-trip-card__title'>{trip.name}</h3>
+        <div className='slcn-trip-card__actions'>
+          <Button onClick={() => onOpenQuiz(trip)}>
+            <svg
+              width='15'
+              height='15'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2.2'
+              aria-hidden='true'
+            >
+              <rect x='5' y='11' width='14' height='9' rx='2' />
+              <path d='M8 11V8a4 4 0 018 0v3' />
+            </svg>
+            퀴즈 풀기
+          </Button>
         </div>
       </div>
-      <div className='slcn-trip-card__actions'>
-        <Button fullWidth onClick={() => onOpenQuiz(trip)}>
-          퀴즈 풀기
-        </Button>
-      </div>
-    </Card>
+    </div>
   );
 }

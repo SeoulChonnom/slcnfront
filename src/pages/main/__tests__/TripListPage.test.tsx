@@ -105,6 +105,8 @@ describe('TripListPage', () => {
       screen.getAllByRole('link', { name: '새 나들이 기록하기' }).length
     ).toBeTruthy();
     expect(screen.getByRole('button', { name: '퀴즈 풀기' })).toBeTruthy();
-    expect(screen.getByPlaceholderText('날짜나 나들이 이름')).toBeTruthy();
+    expect(
+      screen.getByPlaceholderText('날짜 · 나들이 이름 · 유형으로 검색')
+    ).toBeTruthy();
   });
 });

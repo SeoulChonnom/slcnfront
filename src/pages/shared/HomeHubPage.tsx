@@ -1,321 +1,290 @@
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
 import logo from '../../assets/img/SLCN.png';
-import { LinkButton } from '../../components/ui/Button';
-import { getButtonClassName } from '../../components/ui/button-class-name';
-import { Card } from '../../components/ui/Card';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceShoesCatalogPath,
   buildDeviceTripListPath,
-  buildDeviceTripRegisterPath,
 } from '../../lib/routing/route-builders';
-import { cn } from '../../lib/utils/cn';
 
 type HomeHubPageProps = {
   device: DeviceType;
 };
 
-function getDecorativeDotKeys(kind: DesktopPanel['kind'], dots: number) {
-  return Array.from(
-    { length: dots },
-    (_, dotIndex) => `${kind}-decorative-dot-${dotIndex + 1}`
-  );
+const FILM_URL = 'http://naver.me/52RjLNuT';
+const DDAY_START = new Date('2024-09-29T00:00:00+09:00');
+
+function getDdayCount() {
+  return Math.floor((Date.now() - DDAY_START.getTime()) / 86_400_000) + 1;
 }
-
-type MobileTile = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  to: string;
-  tone: 'default' | 'pink' | 'muted';
-  dashed?: boolean;
-  external?: boolean;
-};
-
-type DesktopPanel = {
-  eyebrow: string;
-  title: string;
-  to: string;
-  icon: string;
-  kind: 'anniversary' | 'calendar' | 'outing' | 'shoes' | 'film' | 'new-log';
-  meta?: string;
-  badge?: string;
-  dots?: number;
-  stars?: number;
-  dashed?: boolean;
-  external?: boolean;
-};
 
 export function HomeHubPage({ device }: HomeHubPageProps) {
   const tripListPath = buildDeviceTripListPath(device);
   const calendarPath = buildDeviceCalendarMonthPath(device);
   const shoesPath = buildDeviceShoesCatalogPath(device);
-  const tripRegisterPath = buildDeviceTripRegisterPath(device);
-  const filmArtUrl = 'http://naver.me/52RjLNuT';
-  const ddayDays =
-    Math.floor(
-      (Date.now() - new Date('2024-11-10T00:00:00+09:00').getTime()) /
-        86_400_000
-    ) + 1;
+  const ddayDays = getDdayCount();
   const isMobile = device === 'mobile';
-  const mobileTiles: MobileTile[] = [
-    {
-      eyebrow: '나들이',
-      title: 'map',
-      description: '서울 촌놈 나들이 기록 📷',
-      to: tripListPath,
-      tone: 'default' as const,
-    },
-    {
-      eyebrow: '일정',
-      title: 'calendar',
-      description: '서울촌놈 나들이 일정 🗓️',
-      to: calendarPath,
-      tone: 'pink' as const,
-    },
-    {
-      eyebrow: '신발',
-      title: 'recom',
-      description: "서울 촌놈's 신발 추천 👟",
-      to: shoesPath,
-      tone: 'default' as const,
-    },
-  ];
-  const desktopPanels: DesktopPanel[] = [
-    {
-      eyebrow: 'D-day',
-      title: `만난지 ${ddayDays} 일째`,
-      to: tripListPath,
-      icon: '♥',
-      kind: 'anniversary',
-    },
-    {
-      eyebrow: 'Calendar',
-      title: '서울촌놈 나들이 일정 🗓️',
-      to: calendarPath,
-      icon: '◫',
-      kind: 'calendar',
-    },
-    {
-      eyebrow: 'Map',
-      title: '서울 촌놈 나들이 기록 📷',
-      to: tripListPath,
-      icon: '◉',
-      kind: 'outing',
-    },
-    {
-      eyebrow: 'Shoes',
-      title: "서울 촌놈's 신발 추천~👟",
-      to: shoesPath,
-      icon: '♞',
-      kind: 'shoes',
-    },
-    {
-      eyebrow: 'Film',
-      title: "Choi's Film Art~🎞",
-      to: filmArtUrl,
-      icon: '▣',
-      kind: 'film',
-      external: true,
-    },
-    {
-      eyebrow: 'Trip',
-      title: '새 나들이 기록하기',
-      to: tripRegisterPath,
-      icon: '+',
-      kind: 'new-log',
-      dashed: true,
-    },
-  ];
 
   if (!isMobile) {
     return (
       <section className='slcn-home-hub slcn-home-hub--desktop'>
-        <header className='slcn-home-hub__desktop-intro'>
-          <div className='slcn-home-hub__desktop-mark'>
-            <div className='slcn-home-hub__desktop-logo-wrap'>
-              <div className='slcn-home-hub__desktop-logo'>
-                <img src={logo} alt='Seoul Chonnom' />
-              </div>
+        <div className='slcn-home-hub__desktop-header'>
+          <img src={logo} alt='SLCN' className='slcn-home-hub__desktop-logo' />
+          <div className='slcn-home-hub__desktop-headline'>
+            <h1 className='slcn-home-hub__desktop-title'>
+              서울 촌놈 나들이 기록
+            </h1>
+            <p className='slcn-home-hub__desktop-subtitle'>
+              사진과 지도로 남기는 조용한 서울 포토 저널.
+            </p>
+          </div>
+          <div className='slcn-home-hub__dday-badge'>
+            <span className='slcn-home-hub__dday-icon' aria-hidden='true'>
+              <svg
+                width='17'
+                height='17'
+                viewBox='0 0 24 24'
+                fill='#FE9FC8'
+                stroke='#FE9FC8'
+                strokeWidth='1.6'
+              >
+                <path d='M12 20s-7-4.6-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.4-7 10-7 10z' />
+              </svg>
+            </span>
+            <div className='slcn-home-hub__dday-text'>
+              <p className='slcn-home-hub__dday-label'>D-day</p>
+              <p className='slcn-home-hub__dday-value'>
+                만난 지 <strong>{ddayDays}</strong>일째
+              </p>
             </div>
           </div>
-
-          <p className='slcn-home-hub__desktop-caption'>Seoul Chonnom</p>
-          <p className='slcn-home-hub__desktop-subtitle'>
-            서울 촌놈 나들이 기록 📷
-          </p>
-        </header>
+        </div>
 
         <div className='slcn-home-hub__desktop-grid'>
-          {desktopPanels.map((panel) => {
-            const surfaceClassName = cn(
-              'slcn-home-hub__desktop-panel',
-              `slcn-home-hub__desktop-panel--${panel.kind}`,
-              panel.dashed && 'slcn-home-hub__desktop-panel--dashed'
-            );
-            const cardBody = (
-              <>
-                <div className={surfaceClassName}>
-                  <span
-                    className='slcn-home-hub__desktop-panel-icon display-hand'
-                    aria-hidden='true'
-                  >
-                    {panel.icon}
-                  </span>
-                  <p className='slcn-home-hub__desktop-panel-eyebrow'>
-                    {panel.eyebrow}
-                  </p>
-                  <h2 className='slcn-home-hub__desktop-panel-title display-hand'>
-                    {panel.title}
-                  </h2>
-                  {panel.meta ? (
-                    <span className='slcn-home-hub__desktop-panel-meta'>
-                      {panel.meta}
-                    </span>
-                  ) : null}
-                  {panel.badge ? (
-                    <span className='slcn-home-hub__desktop-panel-badge'>
-                      {panel.badge}
-                    </span>
-                  ) : null}
-                  {panel.dots ? (
-                    <span
-                      className='slcn-home-hub__desktop-panel-dots'
-                      aria-hidden='true'
-                    >
-                      {getDecorativeDotKeys(panel.kind, panel.dots).map(
-                        (dotKey) => (
-                          <span key={dotKey} />
-                        )
-                      )}
-                    </span>
-                  ) : null}
-                  {panel.stars ? (
-                    <span
-                      className='slcn-home-hub__desktop-panel-stars'
-                      aria-hidden='true'
-                    >
-                      {'★'.repeat(panel.stars - 1)}
-                      {'✦'}
-                    </span>
-                  ) : null}
-                </div>
-              </>
-            );
+          <Link to={tripListPath} className='slcn-home-hub__desktop-card'>
+            <div className='slcn-home-hub__card-icon-wrap'>
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#1B1B1B'
+                strokeWidth='1.8'
+              >
+                <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
+                <circle cx='12' cy='10' r='2.4' />
+              </svg>
+            </div>
+            <p className='slcn-home-hub__card-eyebrow'>Map</p>
+            <h3 className='slcn-home-hub__card-title'>나들이 기록</h3>
+            <p className='slcn-home-hub__card-desc'>
+              걸었던 길과 장소를 지도에 남겨요.
+            </p>
+          </Link>
 
-            return panel.external ? (
-              <a
-                key={panel.title}
-                href={panel.to}
-                target='_blank'
-                rel='noreferrer'
-                className='slcn-home-hub__desktop-link'
+          <Link to={calendarPath} className='slcn-home-hub__desktop-card'>
+            <div className='slcn-home-hub__card-icon-wrap'>
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#1B1B1B'
+                strokeWidth='1.8'
               >
-                {cardBody}
-              </a>
-            ) : (
-              <Link
-                key={panel.title}
-                to={panel.to}
-                className='slcn-home-hub__desktop-link'
+                <rect x='4' y='5' width='16' height='15' rx='2.5' />
+                <path d='M4 9h16M8 3v4M16 3v4' />
+              </svg>
+            </div>
+            <p className='slcn-home-hub__card-eyebrow'>Calendar</p>
+            <h3 className='slcn-home-hub__card-title'>나들이 일정</h3>
+            <p className='slcn-home-hub__card-desc'>
+              다가오는 나들이를 미리 계획해요.
+            </p>
+          </Link>
+
+          <Link to={shoesPath} className='slcn-home-hub__desktop-card'>
+            <div className='slcn-home-hub__card-icon-wrap'>
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#1B1B1B'
+                strokeWidth='1.8'
               >
-                {cardBody}
-              </Link>
-            );
-          })}
+                <path d='M3 16h16a2 2 0 002-2c0-1-1-1.6-2.5-2.2L13 9l-2-3H6v8l-3 2z' />
+                <path d='M3 16v2h18' />
+              </svg>
+            </div>
+            <p className='slcn-home-hub__card-eyebrow'>Shoes</p>
+            <h3 className='slcn-home-hub__card-title'>신발 추천</h3>
+            <p className='slcn-home-hub__card-desc'>
+              오래 걷기 좋은 신발 아카이브.
+            </p>
+          </Link>
+
+          <a
+            href={FILM_URL}
+            target='_blank'
+            rel='noreferrer'
+            className='slcn-home-hub__desktop-card'
+          >
+            <div className='slcn-home-hub__card-header-row'>
+              <div className='slcn-home-hub__card-icon-wrap'>
+                <svg
+                  width='20'
+                  height='20'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='#1B1B1B'
+                  strokeWidth='1.8'
+                >
+                  <rect x='3' y='4' width='18' height='16' rx='2.5' />
+                  <path d='M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4' />
+                </svg>
+              </div>
+              <svg
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#9B8C92'
+                strokeWidth='2'
+              >
+                <path d='M7 17L17 7M9 7h8v8' />
+              </svg>
+            </div>
+            <p className='slcn-home-hub__card-eyebrow'>Film</p>
+            <h3 className='slcn-home-hub__card-title'>Choi&apos;s Film Art</h3>
+            <p className='slcn-home-hub__card-desc'>필름 작업 외부 링크</p>
+          </a>
         </div>
       </section>
     );
   }
 
   return (
-    <section className='slcn-home-hub'>
-      <Card
-        className='slcn-home-hub__hero'
-        tone='pink'
-        blob={!isMobile}
-        data-device={device}
-      >
-        <div className='slcn-home-hub__hero-copy'>
-          <p className='slcn-home-hub__eyebrow'>
-            {isMobile ? 'SLCN Mobile' : 'Seoul Chonnom'}
-          </p>
-          <h1 className='slcn-home-hub__title display-hand'>
-            {isMobile ? '서울 촌놈 나들이 기록 📷' : '서울 촌놈 나들이 기록'}
-          </h1>
-          <p className='slcn-home-hub__description'>
-            {isMobile
-              ? '서울 촌놈 나들이는 계속 될 예정....🥳'
-              : '대시보드에서 일정, 나들이, 신발 추천, 필름 기록을 한 번에 이어봅니다.'}
-          </p>
-        </div>
-        <div className='slcn-home-hub__hero-stats'>
-          <div className='slcn-home-hub__stat'>
-            <span className='slcn-home-hub__stat-label'>D-day</span>
-            <strong className='slcn-home-hub__stat-value display-hand'>
-              {ddayDays}
-            </strong>
+    <section className='slcn-home-hub slcn-home-hub--mobile'>
+      <div className='slcn-home-hub__mobile-hero'>
+        <p className='slcn-home-hub__mobile-eyebrow'>Seoul Chonnom</p>
+        <h1 className='slcn-home-hub__mobile-title'>서울 촌놈 나들이 기록</h1>
+        <p className='slcn-home-hub__mobile-subtitle'>
+          사진과 지도로 남기는 조용한 서울 포토 저널.
+        </p>
+        <div className='slcn-home-hub__mobile-stats'>
+          <div className='slcn-home-hub__mobile-stat'>
+            <p className='slcn-home-hub__mobile-stat-label'>D-day</p>
+            <p className='slcn-home-hub__mobile-stat-value'>{ddayDays}일째</p>
           </div>
-          <div className='slcn-home-hub__stat'>
-            <span className='slcn-home-hub__stat-label'>Film</span>
-            <strong className='slcn-home-hub__stat-value display-hand'>
-              Art~🎞
-            </strong>
-          </div>
-        </div>
-        {isMobile ? (
-          <div className='slcn-home-hub__hero-actions'>
-            <a
-              href={filmArtUrl}
-              target='_blank'
-              rel='noreferrer'
-              className={cn(
-                getButtonClassName({ variant: 'secondary', size: 'md' })
-              )}
-            >
-              Choi&apos;s Film Art~🎞
-            </a>
-          </div>
-        ) : null}
-      </Card>
-
-      <div className='slcn-home-hub__grid'>
-        {mobileTiles.map((tile) => (
-          <Card
-            key={tile.title}
-            className='slcn-home-hub__tile'
-            tone={tile.tone}
-            data-dashed={tile.dashed}
+          <a
+            href={FILM_URL}
+            target='_blank'
+            rel='noreferrer'
+            className='slcn-home-hub__mobile-stat'
           >
-            <p className='slcn-home-hub__tile-eyebrow'>{tile.eyebrow}</p>
-            <h2 className='slcn-home-hub__tile-title display-hand'>
-              {tile.title}
-            </h2>
-            <p className='slcn-home-hub__tile-description'>
-              {tile.description}
+            <p className='slcn-home-hub__mobile-stat-label'>Film ↗</p>
+            <p className='slcn-home-hub__mobile-stat-value'>
+              Choi&apos;s Film Art
             </p>
-            <div className='slcn-home-hub__tile-actions'>
-              {tile.external ? (
-                <a
-                  href={tile.to}
-                  target='_blank'
-                  rel='noreferrer'
-                  className={cn(
-                    getButtonClassName({ variant: 'secondary', size: 'md' })
-                  )}
-                >
-                  열기
-                </a>
-              ) : (
-                <LinkButton to={tile.to}>
-                  {isMobile ? '바로 이동' : 'Open'}
-                </LinkButton>
-              )}
-            </div>
-          </Card>
-        ))}
+          </a>
+        </div>
       </div>
+
+      <Link to={tripListPath} className='slcn-home-hub__mobile-tile'>
+        <div className='slcn-home-hub__mobile-tile-icon'>
+          <svg
+            width='22'
+            height='22'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#1B1B1B'
+            strokeWidth='1.8'
+          >
+            <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
+            <circle cx='12' cy='10' r='2.4' />
+          </svg>
+        </div>
+        <div className='slcn-home-hub__mobile-tile-body'>
+          <p className='slcn-home-hub__mobile-tile-eyebrow'>Map</p>
+          <h3 className='slcn-home-hub__mobile-tile-title'>나들이 기록</h3>
+          <p className='slcn-home-hub__mobile-tile-desc'>걸었던 길과 장소</p>
+        </div>
+        <svg
+          width='18'
+          height='18'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C9B9BF'
+          strokeWidth='2'
+        >
+          <path d='M9 6l6 6-6 6' />
+        </svg>
+      </Link>
+
+      <Link to={calendarPath} className='slcn-home-hub__mobile-tile'>
+        <div className='slcn-home-hub__mobile-tile-icon'>
+          <svg
+            width='22'
+            height='22'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#1B1B1B'
+            strokeWidth='1.8'
+          >
+            <rect x='4' y='5' width='16' height='15' rx='2.5' />
+            <path d='M4 9h16M8 3v4M16 3v4' />
+          </svg>
+        </div>
+        <div className='slcn-home-hub__mobile-tile-body'>
+          <p className='slcn-home-hub__mobile-tile-eyebrow'>Calendar</p>
+          <h3 className='slcn-home-hub__mobile-tile-title'>나들이 일정</h3>
+          <p className='slcn-home-hub__mobile-tile-desc'>
+            다가오는 나들이 계획
+          </p>
+        </div>
+        <svg
+          width='18'
+          height='18'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C9B9BF'
+          strokeWidth='2'
+        >
+          <path d='M9 6l6 6-6 6' />
+        </svg>
+      </Link>
+
+      <Link to={shoesPath} className='slcn-home-hub__mobile-tile'>
+        <div className='slcn-home-hub__mobile-tile-icon'>
+          <svg
+            width='22'
+            height='22'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#1B1B1B'
+            strokeWidth='1.8'
+          >
+            <path d='M3 16h16a2 2 0 002-2c0-1-1-1.6-2.5-2.2L13 9l-2-3H6v8l-3 2z' />
+            <path d='M3 16v2h18' />
+          </svg>
+        </div>
+        <div className='slcn-home-hub__mobile-tile-body'>
+          <p className='slcn-home-hub__mobile-tile-eyebrow'>Shoes</p>
+          <h3 className='slcn-home-hub__mobile-tile-title'>신발 추천</h3>
+          <p className='slcn-home-hub__mobile-tile-desc'>오래 걷기 좋은 신발</p>
+        </div>
+        <svg
+          width='18'
+          height='18'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C9B9BF'
+          strokeWidth='2'
+        >
+          <path d='M9 6l6 6-6 6' />
+        </svg>
+      </Link>
     </section>
   );
 }

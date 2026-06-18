@@ -18,7 +18,7 @@ describe('shell components', () => {
 
     expect(screen.getByText('desktop-content')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'SLCN 홈으로 이동' })).toBeTruthy();
-    expect(screen.getByText('Contact . Terms . Privacy')).toBeTruthy();
+    expect(screen.getByText('© 2024 SLCN.')).toBeTruthy();
   });
 
   it('renders the mobile shell with top bar and bottom navigation', () => {

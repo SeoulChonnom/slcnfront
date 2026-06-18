@@ -68,7 +68,7 @@ export function LoginPage({ device }: LoginPageProps) {
           ref={userNameInputRef}
           name='userName'
           label='아이디'
-          placeholder='Enter your id'
+          placeholder='아이디를 입력해 주세요'
           autoComplete='username'
           value={userName}
           onChange={(event) => setUserName(event.target.value)}
@@ -80,7 +80,18 @@ export function LoginPage({ device }: LoginPageProps) {
               aria-label='아이디 입력값 지우기'
               disabled={!userName}
             >
-              <span aria-hidden='true'>✕</span>
+              <svg
+                width='14'
+                height='14'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2.4'
+                strokeLinecap='round'
+                aria-hidden='true'
+              >
+                <path d='M6 6l12 12M18 6L6 18' />
+              </svg>
             </button>
           }
           required
@@ -90,7 +101,7 @@ export function LoginPage({ device }: LoginPageProps) {
           name='password'
           type='password'
           label='비밀번호'
-          placeholder='Enter your password'
+          placeholder='비밀번호를 입력해 주세요'
           autoComplete='current-password'
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -102,19 +113,30 @@ export function LoginPage({ device }: LoginPageProps) {
               aria-label='비밀번호 입력값 지우기'
               disabled={!password}
             >
-              <span aria-hidden='true'>✕</span>
+              <svg
+                width='14'
+                height='14'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2.4'
+                strokeLinecap='round'
+                aria-hidden='true'
+              >
+                <path d='M6 6l12 12M18 6L6 18' />
+              </svg>
             </button>
           }
           required
         />
         <div className='slcn-login-page__actions'>
           <Button type='submit' fullWidth loading={loginMutation.isPending}>
-            Login
+            로그인
           </Button>
         </div>
         {loginMutation.error ? (
           <p className='slcn-login-page__error' role='alert'>
-            {loginMutation.error.message}
+            아이디 또는 비밀번호를 다시 확인해 주세요.
           </p>
         ) : null}
       </form>
