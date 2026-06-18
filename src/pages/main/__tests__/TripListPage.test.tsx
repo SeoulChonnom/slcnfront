@@ -12,7 +12,7 @@ vi.mock('../../../domains/trip/hooks/useTripList', () => ({
 
 vi.mock('../../../domains/trip/hooks/useTripAssetUrls', () => ({
   useTripAssetUrls: () => ({
-    '/logo.png': 'blob:logo',
+    'logo/logo.png': 'blob:logo',
   }),
 }));
 
@@ -88,7 +88,7 @@ describe('TripListPage', () => {
           type: 'year-end',
           name: '연말 나들이',
           displayDate: '2099.12.31',
-          logoPath: '/logo.png',
+          logo: { type: 'logo', filename: 'logo.png' },
         },
       ],
       isPending: false,

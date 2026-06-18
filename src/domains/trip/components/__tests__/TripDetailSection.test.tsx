@@ -1,11 +1,12 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
+import type { FileRef } from '../../types';
 import { TripDetailSection } from '../TripDetailSection';
 
 vi.mock('../../hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: (path: string | undefined) => ({
-    objectUrl: path ? `blob:${path}` : null,
+  useTripAssetUrl: (ref: FileRef | null | undefined) => ({
+    objectUrl: ref ? `blob:${ref.filename}` : null,
     isPending: false,
   }),
 }));
@@ -16,8 +17,8 @@ describe('TripDetailSection', () => {
       <TripDetailSection
         tripDetail={{
           date: '20991231',
-          firstMapPath: '/map1.png',
-          secondMapPath: '',
+          firstMap: { type: 'map', filename: 'map1.png' },
+          secondMap: null,
           nextButtonText: '',
           previousButtonText: '',
           driveUrl: 'https://drive.google.com/x',
@@ -36,8 +37,8 @@ describe('TripDetailSection', () => {
       <TripDetailSection
         tripDetail={{
           date: '20991231',
-          firstMapPath: '/map1.png',
-          secondMapPath: '/map2.png',
+          firstMap: { type: 'map', filename: 'map1.png' },
+          secondMap: { type: 'map', filename: 'map2.png' },
           nextButtonText: '1차 경로',
           previousButtonText: '2차 경로',
           driveUrl: 'https://drive.google.com/x',
@@ -53,7 +54,7 @@ describe('TripDetailSection', () => {
 
     expect(
       screen.getByRole('img', { name: '나들이 지도' }).getAttribute('src')
-    ).toBe('blob:/map2.png');
+    ).toBe('blob:map2.png');
     expect(openSpy).toHaveBeenCalledWith(
       'https://drive.google.com/x',
       '_blank',

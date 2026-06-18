@@ -1,12 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tripFilesApi } from '../../api/trip-files-api';
+import type { FileRef } from '../../types';
 import { useTripAssetUrl } from '../useTripAssetUrl';
 
 vi.mock('../../api/trip-files-api', () => ({
   tripFilesApi: {
-    downloadTripFile: vi.fn(async (path: string) => {
-      return new File([path], `${path.replaceAll('/', '_')}.png`, {
+    downloadTripFile: vi.fn(async (ref: FileRef) => {
+      return new File([ref.filename], `${ref.filename}.png`, {
         type: 'image/png',
       });
     }),
@@ -27,23 +28,24 @@ describe('useTripAssetUrl', () => {
 
   it('loads a single asset and cleans up its object url', async () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
-    const { result, unmount } = renderHook(() => useTripAssetUrl('/map1.png'));
+    const ref: FileRef = { type: 'map', filename: 'map1.png' };
+    const { result, unmount } = renderHook(() => useTripAssetUrl(ref));
 
     expect(result.current.isPending).toBe(true);
 
     await waitFor(() => {
-      expect(result.current.objectUrl).toBe('blob:_map1.png.png');
+      expect(result.current.objectUrl).toBe('blob:map1.png.png');
       expect(result.current.isPending).toBe(false);
     });
 
-    expect(downloadTripFile).toHaveBeenCalledWith('/map1.png');
+    expect(downloadTripFile).toHaveBeenCalledWith(ref);
 
     unmount();
 
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:_map1.png.png');
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:map1.png.png');
   });
 
-  it('stays idle when no path is provided', () => {
+  it('stays idle when no ref is provided', () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
     const { result } = renderHook(() => useTripAssetUrl(null));
 

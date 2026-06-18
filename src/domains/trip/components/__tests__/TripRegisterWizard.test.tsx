@@ -136,13 +136,13 @@ describe('TripRegisterWizard', () => {
 
   it('uploads assets before posting the trip json payload', async () => {
     uploadTripFileMock
-      .mockResolvedValueOnce('/uploads/logo.png')
-      .mockResolvedValueOnce('/uploads/map1.png')
-      .mockResolvedValueOnce('/uploads/map2.png');
+      .mockResolvedValueOnce({ type: 'logo', filename: 'logo.png' })
+      .mockResolvedValueOnce({ type: 'map', filename: 'map1.png' })
+      .mockResolvedValueOnce({ type: 'map', filename: 'map2.png' });
     registerTripMock.mockResolvedValue({
       date: '2099-12-31',
-      firstMapPath: '/uploads/map1.png',
-      secondMapPath: '/uploads/map2.png',
+      firstMap: { type: 'map', filename: 'map1.png' },
+      secondMap: { type: 'map', filename: 'map2.png' },
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -174,9 +174,9 @@ describe('TripRegisterWizard', () => {
       date: '2099-12-31',
       type: 'A',
       name: '연말 나들이',
-      logo: '/uploads/logo.png',
-      firstMap: '/uploads/map1.png',
-      secondMap: '/uploads/map2.png',
+      logo: { type: 'logo', filename: 'logo.png' },
+      firstMap: { type: 'map', filename: 'map1.png' },
+      secondMap: { type: 'map', filename: 'map2.png' },
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -219,8 +219,8 @@ describe('TripRegisterWizard', () => {
 
   it('surfaces /trip failures after uploads without fallback or cleanup', async () => {
     uploadTripFileMock
-      .mockResolvedValueOnce('/uploads/logo.png')
-      .mockResolvedValueOnce('/uploads/map1.png');
+      .mockResolvedValueOnce({ type: 'logo', filename: 'logo.png' })
+      .mockResolvedValueOnce({ type: 'map', filename: 'map1.png' });
     registerTripMock.mockRejectedValueOnce(new Error('trip create failed'));
 
     const { user, container } = renderWithProviders(

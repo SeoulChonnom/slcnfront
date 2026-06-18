@@ -15,6 +15,7 @@ import { useAuthStore } from '../../auth/store/auth-store';
 import { useTripAssetUrls } from '../hooks/useTripAssetUrls';
 import { useTripList } from '../hooks/useTripList';
 import { useTripQuiz } from '../hooks/useTripQuiz';
+import { fileRefKey } from '../types';
 import { TripCard } from './TripCard';
 import { TripQuizModal } from './TripQuizModal';
 
@@ -33,9 +34,7 @@ export function TripListSection({ device }: TripListSectionProps) {
   const { data, isPending, isError, refetch } = useTripList();
   const quiz = useTripQuiz();
   const [query, setQuery] = useState('');
-  const logoObjectUrls = useTripAssetUrls(
-    data?.map((trip) => trip.logoPath) ?? []
-  );
+  const logoObjectUrls = useTripAssetUrls(data?.map((trip) => trip.logo) ?? []);
   const isAdmin = useAuthStore((state) =>
     state.userInfo?.roleList.includes('admin')
   );
@@ -147,7 +146,7 @@ export function TripListSection({ device }: TripListSectionProps) {
             <TripCard
               key={trip.id || trip.date}
               trip={trip}
-              logoObjectUrl={logoObjectUrls[trip.logoPath] ?? null}
+              logoObjectUrl={logoObjectUrls[fileRefKey(trip.logo)] ?? null}
               onOpenQuiz={(nextTrip) => {
                 void quiz.openQuiz(nextTrip);
               }}

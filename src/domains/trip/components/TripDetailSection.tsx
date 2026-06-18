@@ -14,9 +14,9 @@ type TripDetailSectionProps = {
 
 export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
   const [activeMap, setActiveMap] = useState<'map1' | 'map2'>('map1');
-  const map1Asset = useTripAssetUrl(tripDetail.firstMapPath);
-  const map2Asset = useTripAssetUrl(tripDetail.secondMapPath);
-  const hasSecondMap = Boolean(tripDetail.secondMapPath);
+  const map1Asset = useTripAssetUrl(tripDetail.firstMap);
+  const map2Asset = useTripAssetUrl(tripDetail.secondMap);
+  const hasSecondMap = Boolean(tripDetail.secondMap);
   const activeMapUrl =
     activeMap === 'map1' ? map1Asset.objectUrl : map2Asset.objectUrl;
 

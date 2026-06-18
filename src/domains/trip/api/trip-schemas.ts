@@ -1,18 +1,23 @@
 import { z } from 'zod';
 import { createInvalidResponseError } from '../../../lib/api/errors';
 
+const fileRefSchema = z.object({
+  type: z.string(),
+  filename: z.string(),
+});
+
 const tripListItemSchema = z.object({
   id: z.string(),
   date: z.string(),
   type: z.string(),
   name: z.string(),
-  logo: z.string(),
+  logo: fileRefSchema,
 });
 
 const tripDetailShape = {
   date: z.string(),
-  firstMap: z.string(),
-  secondMap: z.string().optional().default(''),
+  firstMap: fileRefSchema,
+  secondMap: fileRefSchema.nullable().default(null),
   nextButtonText: z.string().optional().default(''),
   previousButtonText: z.string().optional().default(''),
   driveUrl: z.string(),
