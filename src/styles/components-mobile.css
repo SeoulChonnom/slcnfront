@@ -34,6 +34,20 @@
   color: var(--color-ink);
 }
 
+.slcn-mobile-topbar__avatar {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #ffe8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #c58ea3;
+}
+
 .slcn-mobile-topbar__logo {
   display: block;
   height: 1.75rem;
@@ -48,8 +62,8 @@
 
 .slcn-mobile-topbar__title-text {
   overflow: hidden;
-  font-size: 1.625rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;

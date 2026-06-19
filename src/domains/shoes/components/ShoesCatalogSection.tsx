@@ -21,7 +21,7 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
             서울 촌놈's 신발 추천
           </h1>
           <p className='slcn-shoes-catalog-page__description'>
-            오래 걷기 좋은 신발들만 골랐어요. 클릭하면 상세 정보를 볼 수 있어요.
+            오래 걸어도 편한 신발들만 골랐어요. 클릭하면 상세 정보를 볼 수 있어요.
           </p>
         </Card>
       ) : null}

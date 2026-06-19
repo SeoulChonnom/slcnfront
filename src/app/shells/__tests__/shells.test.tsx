@@ -32,7 +32,7 @@ describe('shell components', () => {
     );
 
     expect(screen.getByText('mobile-content')).toBeTruthy();
-    expect(screen.getByText('서울 촌놈 나들이 기록')).toBeTruthy();
+    expect(screen.getByText('서울 촌놈')).toBeTruthy();
     expect(
       screen.getByRole('navigation', { name: '모바일 하단 내비게이션' })
     ).toBeTruthy();

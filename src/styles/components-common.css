@@ -702,10 +702,13 @@
 .slcn-login-page {
   position: relative;
   overflow: hidden;
-  max-width: 26rem;
+  max-width: 440px;
   margin: 0 auto;
-  padding: 2rem 1.75rem;
-  background: rgb(255 255 255 / 94%);
+  padding: 2.375rem 1.875rem;
+  background: #fff;
+  border-radius: 24px;
+  border-color: #efe0e5;
+  box-shadow: 0 14px 44px rgba(27, 27, 27, 0.07);
 }
 
 .slcn-login-page::after {
@@ -719,6 +722,12 @@
   justify-items: center;
   gap: 0.875rem;
   text-align: center;
+}
+
+.slcn-login-page__logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }
 
 .slcn-login-page__brand {
@@ -739,11 +748,12 @@
 }
 
 .slcn-login-page__welcome {
-  margin: 0;
+  margin: 0 0 0.5rem;
   font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  color: var(--color-ink-soft);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b8c92;
 }
 
 .slcn-route-page__meta {
@@ -780,6 +790,18 @@
 .slcn-login-page__form {
   display: grid;
   gap: 1rem;
+}
+
+.slcn-login-page .slcn-field__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 0.4375rem;
+}
+
+.slcn-login-page .slcn-field__label span[aria-hidden] {
+  color: #fe9fc8;
 }
 
 .slcn-login-page .slcn-field__control {
@@ -829,10 +851,12 @@
 }
 
 .slcn-login-page__error {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
   margin: 0;
-  color: var(--color-error);
-  font-size: 0.875rem;
-  font-weight: 600;
+  color: #d64545;
+  font-size: 0.8125rem;
 }
 
 .slcn-login-page__links {
