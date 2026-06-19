@@ -39,6 +39,17 @@ Tests use `Vitest`, `@testing-library/react`, `jsdom`, and `msw`. Global setup l
 
 Name tests `*.test.ts` or `*.test.tsx`. Place feature tests next to the code they cover, for example `src/app/router/__tests__/guards.test.tsx`. Run `pnpm test` before opening a PR, and add or update regression coverage when routing, auth bootstrap, or API behavior changes.
 
+## Playwright Capture Guidelines
+
+Most app routes under `/main/*` and `/mobile/*` are protected by the router auth guard. If Playwright opens a protected route without an authenticated session, the app redirects to the matching login route (`/main/login` or `/mobile/login`) with a `redirect` query. When taking screenshots or inspecting UI with Playwright, do not treat a login page capture as the target page unless the login page is the explicit subject.
+
+Before capturing protected pages, sign in through the UI using the development server account:
+
+- ID: `string`
+- Password: `string`
+
+After submitting login, wait for the redirect target or expected protected route to render before taking screenshots. For desktop captures, use `/main/...` routes; for mobile captures, use `/mobile/...` routes and a mobile-sized viewport.
+
 ## Commit & Pull Request Guidelines
 
 Recent history uses short conventional messages such as `feat: ...`, `fix: ...`, and `chore: ...`. Keep that format, use the imperative mood, and scope each commit to one logical change.
