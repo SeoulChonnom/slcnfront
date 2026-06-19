@@ -29,7 +29,7 @@ describe('TripQuizModal', () => {
       />
     );
 
-    const firstAnswerButton = screen.getByRole('button', { name: '1. 보기 1' });
+    const firstAnswerButton = screen.getByRole('button', { name: '보기 1' });
 
     await waitFor(() => {
       expect(document.activeElement).toBe(firstAnswerButton);

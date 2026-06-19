@@ -72,7 +72,13 @@ export function TripQuizModal({
               autoFocus={index === 0}
               onClick={() => onAnswer(answer.id)}
             >
-              {index + 1}. {answer.text}
+              <span
+                className='slcn-trip-quiz-modal__option-key'
+                aria-hidden='true'
+              >
+                {String.fromCharCode(65 + index)}
+              </span>
+              {answer.text}
             </Button>
           ))}
         </div>

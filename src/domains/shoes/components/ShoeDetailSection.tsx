@@ -49,7 +49,7 @@ export function ShoeDetailSection({
       {device === 'main' ? (
         <div className='slcn-shoe-detail-page__header'>
           <p className='slcn-shoe-detail-page__eyebrow'>
-            서울 촌놈\'s 신발 추천 👟
+            서울 촌놈's 신발 추천
           </p>
           <LinkButton
             to={buildDeviceShoesCatalogPath(device)}
@@ -61,9 +61,20 @@ export function ShoeDetailSection({
         </div>
       ) : null}
 
-      <Card className='slcn-shoe-detail-page__warning' tone='muted'>
-        사진을 클릭하면 링크로 이동합니다
-      </Card>
+      <div className='slcn-shoe-detail-page__warning'>
+        <svg
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C58EA3'
+          strokeWidth='2'
+          aria-hidden='true'
+        >
+          <path d='M7 17L17 7M9 7h8v8' />
+        </svg>
+        <span>사진을 클릭하면 구매 링크로 이동해요.</span>
+      </div>
 
       <ShoeDetailHero brand={brand} shoe={shoe} />
       <ShoeVideoPanel shoe={shoe} />

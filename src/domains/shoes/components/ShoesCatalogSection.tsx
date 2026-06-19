@@ -17,15 +17,11 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
       {showIntro ? (
         <Card className='slcn-shoes-catalog-page__intro' tone='pink' blob>
           <p className='slcn-shoes-catalog-page__eyebrow'>SLCN Shoes</p>
-          <h1 className='slcn-shoes-catalog-page__title display-hand'>
-            서울 촌놈's 신발 추천 👟
+          <h1 className='slcn-shoes-catalog-page__title'>
+            서울 촌놈's 신발 추천
           </h1>
           <p className='slcn-shoes-catalog-page__description'>
-            오래 걸어도 편한 신발들만 골랐습니다~ 🎶
-            <br />
-            서울 촌놈 취향 200% 첨가되어있으니 유의~ 😏
-            <br />
-            클릭하면 더욱 상세한 정보를 확인 가능~!
+            오래 걷기 좋은 신발들만 골랐어요. 클릭하면 상세 정보를 볼 수 있어요.
           </p>
         </Card>
       ) : null}
@@ -59,13 +55,25 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
       ))}
 
       {showIntro ? (
-        <Card className='slcn-shoes-catalog-page__warning' tone='muted'>
-          전체 신발 가격은 정가를 기준으로 작성하였습니다..
-          <br />
-          더욱 저렴한 가격은 다른 사이트에서 구매하시는 것을 추천드립니다~
-          <br />
-          단. 가품이 많아 유의해서 구매 필수!
-        </Card>
+        <div className='slcn-shoes-catalog-page__warning'>
+          <svg
+            width='20'
+            height='20'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#F2A93B'
+            strokeWidth='2'
+            className='slcn-shoes-catalog-page__warning-icon'
+            aria-hidden='true'
+          >
+            <path d='M12 9v4M12 16.5v.5' />
+            <path d='M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z' />
+          </svg>
+          <p className='slcn-shoes-catalog-page__warning-text'>
+            모든 신발 가격은 정가 기준이에요. 더 저렴한 다른 사이트에서 구매하는
+            것을 추천해요. 단, 가품이 많으니 유의해서 구매해 주세요!
+          </p>
+        </div>
       ) : null}
     </section>
   );

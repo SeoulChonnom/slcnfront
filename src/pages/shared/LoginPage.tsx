@@ -62,6 +62,7 @@ export function LoginPage({ device }: LoginPageProps) {
         <div className='slcn-login-page__brand'>
           <SLCNLogoBlob size='md' />
         </div>
+        <p className='slcn-login-page__welcome'>Seoul Chonnom</p>
       </div>
       <form className='slcn-login-page__form' onSubmit={handleSubmit}>
         <TextField

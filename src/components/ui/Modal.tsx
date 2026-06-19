@@ -182,9 +182,6 @@ export function Modal({
         >
           ✕
         </button>
-        <div className='slcn-modal__sticker'>
-          <span aria-hidden='true'>⌘</span>
-        </div>
         <div className='slcn-modal__headline'>
           <div className='slcn-modal__title-wrap'>
             <h2 id={titleId} className='slcn-modal__title display-hand'>

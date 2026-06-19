@@ -1069,6 +1069,20 @@
   gap: 0.75rem;
 }
 
+.slcn-trip-quiz-modal__option-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-ink-muted);
+  flex: none;
+}
+
 .slcn-trip-detail-section__map-card,
 .slcn-trip-detail-section__drive-card,
 .slcn-trip-register-wizard__card {
@@ -1104,18 +1118,43 @@
 .slcn-trip-register-wizard__step-indicator span {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5625rem;
   min-height: 2rem;
-  padding: 0 0.875rem;
-  border: 1px solid var(--color-hairline);
+  padding: 0.5625rem 1rem 0.5625rem 0.5625rem;
+  border: 1px solid #ead9df;
   border-radius: 999px;
-  background: var(--color-surface-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+  background: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #9b8c92;
 }
 
 .slcn-trip-register-wizard__step-indicator span[data-active="true"] {
   background: var(--color-brand-pink);
+  border-color: var(--color-brand-pink);
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.slcn-trip-register-wizard__step-num {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: #f1e3e8;
+  color: #9b8c92;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.slcn-trip-register-wizard__step-indicator
+  span[data-active="true"]
+  .slcn-trip-register-wizard__step-num {
+  background: var(--color-ink);
+  color: #fff;
 }
 
 .slcn-trip-register-step {
@@ -1521,8 +1560,24 @@
 }
 
 .slcn-shoes-catalog-page__warning {
-  font-size: 0.875rem;
-  line-height: 1.7;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 1.125rem 1.25rem;
+}
+
+.slcn-shoes-catalog-page__warning-icon {
+  flex: none;
+  margin-top: 0.125rem;
+}
+
+.slcn-shoes-catalog-page__warning-text {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.65;
   color: var(--color-ink-muted);
 }
 
@@ -1659,6 +1714,18 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.slcn-shoe-detail-page__warning {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 0.8125rem 1.125rem;
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
 }
 
 .slcn-shoe-detail-page__fallback {

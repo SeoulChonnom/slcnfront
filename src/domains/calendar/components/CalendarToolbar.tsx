@@ -22,10 +22,8 @@ export function CalendarToolbar({
   return (
     <div className={cn('slcn-calendar-toolbar', className)}>
       <div className='slcn-calendar-toolbar__heading'>
-        <p className='slcn-calendar-toolbar__eyebrow'>서울촌놈 나들이 일정 🗓️</p>
-        <h1 className='slcn-calendar-toolbar__title display-hand'>
-          {navigation.label}
-        </h1>
+        <p className='slcn-calendar-toolbar__eyebrow'>서울 촌놈 나들이 일정</p>
+        <h1 className='slcn-calendar-toolbar__title'>{navigation.label}</h1>
       </div>
       <div className='slcn-calendar-toolbar__controls'>
         <div className='slcn-calendar-toolbar__nav'>

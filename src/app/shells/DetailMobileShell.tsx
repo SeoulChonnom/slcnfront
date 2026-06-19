@@ -15,11 +15,11 @@ function getDetailMobileTitle(pathname: string) {
   }
 
   if (pathname.startsWith('/mobile/map/')) {
-    return '서울 촌놈 나들이 경로 😎';
+    return '서울 촌놈 나들이 경로';
   }
 
   if (pathname.startsWith('/mobile/')) {
-    return "서울 촌놈's 신발 추천 👟";
+    return "서울 촌놈's 신발 추천";
   }
 
   return 'DETAIL';

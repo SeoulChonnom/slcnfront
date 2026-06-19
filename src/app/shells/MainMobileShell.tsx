@@ -10,18 +10,18 @@ type MainMobileShellProps = PropsWithChildren<{
 
 function getMainMobileTitle(pathname: string) {
   if (pathname.startsWith('/mobile/calendar')) {
-    return '서울촌놈 나들이 일정 🗓️';
+    return '서울 촌놈 나들이 일정';
   }
 
   if (pathname.startsWith('/mobile/map')) {
-    return '서울 촌놈 나들이 기록 📷';
+    return '서울 촌놈 나들이 기록';
   }
 
   if (pathname.startsWith('/mobile/shoesRecom')) {
-    return "서울 촌놈's 신발 추천 👟";
+    return "서울 촌놈's 신발 추천";
   }
 
-  return '서울 촌놈 나들이 기록 📷';
+  return '서울 촌놈 나들이 기록';
 }
 
 export function MainMobileShell({ children, className }: MainMobileShellProps) {
