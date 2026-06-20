@@ -180,6 +180,7 @@ export function TripListSection({ device }: TripListSectionProps) {
 
       <TripQuizModal
         tripName={quiz.activeTrip?.name}
+        tripDate={quiz.activeTrip?.displayDate}
         isOpen={quiz.isOpen}
         quiz={quiz.quiz}
         feedback={quiz.feedback}

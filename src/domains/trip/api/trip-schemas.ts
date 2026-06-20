@@ -11,6 +11,7 @@ const tripListItemSchema = z.object({
   date: z.string(),
   type: z.string(),
   name: z.string(),
+  description: z.string().optional(),
   logo: fileRefSchema,
 });
 

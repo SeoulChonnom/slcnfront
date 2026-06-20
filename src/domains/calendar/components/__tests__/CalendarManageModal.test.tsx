@@ -31,48 +31,85 @@ const calendars = [
   },
 ];
 
+const draft = {
+  name: '새 캘린더',
+  backgroundColor: '#fe9fc8',
+  borderColor: '#fe9fc8',
+  textColor: '#111111',
+  editable: true,
+  startEditable: true,
+  durationEditable: true,
+  defaultSelected: true,
+  sortOrder: 3,
+};
+
 describe('CalendarManageModal', () => {
-  it('renders existing calendars and emits create/edit/draft actions', () => {
-    const onDraftChange = vi.fn();
+  it('renders the calendar list with visibility toggles and emits create/edit/toggle actions', () => {
+    const onToggleVisibility = vi.fn();
     const onCreateNew = vi.fn();
     const onEditCalendar = vi.fn();
-    const onSubmit = vi.fn().mockResolvedValue(undefined);
 
     render(
       <CalendarManageModal
         isOpen
+        view='list'
         calendars={calendars}
-        draft={{
-          name: '새 캘린더',
-          backgroundColor: '#fe9fc8',
-          borderColor: '#fe9fc8',
-          textColor: '#111111',
-          editable: true,
-          startEditable: true,
-          durationEditable: true,
-          defaultSelected: true,
-          sortOrder: 3,
-        }}
+        visibleCalendarIds={['cal-1']}
+        draft={draft}
         editingCalendarId={null}
         errorMessage={null}
         isSubmitting={false}
         onClose={vi.fn()}
-        onDraftChange={onDraftChange}
-        onSubmit={onSubmit}
+        onToggleVisibility={onToggleVisibility}
+        onDraftChange={vi.fn()}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
         onCreateNew={onCreateNew}
         onEditCalendar={onEditCalendar}
+        onBackToList={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('캘린더 관리')).toBeTruthy();
+
+    const ayoungToggle = screen.getByRole('switch', { name: '아영 표시' });
+    expect(ayoungToggle.getAttribute('aria-checked')).toBe('true');
+    const ilgwonToggle = screen.getByRole('switch', { name: '일권 표시' });
+    expect(ilgwonToggle.getAttribute('aria-checked')).toBe('false');
+
+    fireEvent.click(ayoungToggle);
+    expect(onToggleVisibility).toHaveBeenCalledWith('cal-1');
+
+    fireEvent.click(screen.getByRole('button', { name: '아영 편집' }));
+    expect(onEditCalendar).toHaveBeenCalledWith('cal-1');
+
+    fireEvent.click(screen.getByRole('button', { name: '새 캘린더 추가' }));
+    expect(onCreateNew).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the editor form and emits draft changes', () => {
+    const onDraftChange = vi.fn();
+
+    render(
+      <CalendarManageModal
+        isOpen
+        view='editor'
+        calendars={calendars}
+        visibleCalendarIds={['cal-1']}
+        draft={draft}
+        editingCalendarId={null}
+        errorMessage={null}
+        isSubmitting={false}
+        onClose={vi.fn()}
+        onToggleVisibility={vi.fn()}
+        onDraftChange={onDraftChange}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+        onCreateNew={vi.fn()}
+        onEditCalendar={vi.fn()}
+        onBackToList={vi.fn()}
       />
     );
 
     expect(screen.getByText('캘린더 만들기')).toBeTruthy();
-    expect(screen.getByRole('button', { name: '새 캘린더' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: '아영 수정 가능' })).toBeTruthy();
-
-    fireEvent.click(screen.getByRole('button', { name: '새 캘린더' }));
-    expect(onCreateNew).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(screen.getByRole('button', { name: '아영 수정 가능' }));
-    expect(onEditCalendar).toHaveBeenCalledWith('cal-1');
 
     fireEvent.change(screen.getByDisplayValue('새 캘린더'), {
       target: { value: '수정된 캘린더' },
@@ -86,27 +123,21 @@ describe('CalendarManageModal', () => {
     render(
       <CalendarManageModal
         isOpen
+        view='editor'
         calendars={calendars}
-        draft={{
-          name: '아영',
-          backgroundColor: '#fe9fc8',
-          borderColor: '#fe9fc8',
-          textColor: '#111111',
-          editable: true,
-          startEditable: true,
-          durationEditable: true,
-          defaultSelected: true,
-          sortOrder: 1,
-        }}
+        visibleCalendarIds={['cal-1']}
+        draft={{ ...draft, name: '아영', sortOrder: 1 }}
         editingCalendarId='cal-1'
         errorMessage='삭제 전 확인'
         isSubmitting={false}
         onClose={vi.fn()}
+        onToggleVisibility={vi.fn()}
         onDraftChange={vi.fn()}
         onSubmit={vi.fn().mockResolvedValue(undefined)}
         onDelete={onDelete}
         onCreateNew={vi.fn()}
         onEditCalendar={vi.fn()}
+        onBackToList={vi.fn()}
       />
     );
 

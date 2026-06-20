@@ -12,6 +12,7 @@ export type TripListItemDto = {
   date: string;
   type: string;
   name: string;
+  description?: string;
   logo: FileRef;
 };
 
@@ -45,6 +46,7 @@ export type TripListItem = {
   date: string;
   type: string;
   name: string;
+  description?: string;
   displayDate: string;
   logo: FileRef;
 };

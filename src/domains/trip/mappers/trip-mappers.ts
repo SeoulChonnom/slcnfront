@@ -19,7 +19,10 @@ export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
     date: dto.date,
     type: dto.type,
     name: dto.name,
-    displayDate: dto.date.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3'),
+    description: dto.description,
+    displayDate: dto.date
+      .replace(/(\d{4})-(\d{2})-(\d{2})/, '$1.$2.$3')
+      .replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3'),
     logo: dto.logo,
   };
 }

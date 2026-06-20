@@ -10,7 +10,7 @@ type ShoesCatalogSectionProps = {
 
 export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
   const catalog = useShoeCatalog();
-  const showIntro = device === 'main';
+  const showIntro = true;
 
   return (
     <section className='slcn-shoes-catalog-page'>
@@ -21,7 +21,8 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
             서울 촌놈's 신발 추천
           </h1>
           <p className='slcn-shoes-catalog-page__description'>
-            오래 걸어도 편한 신발들만 골랐어요. 클릭하면 상세 정보를 볼 수 있어요.
+            오래 걸어도 편한 신발들만 골랐어요. 클릭하면 상세 정보를 볼 수
+            있어요.
           </p>
         </Card>
       ) : null}
@@ -31,6 +32,16 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
           className='slcn-shoes-catalog-page__brand-nav'
           aria-label='브랜드 이동'
         >
+          <a
+            href='#'
+            className='slcn-shoes-catalog-page__brand-link slcn-shoes-catalog-page__brand-link--active'
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            전체
+          </a>
           {catalog.map((brand) => (
             <a
               key={brand.brandId}

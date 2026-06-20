@@ -32,7 +32,22 @@ export function ShoeCard({ device, brand, shoe }: ShoeCardProps) {
         </div>
         <div className='slcn-shoe-card__footer'>
           <span className='slcn-shoe-card__price'>{shoe.price}</span>
-          <span className='slcn-shoe-card__cta'>상세 보기</span>
+          <span className='slcn-shoe-card__cta'>
+            상세 보기
+            <svg
+              width='14'
+              height='14'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              aria-hidden='true'
+            >
+              <path d='M9 18l6-6-6-6' />
+            </svg>
+          </span>
         </div>
       </Card>
     </Link>

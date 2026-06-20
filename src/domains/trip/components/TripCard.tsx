@@ -55,6 +55,9 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
           ) : null}
         </div>
         <h3 className='slcn-trip-card__title'>{trip.name}</h3>
+        {trip.description ? (
+          <p className='slcn-trip-card__desc'>{trip.description}</p>
+        ) : null}
         <div className='slcn-trip-card__actions'>
           <Button onClick={() => onOpenQuiz(trip)}>
             <svg

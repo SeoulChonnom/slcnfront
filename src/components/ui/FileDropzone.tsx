@@ -7,11 +7,13 @@ type FileDropzoneProps = Omit<
   'type' | 'children'
 > & {
   label: string;
+  prompt?: string;
   hint?: string;
 };
 
 export function FileDropzone({
   label,
+  prompt,
   hint,
   id,
   className,
@@ -26,19 +28,34 @@ export function FileDropzone({
 
   return (
     <div className='slcn-file-dropzone'>
+      <span className='slcn-file-dropzone__field-label'>{label}</span>
       <label
         htmlFor={inputId}
         onDragEnter={preventDefault}
         onDragOver={preventDefault}
         onDrop={preventDefault}
-        className={cn(
-          'slcn-file-dropzone__label slcn-card surface-blob pink-mesh',
-          className
-        )}
+        className={cn('slcn-file-dropzone__label', className)}
       >
-        <span className='slcn-file-dropzone__title display-hand'>{label}</span>
+        <svg
+          className='slcn-file-dropzone__icon'
+          width='22'
+          height='22'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='2'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          aria-hidden='true'
+        >
+          <path d='M12 19V6' />
+          <path d='M5 12l7-7 7 7' />
+        </svg>
+        <span className='slcn-file-dropzone__title'>
+          {prompt ?? '파일을 끌어다 놓거나 선택하세요'}
+        </span>
         <span className='slcn-file-dropzone__hint'>
-          {hint ?? '파일을 선택하거나 이 영역으로 끌어오세요.'}
+          {hint ?? 'PNG · JPG · 최대 10MB'}
         </span>
       </label>
       <input

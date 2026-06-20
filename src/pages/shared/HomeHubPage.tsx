@@ -175,7 +175,9 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
         <div className='slcn-home-hub__mobile-stats'>
           <div className='slcn-home-hub__mobile-stat'>
             <p className='slcn-home-hub__mobile-stat-label'>D-day</p>
-            <p className='slcn-home-hub__mobile-stat-value'>{ddayDays}일째</p>
+            <p className='slcn-home-hub__mobile-stat-value slcn-num'>
+              {ddayDays}일째
+            </p>
           </div>
           <a
             href={FILM_URL}
@@ -184,7 +186,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             className='slcn-home-hub__mobile-stat'
           >
             <p className='slcn-home-hub__mobile-stat-label'>Film ↗</p>
-            <p className='slcn-home-hub__mobile-stat-value'>
+            <p className='slcn-home-hub__mobile-stat-value slcn-home-hub__mobile-stat-value--film'>
               Choi&apos;s Film Art
             </p>
           </a>

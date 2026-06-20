@@ -31,7 +31,7 @@ export function MainMobileShell({ children, className }: MainMobileShellProps) {
   const avatar = userInfo?.roleList.includes('admin') ? '관' : '촌';
 
   return (
-    <div className={cn('slcn-shell-mobile pink-mesh', className)}>
+    <div className={cn('slcn-shell-mobile', className)}>
       <MobileTopBar title={getMainMobileTitle(pathname)} avatar={avatar} />
       <main className='slcn-shell-mobile__main'>{children ?? <Outlet />}</main>
       <MobileBottomNav device='mobile' />

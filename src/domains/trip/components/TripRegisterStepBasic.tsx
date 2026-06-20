@@ -34,6 +34,8 @@ export function TripRegisterStepBasic({
     <div className='slcn-trip-register-step'>
       <RadioGroup
         name='trip-type'
+        label='유형'
+        className='slcn-radio-group--inline'
         value={values.type}
         options={[
           { label: '아영', value: 'A' },
@@ -53,13 +55,15 @@ export function TripRegisterStepBasic({
       />
       <TextField
         label='나들이 이름'
-        placeholder='나들이 이름'
+        placeholder='예) 부암동 나들이'
         value={values.info2}
         error={errors.info2}
         onChange={(event) => onFieldChange('info2', event.target.value)}
       />
       <FileDropzone
-        label='로고'
+        label='로고 이미지'
+        prompt='로고 파일을 끌어다 놓거나 선택하세요'
+        hint='PNG · JPG · 최대 10MB'
         accept='.jpg,.jpeg,.png,.gif,.svg'
         onChange={(event) =>
           onFieldChange('logo', event.target.files?.[0] ?? null)

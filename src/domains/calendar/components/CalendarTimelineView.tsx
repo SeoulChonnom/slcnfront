@@ -62,6 +62,14 @@ export function CalendarTimelineView({
         initialView={initialView}
         initialDate={currentDate}
         headerToolbar={false}
+        dayCellContent={(arg) => String(arg.date.getDate())}
+        eventDidMount={(arg) => {
+          const color =
+            arg.event.backgroundColor || arg.event.borderColor || '';
+          if (color) {
+            arg.el.style.setProperty('--slcn-event-color', color);
+          }
+        }}
         events={events}
         height={height}
         selectable={selectable}

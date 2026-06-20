@@ -119,7 +119,12 @@
 .slcn-shell-desktop__main {
   max-width: 77.5rem;
   margin: 0 auto;
-  padding: 0 1.25rem 4rem;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* Home hub manages its own top spacing; keep it unchanged. */
+.slcn-shell-desktop__main:has(> .slcn-home-hub--desktop) {
+  padding-top: 0;
 }
 
 /* ---- Home Hub Desktop ---- */
@@ -286,7 +291,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.slcn-calendar-manage-modal__library-grid,
 .slcn-calendar-manage-modal__color-grid,
 .slcn-calendar-manage-modal__toggle-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -301,16 +305,13 @@
 }
 
 .slcn-shoes-brand-section__grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .slcn-shoe-detail-hero {
-  grid-template-columns: minmax(20rem, 28rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 1.125rem;
   align-items: stretch;
-}
-
-.slcn-shoe-detail-page__reviews-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 @media (min-width: 768px) {

@@ -35,7 +35,7 @@ export function DetailMobileShell({
     title === 'DETAIL' ? getDetailMobileTitle(pathname) : title;
 
   return (
-    <div className={cn('slcn-shell-detail-mobile pink-mesh', className)}>
+    <div className={cn('slcn-shell-detail-mobile', className)}>
       <MobileTopBar
         title={resolvedTitle}
         backHref={buildDeviceRootPath('mobile')}

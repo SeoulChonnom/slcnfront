@@ -20,10 +20,12 @@ import {
 } from './CalendarManageModal';
 import { CalendarMonthView } from './CalendarMonthView';
 import { CalendarToolbar } from './CalendarToolbar';
+import { CalendarWeekAgendaView } from './CalendarWeekAgendaView';
 import { CalendarWeekView } from './CalendarWeekView';
 
 type CalendarManagerState = {
   isOpen: boolean;
+  view: 'list' | 'editor';
   editingCalendarId: string | null;
   draft: CalendarManageDraft;
   error: string | null;
@@ -87,6 +89,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
     useCalendarMutations();
   const [calendarManager, setCalendarManager] = useState<CalendarManagerState>({
     isOpen: false,
+    view: 'list',
     editingCalendarId: null,
     draft: createEmptyCalendarDraft(state.calendars),
     error: null,
@@ -111,9 +114,20 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
           }
         : null;
 
+  const openCalendarManager = () => {
+    setCalendarManager({
+      isOpen: true,
+      view: 'list',
+      editingCalendarId: null,
+      draft: createEmptyCalendarDraft(state.calendars),
+      error: null,
+    });
+  };
+
   const openCreateCalendarManager = () => {
     setCalendarManager({
       isOpen: true,
+      view: 'editor',
       editingCalendarId: null,
       draft: createEmptyCalendarDraft(state.calendars),
       error: null,
@@ -129,10 +143,20 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
 
     setCalendarManager({
       isOpen: true,
+      view: 'editor',
       editingCalendarId: calendar.id,
       draft: createDraftFromCalendar(calendar),
       error: null,
     });
+  };
+
+  const backToCalendarList = () => {
+    setCalendarManager((current) => ({
+      ...current,
+      view: 'list',
+      editingCalendarId: null,
+      error: null,
+    }));
   };
 
   const closeCalendarManager = () => {
@@ -172,7 +196,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         await createCalendar(calendarManager.draft);
       }
 
-      closeCalendarManager();
+      backToCalendarList();
       await state.refetch();
     } catch (error) {
       setCalendarManager((current) => ({
@@ -192,7 +216,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
 
     try {
       await deleteCalendar(calendarManager.editingCalendarId);
-      closeCalendarManager();
+      backToCalendarList();
       await state.refetch();
     } catch (error) {
       setCalendarManager((current) => ({
@@ -210,7 +234,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
       <CalendarToolbar
         navigation={controller.navigation}
         filters={controller.filters}
-        onManageCalendars={openCreateCalendarManager}
+        onManageCalendars={openCalendarManager}
       />
 
       {controller.status.isLoading ? (
@@ -243,6 +267,12 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
               onEventDrop={controller.calendarEvents.onEventDrop}
               onEventResize={controller.calendarEvents.onEventResize}
             />
+          ) : device === 'mobile' ? (
+            <CalendarWeekAgendaView
+              currentDate={controller.navigation.currentDate}
+              events={controller.calendarEvents.items}
+              onEventClick={controller.calendarEvents.onEventClick}
+            />
           ) : (
             <CalendarWeekView
               currentDate={controller.navigation.currentDate}
@@ -269,12 +299,15 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
 
       <CalendarManageModal
         isOpen={calendarManager.isOpen}
+        view={calendarManager.view}
         calendars={controller.filters.calendars}
+        visibleCalendarIds={controller.filters.visibleCalendarIds}
         draft={calendarManager.draft}
         editingCalendarId={calendarManager.editingCalendarId}
         errorMessage={calendarManager.error}
         isSubmitting={isSubmitting}
         onClose={closeCalendarManager}
+        onToggleVisibility={controller.filters.onToggleCalendar}
         onDraftChange={onCalendarDraftChange}
         onSubmit={onSubmitCalendarManager}
         onDelete={
@@ -284,6 +317,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         }
         onCreateNew={openCreateCalendarManager}
         onEditCalendar={openEditCalendarManager}
+        onBackToList={backToCalendarList}
       />
     </section>
   );
