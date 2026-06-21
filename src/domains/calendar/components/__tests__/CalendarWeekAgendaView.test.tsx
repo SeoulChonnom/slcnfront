@@ -1,7 +1,6 @@
 import type { EventApi, EventInput } from '@fullcalendar/core';
-import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CalendarWeekAgendaView } from '../CalendarWeekAgendaView';
 
 const currentDate = '2026-06-18';
@@ -34,16 +33,18 @@ const events: EventInput[] = [
   },
 ];
 
-// Each test explicitly selects the day it asserts on, so the default selection
-// (which depends on whether the real "today" falls inside the rendered week) is
-// never relied upon.
-function getDayChip(dayNumber: number) {
-  return screen
-    .getAllByRole('tab')
-    .find((tab) => tab.textContent?.trim().endsWith(String(dayNumber)));
-}
-
 describe('CalendarWeekAgendaView', () => {
+  // Pin "today" to Thursday 2026-06-18 so the today-anchor logic is
+  // deterministic across environments.
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-18T09:00:00+09:00'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders a 7-day strip for the current week with day numbers', () => {
     render(
       <CalendarWeekAgendaView
@@ -53,16 +54,13 @@ describe('CalendarWeekAgendaView', () => {
       />
     );
 
-    const tabs = screen.getAllByRole('tab');
-    expect(tabs).toHaveLength(7);
+    const chips = screen.getAllByRole('listitem');
     // Sunday 14 .. Saturday 20
-    expect(tabs[0].textContent).toContain('14');
-    expect(tabs[6].textContent).toContain('20');
+    expect(chips[0].textContent).toContain('14');
+    expect(chips[6].textContent).toContain('20');
   });
 
-  it('lists only the selected day events sorted by start time', async () => {
-    const user = userEvent.setup();
-
+  it('lists every day of the week that has events, grouped by day heading', () => {
     render(
       <CalendarWeekAgendaView
         currentDate={currentDate}
@@ -71,36 +69,59 @@ describe('CalendarWeekAgendaView', () => {
       />
     );
 
-    const chip = getDayChip(18);
-    expect(chip).toBeTruthy();
-    await user.click(chip as HTMLElement);
-
-    const items = screen.getAllByRole('listitem');
-    expect(items).toHaveLength(2);
-    expect(items[0].textContent).toContain('부암동 나들이');
-    expect(items[1].textContent).toContain('저녁 약속');
-    expect(screen.queryByText('다른 날 일정')).toBeNull();
-  });
-
-  it('switches the agenda list when a different day chip is tapped', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <CalendarWeekAgendaView
-        currentDate={currentDate}
-        events={events}
-        onEventClick={vi.fn()}
-      />
-    );
-
-    await user.click(getDayChip(15) as HTMLElement);
+    // The week includes both June 15 (other-day) and June 18 (two events).
+    expect(screen.getByText('6월 15일 (월) 일정')).toBeTruthy();
+    expect(screen.getByText('6월 18일 (목) 일정')).toBeTruthy();
 
     expect(screen.getByText('다른 날 일정')).toBeTruthy();
-    expect(screen.queryByText('부암동 나들이')).toBeNull();
+    expect(screen.getByText('부암동 나들이')).toBeTruthy();
+    expect(screen.getByText('저녁 약속')).toBeTruthy();
   });
 
-  it('calls onEventClick with the event id when an agenda row is tapped', async () => {
-    const user = userEvent.setup();
+  it('sorts events within a day by start time', () => {
+    render(
+      <CalendarWeekAgendaView
+        currentDate={currentDate}
+        events={events}
+        onEventClick={vi.fn()}
+      />
+    );
+
+    const heading = screen.getByText('6월 18일 (목) 일정');
+    const daySection = heading.closest(
+      '.slcn-calendar-agenda-day'
+    ) as HTMLElement;
+    const items = within(daySection).getAllByRole('listitem');
+
+    expect(items[0].textContent).toContain('부암동 나들이');
+    expect(items[1].textContent).toContain('저녁 약속');
+  });
+
+  it('always renders today even when it has no events', () => {
+    const noTodayEvents: EventInput[] = [
+      {
+        id: 'evt-other-day',
+        title: '다른 날 일정',
+        start: '2026-06-15T10:00:00+09:00',
+        end: '2026-06-15T11:00:00+09:00',
+        allDay: false,
+      },
+    ];
+
+    render(
+      <CalendarWeekAgendaView
+        currentDate={currentDate}
+        events={noTodayEvents}
+        onEventClick={vi.fn()}
+      />
+    );
+
+    // Today (June 18) is still rendered as an anchor with an empty hint.
+    expect(screen.getByText('6월 18일 (목) 일정')).toBeTruthy();
+    expect(screen.getByText('오늘 등록된 일정이 없어요.')).toBeTruthy();
+  });
+
+  it('calls onEventClick with the event id when an agenda row is tapped', () => {
     const onEventClick = vi.fn<(event: EventApi) => void>();
 
     render(
@@ -111,33 +132,14 @@ describe('CalendarWeekAgendaView', () => {
       />
     );
 
-    await user.click(getDayChip(18) as HTMLElement);
-    await user.click(screen.getByRole('button', { name: /부암동 나들이/ }));
+    fireEvent.click(screen.getByRole('button', { name: /부암동 나들이/ }));
 
     expect(onEventClick).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'evt-walk' })
     );
   });
 
-  it('shows an empty hint when the selected day has no events', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <CalendarWeekAgendaView
-        currentDate={currentDate}
-        events={events}
-        onEventClick={vi.fn()}
-      />
-    );
-
-    // Tuesday 16th has no events.
-    await user.click(getDayChip(16) as HTMLElement);
-
-    expect(screen.getByText('이 날에는 등록된 일정이 없어요.')).toBeTruthy();
-  });
-
-  it('renders all-day events without a time label', async () => {
-    const user = userEvent.setup();
+  it('renders all-day events without a time label', () => {
     const allDayEvents: EventInput[] = [
       {
         id: 'evt-allday',
@@ -156,8 +158,6 @@ describe('CalendarWeekAgendaView', () => {
         onEventClick={vi.fn()}
       />
     );
-
-    await user.click(getDayChip(18) as HTMLElement);
 
     const row = screen.getByRole('button', { name: /연차/ });
     expect(within(row).getByText('종일')).toBeTruthy();

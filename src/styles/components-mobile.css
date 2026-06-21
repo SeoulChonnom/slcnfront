@@ -291,6 +291,9 @@
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .slcn-shell-mobile .slcn-calendar-agenda__chip {
@@ -352,6 +355,34 @@
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-body);
+}
+
+/* ---- Scrollable agenda (whole period, grouped by day) ---- */
+.slcn-shell-mobile .slcn-calendar-agenda-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  /* Leave room within the mobile viewport, accounting for the bottom nav. */
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda-day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  scroll-margin-top: 0;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda-day > .slcn-calendar-agenda__heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.25rem 0;
+  background: var(--color-canvas);
 }
 
 .slcn-shell-mobile .slcn-calendar-agenda__empty {

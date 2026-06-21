@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import type { DeviceType } from '../../../app/router/route-constants';
 import { EmptyState } from '../../../components/ui/EmptyState';
@@ -13,6 +14,7 @@ import type {
   CalendarMeta,
   CalendarViewMode,
 } from '../types';
+import { CalendarAgendaSections } from './CalendarAgendaSections';
 import { CalendarEventModal } from './CalendarEventModal';
 import {
   type CalendarManageDraft,
@@ -257,16 +259,33 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
       {shouldRenderCalendarSurface ? (
         <>
           {controller.navigation.activeView === 'month' ? (
-            <CalendarMonthView
-              currentDate={controller.navigation.currentDate}
-              events={controller.calendarEvents.items}
-              selectable={controller.calendarEvents.selectable}
-              onSelect={controller.calendarEvents.onSelectRange}
-              onDateClick={controller.calendarEvents.onDateClick}
-              onEventClick={controller.calendarEvents.onEventClick}
-              onEventDrop={controller.calendarEvents.onEventDrop}
-              onEventResize={controller.calendarEvents.onEventResize}
-            />
+            <>
+              <CalendarMonthView
+                currentDate={controller.navigation.currentDate}
+                events={controller.calendarEvents.items}
+                selectable={controller.calendarEvents.selectable}
+                onSelect={controller.calendarEvents.onSelectRange}
+                onDateClick={controller.calendarEvents.onDateClick}
+                onEventClick={controller.calendarEvents.onEventClick}
+                onEventDrop={controller.calendarEvents.onEventDrop}
+                onEventResize={controller.calendarEvents.onEventResize}
+              />
+              {device === 'mobile' ? (
+                <div className='slcn-calendar-agenda'>
+                  <CalendarAgendaSections
+                    events={controller.calendarEvents.items}
+                    rangeStart={dayjs(controller.navigation.currentDate)
+                      .startOf('month')
+                      .format('YYYY-MM-DD')}
+                    rangeEnd={dayjs(controller.navigation.currentDate)
+                      .startOf('month')
+                      .add(1, 'month')
+                      .format('YYYY-MM-DD')}
+                    onEventClick={controller.calendarEvents.onEventClick}
+                  />
+                </div>
+              ) : null}
+            </>
           ) : device === 'mobile' ? (
             <CalendarWeekAgendaView
               currentDate={controller.navigation.currentDate}
