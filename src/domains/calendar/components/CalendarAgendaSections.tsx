@@ -142,7 +142,6 @@ export function CalendarAgendaSections({
   // Anchor today's section to the top of the agenda scroll container on mount
   // and whenever the visible period changes. Scoped to the container so the
   // whole page is never scrolled.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: re-anchor when the period changes.
   useEffect(() => {
     const container = scrollRef.current;
     const todaySection = todayRef.current;

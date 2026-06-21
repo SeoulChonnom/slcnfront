@@ -32,16 +32,15 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
           className='slcn-shoes-catalog-page__brand-nav'
           aria-label='브랜드 이동'
         >
-          <a
-            href='#'
+          <button
+            type='button'
             className='slcn-shoes-catalog-page__brand-link slcn-shoes-catalog-page__brand-link--active'
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
             전체
-          </a>
+          </button>
           {catalog.map((brand) => (
             <a
               key={brand.brandId}

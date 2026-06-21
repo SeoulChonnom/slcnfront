@@ -47,6 +47,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 fill='#FE9FC8'
                 stroke='#FE9FC8'
                 strokeWidth='1.6'
+                aria-hidden='true'
               >
                 <path d='M12 20s-7-4.6-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.4-7 10-7 10z' />
               </svg>
@@ -70,6 +71,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 fill='none'
                 stroke='#1B1B1B'
                 strokeWidth='1.8'
+                aria-hidden='true'
               >
                 <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
                 <circle cx='12' cy='10' r='2.4' />
@@ -91,6 +93,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 fill='none'
                 stroke='#1B1B1B'
                 strokeWidth='1.8'
+                aria-hidden='true'
               >
                 <rect x='4' y='5' width='16' height='15' rx='2.5' />
                 <path d='M4 9h16M8 3v4M16 3v4' />
@@ -112,6 +115,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 fill='none'
                 stroke='#1B1B1B'
                 strokeWidth='1.8'
+                aria-hidden='true'
               >
                 <path d='M3 16h16a2 2 0 002-2c0-1-1-1.6-2.5-2.2L13 9l-2-3H6v8l-3 2z' />
                 <path d='M3 16v2h18' />
@@ -139,6 +143,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                   fill='none'
                   stroke='#1B1B1B'
                   strokeWidth='1.8'
+                  aria-hidden='true'
                 >
                   <rect x='3' y='4' width='18' height='16' rx='2.5' />
                   <path d='M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4' />
@@ -151,6 +156,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                 fill='none'
                 stroke='#9B8C92'
                 strokeWidth='2'
+                aria-hidden='true'
               >
                 <path d='M7 17L17 7M9 7h8v8' />
               </svg>
@@ -202,6 +208,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             fill='none'
             stroke='#1B1B1B'
             strokeWidth='1.8'
+            aria-hidden='true'
           >
             <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
             <circle cx='12' cy='10' r='2.4' />
@@ -219,6 +226,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
           fill='none'
           stroke='#C9B9BF'
           strokeWidth='2'
+          aria-hidden='true'
         >
           <path d='M9 6l6 6-6 6' />
         </svg>
@@ -233,6 +241,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             fill='none'
             stroke='#1B1B1B'
             strokeWidth='1.8'
+            aria-hidden='true'
           >
             <rect x='4' y='5' width='16' height='15' rx='2.5' />
             <path d='M4 9h16M8 3v4M16 3v4' />
@@ -252,6 +261,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
           fill='none'
           stroke='#C9B9BF'
           strokeWidth='2'
+          aria-hidden='true'
         >
           <path d='M9 6l6 6-6 6' />
         </svg>
@@ -266,6 +276,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             fill='none'
             stroke='#1B1B1B'
             strokeWidth='1.8'
+            aria-hidden='true'
           >
             <path d='M3 16h16a2 2 0 002-2c0-1-1-1.6-2.5-2.2L13 9l-2-3H6v8l-3 2z' />
             <path d='M3 16v2h18' />
@@ -283,6 +294,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
           fill='none'
           stroke='#C9B9BF'
           strokeWidth='2'
+          aria-hidden='true'
         >
           <path d='M9 6l6 6-6 6' />
         </svg>

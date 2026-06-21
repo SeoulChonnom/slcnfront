@@ -149,6 +149,7 @@ export function TripListSection({ device }: TripListSectionProps) {
               fill='none'
               stroke='#C9B9BF'
               strokeWidth='2'
+              aria-hidden='true'
             >
               <circle cx='11' cy='11' r='7' />
               <path d='M20 20l-3.2-3.2' />

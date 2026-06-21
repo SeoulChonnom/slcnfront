@@ -556,7 +556,9 @@
   box-shadow: none;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: FullCalendar base styles follow override rules */
 .slcn-calendar-surface .fc-event-title,
+/* biome-ignore lint/style/noDescendingSpecificity: FullCalendar base styles follow override rules */
 .slcn-calendar-surface .fc-event-time {
   font-size: 0.75rem;
   font-weight: 700;
@@ -1649,6 +1651,7 @@
   gap: 0.5rem;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__field-label {
   font-size: 0.875rem;
   font-weight: 700;
@@ -1664,6 +1667,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__option {
   display: flex;
   align-items: flex-start;
@@ -1676,6 +1680,7 @@
   cursor: pointer;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group--inline .slcn-radio-group__option {
   align-items: center;
   border-radius: 0.875rem;
@@ -1685,6 +1690,7 @@
   accent-color: var(--color-primary);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__option[data-checked="true"] {
   background: var(--color-surface-soft);
   border-color: var(--color-primary);
@@ -1694,11 +1700,13 @@
   min-width: 0;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__label {
   display: block;
   font-weight: 600;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group--inline .slcn-radio-group__label {
   font-size: 0.8125rem;
 }
@@ -1785,12 +1793,14 @@
   width: 100%;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__field-label {
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-ink);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__label {
   display: flex;
   flex-direction: column;
@@ -1813,16 +1823,19 @@
   text-align: center;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__icon {
   color: var(--color-primary);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__title {
   font-size: 0.9375rem;
   font-weight: 700;
   color: var(--color-ink);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__hint {
   font-size: 0.8125rem;
   color: var(--color-ink-muted);

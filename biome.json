@@ -16,6 +16,13 @@
       "trailingCommas": "es5"
     }
   },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noImportantStyles": "off"
+      }
+    }
+  },
   "css": {
     "parser": {
       "tailwindDirectives": true

@@ -54,9 +54,7 @@ export function DesktopHeader({
           </ul>
         </nav>
 
-        <div className='slcn-desktop-header__avatar' aria-label='사용자 메뉴'>
-          {avatar}
-        </div>
+        <div className='slcn-desktop-header__avatar'>{avatar}</div>
       </div>
     </header>
   );
