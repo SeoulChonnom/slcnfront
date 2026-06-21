@@ -1488,16 +1488,15 @@
 
 .slcn-trip-register-wizard__step-indicator {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.625rem;
   flex-wrap: wrap;
 }
 
-.slcn-trip-register-wizard__step-indicator span {
+.slcn-trip-register-wizard__step-indicator > span {
   display: inline-flex;
   align-items: center;
   gap: 0.5625rem;
-  min-height: 2rem;
-  padding: 0.5625rem 1rem 0.5625rem 0.5625rem;
+  padding: 0.5625rem 1rem;
   border: 1px solid #ead9df;
   border-radius: 999px;
   background: #fff;
@@ -1506,7 +1505,7 @@
   color: #9b8c92;
 }
 
-.slcn-trip-register-wizard__step-indicator span[data-active="true"] {
+.slcn-trip-register-wizard__step-indicator > span[data-active="true"] {
   background: var(--color-brand-pink);
   border-color: var(--color-brand-pink);
   color: var(--color-ink);
@@ -1514,21 +1513,24 @@
 }
 
 .slcn-trip-register-wizard__step-num {
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 999px;
-  background: #f1e3e8;
-  color: #9b8c92;
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #f1e3e8;
+  color: #9b8c92;
   font-size: 0.75rem;
   font-weight: 700;
-  flex: none;
+  line-height: 1;
 }
 
 .slcn-trip-register-wizard__step-indicator
-  span[data-active="true"]
+  > span[data-active="true"]
   .slcn-trip-register-wizard__step-num {
   background: var(--color-ink);
   color: #fff;
