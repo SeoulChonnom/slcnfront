@@ -183,8 +183,12 @@ describe('trip-api', () => {
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
       'http://localhost:8080/api/file?type=logo&filename=logo.png'
     );
-    expect(fetchFn.mock.calls[6]?.[0]).toBe('http://localhost:8080/api/file');
-    expect(fetchFn.mock.calls[7]?.[0]).toBe('http://localhost:8080/api/file');
+    expect(fetchFn.mock.calls[6]?.[0]).toBe(
+      'http://localhost:8080/api/file?type=logo'
+    );
+    expect(fetchFn.mock.calls[7]?.[0]).toBe(
+      'http://localhost:8080/api/file?type=map'
+    );
 
     const registerInit = fetchFn.mock.calls[4]?.[1];
     const uploadLogoInit = fetchFn.mock.calls[6]?.[1];
@@ -221,12 +225,12 @@ describe('trip-api', () => {
     expect(uploadLogoInit?.body).toBeInstanceOf(FormData);
     expect(new Headers(uploadLogoInit?.headers).get('content-type')).toBeNull();
     expect((uploadLogoInit?.body as FormData).get('file')).toBeInstanceOf(File);
-    expect((uploadLogoInit?.body as FormData).get('type')).toBe('logo');
+    expect((uploadLogoInit?.body as FormData).get('type')).toBeNull();
     expect(uploadMapInit?.method).toBe('POST');
     expect(uploadMapInit?.body).toBeInstanceOf(FormData);
     expect(new Headers(uploadMapInit?.headers).get('content-type')).toBeNull();
     expect((uploadMapInit?.body as FormData).get('file')).toBeInstanceOf(File);
-    expect((uploadMapInit?.body as FormData).get('type')).toBe('map');
+    expect((uploadMapInit?.body as FormData).get('type')).toBeNull();
   });
 
   it('rejects malformed trip list payloads as INVALID_RESPONSE', async () => {

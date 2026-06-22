@@ -25,10 +25,12 @@ export function createTripFilesApi(client: ApiClientLike = apiClient) {
       const formData = new FormData();
 
       formData.append('file', file);
-      formData.append('type', mapTripFileUploadType(kind));
 
       return client.post<FileRef>({
         path: '/file',
+        query: {
+          type: mapTripFileUploadType(kind),
+        },
         body: formData,
       });
     },
