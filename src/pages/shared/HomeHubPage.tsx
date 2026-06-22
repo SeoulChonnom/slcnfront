@@ -12,7 +12,7 @@ type HomeHubPageProps = {
 };
 
 const FILM_URL = 'http://naver.me/52RjLNuT';
-const DDAY_START = new Date('2024-09-29T00:00:00+09:00');
+const DDAY_START = new Date('2024-11-10T00:00:00+09:00');
 
 function getDdayCount() {
   return Math.floor((Date.now() - DDAY_START.getTime()) / 86_400_000) + 1;
