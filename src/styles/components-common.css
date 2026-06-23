@@ -562,6 +562,7 @@
 .slcn-calendar-surface .fc-event-time {
   font-size: 0.75rem;
   font-weight: 700;
+  margin: 0 0.5rem;
 }
 
 .slcn-calendar-surface .fc-timegrid-event {
