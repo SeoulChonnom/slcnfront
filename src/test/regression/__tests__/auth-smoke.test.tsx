@@ -74,7 +74,7 @@ describe('auth smoke', () => {
         '/main/login?redirect=%2Fmain%2Fmap'
       );
     });
-    expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: '로그인' })).toBeTruthy();
   });
 
   it('restores a session from refresh token before entering the protected route', async () => {
@@ -98,7 +98,7 @@ describe('auth smoke', () => {
     await waitFor(() => {
       expect(restoreSession).toHaveBeenCalledTimes(1);
     });
-    expect(await screen.findByText('서울 촌놈의 신발 추천 👟')).toBeTruthy();
+    expect(await screen.findByText("서울 촌놈's 신발 추천")).toBeTruthy();
     expect(screen.getByTestId('location-probe').textContent).toBe(
       '/main/shoesRecom'
     );

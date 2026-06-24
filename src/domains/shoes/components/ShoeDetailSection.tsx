@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { DeviceType } from '../../../app/router/route-constants';
 import { LinkButton } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
@@ -48,22 +49,42 @@ export function ShoeDetailSection({
     <section className='slcn-shoe-detail-page'>
       {device === 'main' ? (
         <div className='slcn-shoe-detail-page__header'>
-          <p className='slcn-shoe-detail-page__eyebrow'>
-            서울 촌놈의 신발 추천 👟
-          </p>
-          <LinkButton
+          <Link
             to={buildDeviceShoesCatalogPath(device)}
-            variant='ghost'
-            size='sm'
+            className='slcn-shoe-detail-page__back'
           >
+            <svg
+              width='16'
+              height='16'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              aria-hidden='true'
+            >
+              <path d='M15 18l-6-6 6-6' />
+            </svg>
             신발 추천으로 돌아가기
-          </LinkButton>
+          </Link>
         </div>
       ) : null}
 
-      <Card className='slcn-shoe-detail-page__warning' tone='muted'>
-        사진을 클릭하면 링크로 이동합니다
-      </Card>
+      <div className='slcn-shoe-detail-page__warning'>
+        <svg
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C58EA3'
+          strokeWidth='2'
+          aria-hidden='true'
+        >
+          <path d='M7 17L17 7M9 7h8v8' />
+        </svg>
+        <span>사진을 클릭하면 구매 링크로 이동해요.</span>
+      </div>
 
       <ShoeDetailHero brand={brand} shoe={shoe} />
       <ShoeVideoPanel shoe={shoe} />

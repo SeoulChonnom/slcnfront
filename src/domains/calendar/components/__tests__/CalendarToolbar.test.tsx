@@ -50,9 +50,9 @@ describe('CalendarToolbar', () => {
 
     expect(screen.getByText('2026년 4월')).toBeTruthy();
 
-    await user.click(screen.getByRole('button', { name: '이전' }));
-    await user.click(screen.getByRole('button', { name: 'Today' }));
-    await user.click(screen.getByRole('button', { name: '다음' }));
+    await user.click(screen.getByRole('button', { name: '이전 달' }));
+    await user.click(screen.getByRole('button', { name: '오늘' }));
+    await user.click(screen.getByRole('button', { name: '다음 달' }));
     await user.click(screen.getByRole('tab', { name: '주' }));
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
     await user.click(screen.getByRole('button', { name: '캘린더 관리' }));

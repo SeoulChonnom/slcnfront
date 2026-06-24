@@ -13,26 +13,26 @@ describe('trip-mappers', () => {
         date: '20991231',
         type: 'year-end',
         name: '연말 나들이',
-        logo: '/logo.png',
+        logo: { type: 'logo', filename: 'logo.png' },
       })
     ).toMatchObject({
       displayDate: '2099.12.31',
-      logoPath: '/logo.png',
+      logo: { type: 'logo', filename: 'logo.png' },
       type: 'year-end',
     });
 
     expect(
       mapTripDetailDto({
         date: '20991231',
-        firstMap: '/map1.png',
-        secondMap: '',
+        firstMap: { type: 'map', filename: 'map1.png' },
+        secondMap: null,
         nextButtonText: '',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
       })
     ).toMatchObject({
-      firstMapPath: '/map1.png',
-      secondMapPath: '',
+      firstMap: { type: 'map', filename: 'map1.png' },
+      secondMap: null,
       nextButtonText: '',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -61,9 +61,9 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도하세요.',
       },
       {
-        logo: '/files/logo.png',
-        firstMap: '/files/map1.png',
-        secondMap: '   /files/map2.png   ',
+        logo: { type: 'logo', filename: 'logo.png' },
+        firstMap: { type: 'map', filename: 'map1.png' },
+        secondMap: { type: 'map', filename: 'map2.png' },
       }
     );
 
@@ -71,9 +71,9 @@ describe('trip-mappers', () => {
       date: '2099-12-31',
       type: 'A',
       name: '연말 나들이',
-      logo: '/files/logo.png',
-      firstMap: '/files/map1.png',
-      secondMap: '/files/map2.png',
+      logo: { type: 'logo', filename: 'logo.png' },
+      firstMap: { type: 'map', filename: 'map1.png' },
+      secondMap: { type: 'map', filename: 'map2.png' },
       nextButtonText: '1차 경로',
       previousButtonText: '2차 경로',
       driveUrl: 'https://drive.google.com/x',
@@ -117,8 +117,8 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도하세요.',
       },
       {
-        logo: '/files/logo.png',
-        firstMap: '/files/map1.png',
+        logo: { type: 'logo', filename: 'logo.png' },
+        firstMap: { type: 'map', filename: 'map1.png' },
       }
     );
 
@@ -153,9 +153,9 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도',
       },
       {
-        logo: '/files/logo.png',
-        firstMap: '/files/map1.png',
-        secondMap: '   ',
+        logo: { type: 'logo', filename: 'logo.png' },
+        firstMap: { type: 'map', filename: 'map1.png' },
+        secondMap: undefined,
       }
     );
 
@@ -163,8 +163,8 @@ describe('trip-mappers', () => {
       date: '2099-12-31',
       type: 'A',
       name: '봄 나들이',
-      logo: '/files/logo.png',
-      firstMap: '/files/map1.png',
+      logo: { type: 'logo', filename: 'logo.png' },
+      firstMap: { type: 'map', filename: 'map1.png' },
       driveUrl: 'https://drive.google.com/spring',
       quiz: {
         title: '정답은?',

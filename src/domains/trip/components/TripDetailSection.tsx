@@ -14,9 +14,9 @@ type TripDetailSectionProps = {
 
 export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
   const [activeMap, setActiveMap] = useState<'map1' | 'map2'>('map1');
-  const map1Asset = useTripAssetUrl(tripDetail.firstMapPath);
-  const map2Asset = useTripAssetUrl(tripDetail.secondMapPath);
-  const hasSecondMap = Boolean(tripDetail.secondMapPath);
+  const map1Asset = useTripAssetUrl(tripDetail.firstMap);
+  const map2Asset = useTripAssetUrl(tripDetail.secondMap);
+  const hasSecondMap = Boolean(tripDetail.secondMap);
   const activeMapUrl =
     activeMap === 'map1' ? map1Asset.objectUrl : map2Asset.objectUrl;
 
@@ -24,7 +24,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
     <section className='slcn-trip-detail-section'>
       <PageSectionHeader
         title='서울 촌놈 나들이 경로'
-        description='사진은 드라이브에서 📷'
+        description='사진은 드라이브에서 확인할 수 있어요.'
       />
 
       {hasSecondMap ? (
@@ -55,11 +55,9 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
 
       <Card className='slcn-trip-detail-section__drive-card' tone='pink'>
         <div>
-          <p className='slcn-trip-detail-section__drive-kicker display-hand'>
-            SLCN Drive
-          </p>
-          <h3 className='slcn-trip-detail-section__drive-title display-hand'>
-            사진은 드라이브에서 📷
+          <p className='slcn-trip-detail-section__drive-kicker'>SLCN Drive</p>
+          <h3 className='slcn-trip-detail-section__drive-title'>
+            사진은 드라이브에서 보기
           </h3>
           <p className='slcn-trip-detail-section__drive-copy'>
             암호 🔒 : 입사일

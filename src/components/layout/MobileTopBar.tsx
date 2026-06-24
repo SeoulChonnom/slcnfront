@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
+import logo from '../../assets/img/SLCN.png';
 import { cn } from '../../lib/utils/cn';
 
 type MobileTopBarProps = {
   title?: string;
   className?: string;
   backHref?: string;
-  showTrailingAction?: boolean;
+  avatar?: string;
 };
 
 export function MobileTopBar({
   title = 'SLCN',
   className,
   backHref,
-  showTrailingAction = false,
+  avatar,
 }: MobileTopBarProps) {
   return (
     <header className={cn('slcn-mobile-topbar pink-mesh', className)}>
@@ -26,19 +27,21 @@ export function MobileTopBar({
             ←
           </Link>
         ) : (
-          <span className='slcn-mobile-topbar__leading' aria-hidden='true' />
+          <span className='slcn-mobile-topbar__leading'>
+            <img
+              src={logo}
+              alt='Seoul Chonnom'
+              className='slcn-mobile-topbar__logo'
+            />
+          </span>
         )}
         <div className='slcn-mobile-topbar__title'>
           <p className='slcn-mobile-topbar__title-text display-hand'>{title}</p>
         </div>
-        {showTrailingAction ? (
-          <button
-            type='button'
-            aria-label='더 보기'
-            className='slcn-mobile-topbar__trailing'
-          >
-            …
-          </button>
+        {avatar ? (
+          <span className='slcn-mobile-topbar__avatar' aria-hidden='true'>
+            {avatar}
+          </span>
         ) : (
           <span className='slcn-mobile-topbar__trailing' aria-hidden='true' />
         )}

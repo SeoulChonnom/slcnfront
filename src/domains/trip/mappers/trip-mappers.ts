@@ -19,16 +19,19 @@ export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
     date: dto.date,
     type: dto.type,
     name: dto.name,
-    displayDate: dto.date.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3'),
-    logoPath: dto.logo,
+    description: dto.description,
+    displayDate: dto.date
+      .replace(/(\d{4})-(\d{2})-(\d{2})/, '$1.$2.$3')
+      .replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3'),
+    logo: dto.logo,
   };
 }
 
 export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
   return {
     date: dto.date,
-    firstMapPath: dto.firstMap,
-    secondMapPath: dto.secondMap,
+    firstMap: dto.firstMap,
+    secondMap: dto.secondMap,
     nextButtonText: dto.nextButtonText,
     previousButtonText: dto.previousButtonText,
     driveUrl: dto.driveUrl,
@@ -69,7 +72,9 @@ export function buildTripRegisterPayload(
     name: values.info2.trim(),
     logo: assetPaths.logo,
     firstMap: assetPaths.firstMap,
-    ...(toOptionalTrimmedEntry('secondMap', assetPaths.secondMap) ?? {}),
+    ...(assetPaths.secondMap !== undefined
+      ? { secondMap: assetPaths.secondMap }
+      : {}),
     ...(values.hasSecondMap
       ? {
           ...(toOptionalTrimmedEntry('nextButtonText', values.button1) ?? {}),

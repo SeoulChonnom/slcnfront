@@ -423,7 +423,15 @@
         "operationId": "getFile",
         "parameters": [
           {
-            "name": "path",
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
             "in": "query",
             "required": true,
             "schema": {
@@ -457,7 +465,7 @@
         "operationId": "uploadFile",
         "parameters": [
           {
-            "name": "path",
+            "name": "type",
             "in": "query",
             "required": true,
             "schema": {
@@ -487,7 +495,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/FileRefSdo"
                 }
               }
             }
@@ -506,7 +514,16 @@
         "summary": "일정 삭제(숨김)",
         "description": "일정 목록 삭제 API",
         "operationId": "hideSchedule",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -547,13 +564,22 @@
         ]
       }
     },
-    "/trip/{id}": {
+    "/trip/{tripId}": {
       "get": {
         "tags": ["나들이 정보 API"],
         "summary": "나들이 상세정보 조회",
         "description": "나들이 상세페이지용 API",
         "operationId": "getTripById",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -579,7 +605,16 @@
         "summary": "나들이 추가",
         "description": "나들이 퀴즈 정보 API",
         "operationId": "getTripQuiz",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -607,7 +642,7 @@
         "operationId": "checkTripQuizAnswer",
         "parameters": [
           {
-            "name": "arg0",
+            "name": "tripId",
             "in": "query",
             "required": true,
             "schema": {
@@ -615,7 +650,7 @@
             }
           },
           {
-            "name": "arg1",
+            "name": "optionId",
             "in": "query",
             "required": true,
             "schema": {
@@ -676,7 +711,16 @@
         "summary": "일정 완전 삭제",
         "description": "일정 데이터 삭제 API",
         "operationId": "deleteSchedule",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -934,6 +978,21 @@
           }
         }
       },
+      "FileRefSdo": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["logo", "map"]
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\\.(jpg|png|jpeg|gif|svg)$"
+          }
+        },
+        "required": ["filename", "type"]
+      },
       "OptionCdo": {
         "type": "object",
         "properties": {
@@ -1005,15 +1064,13 @@
             "minLength": 1
           },
           "logo": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "firstMap": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "secondMap": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "nextButtonText": {
             "type": "string"
@@ -1055,13 +1112,13 @@
             "type": "string"
           },
           "logo": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "firstMap": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "secondMap": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileRefSdo"
           },
           "nextButtonText": {
             "type": "string"
@@ -1181,7 +1238,7 @@
             "type": "string"
           },
           "logo": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileRefSdo"
           }
         }
       },

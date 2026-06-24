@@ -55,8 +55,8 @@ export function createTripApi(client: ApiClientLike = apiClient) {
       const response = await client.get<QuizResultRdo>({
         path: '/trip/quiz/check',
         query: {
-          arg0: tripId,
-          arg1: optionId,
+          tripId,
+          optionId,
         },
       });
 

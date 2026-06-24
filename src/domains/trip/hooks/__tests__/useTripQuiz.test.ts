@@ -8,7 +8,7 @@ const trip = {
   type: 'year-end',
   name: '연말 나들이',
   displayDate: '2099.12.31',
-  logoPath: '/logo.png',
+  logo: { type: 'logo', filename: 'logo.png' },
 };
 
 const { getTripQuiz, checkTripQuizAnswer } = vi.hoisted(() => ({

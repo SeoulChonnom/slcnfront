@@ -1,5 +1,6 @@
+import type { FileRef } from '../types';
 import { useTripAssetObjectUrls } from './internal/useTripAssetObjectUrls';
 
-export function useTripAssetUrls(paths: Array<string | null | undefined>) {
-  return useTripAssetObjectUrls(paths).objectUrls;
+export function useTripAssetUrls(refs: Array<FileRef | null | undefined>) {
+  return useTripAssetObjectUrls(refs).objectUrls;
 }

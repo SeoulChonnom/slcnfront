@@ -7,20 +7,20 @@ import {
 } from '../trip-schemas';
 
 describe('trip-schemas', () => {
-  it('defaults omitted optional trip detail strings to empty strings', () => {
+  it('defaults optional trip detail fields when omitted', () => {
     expect(
       parseTripDetailResponse(
         {
           date: '2099-12-31',
-          firstMap: '/map1.png',
+          firstMap: { type: 'map', filename: 'map1.png' },
           driveUrl: 'https://drive.google.com/x',
         },
         'detail'
       )
     ).toEqual({
       date: '2099-12-31',
-      firstMap: '/map1.png',
-      secondMap: '',
+      firstMap: { type: 'map', filename: 'map1.png' },
+      secondMap: null,
       nextButtonText: '',
       previousButtonText: '',
       driveUrl: 'https://drive.google.com/x',
@@ -32,7 +32,7 @@ describe('trip-schemas', () => {
       parseTripDetailResponse(
         {
           date: '2099-12-31',
-          firstMap: '/map1.png',
+          firstMap: { type: 'map', filename: 'map1.png' },
           drive: 'https://drive.google.com/x',
         },
         'detail'

@@ -45,7 +45,7 @@ describe('AppRouter', () => {
     });
     renderAppRouter('/main/map');
 
-    expect(await screen.findByRole('button', { name: 'Login' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: '로그인' })).toBeTruthy();
   });
 
   it('renders authenticated internal routes inside the mobile shell', async () => {
