@@ -80,14 +80,20 @@ export function TripRegisterWizard({
     <section className='slcn-trip-register-wizard'>
       {device === 'main' ? (
         <PageSectionHeader
-          title='서울 촌놈 나들이 추가'
-          description='날짜, 지도, 퀴즈 정보를 차례대로 입력해 나들이 기록을 남겨보세요.'
+          title='새 나들이 기록하기'
+          description='날짜 · 지도 · 퀴즈 정보를 차례로 입력해 기록을 남겨요.'
         />
       ) : null}
       <Card className='slcn-trip-register-wizard__card'>
         <div className='slcn-trip-register-wizard__step-indicator'>
           {TRIP_REGISTER_STEP_CONFIGS.map((config) => (
             <span key={config.step} data-active={form.step === config.step}>
+              <span
+                className='slcn-trip-register-wizard__step-num'
+                aria-hidden='true'
+              >
+                {config.step}
+              </span>
               {config.label}
             </span>
           ))}

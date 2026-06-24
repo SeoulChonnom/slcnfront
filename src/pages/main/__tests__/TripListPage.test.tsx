@@ -12,7 +12,7 @@ vi.mock('../../../domains/trip/hooks/useTripList', () => ({
 
 vi.mock('../../../domains/trip/hooks/useTripAssetUrls', () => ({
   useTripAssetUrls: () => ({
-    '/logo.png': 'blob:logo',
+    'logo/logo.png': 'blob:logo',
   }),
 }));
 
@@ -88,7 +88,7 @@ describe('TripListPage', () => {
           type: 'year-end',
           name: '연말 나들이',
           displayDate: '2099.12.31',
-          logoPath: '/logo.png',
+          logo: { type: 'logo', filename: 'logo.png' },
         },
       ],
       isPending: false,
@@ -105,6 +105,8 @@ describe('TripListPage', () => {
       screen.getAllByRole('link', { name: '새 나들이 기록하기' }).length
     ).toBeTruthy();
     expect(screen.getByRole('button', { name: '퀴즈 풀기' })).toBeTruthy();
-    expect(screen.getByPlaceholderText('날짜나 나들이 이름')).toBeTruthy();
+    expect(
+      screen.getByPlaceholderText('날짜 · 나들이 이름 · 유형으로 검색')
+    ).toBeTruthy();
   });
 });

@@ -11,15 +11,15 @@ type DetailMobileShellProps = PropsWithChildren<{
 
 function getDetailMobileTitle(pathname: string) {
   if (pathname.startsWith('/mobile/map/register')) {
-    return '서울 촌놈 나들이 추가';
+    return '기록하기';
   }
 
   if (pathname.startsWith('/mobile/map/')) {
-    return '서울 촌놈 나들이 경로 😎';
+    return '나들이 경로';
   }
 
   if (pathname.startsWith('/mobile/')) {
-    return '서울 촌놈의 신발 추천 👟';
+    return '신발 상세';
   }
 
   return 'DETAIL';
@@ -35,7 +35,7 @@ export function DetailMobileShell({
     title === 'DETAIL' ? getDetailMobileTitle(pathname) : title;
 
   return (
-    <div className={cn('slcn-shell-detail-mobile pink-mesh', className)}>
+    <div className={cn('slcn-shell-detail-mobile', className)}>
       <MobileTopBar
         title={resolvedTitle}
         backHref={buildDeviceRootPath('mobile')}

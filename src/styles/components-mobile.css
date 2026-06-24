@@ -2,7 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 2px solid var(--color-border-strong);
+  border-bottom: 1px solid #f1e3e8;
+  background: rgba(255, 248, 248, 0.85);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
 .slcn-mobile-topbar__inner {
@@ -17,12 +19,39 @@
   padding: 0 1rem;
 }
 
-.slcn-mobile-topbar__leading,
+.slcn-mobile-topbar__leading {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-ink);
+}
+
 .slcn-mobile-topbar__trailing {
+  flex-shrink: 0;
   width: 1.25rem;
   font-size: 1.25rem;
   line-height: 1;
   color: var(--color-ink);
+}
+
+.slcn-mobile-topbar__avatar {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #ffe8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #c58ea3;
+}
+
+.slcn-mobile-topbar__logo {
+  display: block;
+  height: 1.75rem;
+  width: auto;
 }
 
 .slcn-mobile-topbar__title {
@@ -33,8 +62,8 @@
 
 .slcn-mobile-topbar__title-text {
   overflow: hidden;
-  font-size: 1.625rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -46,17 +75,19 @@
   bottom: 0;
   left: 0;
   z-index: 30;
-  border-top: 2px solid var(--color-border-strong);
+  border-top: 1px solid #f1e3e8;
+  background: rgba(255, 248, 248, 0.85);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
 .slcn-mobile-bottom-nav__list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.25rem;
   width: 100%;
   max-width: 28rem;
   margin: 0 auto;
-  padding: 0.375rem 0.625rem;
+  padding: 0.5rem 0.5rem 1.125rem;
   list-style: none;
 }
 
@@ -66,22 +97,23 @@
   align-items: center;
   justify-content: center;
   min-height: 3rem;
+  gap: 0.1875rem;
   text-align: center;
-  color: rgb(0 0 0 / 40%);
+  color: #b7a7ad;
+  text-decoration: none;
 }
 
 .slcn-mobile-bottom-nav__link--active {
-  color: var(--color-ink);
+  color: var(--color-primary);
 }
 
 .slcn-mobile-bottom-nav__icon {
-  font-size: 1.125rem;
   line-height: 1;
+  display: flex;
 }
 
 .slcn-mobile-bottom-nav__label {
-  margin-top: 0.125rem;
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   font-weight: 700;
 }
 
@@ -105,31 +137,131 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.slcn-trip-list-section__search-row {
-  display: grid;
+.slcn-shell-mobile .slcn-calendar-toolbar__view-toggle {
+  min-width: 8rem;
 }
 
-.slcn-calendar-toolbar__controls {
-  align-items: stretch;
+/* Label + 3 chips on the first row; the manage button wraps to its own
+   right-aligned second row. */
+.slcn-shell-mobile .slcn-calendar-toolbar__legend-row {
+  flex-wrap: wrap;
 }
 
-.slcn-calendar-toolbar__nav,
-.slcn-calendar-toolbar__view-toggle,
-.slcn-calendar-toolbar__controls > .slcn-button {
+.slcn-shell-mobile .slcn-calendar-toolbar__legend {
+  flex-wrap: nowrap;
+  gap: 0.375rem;
+}
+
+.slcn-shell-mobile .slcn-calendar-toolbar__chip {
+  flex-shrink: 0;
+  min-height: 2.25rem;
+  padding: 0 0.625rem;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.slcn-shell-mobile .slcn-calendar-toolbar__legend-row > .slcn-button {
   width: 100%;
-}
-
-.slcn-calendar-toolbar__legend-header > .slcn-button {
-  width: 100%;
-}
-
-.slcn-calendar-toolbar__nav > * {
-  flex: 1 1 0;
+  margin-left: 0;
+  justify-content: flex-end;
 }
 
 .slcn-calendar-surface {
   padding: 0.75rem;
-  border-radius: 1.25rem;
+  border-radius: var(--radius-md);
+}
+
+/* Mobile month view: taller, airier week rows so the centered day number and
+   the event dots below it have clear vertical breathing room. */
+.slcn-shell-mobile .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-day-frame {
+  min-height: 3.25rem;
+}
+
+/* Mobile month view: collapse events to small colored dots */
+.slcn-shell-mobile .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-day-events {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  min-height: 0.875rem;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-event-harness {
+  position: static !important;
+  width: auto;
+  /*
+   * Each harness wraps a 1.5rem (24px) tap target around a 0.375rem (6px) dot.
+   * Pull adjacent harnesses together with negative horizontal margins so the
+   * visible dots sit in a tight row; the larger transparent tap areas may
+   * overlap, which is fine for tapping.
+   */
+  margin-inline: -0.5625rem;
+}
+
+/*
+ * The visible mark stays a small ~6px dot (drawn via ::after), but the <a>
+ * event element itself is sized to a ~24px tap target so it can be tapped
+ * reliably. Keep the background transparent so only the inner dot shows.
+ */
+.slcn-shell-mobile .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-block-event {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px;
+  overflow: visible;
+  background: transparent !important;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-block-event::before {
+  display: none;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-block-event::after {
+  content: "";
+  display: block;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--slcn-event-color, #fe9fc8);
+  pointer-events: none;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-block-event
+  .fc-event-main {
+  display: none;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-surface
+  .fc-dayGridMonth-view
+  .fc-daygrid-day-bottom {
+  display: none;
 }
 
 .slcn-calendar-surface .fc .fc-col-header-cell-cushion,
@@ -137,21 +269,178 @@
   font-size: 0.8125rem;
 }
 
+/* Mobile month view keeps the day number centered (desktop is left-aligned)
+   with a little top breathing room above the dots. */
+.slcn-shell-mobile .slcn-calendar-surface .fc-daygrid-day-top {
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
 .slcn-calendar-surface .fc-timegrid-slot {
   height: 2.5rem;
 }
 
-.slcn-shoes-catalog-page__intro {
-  padding: 1.5rem;
+/* ---- Mobile week agenda (day strip + agenda list) ---- */
+.slcn-shell-mobile .slcn-calendar-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.slcn-shoes-brand-section__badge {
-  width: 5.5rem;
-  height: 5.5rem;
+.slcn-shell-mobile .slcn-calendar-agenda__strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.slcn-shoes-brand-section__grid,
-.slcn-shoe-detail-page__reviews-grid {
+.slcn-shell-mobile .slcn-calendar-agenda__chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas-pure);
+  color: var(--color-body);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__chip-weekday {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-body-muted);
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__chip-day {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-agenda__chip--sunday
+  .slcn-calendar-agenda__chip-day {
+  color: var(--color-error);
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-agenda__chip--saturday
+  .slcn-calendar-agenda__chip-day {
+  color: #2563eb;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__chip--selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.slcn-shell-mobile
+  .slcn-calendar-agenda__chip--selected
+  .slcn-calendar-agenda__chip-weekday,
+.slcn-shell-mobile
+  .slcn-calendar-agenda__chip--selected
+  .slcn-calendar-agenda__chip-day {
+  color: var(--color-body-on-dark);
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__heading {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-body);
+}
+
+/* ---- Scrollable agenda (whole period, grouped by day) ---- */
+.slcn-shell-mobile .slcn-calendar-agenda-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  /* Leave room within the mobile viewport, accounting for the bottom nav. */
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda-day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  scroll-margin-top: 0;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda-day > .slcn-calendar-agenda__heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.25rem 0;
+  background: var(--color-canvas);
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__empty {
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-body-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__event {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.75rem 0.875rem 0.75rem 1rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas-pure);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__event::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 0.25rem;
+  background: var(--slcn-agenda-accent, var(--color-primary));
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__event-time {
+  font-size: 0.75rem;
+  color: var(--color-body-muted);
+}
+
+.slcn-shell-mobile .slcn-calendar-agenda__event-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-body);
+}
+
+.slcn-shell-mobile .slcn-shoes-brand-section__grid,
+.slcn-shell-mobile .slcn-shoe-detail-page__reviews-grid {
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -160,10 +449,143 @@
   padding: 1.5rem;
 }
 
-.slcn-home-hub__grid {
-  grid-template-columns: minmax(0, 1fr);
+/* ---- Mobile Home Hub ---- */
+.slcn-home-hub--mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.125rem 0 1.75rem;
 }
 
-.slcn-home-hub__hero {
-  padding: 1.5rem;
+.slcn-home-hub__mobile-hero {
+  background: #ffe8ef;
+  border: 1px solid #f6d6e0;
+  border-radius: var(--radius-xl);
+  padding: 1.375rem 1.25rem;
+}
+
+.slcn-home-hub__mobile-eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c58ea3;
+  font-weight: 700;
+}
+
+.slcn-home-hub__mobile-title {
+  margin: 0.5rem 0 0.375rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.slcn-home-hub__mobile-subtitle {
+  margin: 0 0 1rem;
+  color: #9b8c92;
+  font-size: 0.875rem;
+}
+
+.slcn-home-hub__mobile-stats {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.slcn-home-hub__mobile-stat {
+  flex: 1;
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.slcn-home-hub__mobile-stat-label {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c58ea3;
+  font-weight: 700;
+}
+
+.slcn-home-hub__mobile-stat-value {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.slcn-home-hub__mobile-stat-value--film {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* Mobile tile rows */
+.slcn-home-hub__mobile-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  background: #fff;
+  border: 1px solid #efe0e5;
+  border-radius: var(--radius-lg);
+  padding: 1.125rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.slcn-home-hub__mobile-tile-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  background: #ffe8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.slcn-home-hub__mobile-tile-body {
+  flex: 1;
+}
+
+.slcn-home-hub__mobile-tile-eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c58ea3;
+  font-weight: 700;
+}
+
+.slcn-home-hub__mobile-tile-title {
+  margin: 0.1875rem 0 0.125rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.slcn-home-hub__mobile-tile-desc {
+  margin: 0;
+  color: #9b8c92;
+  font-size: 0.8125rem;
+}
+
+/* Trip register step indicator: keep all 3 pills on one row at mobile widths. */
+.slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator {
+  flex-wrap: nowrap;
+  gap: 0.375rem;
+}
+
+.slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator > span {
+  flex: 1 1 0;
+  justify-content: center;
+  gap: 0.3125rem;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.slcn-shell-detail-mobile .slcn-trip-register-wizard__step-num {
+  width: 1.125rem;
+  height: 1.125rem;
+  font-size: 0.6875rem;
 }

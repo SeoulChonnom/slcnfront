@@ -8,12 +8,12 @@ describe('MobileBottomNav', () => {
       route: '/mobile/calendar',
     });
 
-    expect(screen.getByRole('link', { name: '홈' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '나들이' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '달력' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '신발' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /홈/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /기록/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /일정/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /신발/i })).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: '달력' }).getAttribute('aria-current')
+      screen.getByRole('link', { name: /일정/i }).getAttribute('aria-current')
     ).toBe('page');
   });
 });

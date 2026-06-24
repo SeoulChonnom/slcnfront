@@ -60,6 +60,8 @@ export function TripRegisterStepMaps({
       ) : null}
       <Button
         variant='secondary'
+        fullWidth
+        className='slcn-trip-register-step__toggle-map'
         onClick={() => {
           onFieldChange('hasSecondMap', !values.hasSecondMap);
 

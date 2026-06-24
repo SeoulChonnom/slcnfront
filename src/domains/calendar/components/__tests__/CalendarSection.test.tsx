@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -189,7 +195,7 @@ describe('CalendarSection', () => {
       });
     });
     await waitFor(() => {
-      expect(screen.queryByText('일정 만들기')).toBeNull();
+      expect(screen.queryByRole('heading', { name: '일정 추가' })).toBeNull();
     });
   });
 
@@ -201,7 +207,7 @@ describe('CalendarSection', () => {
     const { user } = renderSection();
 
     await user.click(screen.getByRole('button', { name: 'quick-create' }));
-    await screen.findByText('일정 만들기');
+    await screen.findByRole('heading', { name: '일정 추가' });
 
     fireEvent.change(screen.getAllByRole('textbox')[0], {
       target: { value: '현장 메모' },
@@ -278,9 +284,14 @@ describe('CalendarSection', () => {
     });
 
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
-    await screen.findByText('일정 만들기');
+    await screen.findByRole('heading', { name: '일정 추가' });
 
-    expect(screen.getByDisplayValue('편집 가능')).toBeTruthy();
+    const dialog = screen.getByRole('dialog');
+    expect(
+      within(dialog)
+        .getByRole('button', { name: '편집 가능' })
+        .getAttribute('aria-pressed')
+    ).toBe('true');
 
     fireEvent.change(screen.getAllByRole('textbox')[0], {
       target: { value: '편집 일정' },
@@ -361,7 +372,7 @@ describe('CalendarSection', () => {
     expect(
       screen.getAllByText(
         (_, element) =>
-          element?.className.includes('slcn-calendar-loading__panel') ?? false
+          element?.classList?.contains('slcn-calendar-loading__panel') ?? false
       ).length
     ).toBe(2);
   });
@@ -414,7 +425,7 @@ describe('CalendarSection', () => {
     const { user } = renderSection();
 
     await user.click(screen.getByRole('button', { name: 'quick-create' }));
-    await screen.findByText('일정 만들기');
+    await screen.findByRole('heading', { name: '일정 추가' });
 
     fireEvent.change(screen.getAllByRole('textbox')[0], {
       target: { value: '실패 일정' },
@@ -424,7 +435,7 @@ describe('CalendarSection', () => {
     await waitFor(() => {
       expect(screen.getByRole('alert').textContent).toContain('저장 실패');
     });
-    expect(screen.getByText('일정 만들기')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '일정 추가' })).toBeTruthy();
   });
 
   it('creates and updates calendars from the calendar manager modal', async () => {
@@ -434,6 +445,8 @@ describe('CalendarSection', () => {
     const { user } = renderSection({ schedules: [] });
 
     await user.click(screen.getByRole('button', { name: '캘린더 관리' }));
+    await screen.findByRole('heading', { name: '캘린더 관리' });
+    await user.click(screen.getByRole('button', { name: '새 캘린더 추가' }));
     await screen.findByText('캘린더 만들기');
 
     fireEvent.change(screen.getByRole('textbox', { name: '캘린더 이름' }), {
@@ -447,8 +460,7 @@ describe('CalendarSection', () => {
       );
     });
 
-    await user.click(screen.getByRole('button', { name: '캘린더 관리' }));
-    await user.click(screen.getByRole('button', { name: '아영 수정 가능' }));
+    await user.click(screen.getByRole('button', { name: '아영 편집' }));
     fireEvent.change(screen.getByDisplayValue('아영'), {
       target: { value: '아영 메인' },
     });

@@ -1,6 +1,7 @@
 import {
   type HTMLAttributes,
   type PropsWithChildren,
+  type ReactNode,
   useEffect,
   useId,
   useRef,
@@ -8,12 +9,20 @@ import {
 import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils/cn';
 
+type ModalTitleVariant = 'display' | 'heading' | 'eyebrow';
+
 type ModalProps = PropsWithChildren<{
   isOpen: boolean;
   onClose: () => void;
   title: string;
   description?: string;
   className?: string;
+  /** Header text alignment. Defaults to centered display style. */
+  align?: 'center' | 'left';
+  /** Visual style of the title text. */
+  titleVariant?: ModalTitleVariant;
+  /** Optional leading node rendered inline before the title (e.g. an icon). */
+  titleIcon?: ReactNode;
 }> &
   HTMLAttributes<HTMLDivElement>;
 
@@ -42,6 +51,9 @@ export function Modal({
   description,
   children,
   className,
+  align = 'center',
+  titleVariant = 'display',
+  titleIcon,
   onKeyDown,
   ...props
 }: ModalProps) {
@@ -131,6 +143,7 @@ export function Modal({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         className={cn('slcn-modal', className)}
+        data-align={align}
         ref={dialogRef}
         onKeyDown={(event) => {
           onKeyDown?.(event);
@@ -182,12 +195,21 @@ export function Modal({
         >
           ✕
         </button>
-        <div className='slcn-modal__sticker'>
-          <span aria-hidden='true'>⌘</span>
-        </div>
         <div className='slcn-modal__headline'>
           <div className='slcn-modal__title-wrap'>
-            <h2 id={titleId} className='slcn-modal__title display-hand'>
+            <h2
+              id={titleId}
+              className={cn(
+                'slcn-modal__title',
+                titleVariant === 'display' && 'display-hand'
+              )}
+              data-variant={titleVariant}
+            >
+              {titleIcon ? (
+                <span className='slcn-modal__title-icon' aria-hidden='true'>
+                  {titleIcon}
+                </span>
+              ) : null}
               {title}
             </h2>
           </div>

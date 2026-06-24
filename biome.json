@@ -5,12 +5,22 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "files": {
+    "includes": ["**", "!dist", "!build", "!node_modules", "!docs"]
+  },
   "javascript": {
     "formatter": {
       "semicolons": "always",
       "quoteStyle": "single",
       "jsxQuoteStyle": "single",
       "trailingCommas": "es5"
+    }
+  },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noImportantStyles": "off"
+      }
     }
   },
   "css": {

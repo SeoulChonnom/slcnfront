@@ -7,92 +7,106 @@ export type CalendarManageDraft = CalendarCreatePayload;
 
 type CalendarManageModalProps = {
   isOpen: boolean;
+  view: 'list' | 'editor';
   calendars: CalendarMeta[];
+  visibleCalendarIds: string[];
   draft: CalendarManageDraft;
   editingCalendarId: string | null;
   errorMessage: string | null;
   isSubmitting: boolean;
   onClose: () => void;
+  onToggleVisibility: (calendarId: string) => void;
   onDraftChange: (patch: Partial<CalendarManageDraft>) => void;
   onSubmit: () => Promise<void>;
   onDelete?: () => Promise<void>;
   onCreateNew: () => void;
   onEditCalendar: (calendarId: string) => void;
+  onBackToList: () => void;
 };
-
-function getCalendarBadgeTone(calendar: CalendarMeta) {
-  return calendar.editable ? '수정 가능' : '읽기 전용';
-}
 
 export function CalendarManageModal({
   isOpen,
+  view,
   calendars,
+  visibleCalendarIds,
   draft,
   editingCalendarId,
   errorMessage,
   isSubmitting,
   onClose,
+  onToggleVisibility,
   onDraftChange,
   onSubmit,
   onDelete,
   onCreateNew,
   onEditCalendar,
+  onBackToList,
 }: CalendarManageModalProps) {
-  const title = editingCalendarId ? '캘린더 수정' : '캘린더 만들기';
+  const title =
+    view === 'list'
+      ? '캘린더 관리'
+      : editingCalendarId
+        ? '캘린더 수정'
+        : '캘린더 만들기';
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={title}
-      description='일정 화면에서 바로 사용할 캘린더 색상과 편집 권한을 정리할 수 있어요.'
+      align='left'
+      titleVariant='heading'
       className='slcn-calendar-manage-modal'
     >
-      <div className='slcn-calendar-manage-modal__stack'>
-        <div className='slcn-calendar-manage-modal__library'>
-          <div className='slcn-calendar-manage-modal__library-header'>
-            <div>
-              <p className='slcn-field__label'>캘린더 목록</p>
-              <p className='slcn-calendar-manage-modal__library-copy'>
-                기존 캘린더를 수정하거나 새로운 캘린더를 추가해보세요.
-              </p>
-            </div>
-            <Button variant='secondary' size='sm' onClick={onCreateNew}>
-              새 캘린더
-            </Button>
-          </div>
-          <div className='slcn-calendar-manage-modal__library-grid'>
-            {calendars.map((calendar) => {
-              const active = calendar.id === editingCalendarId;
+      {view === 'list' ? (
+        <div className='slcn-calendar-manage-modal__list'>
+          {calendars.map((calendar) => {
+            const visible = visibleCalendarIds.includes(calendar.id);
 
-              return (
+            return (
+              <div
+                key={calendar.id}
+                className='slcn-calendar-manage-modal__row'
+              >
                 <button
-                  key={calendar.id}
                   type='button'
-                  aria-label={`${calendar.name} ${getCalendarBadgeTone(calendar)}`}
-                  className='slcn-calendar-manage-modal__calendar-card'
-                  data-active={active}
+                  aria-label={`${calendar.name} 편집`}
+                  className='slcn-calendar-manage-modal__row-main'
                   onClick={() => onEditCalendar(calendar.id)}
                 >
                   <span
-                    className='slcn-calendar-manage-modal__calendar-swatch'
+                    className='slcn-calendar-manage-modal__row-dot'
                     style={{ backgroundColor: calendar.backgroundColor }}
                     aria-hidden='true'
                   />
-                  <span className='slcn-calendar-manage-modal__calendar-meta'>
-                    <span className='slcn-calendar-manage-modal__calendar-name'>
-                      {calendar.name}
-                    </span>
-                    <span className='slcn-calendar-manage-modal__calendar-badge'>
-                      {getCalendarBadgeTone(calendar)}
-                    </span>
+                  <span className='slcn-calendar-manage-modal__row-name'>
+                    {calendar.name}
                   </span>
                 </button>
-              );
-            })}
-          </div>
-        </div>
+                <button
+                  type='button'
+                  role='switch'
+                  aria-checked={visible}
+                  aria-label={`${calendar.name} 표시`}
+                  className='slcn-toggle'
+                  data-on={visible}
+                  onClick={() => onToggleVisibility(calendar.id)}
+                >
+                  <span className='slcn-toggle__thumb' aria-hidden='true' />
+                </button>
+              </div>
+            );
+          })}
 
+          <button
+            type='button'
+            className='slcn-calendar-manage-modal__add'
+            onClick={onCreateNew}
+          >
+            <span aria-hidden='true'>+</span> 새 캘린더 추가
+          </button>
+        </div>
+      ) : (
         <form
           className='slcn-calendar-manage-modal__form'
           onSubmit={async (submitEvent) => {
@@ -103,6 +117,8 @@ export function CalendarManageModal({
           <TextField
             label='캘린더 이름'
             value={draft.name}
+            placeholder='예) 아영'
+            autoFocus
             onChange={(event) => {
               onDraftChange({ name: event.target.value });
             }}
@@ -256,16 +272,16 @@ export function CalendarManageModal({
               variant='secondary'
               type='button'
               disabled={isSubmitting}
-              onClick={onClose}
+              onClick={onBackToList}
             >
-              닫기
+              뒤로
             </Button>
             <Button type='submit' loading={isSubmitting}>
               저장
             </Button>
           </div>
         </form>
-      </div>
+      )}
     </Modal>
   );
 }

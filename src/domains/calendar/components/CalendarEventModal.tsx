@@ -20,7 +20,7 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
     onDelete,
     onDraftChange,
   } = editor;
-  const title = event ? '일정 수정' : '일정 만들기';
+  const title = event ? '일정 수정' : '일정 추가';
   const editableCalendars = calendars.filter((calendar) => calendar.editable);
 
   return (
@@ -28,7 +28,8 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       title={title}
-      description='일정 내용을 입력하고 바로 저장할 수 있어요.'
+      align='left'
+      titleVariant='heading'
       className='slcn-calendar-modal'
     >
       <form
@@ -38,28 +39,10 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           await onSubmit();
         }}
       >
-        <label className='slcn-calendar-modal__select-field'>
-          <span className='slcn-field__label'>캘린더</span>
-          <select
-            value={draft.calendarId}
-            className='slcn-calendar-modal__select'
-            disabled={isSubmitting || editableCalendars.length === 0}
-            onChange={(changeEvent) => {
-              onDraftChange({
-                calendarId: changeEvent.target.value,
-              });
-            }}
-          >
-            {editableCalendars.map((calendar) => (
-              <option key={calendar.id} value={calendar.id}>
-                {calendar.name}
-              </option>
-            ))}
-          </select>
-        </label>
         <TextField
           label='제목'
           value={draft.title}
+          placeholder='예) 부암동 나들이'
           autoFocus
           onChange={(changeEvent) => {
             onDraftChange({
@@ -68,6 +51,35 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
           }}
           required
         />
+        <div className='slcn-calendar-modal__field'>
+          <span className='slcn-field__label'>캘린더</span>
+          <div className='slcn-calendar-modal__chips'>
+            {editableCalendars.map((calendar) => {
+              const active = calendar.id === draft.calendarId;
+
+              return (
+                <button
+                  key={calendar.id}
+                  type='button'
+                  className='slcn-calendar-modal__chip'
+                  data-active={active}
+                  aria-pressed={active}
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    onDraftChange({ calendarId: calendar.id });
+                  }}
+                >
+                  <span
+                    className='slcn-calendar-modal__chip-dot'
+                    style={{ backgroundColor: calendar.backgroundColor }}
+                    aria-hidden='true'
+                  />
+                  <span>{calendar.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
         <TextareaField
           label='설명'
           value={draft.body}

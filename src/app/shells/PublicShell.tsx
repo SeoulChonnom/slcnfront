@@ -8,7 +8,7 @@ type PublicShellProps = PropsWithChildren<{
 
 export function PublicShell({ children, className }: PublicShellProps) {
   return (
-    <div className={cn('slcn-shell-public pink-mesh', className)}>
+    <div className={cn('slcn-shell-public', className)}>
       <main className='slcn-shell-public__main'>
         <div className='slcn-shell-public__inner'>{children ?? <Outlet />}</div>
       </main>

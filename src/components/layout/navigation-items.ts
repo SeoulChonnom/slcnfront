@@ -13,16 +13,21 @@ export type NavigationItem = {
   end?: boolean;
 };
 
-export function getPrimaryNavigationItems(
+export function getDesktopNavigationItems(
   device: DeviceType
 ): NavigationItem[] {
-  const filmUrl = 'http://naver.me/52RjLNuT';
+  return [
+    { label: '나들이 기록', to: buildDeviceTripListPath(device) },
+    { label: '나들이 일정', to: buildDeviceCalendarMonthPath(device) },
+    { label: '신발 추천', to: buildDeviceShoesCatalogPath(device) },
+  ];
+}
 
+export function getMobileNavigationItems(device: DeviceType): NavigationItem[] {
   return [
     { label: '홈', to: buildDeviceRootPath(device), end: true },
-    { label: '나들이', to: buildDeviceTripListPath(device) },
-    { label: '달력', to: buildDeviceCalendarMonthPath(device) },
+    { label: '기록', to: buildDeviceTripListPath(device) },
+    { label: '일정', to: buildDeviceCalendarMonthPath(device) },
     { label: '신발', to: buildDeviceShoesCatalogPath(device) },
-    { label: '필름', to: filmUrl, external: true },
   ];
 }

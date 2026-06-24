@@ -102,11 +102,11 @@ describe('CalendarEventModal', () => {
       />
     );
 
-    expect(screen.getByText('일정 만들기')).toBeTruthy();
+    expect(screen.getByText('일정 추가')).toBeTruthy();
     expect(screen.getByDisplayValue('초기 제목')).toBeTruthy();
     expect(screen.getByRole('alert').textContent).toContain('검증 오류');
-    expect(screen.getByRole('option', { name: '아영' })).toBeTruthy();
-    expect(screen.queryByRole('option', { name: '읽기 전용' })).toBeNull();
+    expect(screen.getByRole('button', { name: '아영' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: '읽기 전용' })).toBeNull();
 
     fireEvent.change(screen.getAllByRole('textbox')[0], {
       target: { value: '수정 제목' },

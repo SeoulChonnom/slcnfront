@@ -30,14 +30,25 @@ Use Node.js 24 and `pnpm`.
 ## Coding Style & Naming Conventions
 
 Follow existing TypeScript + React patterns with 2-space indentation and ES module imports. Use `PascalCase` for components and pages (`TripRegisterPage.tsx`), `camelCase` for hooks and utilities (`useRestoreSession.ts`, `trip-validation.ts`), and colocate tests in `__tests__/`.
-Biome is configured in `biome.json`. Before commit, please run `npx @biomejs/biome check --write` for formatting and linting.
-Before commit, please run `pnpm run knip` for checking unused files, dependencies, and exports. It is configured and executable, but currently reports known existing unused files, dependencies, and exports. Do not treat those as newly introduced unless a change adds to them.
+Biome is configured in `biome.json`. Before finish your job, please run `npx @biomejs/biome check --write src/` for formatting and linting.
+Before finish your job, please run `pnpm run knip` for checking unused files, dependencies, and exports. It is configured and executable, but currently reports known existing unused files, dependencies, and exports. Do not treat those as newly introduced unless a change adds to them.
 
 ## Testing Guidelines
 
 Tests use `Vitest`, `@testing-library/react`, `jsdom`, and `msw`. Global setup lives in `src/test/setup.ts`; shared render helpers and mock server utilities are under `src/test/helpers/`.
 
 Name tests `*.test.ts` or `*.test.tsx`. Place feature tests next to the code they cover, for example `src/app/router/__tests__/guards.test.tsx`. Run `pnpm test` before opening a PR, and add or update regression coverage when routing, auth bootstrap, or API behavior changes.
+
+## Playwright Capture Guidelines
+
+Most app routes under `/main/*` and `/mobile/*` are protected by the router auth guard. If Playwright opens a protected route without an authenticated session, the app redirects to the matching login route (`/main/login` or `/mobile/login`) with a `redirect` query. When taking screenshots or inspecting UI with Playwright, do not treat a login page capture as the target page unless the login page is the explicit subject.
+
+Before capturing protected pages, sign in through the UI using the development server account:
+
+- ID: `string`
+- Password: `string`
+
+After submitting login, wait for the redirect target or expected protected route to render before taking screenshots. For desktop captures, use `/main/...` routes; for mobile captures, use `/mobile/...` routes and a mobile-sized viewport.
 
 ## Commit & Pull Request Guidelines
 

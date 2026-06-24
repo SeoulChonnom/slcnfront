@@ -1,15 +1,25 @@
+export type FileRef = {
+  type: string;
+  filename: string;
+};
+
+export function fileRefKey(ref: FileRef): string {
+  return `${ref.type}/${ref.filename}`;
+}
+
 export type TripListItemDto = {
   id: string;
   date: string;
   type: string;
   name: string;
-  logo: string;
+  description?: string;
+  logo: FileRef;
 };
 
 export type TripDetailDto = {
   date: string;
-  firstMap: string;
-  secondMap: string;
+  firstMap: FileRef;
+  secondMap: FileRef | null;
   nextButtonText: string;
   previousButtonText: string;
   driveUrl: string;
@@ -36,14 +46,15 @@ export type TripListItem = {
   date: string;
   type: string;
   name: string;
+  description?: string;
   displayDate: string;
-  logoPath: string;
+  logo: FileRef;
 };
 
 export type TripDetail = {
   date: string;
-  firstMapPath: string;
-  secondMapPath: string;
+  firstMap: FileRef;
+  secondMap: FileRef | null;
   nextButtonText: string;
   previousButtonText: string;
   driveUrl: string;
@@ -83,9 +94,9 @@ export type TripCdo = {
   date: string;
   type: string;
   name: string;
-  logo: string;
-  firstMap: string;
-  secondMap?: string;
+  logo: FileRef;
+  firstMap: FileRef;
+  secondMap?: FileRef;
   nextButtonText?: string;
   previousButtonText?: string;
   driveUrl: string;
@@ -93,7 +104,7 @@ export type TripCdo = {
 };
 
 export type TripRegisterAssetPaths = {
-  logo: string;
-  firstMap: string;
-  secondMap?: string;
+  logo: FileRef;
+  firstMap: FileRef;
+  secondMap?: FileRef;
 };

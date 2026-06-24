@@ -1,6 +1,6 @@
 # SLCN Frontend
 
-기존 Vue 기반 SLCN 서비스를 `Vite + React + TypeScript` 구조로 옮긴 프론트엔드입니다. 내부 라우트는 `/main/*`, `/mobile/*` 구조를 사용하고, 공개 URL은 엔트리 라우트에서 디바이스별 내부 URL로 리다이렉트합니다.
+기존 Vue 기반 SLCN 서비스를 `Vite + React + TypeScript` 구조로 옮긴 프론트엔드입니다. 라우트는 `/main/*`, `/mobile/*` 내부 디바이스 경로만 사용합니다.
 
 ## 실행
 
@@ -20,19 +20,7 @@ pnpm build
 pnpm lint
 ```
 
-## 공개 URL
-
-- `/`
-- `/login`
-- `/map`
-- `/map/register`
-- `/map/:date`
-- `/calendar`
-- `/calendar/week`
-- `/shoesRecom`
-- `/:brand/:shoesName`
-
-## 내부 URL
+## 라우트
 
 - `/main/*`
 - `/mobile/*`
@@ -51,6 +39,6 @@ pnpm lint
 
 ## 참고 문서
 
-- 계획 문서: `docs/refactoring_plan`
+- 프로젝트 규칙: `rules.md`
 - API 명세: `docs/api_spec.json`
 - 디자인 기준: `docs/design/design.pen`

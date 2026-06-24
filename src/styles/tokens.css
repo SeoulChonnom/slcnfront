@@ -1,24 +1,60 @@
 :root {
+  /* Colors */
+  --color-primary: #fe9fc8;
+  --color-primary-focus: #ff7fb8;
+  --color-primary-on-dark: #fe9fc8;
+
+  --color-ink: #1b1b1b;
+  --color-body: #1b1b1b;
+  --color-body-muted: #6f666a;
+  --color-body-on-dark: #ffffff;
+  --color-body-muted-on-dark: #d8ced2;
+
+  --color-canvas: #fff8f8;
+  --color-canvas-pure: #ffffff;
+  --color-surface-pearl: #ffffff;
+  --color-surface-soft: #ffe8ef;
+  --color-surface-muted: #f8eef1;
+
+  --color-surface-dark-1: #1b1b1b;
+  --color-surface-dark-2: #242124;
+  --color-surface-dark-3: #2b2629;
+
+  --color-divider-soft: rgba(27, 27, 27, 0.08);
+  --color-hairline: rgba(27, 27, 27, 0.12);
+  --color-overlay: rgba(27, 27, 27, 0.42);
+
+  --color-on-primary: #1b1b1b;
+  --color-on-dark: #ffffff;
+
+  /* Backward compat aliases */
   --color-brand-pink: #fe9fc8;
-  --color-brand-pink-strong: #ff6cab;
-  --color-brand-pink-soft: #ffdceb;
-  --color-ink: #000000;
+  --color-brand-pink-strong: #ff7fb8;
+  --color-brand-pink-soft: #ffe8ef;
   --color-surface: #ffffff;
-  --color-surface-muted: #fff7fb;
-  --color-surface-elevated: #fff1f8;
-  --color-ink-muted: #4f4f4f;
-  --color-ink-soft: #6e6e6e;
-  --color-border-strong: #000000;
-  --color-border-soft: rgba(0, 0, 0, 0.14);
+  --color-ink-muted: #6f666a;
+  --color-ink-soft: #6f666a;
+  --color-border-soft: rgba(27, 27, 27, 0.12);
+  --color-border-strong: rgba(27, 27, 27, 0.12);
+
+  /* Semantic */
   --color-success: #1f9d68;
   --color-error: #d64545;
+  --color-error-surface: #fff1f1;
   --color-warning: #f2a93b;
 
-  --font-display: "Patrick Hand", "Comic Sans MS", "Marker Felt", cursive;
-  --font-body: "Plus Jakarta Sans", "Inter", "Segoe UI", system-ui, sans-serif;
+  /* Typography */
+  --font-display:
+    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+  --font-body:
+    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
   --font-caption:
-    "Plus Jakarta Sans", "Inter", "Segoe UI", system-ui, sans-serif;
+    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
 
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -27,16 +63,36 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-10: 2.5rem;
+  --space-section: 5rem;
+  --space-section-lg: 7rem;
 
-  --shadow-card: 0 4px 0 0 #000000;
-  --shadow-pink: 3px 3px 0 0 #fe9fc8;
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.08);
-  --shadow-floating: 0 18px 32px rgba(0, 0, 0, 0.14);
-  --border-thick: 4px;
-  --border-medium: 2px;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1.5rem;
-  --radius-blob: 2rem 2.5rem 1.75rem 2.25rem;
-  --radius-pill: 999px;
+  /* Elevation */
+  --shadow-card: none;
+  --shadow-pink: none;
+  --shadow-soft: none;
+  --shadow-floating: 0 8px 30px rgba(27, 27, 27, 0.08);
+  --shadow-image: 3px 5px 30px rgba(27, 27, 27, 0.18);
+  --shadow-modal: 0 24px 80px rgba(27, 27, 27, 0.16);
+  --elevation-hairline: 0 0 0 1px rgba(27, 27, 27, 0.08);
+
+  /* Borders */
+  --border-thick: 1px;
+  --border-medium: 1px;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --duration-fast: 160ms;
+  --duration-default: 240ms;
+  --duration-page: 360ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --press-scale: 0.96;
 }

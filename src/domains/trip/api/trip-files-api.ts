@@ -1,20 +1,22 @@
 import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import type { FileRef } from '../types';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 
 type TripFileUploadKind = 'logo' | 'map1' | 'map2';
 
-function mapTripFileUploadPath(kind: TripFileUploadKind) {
+function mapTripFileUploadType(kind: TripFileUploadKind): string {
   return kind === 'logo' ? 'logo' : 'map';
 }
 
 export function createTripFilesApi(client: ApiClientLike = apiClient) {
   return {
-    downloadTripFile(path: string) {
+    downloadTripFile(ref: FileRef) {
       return client.get<Blob>({
         path: '/file',
         query: {
-          path,
+          type: ref.type,
+          filename: ref.filename,
         },
         responseType: 'blob',
       });
@@ -24,13 +26,12 @@ export function createTripFilesApi(client: ApiClientLike = apiClient) {
 
       formData.append('file', file);
 
-      return client.post<string>({
+      return client.post<FileRef>({
         path: '/file',
         query: {
-          path: mapTripFileUploadPath(kind),
+          type: mapTripFileUploadType(kind),
         },
         body: formData,
-        responseType: 'text',
       });
     },
   };
