@@ -29,21 +29,21 @@ export function createTripApi(client: ApiClientLike = apiClient) {
   return {
     async getTripList(): Promise<TripListItem[]> {
       const response = await client.get<TripListItemDto[]>({
-        path: '/trip',
+        path: '/trips',
       });
 
       return parseTripListResponse(response).map(mapTripListItemDto);
     },
     async getTripDetail(id: string): Promise<TripDetail> {
       const response = await client.get<TripDetailDto>({
-        path: `/trip/${encodeURIComponent(id)}`,
+        path: `/trips/${encodeURIComponent(id)}`,
       });
 
       return mapTripDetailDto(parseTripDetailResponse(response, 'detail'));
     },
     async getTripQuiz(tripId: string): Promise<TripQuiz> {
       const response = await client.get<QuizRdo>({
-        path: `/trip/quiz/${encodeURIComponent(tripId)}`,
+        path: `/trips/quiz/${encodeURIComponent(tripId)}`,
       });
 
       return mapTripQuizDto(parseTripQuizResponse(response));
@@ -53,7 +53,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
       optionId: string
     ): Promise<TripQuizFeedback> {
       const response = await client.get<QuizResultRdo>({
-        path: '/trip/quiz/check',
+        path: '/trips/quiz/check',
         query: {
           tripId,
           optionId,
@@ -64,7 +64,7 @@ export function createTripApi(client: ApiClientLike = apiClient) {
     },
     async registerTrip(payload: TripCdo): Promise<TripDetail> {
       const response = await client.post<TripDetailDto>({
-        path: '/trip',
+        path: '/trips',
         body: payload,
       });
 

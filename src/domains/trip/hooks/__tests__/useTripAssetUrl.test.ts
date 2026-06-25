@@ -1,12 +1,25 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tripFilesApi } from '../../api/trip-files-api';
-import type { FileRef } from '../../types';
+import type { FileAsset } from '../../types';
 import { useTripAssetUrl } from '../useTripAssetUrl';
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
 
 vi.mock('../../api/trip-files-api', () => ({
   tripFilesApi: {
-    downloadTripFile: vi.fn(async (ref: FileRef) => {
+    downloadTripFile: vi.fn(async (ref: FileAsset) => {
       return new File([ref.filename], `${ref.filename}.png`, {
         type: 'image/png',
       });
@@ -28,7 +41,7 @@ describe('useTripAssetUrl', () => {
 
   it('loads a single asset and cleans up its object url', async () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
-    const ref: FileRef = { type: 'map', filename: 'map1.png' };
+    const ref = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
     const { result, unmount } = renderHook(() => useTripAssetUrl(ref));
 
     expect(result.current.isPending).toBe(true);

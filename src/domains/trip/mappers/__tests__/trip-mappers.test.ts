@@ -1,37 +1,58 @@
 import { describe, expect, it } from 'vitest';
+import type { FileAsset } from '../../types';
 import {
   buildTripRegisterPayload,
   mapTripDetailDto,
   mapTripListItemDto,
 } from '../trip-mappers';
 
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
+
 describe('trip-mappers', () => {
   it('maps trip list and detail dto shapes', () => {
+    const logoAsset = fileAsset({
+      fileId: 'logo-1',
+      type: 'logo',
+      filename: 'logo.png',
+    });
+    const firstMapAsset = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
+
     expect(
       mapTripListItemDto({
         id: 'trip-1',
         date: '20991231',
         type: 'year-end',
         name: '연말 나들이',
-        logo: { type: 'logo', filename: 'logo.png' },
+        logo: logoAsset,
       })
     ).toMatchObject({
       displayDate: '2099.12.31',
-      logo: { type: 'logo', filename: 'logo.png' },
+      logo: logoAsset,
       type: 'year-end',
     });
 
     expect(
       mapTripDetailDto({
         date: '20991231',
-        firstMap: { type: 'map', filename: 'map1.png' },
+        firstMap: firstMapAsset,
         secondMap: null,
         nextButtonText: '',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
       })
     ).toMatchObject({
-      firstMap: { type: 'map', filename: 'map1.png' },
+      firstMap: firstMapAsset,
       secondMap: null,
       nextButtonText: '',
       previousButtonText: '이전',
@@ -61,9 +82,9 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도하세요.',
       },
       {
-        logo: { type: 'logo', filename: 'logo.png' },
-        firstMap: { type: 'map', filename: 'map1.png' },
-        secondMap: { type: 'map', filename: 'map2.png' },
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+        secondMapFileId: 'map-2',
       }
     );
 
@@ -71,9 +92,9 @@ describe('trip-mappers', () => {
       date: '2099-12-31',
       type: 'A',
       name: '연말 나들이',
-      logo: { type: 'logo', filename: 'logo.png' },
-      firstMap: { type: 'map', filename: 'map1.png' },
-      secondMap: { type: 'map', filename: 'map2.png' },
+      logoFileId: 'logo-1',
+      firstMapFileId: 'map-1',
+      secondMapFileId: 'map-2',
       nextButtonText: '1차 경로',
       previousButtonText: '2차 경로',
       driveUrl: 'https://drive.google.com/x',
@@ -117,8 +138,8 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도하세요.',
       },
       {
-        logo: { type: 'logo', filename: 'logo.png' },
-        firstMap: { type: 'map', filename: 'map1.png' },
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
       }
     );
 
@@ -153,9 +174,9 @@ describe('trip-mappers', () => {
         quizErrorText: '다시 시도',
       },
       {
-        logo: { type: 'logo', filename: 'logo.png' },
-        firstMap: { type: 'map', filename: 'map1.png' },
-        secondMap: undefined,
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+        secondMapFileId: undefined,
       }
     );
 
@@ -163,8 +184,8 @@ describe('trip-mappers', () => {
       date: '2099-12-31',
       type: 'A',
       name: '봄 나들이',
-      logo: { type: 'logo', filename: 'logo.png' },
-      firstMap: { type: 'map', filename: 'map1.png' },
+      logoFileId: 'logo-1',
+      firstMapFileId: 'map-1',
       driveUrl: 'https://drive.google.com/spring',
       quiz: {
         title: '정답은?',
@@ -178,7 +199,7 @@ describe('trip-mappers', () => {
         ],
       },
     });
-    expect(payload).not.toHaveProperty('secondMap');
+    expect(payload).not.toHaveProperty('secondMapFileId');
     expect(payload).not.toHaveProperty('nextButtonText');
     expect(payload).not.toHaveProperty('previousButtonText');
   });

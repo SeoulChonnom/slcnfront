@@ -38,24 +38,24 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
         throw new Error('Trip registration requires logo and first map files.');
       }
 
-      const logoPath = await tripFilesApi.uploadTripFile(
+      const logoAsset = await tripFilesApi.uploadTripFile(
         'logo',
         nextValues.logo
       );
-      const firstMapPath = await tripFilesApi.uploadTripFile(
+      const firstMapAsset = await tripFilesApi.uploadTripFile(
         'map1',
         nextValues.map1
       );
-      const secondMapPath =
+      const secondMapAsset =
         nextValues.hasSecondMap && nextValues.map2
           ? await tripFilesApi.uploadTripFile('map2', nextValues.map2)
           : undefined;
 
       await tripApi.registerTrip(
         buildTripRegisterPayload(nextValues, {
-          logo: logoPath,
-          firstMap: firstMapPath,
-          secondMap: secondMapPath,
+          logoFileId: logoAsset.fileId,
+          firstMapFileId: firstMapAsset.fileId,
+          secondMapFileId: secondMapAsset?.fileId,
         })
       );
     },

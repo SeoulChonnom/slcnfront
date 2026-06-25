@@ -1,10 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { AppError } from '../../../../lib/api/errors';
+import type { FileAsset } from '../../types';
 import {
   parseTripDetailResponse,
   parseTripQuizCheckResponse,
   parseTripQuizResponse,
 } from '../trip-schemas';
+
+const firstMapAsset: FileAsset = {
+  fileId: 'map-1',
+  type: 'map',
+  originalFilename: 'map1.png',
+  filename: 'map1.png',
+  path: '/files/map1.png',
+  mimeType: 'image/png',
+  size: 1024,
+};
 
 describe('trip-schemas', () => {
   it('defaults optional trip detail fields when omitted', () => {
@@ -12,14 +23,14 @@ describe('trip-schemas', () => {
       parseTripDetailResponse(
         {
           date: '2099-12-31',
-          firstMap: { type: 'map', filename: 'map1.png' },
+          firstMap: firstMapAsset,
           driveUrl: 'https://drive.google.com/x',
         },
         'detail'
       )
     ).toEqual({
       date: '2099-12-31',
-      firstMap: { type: 'map', filename: 'map1.png' },
+      firstMap: firstMapAsset,
       secondMap: null,
       nextButtonText: '',
       previousButtonText: '',
@@ -32,7 +43,7 @@ describe('trip-schemas', () => {
       parseTripDetailResponse(
         {
           date: '2099-12-31',
-          firstMap: { type: 'map', filename: 'map1.png' },
+          firstMap: firstMapAsset,
           drive: 'https://drive.google.com/x',
         },
         'detail'
