@@ -1,10 +1,15 @@
-export type FileRef = {
+export type FileAsset = {
+  fileId: string;
   type: string;
+  originalFilename: string;
   filename: string;
+  path: string;
+  mimeType: string;
+  size: number;
 };
 
-export function fileRefKey(ref: FileRef): string {
-  return `${ref.type}/${ref.filename}`;
+export function fileAssetKey(asset: FileAsset): string {
+  return asset.fileId;
 }
 
 export type TripListItemDto = {
@@ -13,13 +18,13 @@ export type TripListItemDto = {
   type: string;
   name: string;
   description?: string;
-  logo: FileRef;
+  logo: FileAsset;
 };
 
 export type TripDetailDto = {
   date: string;
-  firstMap: FileRef;
-  secondMap: FileRef | null;
+  firstMap: FileAsset;
+  secondMap: FileAsset | null;
   nextButtonText: string;
   previousButtonText: string;
   driveUrl: string;
@@ -48,13 +53,13 @@ export type TripListItem = {
   name: string;
   description?: string;
   displayDate: string;
-  logo: FileRef;
+  logo: FileAsset;
 };
 
 export type TripDetail = {
   date: string;
-  firstMap: FileRef;
-  secondMap: FileRef | null;
+  firstMap: FileAsset;
+  secondMap: FileAsset | null;
   nextButtonText: string;
   previousButtonText: string;
   driveUrl: string;
@@ -94,17 +99,17 @@ export type TripCdo = {
   date: string;
   type: string;
   name: string;
-  logo: FileRef;
-  firstMap: FileRef;
-  secondMap?: FileRef;
+  logoFileId: string;
+  firstMapFileId: string;
+  secondMapFileId?: string;
   nextButtonText?: string;
   previousButtonText?: string;
   driveUrl: string;
   quiz: QuizCdo;
 };
 
-export type TripRegisterAssetPaths = {
-  logo: FileRef;
-  firstMap: FileRef;
-  secondMap?: FileRef;
+export type TripRegisterAssetIds = {
+  logoFileId: string;
+  firstMapFileId: string;
+  secondMapFileId?: string;
 };

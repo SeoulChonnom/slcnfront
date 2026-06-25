@@ -9,7 +9,7 @@ import type {
   TripListItem,
   TripListItemDto,
   TripQuiz,
-  TripRegisterAssetPaths,
+  TripRegisterAssetIds,
 } from '../types';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 
@@ -55,7 +55,7 @@ export function mapTripQuizCheckDto(dto: QuizResultRdo) {
 
 export function buildTripRegisterPayload(
   values: TripRegisterWizardValues,
-  assetPaths: TripRegisterAssetPaths
+  assetIds: TripRegisterAssetIds
 ): TripCdo {
   const selectedAnswerIndex =
     values.quizAnswer.trim() === '' ? null : Number(values.quizAnswer) - 1;
@@ -70,10 +70,10 @@ export function buildTripRegisterPayload(
     date: dayjs(values.date).format('YYYY-MM-DD'),
     type: values.type,
     name: values.info2.trim(),
-    logo: assetPaths.logo,
-    firstMap: assetPaths.firstMap,
-    ...(assetPaths.secondMap !== undefined
-      ? { secondMap: assetPaths.secondMap }
+    logoFileId: assetIds.logoFileId,
+    firstMapFileId: assetIds.firstMapFileId,
+    ...(assetIds.secondMapFileId !== undefined
+      ? { secondMapFileId: assetIds.secondMapFileId }
       : {}),
     ...(values.hasSecondMap
       ? {

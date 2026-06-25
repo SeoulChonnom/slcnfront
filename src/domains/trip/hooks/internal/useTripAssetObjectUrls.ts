@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { tripFilesApi } from '../../api/trip-files-api';
-import { type FileRef, fileRefKey } from '../../types';
+import { type FileAsset, fileAssetKey } from '../../types';
 
 function normalizeAssetRefs(
-  refs: Array<FileRef | null | undefined>
-): FileRef[] {
+  refs: Array<FileAsset | null | undefined>
+): FileAsset[] {
   const seen = new Set<string>();
-  const result: FileRef[] = [];
+  const result: FileAsset[] = [];
 
   for (const ref of refs) {
     if (!ref) continue;
-    const key = fileRefKey(ref);
+    const key = fileAssetKey(ref);
     if (seen.has(key)) continue;
     seen.add(key);
     result.push(ref);
@@ -26,7 +26,7 @@ function revokeObjectUrls(record: Record<string, string>) {
 }
 
 export function useTripAssetObjectUrls(
-  refs: Array<FileRef | null | undefined>
+  refs: Array<FileAsset | null | undefined>
 ) {
   const normalizedRefs = useMemo(() => normalizeAssetRefs(refs), [refs]);
   const serializedRefs = JSON.stringify(normalizedRefs);
@@ -36,7 +36,7 @@ export function useTripAssetObjectUrls(
 
   useEffect(() => {
     let cancelled = false;
-    const nextRefs: FileRef[] = JSON.parse(serializedRefs);
+    const nextRefs: FileAsset[] = JSON.parse(serializedRefs);
 
     if (nextRefs.length === 0) {
       revokeObjectUrls(objectUrlsRef.current);
@@ -64,7 +64,7 @@ export function useTripAssetObjectUrls(
         const ref = nextRefs[index];
 
         if (result.status === 'fulfilled' && ref) {
-          nextObjectUrls[fileRefKey(ref)] = URL.createObjectURL(result.value);
+          nextObjectUrls[fileAssetKey(ref)] = URL.createObjectURL(result.value);
         }
       });
 

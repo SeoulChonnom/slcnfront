@@ -52,7 +52,7 @@ describe('calendar-api', () => {
 
     expect(result.map((calendar) => calendar.id)).toEqual(['cal-1', 'cal-2']);
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/calendar'
+      'http://localhost:8080/api/calendars'
     );
   });
 
@@ -120,7 +120,7 @@ describe('calendar-api', () => {
     expect(fetchFn.mock.calls[0]?.[1]?.method).toBe('POST');
     expect(fetchFn.mock.calls[1]?.[1]?.method).toBe('PUT');
     expect(fetchFn.mock.calls[2]?.[0]).toBe(
-      'http://localhost:8080/api/calendar/cal-1'
+      'http://localhost:8080/api/calendars/cal-1'
     );
     expect(fetchFn.mock.calls[2]?.[1]?.method).toBe('DELETE');
   });
