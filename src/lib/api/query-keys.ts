@@ -22,6 +22,12 @@ export const scheduleQueryKeys = {
     [...scheduleQueryKeys.all, 'week', startDate] as const,
 };
 
+export const travelQueryKeys = {
+  all: ['travel'] as const,
+  list: () => [...travelQueryKeys.all, 'list'] as const,
+  detail: (id: string) => [...travelQueryKeys.all, 'detail', id] as const,
+};
+
 export const shoesQueryKeys = {
   all: ['shoes'] as const,
   catalog: () => [...shoesQueryKeys.all, 'catalog'] as const,

@@ -10,10 +10,11 @@ describe('MobileBottomNav', () => {
 
     expect(screen.getByRole('link', { name: /홈/i })).toBeTruthy();
     expect(screen.getByRole('link', { name: /기록/i })).toBeTruthy();
-    expect(screen.getByRole('link', { name: /일정/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /여행/i })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /달력/i })).toBeTruthy();
     expect(screen.getByRole('link', { name: /신발/i })).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: /일정/i }).getAttribute('aria-current')
+      screen.getByRole('link', { name: /달력/i }).getAttribute('aria-current')
     ).toBe('page');
   });
 });

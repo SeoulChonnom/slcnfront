@@ -4,6 +4,7 @@ import logo from '../../assets/img/SLCN.png';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceShoesCatalogPath,
+  buildDeviceTravelListPath,
   buildDeviceTripListPath,
 } from '../../lib/routing/route-builders';
 
@@ -20,6 +21,7 @@ function getDdayCount() {
 
 export function HomeHubPage({ device }: HomeHubPageProps) {
   const tripListPath = buildDeviceTripListPath(device);
+  const travelListPath = buildDeviceTravelListPath(device);
   const calendarPath = buildDeviceCalendarMonthPath(device);
   const shoesPath = buildDeviceShoesCatalogPath(device);
   const ddayDays = getDdayCount();
@@ -84,6 +86,30 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             </p>
           </Link>
 
+          <Link to={travelListPath} className='slcn-home-hub__desktop-card'>
+            <div className='slcn-home-hub__card-icon-wrap'>
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#1B1B1B'
+                strokeWidth='1.8'
+                aria-hidden='true'
+              >
+                <polygon points='1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6' />
+                <line x1='8' y1='2' x2='8' y2='18' />
+                <line x1='16' y1='6' x2='16' y2='22' />
+              </svg>
+            </div>
+            <p className='slcn-home-hub__card-eyebrow'>JOURNEY</p>
+            <span className='slcn-home-hub__card-new'>New</span>
+            <h3 className='slcn-home-hub__card-title'>여행 기록</h3>
+            <p className='slcn-home-hub__card-desc'>
+              1박 이상 여행을 날짜별로 기록해요.
+            </p>
+          </Link>
+
           <Link to={calendarPath} className='slcn-home-hub__desktop-card'>
             <div className='slcn-home-hub__card-icon-wrap'>
               <svg
@@ -100,7 +126,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
               </svg>
             </div>
             <p className='slcn-home-hub__card-eyebrow'>Calendar</p>
-            <h3 className='slcn-home-hub__card-title'>나들이 일정</h3>
+            <h3 className='slcn-home-hub__card-title'>서울 촌놈 달력</h3>
             <p className='slcn-home-hub__card-desc'>
               다가오는 나들이를 미리 계획해요.
             </p>
@@ -232,6 +258,43 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
         </svg>
       </Link>
 
+      <Link to={travelListPath} className='slcn-home-hub__mobile-tile'>
+        <div className='slcn-home-hub__mobile-tile-icon'>
+          <svg
+            width='22'
+            height='22'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#1B1B1B'
+            strokeWidth='1.8'
+            aria-hidden='true'
+          >
+            <polygon points='1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6' />
+            <line x1='8' y1='2' x2='8' y2='18' />
+            <line x1='16' y1='6' x2='16' y2='22' />
+          </svg>
+        </div>
+        <div className='slcn-home-hub__mobile-tile-body'>
+          <p className='slcn-home-hub__mobile-tile-eyebrow'>JOURNEY</p>
+          <div className='slcn-home-hub__mobile-tile-title-row'>
+            <h3 className='slcn-home-hub__mobile-tile-title'>여행 기록</h3>
+            <span className='slcn-home-hub__card-new'>New</span>
+          </div>
+          <p className='slcn-home-hub__mobile-tile-desc'>1박 이상 여행 기록</p>
+        </div>
+        <svg
+          width='18'
+          height='18'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='#C9B9BF'
+          strokeWidth='2'
+          aria-hidden='true'
+        >
+          <path d='M9 6l6 6-6 6' />
+        </svg>
+      </Link>
+
       <Link to={calendarPath} className='slcn-home-hub__mobile-tile'>
         <div className='slcn-home-hub__mobile-tile-icon'>
           <svg
@@ -249,7 +312,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
         </div>
         <div className='slcn-home-hub__mobile-tile-body'>
           <p className='slcn-home-hub__mobile-tile-eyebrow'>Calendar</p>
-          <h3 className='slcn-home-hub__mobile-tile-title'>나들이 일정</h3>
+          <h3 className='slcn-home-hub__mobile-tile-title'>서울 촌놈 달력</h3>
           <p className='slcn-home-hub__mobile-tile-desc'>
             다가오는 나들이 계획
           </p>
