@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\n').length;if(lines>800){console.error('[Hook] BLOCKED: 파일이 800줄을 초과합니다 ('+lines+'줄)');console.error('[Hook] 더 작은 모듈로 분리하세요');process.exit(2)}console.log(d)})\"",
+        "description": "800줄 초과 파일 작성 차단"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "echo \"$FILE_PATH\" | grep -qE '\\.(ts|tsx|css|json)$' && pnpm exec biome check --write \"$FILE_PATH\" 2>/dev/null || true",
+        "description": "Biome 포맷 + 린트 (TS/TSX/CSS/JSON 파일에만 적용)"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "echo \"$FILE_PATH\" | grep -qE '\\.(ts|tsx)$' && timeout 60 pnpm tsc --noEmit --pretty false --incremental --tsBuildInfoFile node_modules/.cache/tsc-hook.tsbuildinfo 2>&1 | head -20 || true",
+        "description": "TypeScript 증분 타입 체크 (TS/TSX 파일에만 적용, 타임아웃 60초)"
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dev)",
+      "Bash(pnpm build)",
+      "Bash(pnpm preview)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:watch)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm knip)",
+      "Bash(pnpm exec biome*)",
+      "Bash(npx @biomejs/biome*)",
+      "Bash(pnpm tsc*)",
+      "Bash(pnpm vitest*)"
+    ]
+  }
+}
