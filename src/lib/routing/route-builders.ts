@@ -50,6 +50,22 @@ export function buildDeviceTripDetailPath(device: DeviceType, id: string) {
   return buildDevicePath(device, 'map', encodeSegment(id));
 }
 
+export function buildDeviceTravelListPath(device: DeviceType) {
+  return buildDevicePath(device, 'travel');
+}
+
+export function buildDeviceTravelRegisterPath(device: DeviceType) {
+  return buildDevicePath(device, 'travel', 'register');
+}
+
+export function buildDeviceTravelDetailPath(device: DeviceType, id: string) {
+  return buildDevicePath(device, 'travel', encodeSegment(id));
+}
+
+export function buildDeviceTravelEditPath(device: DeviceType, id: string) {
+  return buildDevicePath(device, 'travel', encodeSegment(id), 'edit');
+}
+
 export function buildDeviceCalendarMonthPath(device: DeviceType) {
   return buildDevicePath(device, 'calendar');
 }

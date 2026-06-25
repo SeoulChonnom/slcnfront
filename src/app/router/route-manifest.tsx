@@ -8,6 +8,10 @@ export type RoutePageKey =
   | 'tripList'
   | 'tripRegister'
   | 'tripDetail'
+  | 'travelList'
+  | 'travelRegister'
+  | 'travelDetail'
+  | 'travelEdit'
   | 'calendarMonth'
   | 'calendarWeek'
   | 'shoesCatalog'
@@ -27,6 +31,10 @@ export const BASE_PROTECTED_ROUTES: BaseRouteDefinition[] = [
   { path: 'map', page: 'tripList' },
   { path: 'map/register', page: 'tripRegister' },
   { path: 'map/:id', page: 'tripDetail' },
+  { path: 'travel', page: 'travelList' },
+  { path: 'travel/register', page: 'travelRegister' },
+  { path: 'travel/:id', page: 'travelDetail' },
+  { path: 'travel/:id/edit', page: 'travelEdit' },
   { path: 'calendar', page: 'calendarMonth' },
   { path: 'calendar/week', page: 'calendarWeek' },
   { path: 'shoesRecom', page: 'shoesCatalog' },
