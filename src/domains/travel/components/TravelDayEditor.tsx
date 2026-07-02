@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { DayFormRow } from '../hooks/useTravelRegisterForm';
+import { formatDisplayDate } from '../mappers/travel-mappers';
 import { CATEGORY_LABELS, type PlaceCategory } from '../types';
 
 type TravelDayEditorProps = {
@@ -14,10 +15,6 @@ type TravelDayEditorProps = {
   ) => void;
   onDayCoverPhoto: (dayLocalId: string, file: File | null) => void;
 };
-
-function formatDisplayDate(isoDate: string): string {
-  return isoDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$1.$2.$3');
-}
 
 const PLACE_CATEGORIES = Object.entries(CATEGORY_LABELS) as [
   PlaceCategory,

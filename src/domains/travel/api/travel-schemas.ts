@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createInvalidResponseError } from '../../../lib/api/errors';
+import { parseOrThrow } from '../../../lib/api/errors';
 
 // ── Shared ────────────────────────────────────────────────────────────────────
 
@@ -227,43 +227,16 @@ export type TravelReviewRdoDto = z.infer<typeof travelReviewRdoSchema>;
 // ── Parse helpers ─────────────────────────────────────────────────────────────
 
 export function parseTravelListResponse(payload: unknown): TravelRdoDto[] {
-  const result = z.array(travelRdoSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Travel list', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(z.array(travelRdoSchema), payload, 'Travel list');
 }
 
 export function parseTravelDetailResponse(
   payload: unknown,
   context: 'detail' | 'create' | 'update'
 ): TravelDetailRdoDto {
-  const result = travelDetailRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(`Travel ${context}`, {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(travelDetailRdoSchema, payload, `Travel ${context}`);
 }
 
 export function parseTravelRdoResponse(payload: unknown): TravelRdoDto {
-  const result = travelRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Travel rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(travelRdoSchema, payload, 'Travel rdo');
 }
