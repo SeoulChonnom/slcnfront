@@ -27,5 +27,16 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     css: true,
     mockReset: true,
+    exclude: ['**/node_modules/**', '**/e2e/**'],
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9090',
+        changeOrigin: true,
+        // rewrite: (path) => path.replace(/^\/api/, '')
+        secure: false,
+      },
+    },
   },
 });
