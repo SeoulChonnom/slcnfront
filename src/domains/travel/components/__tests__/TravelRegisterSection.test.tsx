@@ -51,8 +51,6 @@ const mockTravelDetail: TravelDetail = {
       places: [
         {
           id: 'place-1',
-          travelId: 'travel-1',
-          travelDayId: 'day-1',
           name: 'FE 확인용 장소',
           category: 'TOURIST_SPOT',
           address: null,
@@ -81,7 +79,8 @@ const mockTravelDetail: TravelDetail = {
   ],
   places: [],
   photos: [],
-  tags: [{ id: 'tag-1', travelId: 'travel-1', name: '부산여행', sortOrder: 0 }],
+  files: [],
+  tags: [{ name: '부산여행' }],
   review: null,
 };
 

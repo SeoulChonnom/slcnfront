@@ -1,11 +1,10 @@
 import type {
+  FileBoxItemRdoDto,
   TravelDayRdoDto,
   TravelDetailRdoDto,
-  TravelPhotoRdoDto,
   TravelPlaceRdoDto,
   TravelRdoDto,
   TravelReviewRdoDto,
-  TravelTagRdoDto,
 } from '../api/travel-schemas';
 import type {
   TravelDay,
@@ -36,22 +35,17 @@ export function formatNightsDays(nights: number, days: number): string {
 
 // ── Individual mappers ────────────────────────────────────────────────────────
 
-export function mapTravelTagDto(dto: TravelTagRdoDto): TravelTag {
-  return {
-    id: dto.id,
-    travelId: dto.travelId,
-    name: dto.name,
-    sortOrder: dto.sortOrder,
-  };
+export function mapTravelTagString(tag: string): TravelTag {
+  return { name: tag };
 }
 
-export function mapTravelPhotoDto(dto: TravelPhotoRdoDto): TravelPhoto {
+export function mapFileBoxItemToPhoto(dto: FileBoxItemRdoDto): TravelPhoto {
   return {
     id: dto.id,
-    travelId: dto.travelId,
-    travelDayId: dto.travelDayId,
-    travelPlaceId: dto.travelPlaceId,
-    photoFileId: dto.photoFileId,
+    travelId: '',
+    travelDayId: dto.targetType === 'TRAVEL_DAY' ? dto.targetId : null,
+    travelPlaceId: dto.targetType === 'TRAVEL_PLACE' ? dto.targetId : null,
+    photoFileId: dto.fileAssetId,
     caption: dto.caption,
     sortOrder: dto.sortOrder,
   };
@@ -59,41 +53,36 @@ export function mapTravelPhotoDto(dto: TravelPhotoRdoDto): TravelPhoto {
 
 export function mapTravelPlaceDto(dto: TravelPlaceRdoDto): TravelPlace {
   return {
-    id: dto.id,
-    travelId: dto.travelId,
-    travelDayId: dto.travelDayId,
+    id: dto.placeKey,
     name: dto.name,
     category: dto.category,
     address: dto.address,
     memo: dto.memo,
     description: dto.description,
-    coverPhotoId: dto.coverPhotoId,
+    coverPhotoId: dto.cover?.fileAssetId ?? null,
     sortOrder: dto.sortOrder,
-    photos: dto.photos.map(mapTravelPhotoDto),
+    photos: dto.photos.map(mapFileBoxItemToPhoto),
   };
 }
 
 export function mapTravelDayDto(dto: TravelDayRdoDto): TravelDay {
   return {
-    id: dto.id,
-    travelId: dto.travelId,
+    id: dto.id ?? dto.date,
+    travelId: dto.travelId ?? '',
     date: dto.date,
     displayDate: formatDisplayDate(dto.date),
     title: dto.title,
     memo: dto.memo,
-    coverPhotoId: dto.coverPhotoId,
+    coverPhotoId: dto.cover?.fileAssetId ?? null,
     dayNumber: dto.dayNumber,
     sortOrder: dto.sortOrder,
     places: dto.places.map(mapTravelPlaceDto),
-    photos: dto.photos.map(mapTravelPhotoDto),
+    photos: dto.photos.map(mapFileBoxItemToPhoto),
   };
 }
 
 export function mapTravelReviewDto(dto: TravelReviewRdoDto): TravelReview {
   return {
-    id: dto.id,
-    travelId: dto.travelId,
-    content: dto.content,
     oneLineSummary: dto.oneLineSummary,
     goodPoint: dto.goodPoint,
     badPoint: dto.badPoint,
@@ -114,15 +103,16 @@ export function mapTravelListItemDto(dto: TravelRdoDto): TravelListItem {
     displayEndDate: formatDisplayDate(dto.endDate),
     dateRangeLabel: formatDateRange(dto.startDate, dto.endDate),
     nightsDaysLabel: formatNightsDays(dto.nights, dto.days),
-    coverPhotoId: dto.coverPhotoId,
+    coverPhotoId: dto.cover?.fileAssetId ?? null,
     oneLineReview: dto.oneLineReview,
     nights: dto.nights,
     days: dto.days,
-    tags: dto.tags.map(mapTravelTagDto),
+    tags: dto.tags.map(mapTravelTagString),
   };
 }
 
 export function mapTravelDetailDto(dto: TravelDetailRdoDto): TravelDetail {
+  const travelDays = dto.travelDays.map(mapTravelDayDto);
   return {
     id: dto.id,
     travelId: dto.travelId,
@@ -134,14 +124,15 @@ export function mapTravelDetailDto(dto: TravelDetailRdoDto): TravelDetail {
     displayEndDate: formatDisplayDate(dto.endDate),
     dateRangeLabel: formatDateRange(dto.startDate, dto.endDate),
     nightsDaysLabel: formatNightsDays(dto.nights, dto.days),
-    coverPhotoId: dto.coverPhotoId,
+    coverPhotoId: dto.cover?.fileAssetId ?? null,
     oneLineReview: dto.oneLineReview,
     nights: dto.nights,
     days: dto.days,
-    travelDays: dto.travelDays.map(mapTravelDayDto),
-    places: dto.places.map(mapTravelPlaceDto),
-    photos: dto.photos.map(mapTravelPhotoDto),
-    tags: dto.tags.map(mapTravelTagDto),
+    travelDays,
+    places: travelDays.flatMap((day) => day.places),
+    photos: dto.files.map(mapFileBoxItemToPhoto),
+    files: dto.files,
+    tags: dto.tags.map(mapTravelTagString),
     review: dto.review ? mapTravelReviewDto(dto.review) : null,
   };
 }

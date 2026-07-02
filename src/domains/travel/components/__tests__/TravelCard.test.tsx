@@ -18,10 +18,7 @@ const travel = {
   oneLineReview: '정말 좋았다',
   nights: 4,
   days: 5,
-  tags: [
-    { id: 'tag-1', travelId: 'travel-1', name: '힐링', sortOrder: 0 },
-    { id: 'tag-2', travelId: 'travel-1', name: '제주', sortOrder: 1 },
-  ],
+  tags: [{ name: '힐링' }, { name: '제주' }],
 };
 
 describe('TravelCard', () => {
