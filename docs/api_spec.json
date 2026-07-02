@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080/api",
+      "url": "http://localhost:9090/api",
       "description": "Generated server url"
     }
   ],
@@ -142,44 +142,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/TravelDetailRdo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/review": {
-      "put": {
-        "tags": ["travel-resource"],
-        "operationId": "putReview",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelReviewUdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelReviewRdo"
                 }
               }
             }
@@ -619,157 +581,6 @@
         }
       }
     },
-    "/travels/{travelId}/tags": {
-      "post": {
-        "tags": ["travel-resource"],
-        "operationId": "registerTag",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelTagCdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelTagRdo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/photos": {
-      "get": {
-        "tags": ["travel-resource"],
-        "operationId": "getPhotos",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TravelPhotoRdo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["travel-resource"],
-        "operationId": "registerPhoto",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelPhotoCdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelPhotoRdo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/days/{travelDayId}/places": {
-      "post": {
-        "tags": ["travel-resource"],
-        "operationId": "registerPlace",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "travelDayId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelPlaceCdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelPlaceRdo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/assets/files": {
       "post": {
         "tags": ["file-resource"],
@@ -918,141 +729,6 @@
             "X-AUTH-TOKEN": []
           }
         ]
-      }
-    },
-    "/travels/{travelId}/days/{travelDayId}": {
-      "patch": {
-        "tags": ["travel-resource"],
-        "operationId": "modifyDay",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "travelDayId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelDayUdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelDayRdo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/days/{travelDayId}/places/{placeId}": {
-      "delete": {
-        "tags": ["travel-resource"],
-        "operationId": "deletePlace",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "travelDayId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "placeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["travel-resource"],
-        "operationId": "modifyPlace",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "travelDayId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "placeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelPlaceUdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelPlaceRdo"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/schedule/{scheduleId}/hide": {
@@ -1224,84 +900,6 @@
         ]
       }
     },
-    "/travels/{travelId}/places/{placeId}/photos": {
-      "get": {
-        "tags": ["travel-resource"],
-        "operationId": "getPlacePhotos",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "placeId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TravelPhotoRdo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/days/{travelDayId}/photos": {
-      "get": {
-        "tags": ["travel-resource"],
-        "operationId": "getDayPhotos",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "travelDayId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TravelPhotoRdo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/schedule/now": {
       "get": {
         "tags": ["일정 정보 API"],
@@ -1366,64 +964,6 @@
         ]
       }
     },
-    "/travels/{travelId}/tags/{tagId}": {
-      "delete": {
-        "tags": ["travel-resource"],
-        "operationId": "deleteTag",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tagId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/travels/{travelId}/photos/{photoId}": {
-      "delete": {
-        "tags": ["travel-resource"],
-        "operationId": "deletePhoto",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "photoId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/schedule/{scheduleId}": {
       "delete": {
         "tags": ["일정 정보 API"],
@@ -1483,53 +1023,25 @@
   },
   "components": {
     "schemas": {
-      "TravelDayUdo": {
+      "FileBoxItemUdo": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
-          "date": {
+          "fileAssetId": {
             "type": "string"
           },
-          "title": {
+          "targetType": {
+            "type": "string",
+            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+          },
+          "targetId": {
             "type": "string"
           },
-          "memo": {
-            "type": "string"
-          },
-          "coverPhotoId": {
-            "type": "string"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "photos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPhotoCdo"
-            }
-          },
-          "places": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPlaceUdo"
-            }
-          }
-        }
-      },
-      "TravelPhotoCdo": {
-        "type": "object",
-        "properties": {
-          "travelDayId": {
-            "type": "string"
-          },
-          "travelPlaceId": {
-            "type": "string"
-          },
-          "photoFileId": {
-            "type": "string"
+          "role": {
+            "type": "string",
+            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
           },
           "caption": {
             "type": "string"
@@ -1540,9 +1052,36 @@
           }
         }
       },
+      "TravelDayUdo": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelPlaceUdo"
+            }
+          }
+        }
+      },
       "TravelPlaceUdo": {
         "type": "object",
         "properties": {
+          "placeKey": {
+            "type": "string"
+          },
           "name": {
             "type": "string"
           },
@@ -1571,24 +1110,12 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
-          },
-          "coverPhotoId": {
-            "type": "string"
-          },
-          "photos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPhotoCdo"
-            }
           }
         }
       },
       "TravelReviewUdo": {
         "type": "object",
         "properties": {
-          "content": {
-            "type": "string"
-          },
           "oneLineSummary": {
             "type": "string"
           },
@@ -1621,9 +1148,6 @@
           "endDate": {
             "type": "string"
           },
-          "coverPhotoId": {
-            "type": "string"
-          },
           "tags": {
             "type": "array",
             "items": {
@@ -1639,26 +1163,80 @@
               "$ref": "#/components/schemas/TravelDayUdo"
             }
           },
-          "photos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPhotoCdo"
-            }
-          },
           "review": {
             "$ref": "#/components/schemas/TravelReviewUdo"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemUdo"
+            }
+          }
+        }
+      },
+      "FileAssetRdo": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["logo", "map", "travel"]
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "FileBoxItemRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fileAssetId": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
+          },
+          "caption": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "file": {
+            "$ref": "#/components/schemas/FileAssetRdo"
           }
         }
       },
       "TravelDayRdo": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "travelId": {
-            "type": "string"
-          },
           "date": {
             "type": "string"
           },
@@ -1666,9 +1244,6 @@
             "type": "string"
           },
           "memo": {
-            "type": "string"
-          },
-          "coverPhotoId": {
             "type": "string"
           },
           "dayNumber": {
@@ -1679,16 +1254,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "places": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPlaceRdo"
-            }
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
           },
           "photos": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TravelPhotoRdo"
+              "$ref": "#/components/schemas/FileBoxItemRdo"
+            }
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelPlaceRdo"
             }
           }
         }
@@ -1714,8 +1292,8 @@
           "endDate": {
             "type": "string"
           },
-          "coverPhotoId": {
-            "type": "string"
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
           },
           "oneLineReview": {
             "type": "string"
@@ -1734,66 +1312,27 @@
               "$ref": "#/components/schemas/TravelDayRdo"
             }
           },
-          "places": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPlaceRdo"
-            }
-          },
-          "photos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPhotoRdo"
-            }
-          },
           "tags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TravelTagRdo"
+              "type": "string"
             }
           },
           "review": {
             "$ref": "#/components/schemas/TravelReviewRdo"
-          }
-        }
-      },
-      "TravelPhotoRdo": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
           },
-          "travelId": {
-            "type": "string"
-          },
-          "travelDayId": {
-            "type": "string"
-          },
-          "travelPlaceId": {
-            "type": "string"
-          },
-          "photoFileId": {
-            "type": "string"
-          },
-          "caption": {
-            "type": "string"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemRdo"
+            }
           }
         }
       },
       "TravelPlaceRdo": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "travelId": {
-            "type": "string"
-          },
-          "travelDayId": {
+          "placeKey": {
             "type": "string"
           },
           "name": {
@@ -1821,17 +1360,17 @@
           "description": {
             "type": "string"
           },
-          "coverPhotoId": {
-            "type": "string"
-          },
           "sortOrder": {
             "type": "integer",
             "format": "int32"
           },
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
+          },
           "photos": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TravelPhotoRdo"
+              "$ref": "#/components/schemas/FileBoxItemRdo"
             }
           }
         }
@@ -1839,15 +1378,6 @@
       "TravelReviewRdo": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "travelId": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
           "oneLineSummary": {
             "type": "string"
           },
@@ -1862,24 +1392,6 @@
           },
           "finalReview": {
             "type": "string"
-          }
-        }
-      },
-      "TravelTagRdo": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "travelId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -2097,6 +1609,32 @@
           }
         }
       },
+      "FileBoxItemCdo": {
+        "type": "object",
+        "properties": {
+          "fileAssetId": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
+          },
+          "caption": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "OptionCdo": {
         "type": "object",
         "properties": {
@@ -2167,17 +1705,6 @@
             "type": "string",
             "minLength": 1
           },
-          "logoFileId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "firstMapFileId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "secondMapFileId": {
-            "type": "string"
-          },
           "nextButtonText": {
             "type": "string"
           },
@@ -2190,45 +1717,15 @@
           },
           "quiz": {
             "$ref": "#/components/schemas/QuizCdo"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemCdo"
+            }
           }
         },
-        "required": [
-          "date",
-          "driveUrl",
-          "firstMapFileId",
-          "logoFileId",
-          "name",
-          "quiz",
-          "type"
-        ]
-      },
-      "FileAssetRdo": {
-        "type": "object",
-        "properties": {
-          "fileId": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["logo", "map", "travel"]
-          },
-          "originalFilename": {
-            "type": "string"
-          },
-          "filename": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
+        "required": ["date", "driveUrl", "files", "name", "quiz", "type"]
       },
       "TripDetailRdo": {
         "type": "object",
@@ -2280,9 +1777,6 @@
           "endDate": {
             "type": "string"
           },
-          "coverPhotoId": {
-            "type": "string"
-          },
           "tags": {
             "type": "array",
             "items": {
@@ -2295,68 +1789,14 @@
               "$ref": "#/components/schemas/TravelDayUdo"
             }
           },
-          "photos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TravelPhotoCdo"
-            }
-          },
           "review": {
             "$ref": "#/components/schemas/TravelReviewUdo"
-          }
-        }
-      },
-      "TravelTagCdo": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "TravelPlaceCdo": {
-        "type": "object",
-        "properties": {
-          "travelDayId": {
-            "type": "string"
           },
-          "name": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "TOURIST_SPOT",
-              "RESTAURANT",
-              "CAFE",
-              "ACCOMMODATION",
-              "SHOPPING",
-              "TRANSPORT",
-              "ACTIVITY",
-              "ETC"
-            ]
-          },
-          "address": {
-            "type": "string"
-          },
-          "memo": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "coverPhotoId": {
-            "type": "string"
-          },
-          "photoFileIds": {
+          "files": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/FileBoxItemCdo"
             }
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -2531,8 +1971,8 @@
           "endDate": {
             "type": "string"
           },
-          "coverPhotoId": {
-            "type": "string"
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
           },
           "oneLineReview": {
             "type": "string"
@@ -2548,7 +1988,7 @@
           "tags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TravelTagRdo"
+              "type": "string"
             }
           }
         }
