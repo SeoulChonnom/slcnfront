@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../../app/router/route-constants';
 import {
@@ -6,20 +5,7 @@ import {
   buildDeviceTravelListPath,
 } from '../../../lib/routing/route-builders';
 import { useTravelAssetUrl } from '../hooks/useTravelAssetUrl';
-import {
-  useAddTravelPhoto,
-  useAddTravelTag,
-  useCreateTravelPlace,
-  useDeleteTravelTag,
-} from '../hooks/useTravelMutations';
-import type {
-  TravelDay,
-  TravelDetail,
-  TravelPhotoCdo,
-  TravelPlaceCdo,
-} from '../types';
-import { AddPhotoModal } from './AddPhotoModal';
-import { AddPlaceModal } from './AddPlaceModal';
+import type { TravelDetail } from '../types';
 import { TravelDayList } from './TravelDayList';
 import { TravelPhotoAlbum } from './TravelPhotoAlbum';
 import { TravelReviewSection } from './TravelReviewSection';
@@ -49,15 +35,8 @@ export function TravelDetailSection({
   travel,
 }: TravelDetailSectionProps) {
   const navigate = useNavigate();
-  const [placeModalDay, setPlaceModalDay] = useState<TravelDay | null>(null);
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   const { objectUrl: heroCoverUrl } = useTravelAssetUrl(travel.coverPhotoId);
-
-  const createPlace = useCreateTravelPlace(travel.id);
-  const addPhoto = useAddTravelPhoto(travel.id);
-  const addTag = useAddTravelTag(travel.id);
-  const deleteTag = useDeleteTravelTag(travel.id);
 
   // Place count: sum of places across all travelDays (or fall back to travel.places)
   const placeCount =
@@ -67,32 +46,6 @@ export function TravelDetailSection({
 
   // Photo count from travel.photos
   const photoCount = travel.photos.length;
-
-  function handleCreatePlace(args: {
-    travelDayId: string;
-    payload: TravelPlaceCdo;
-  }) {
-    createPlace.mutate(args, {
-      onSuccess: () => setPlaceModalDay(null),
-    });
-  }
-
-  function handleAddPhotos(payloads: TravelPhotoCdo[]) {
-    if (payloads.length === 0) {
-      return;
-    }
-    let remaining = payloads.length;
-    for (const payload of payloads) {
-      addPhoto.mutate(payload, {
-        onSettled: () => {
-          remaining -= 1;
-          if (remaining === 0) {
-            setIsPhotoModalOpen(false);
-          }
-        },
-      });
-    }
-  }
 
   return (
     <section className='slcn-travel-detail' data-device={device}>
@@ -251,7 +204,7 @@ export function TravelDetailSection({
 
       <section className='slcn-travel-detail__section' id='section-days'>
         <h2 className='slcn-travel-detail__section-title'>날짜별 기록</h2>
-        <TravelDayList days={travel.travelDays} onAddPlace={setPlaceModalDay} />
+        <TravelDayList days={travel.travelDays} onAddPlace={() => {}} />
       </section>
 
       <section className='slcn-travel-detail__section' id='section-album'>
@@ -260,7 +213,7 @@ export function TravelDetailSection({
           photos={travel.photos}
           days={travel.travelDays}
           places={travel.places}
-          onAddPhoto={() => setIsPhotoModalOpen(true)}
+          onAddPhoto={() => {}}
         />
       </section>
 
@@ -273,35 +226,10 @@ export function TravelDetailSection({
         <h2 className='slcn-travel-detail__section-title'>태그</h2>
         <TravelTagSection
           tags={travel.tags}
-          isAdding={addTag.isPending}
-          isRemoving={deleteTag.isPending}
-          onAddTag={(name) => addTag.mutate({ name })}
-          onRemoveTag={(tagId) => deleteTag.mutate(tagId)}
+          onAddTag={() => {}}
+          onRemoveTag={() => {}}
         />
       </section>
-
-      {placeModalDay ? (
-        <AddPlaceModal
-          isOpen={placeModalDay !== null}
-          dayNumber={placeModalDay.dayNumber}
-          travelDayId={placeModalDay.id}
-          isSubmitting={createPlace.isPending}
-          errorMessage={
-            createPlace.isError ? '장소를 저장하지 못했어요.' : null
-          }
-          onClose={() => setPlaceModalDay(null)}
-          onSubmit={handleCreatePlace}
-        />
-      ) : null}
-
-      <AddPhotoModal
-        isOpen={isPhotoModalOpen}
-        photos={travel.photos}
-        isSubmitting={addPhoto.isPending}
-        errorMessage={addPhoto.isError ? '사진을 추가하지 못했어요.' : null}
-        onClose={() => setIsPhotoModalOpen(false)}
-        onSubmit={handleAddPhotos}
-      />
     </section>
   );
 }

@@ -22,10 +22,7 @@ export const CATEGORY_LABELS: Record<PlaceCategory, string> = {
 // ── View-model types ──────────────────────────────────────────────────────────
 
 export type TravelTag = {
-  id: string;
-  travelId: string;
   name: string;
-  sortOrder: number;
 };
 
 export type TravelPhoto = {
@@ -38,10 +35,24 @@ export type TravelPhoto = {
   sortOrder: number;
 };
 
+export type FileBoxItem = {
+  id: string;
+  fileAssetId: string;
+  targetType: 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE' | 'TRIP';
+  targetId: string | null;
+  role: 'COVER' | 'GALLERY' | 'LOGO' | 'FIRST_MAP' | 'SECOND_MAP';
+  caption: string | null;
+  sortOrder: number;
+  file?: {
+    fileId: string;
+    type: string;
+    filename: string;
+    path: string;
+  };
+};
+
 export type TravelPlace = {
   id: string;
-  travelId: string;
-  travelDayId: string;
   name: string;
   category: PlaceCategory;
   address: string | null;
@@ -67,9 +78,6 @@ export type TravelDay = {
 };
 
 export type TravelReview = {
-  id: string;
-  travelId: string;
-  content: string | null;
   oneLineSummary: string | null;
   goodPoint: string | null;
   badPoint: string | null;
@@ -113,6 +121,7 @@ export type TravelDetail = {
   travelDays: TravelDay[];
   places: TravelPlace[];
   photos: TravelPhoto[];
+  files: FileBoxItem[];
   tags: TravelTag[];
   review: TravelReview | null;
 };

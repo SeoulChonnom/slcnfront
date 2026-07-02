@@ -94,36 +94,29 @@ export const travelPlaceCdoSchema = z.object({
 
 // ── RDO schemas ───────────────────────────────────────────────────────────────
 
-const travelTagRdoSchema = z.object({
-  id: z.string(),
-  travelId: z.string(),
-  name: z.string(),
-  sortOrder: z.number().int(),
+const fileAssetSchema = z.object({
+  fileId: z.string(),
+  type: z.string(),
+  filename: z.string(),
+  path: z.string(),
 });
 
-const travelPhotoRdoSchema = z.object({
+const fileBoxItemRdoSchema = z.object({
   id: z.string(),
-  travelId: z.string(),
-  travelDayId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
-  travelPlaceId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
-  photoFileId: z.string(),
+  fileAssetId: z.string(),
+  targetType: z.enum(['TRAVEL', 'TRAVEL_DAY', 'TRAVEL_PLACE', 'TRIP']),
+  targetId: z.string().nullable(),
+  role: z.enum(['COVER', 'GALLERY', 'LOGO', 'FIRST_MAP', 'SECOND_MAP']),
   caption: z
     .string()
     .nullish()
     .transform((v) => v ?? null),
   sortOrder: z.number().int(),
+  file: fileAssetSchema.optional(),
 });
 
 const travelPlaceRdoSchema = z.object({
-  id: z.string(),
-  travelId: z.string(),
-  travelDayId: z.string(),
+  placeKey: z.string(),
   name: z.string(),
   category: placeCategorySchema,
   address: z
@@ -138,17 +131,14 @@ const travelPlaceRdoSchema = z.object({
     .string()
     .nullish()
     .transform((v) => v ?? null),
-  coverPhotoId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
+  cover: fileBoxItemRdoSchema.nullish().transform((v) => v ?? null),
   sortOrder: z.number().int(),
-  photos: z.array(travelPhotoRdoSchema).default([]),
+  photos: z.array(fileBoxItemRdoSchema).default([]),
 });
 
 const travelDayRdoSchema = z.object({
-  id: z.string(),
-  travelId: z.string(),
+  id: z.string().optional(),
+  travelId: z.string().optional(),
   date: z.string(),
   title: z
     .string()
@@ -158,23 +148,14 @@ const travelDayRdoSchema = z.object({
     .string()
     .nullish()
     .transform((v) => v ?? null),
-  coverPhotoId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
+  cover: fileBoxItemRdoSchema.nullish().transform((v) => v ?? null),
   dayNumber: z.number().int(),
   sortOrder: z.number().int(),
   places: z.array(travelPlaceRdoSchema).default([]),
-  photos: z.array(travelPhotoRdoSchema).default([]),
+  photos: z.array(fileBoxItemRdoSchema).default([]),
 });
 
 const travelReviewRdoSchema = z.object({
-  id: z.string(),
-  travelId: z.string(),
-  content: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
   oneLineSummary: z
     .string()
     .nullish()
@@ -204,17 +185,14 @@ export const travelRdoSchema = z.object({
   region: z.string(),
   startDate: z.string(),
   endDate: z.string(),
-  coverPhotoId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
+  cover: fileBoxItemRdoSchema.nullish().transform((v) => v ?? null),
   oneLineReview: z
     .string()
     .nullish()
     .transform((v) => v ?? null),
   nights: z.number().int(),
   days: z.number().int(),
-  tags: z.array(travelTagRdoSchema).default([]),
+  tags: z.array(z.string()).default([]),
 });
 
 export const travelDetailRdoSchema = z.object({
@@ -224,10 +202,7 @@ export const travelDetailRdoSchema = z.object({
   region: z.string(),
   startDate: z.string(),
   endDate: z.string(),
-  coverPhotoId: z
-    .string()
-    .nullish()
-    .transform((v) => v ?? null),
+  cover: fileBoxItemRdoSchema.nullish().transform((v) => v ?? null),
   oneLineReview: z
     .string()
     .nullish()
@@ -235,9 +210,8 @@ export const travelDetailRdoSchema = z.object({
   nights: z.number().int(),
   days: z.number().int(),
   travelDays: z.array(travelDayRdoSchema).default([]),
-  places: z.array(travelPlaceRdoSchema).default([]),
-  photos: z.array(travelPhotoRdoSchema).default([]),
-  tags: z.array(travelTagRdoSchema).default([]),
+  files: z.array(fileBoxItemRdoSchema).default([]),
+  tags: z.array(z.string()).default([]),
   review: travelReviewRdoSchema.nullish().transform((v) => v ?? null),
 });
 
@@ -247,8 +221,7 @@ export type TravelRdoDto = z.infer<typeof travelRdoSchema>;
 export type TravelDetailRdoDto = z.infer<typeof travelDetailRdoSchema>;
 export type TravelDayRdoDto = z.infer<typeof travelDayRdoSchema>;
 export type TravelPlaceRdoDto = z.infer<typeof travelPlaceRdoSchema>;
-export type TravelPhotoRdoDto = z.infer<typeof travelPhotoRdoSchema>;
-export type TravelTagRdoDto = z.infer<typeof travelTagRdoSchema>;
+export type FileBoxItemRdoDto = z.infer<typeof fileBoxItemRdoSchema>;
 export type TravelReviewRdoDto = z.infer<typeof travelReviewRdoSchema>;
 
 // ── Parse helpers ─────────────────────────────────────────────────────────────
@@ -287,77 +260,6 @@ export function parseTravelRdoResponse(payload: unknown): TravelRdoDto {
 
   if (!result.success) {
     throw createInvalidResponseError('Travel rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelDayRdoResponse(payload: unknown): TravelDayRdoDto {
-  const result = travelDayRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelDay rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelPlaceRdoResponse(
-  payload: unknown
-): TravelPlaceRdoDto {
-  const result = travelPlaceRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelPlace rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelPhotoListResponse(
-  payload: unknown
-): TravelPhotoRdoDto[] {
-  const result = z.array(travelPhotoRdoSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelPhoto list', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelReviewRdoResponse(
-  payload: unknown
-): TravelReviewRdoDto {
-  const result = travelReviewRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelReview rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelTagRdoResponse(payload: unknown): TravelTagRdoDto {
-  const result = travelTagRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelTag rdo', {
       issues: result.error.issues,
       payload,
     });

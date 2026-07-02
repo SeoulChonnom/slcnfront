@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { useState } from 'react';
 import type { TravelTag } from '../types';
 
 type TravelTagSectionProps = {
@@ -18,7 +18,7 @@ export function TravelTagSection({
 }: TravelTagSectionProps) {
   const [draft, setDraft] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: { preventDefault(): void }) {
     event.preventDefault();
     const name = draft.trim().replace(/^#/, '');
     if (!name || isAdding) {
@@ -32,14 +32,14 @@ export function TravelTagSection({
     <div className='slcn-travel-tags'>
       <ul className='slcn-travel-tags__list'>
         {tags.map((tag) => (
-          <li key={tag.id} className='slcn-travel-tags__chip'>
+          <li key={tag.name} className='slcn-travel-tags__chip'>
             <span>#{tag.name}</span>
             <button
               type='button'
               className='slcn-travel-tags__remove'
               aria-label={`${tag.name} 태그 삭제`}
               disabled={isRemoving}
-              onClick={() => onRemoveTag(tag.id)}
+              onClick={() => onRemoveTag(tag.name)}
             >
               ✕
             </button>

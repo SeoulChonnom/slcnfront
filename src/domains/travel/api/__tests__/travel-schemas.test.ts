@@ -10,11 +10,20 @@ import {
   travelUdoSchema,
 } from '../travel-schemas';
 
-const validTag = {
-  id: 'tag-1',
-  travelId: 'travel-1',
-  name: '힐링',
+const validFileBoxItem = {
+  id: 'fbox-1',
+  fileAssetId: 'asset-1',
+  targetType: 'TRAVEL_DAY',
+  targetId: 'day-1',
+  role: 'GALLERY',
+  caption: null,
   sortOrder: 0,
+  file: {
+    fileId: 'f-1',
+    type: 'image/jpeg',
+    filename: 'photo.jpg',
+    path: '/uploads/photo.jpg',
+  },
 };
 
 const validTravelRdo = {
@@ -24,33 +33,21 @@ const validTravelRdo = {
   region: '제주',
   startDate: '2025-06-01',
   endDate: '2025-06-05',
-  coverPhotoId: null,
+  cover: null,
   oneLineReview: '좋았어요',
   nights: 4,
   days: 5,
-  tags: [validTag],
-};
-
-const validPhoto = {
-  id: 'photo-1',
-  travelId: 'travel-1',
-  travelDayId: 'day-1',
-  travelPlaceId: null,
-  photoFileId: 'file-1',
-  caption: null,
-  sortOrder: 0,
+  tags: ['힐링'],
 };
 
 const validPlace = {
-  id: 'place-1',
-  travelId: 'travel-1',
-  travelDayId: 'day-1',
+  placeKey: 'place-1',
   name: '한라산',
   category: 'TOURIST_SPOT',
   address: null,
   memo: null,
   description: null,
-  coverPhotoId: null,
+  cover: null,
   sortOrder: 0,
   photos: [],
 };
@@ -61,11 +58,11 @@ const validDay = {
   date: '2025-06-01',
   title: '1일차',
   memo: null,
-  coverPhotoId: null,
+  cover: null,
   dayNumber: 1,
   sortOrder: 0,
   places: [validPlace],
-  photos: [validPhoto],
+  photos: [validFileBoxItem],
 };
 
 const validDetailRdo = {
@@ -75,14 +72,13 @@ const validDetailRdo = {
   region: '제주',
   startDate: '2025-06-01',
   endDate: '2025-06-05',
-  coverPhotoId: null,
+  cover: null,
   oneLineReview: '좋았어요',
   nights: 4,
   days: 5,
   travelDays: [validDay],
-  places: [validPlace],
-  photos: [validPhoto],
-  tags: [validTag],
+  files: [],
+  tags: ['힐링'],
   review: null,
 };
 
@@ -108,10 +104,10 @@ describe('travel-schemas', () => {
       }
     });
 
-    it('fails when sortOrder on a tag is not an integer', () => {
+    it('fails when tags contains a non-string value', () => {
       const badPayload = {
         ...validTravelRdo,
-        tags: [{ ...validTag, sortOrder: 'first' }],
+        tags: [{ name: '힐링' }],
       };
       const result = travelRdoSchema.safeParse(badPayload);
 
@@ -141,9 +137,6 @@ describe('travel-schemas', () => {
       const withReview = {
         ...validDetailRdo,
         review: {
-          id: 'review-1',
-          travelId: 'travel-1',
-          content: '좋았어요',
           oneLineSummary: null,
           goodPoint: null,
           badPoint: null,
@@ -155,7 +148,8 @@ describe('travel-schemas', () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.review?.id).toBe('review-1');
+        expect(result.data.review).not.toBeNull();
+        expect(result.data.review?.oneLineSummary).toBeNull();
       }
     });
   });
@@ -171,7 +165,7 @@ describe('travel-schemas', () => {
     it('throws INVALID_RESPONSE when sortOrder is not a number', () => {
       expect(() =>
         parseTravelListResponse([{ ...validTravelRdo, nights: 'four' }])
-      ).toThrowError(AppError);
+      ).toThrow(AppError);
 
       expect(() =>
         parseTravelListResponse([{ ...validTravelRdo, nights: 'four' }])
@@ -180,13 +174,11 @@ describe('travel-schemas', () => {
 
     it('throws INVALID_RESPONSE when required field is missing', () => {
       const { title: _title, ...noTitle } = validTravelRdo;
-      expect(() => parseTravelListResponse([noTitle])).toThrowError(AppError);
+      expect(() => parseTravelListResponse([noTitle])).toThrow(AppError);
     });
 
     it('throws INVALID_RESPONSE when payload is not an array', () => {
-      expect(() => parseTravelListResponse(validTravelRdo)).toThrowError(
-        AppError
-      );
+      expect(() => parseTravelListResponse(validTravelRdo)).toThrow(AppError);
     });
   });
 
@@ -201,9 +193,14 @@ describe('travel-schemas', () => {
     it('throws INVALID_RESPONSE when place category is invalid', () => {
       const badDetail = {
         ...validDetailRdo,
-        places: [{ ...validPlace, category: 'UNKNOWN_CATEGORY' }],
+        travelDays: [
+          {
+            ...validDay,
+            places: [{ ...validPlace, category: 'UNKNOWN_CATEGORY' }],
+          },
+        ],
       };
-      expect(() => parseTravelDetailResponse(badDetail, 'detail')).toThrowError(
+      expect(() => parseTravelDetailResponse(badDetail, 'detail')).toThrow(
         AppError
       );
     });
@@ -211,13 +208,13 @@ describe('travel-schemas', () => {
     it('throws INVALID_RESPONSE on create context when payload is malformed', () => {
       expect(() =>
         parseTravelDetailResponse({ ...validDetailRdo, title: 42 }, 'create')
-      ).toThrowError(AppError);
+      ).toThrow(AppError);
     });
 
     it('throws INVALID_RESPONSE on update context when payload is malformed', () => {
       expect(() =>
         parseTravelDetailResponse({ ...validDetailRdo, days: 'five' }, 'update')
-      ).toThrowError(AppError);
+      ).toThrow(AppError);
     });
   });
 
@@ -334,7 +331,7 @@ describe('travel-schemas', () => {
     it('throws INVALID_RESPONSE for malformed payload', () => {
       expect(() =>
         parseTravelRdoResponse({ ...validTravelRdo, nights: 'four' })
-      ).toThrowError(AppError);
+      ).toThrow(AppError);
     });
   });
 });

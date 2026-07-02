@@ -80,7 +80,7 @@ export function TravelCard({
         {travel.tags.length > 0 ? (
           <div className='slcn-travel-card__tags'>
             {travel.tags.map((tag) => (
-              <span key={tag.id} className='slcn-travel-card__tag-chip'>
+              <span key={tag.name} className='slcn-travel-card__tag-chip'>
                 #{tag.name}
               </span>
             ))}

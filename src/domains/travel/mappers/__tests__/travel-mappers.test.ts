@@ -45,18 +45,11 @@ describe('travel-mappers', () => {
       region: '제주',
       startDate: '2025-06-01',
       endDate: '2025-06-05',
-      coverPhotoId: null,
+      cover: null,
       oneLineReview: '정말 좋았다',
       nights: 4,
       days: 5,
-      tags: [
-        {
-          id: 'tag-1',
-          travelId: 'travel-1',
-          name: '힐링',
-          sortOrder: 0,
-        },
-      ],
+      tags: ['힐링'],
     };
 
     it('maps all scalar fields from the dto', () => {
@@ -82,16 +75,11 @@ describe('travel-mappers', () => {
       expect(result.nightsDaysLabel).toBe('4박 5일');
     });
 
-    it('maps nested tags', () => {
+    it('maps tags from string array', () => {
       const result = mapTravelListItemDto(baseDto);
 
       expect(result.tags).toHaveLength(1);
-      expect(result.tags[0]).toEqual({
-        id: 'tag-1',
-        travelId: 'travel-1',
-        name: '힐링',
-        sortOrder: 0,
-      });
+      expect(result.tags[0]).toEqual({ name: '힐링' });
     });
 
     it('handles empty tags array', () => {
@@ -100,10 +88,34 @@ describe('travel-mappers', () => {
       expect(result.tags).toEqual([]);
     });
 
+    it('derives coverPhotoId from cover.fileAssetId', () => {
+      const withCover = {
+        ...baseDto,
+        cover: {
+          id: 'fbox-1',
+          fileAssetId: 'asset-1',
+          targetType: 'TRAVEL' as const,
+          targetId: 'travel-1',
+          role: 'COVER' as const,
+          caption: null,
+          sortOrder: 0,
+          file: {
+            fileId: 'f-1',
+            type: 'image/jpeg',
+            filename: 'cover.jpg',
+            path: '/uploads/cover.jpg',
+          },
+        },
+      };
+      const result = mapTravelListItemDto(withCover);
+
+      expect(result.coverPhotoId).toBe('asset-1');
+    });
+
     it('passes through null optional fields', () => {
       const result = mapTravelListItemDto({
         ...baseDto,
-        coverPhotoId: null,
+        cover: null,
         oneLineReview: null,
       });
 
@@ -113,28 +125,32 @@ describe('travel-mappers', () => {
   });
 
   describe('mapTravelDetailDto', () => {
-    const basePhoto = {
-      id: 'photo-1',
-      travelId: 'travel-1',
-      travelDayId: 'day-1',
-      travelPlaceId: null,
-      photoFileId: 'file-1',
+    const baseFileBoxItem = {
+      id: 'fbox-1',
+      fileAssetId: 'asset-1',
+      targetType: 'TRAVEL_DAY' as const,
+      targetId: 'day-1',
+      role: 'GALLERY' as const,
       caption: null,
       sortOrder: 0,
+      file: {
+        fileId: 'f-1',
+        type: 'image/jpeg',
+        filename: 'photo.jpg',
+        path: '/uploads/photo.jpg',
+      },
     };
 
     const basePlace = {
-      id: 'place-1',
-      travelId: 'travel-1',
-      travelDayId: 'day-1',
+      placeKey: 'place-1',
       name: '한라산',
       category: 'TOURIST_SPOT' as const,
       address: '제주특별자치도',
       memo: null,
       description: null,
-      coverPhotoId: null,
+      cover: null,
       sortOrder: 0,
-      photos: [basePhoto],
+      photos: [baseFileBoxItem],
     };
 
     const baseDay = {
@@ -143,17 +159,14 @@ describe('travel-mappers', () => {
       date: '2025-06-01',
       title: '1일차',
       memo: null,
-      coverPhotoId: null,
+      cover: null,
       dayNumber: 1,
       sortOrder: 0,
       places: [basePlace],
-      photos: [basePhoto],
+      photos: [baseFileBoxItem],
     };
 
     const baseReview = {
-      id: 'review-1',
-      travelId: 'travel-1',
-      content: '좋았어요',
       oneLineSummary: '최고',
       goodPoint: '날씨',
       badPoint: null,
@@ -168,21 +181,13 @@ describe('travel-mappers', () => {
       region: '제주',
       startDate: '2025-06-01',
       endDate: '2025-06-05',
-      coverPhotoId: null,
+      cover: null,
       oneLineReview: '최고의 여행',
       nights: 4,
       days: 5,
       travelDays: [baseDay],
-      places: [basePlace],
-      photos: [basePhoto],
-      tags: [
-        {
-          id: 'tag-1',
-          travelId: 'travel-1',
-          name: '힐링',
-          sortOrder: 0,
-        },
-      ],
+      files: [baseFileBoxItem],
+      tags: ['힐링'],
       review: baseReview,
     };
 
@@ -217,13 +222,21 @@ describe('travel-mappers', () => {
       const place = result.travelDays[0]?.places[0];
       expect(place?.category).toBe('TOURIST_SPOT');
       expect(place?.photos).toHaveLength(1);
-      expect(place?.photos[0]?.id).toBe('photo-1');
+      expect(place?.photos[0]?.id).toBe('fbox-1');
     });
 
-    it('maps top-level photos and tags', () => {
+    it('derives places from travelDays and maps top-level files to photos', () => {
       const result = mapTravelDetailDto(baseDetailDto);
 
+      expect(result.places).toHaveLength(1);
+      expect(result.places[0]?.name).toBe('한라산');
       expect(result.photos).toHaveLength(1);
+      expect(result.photos[0]?.photoFileId).toBe('asset-1');
+    });
+
+    it('maps tags from string array', () => {
+      const result = mapTravelDetailDto(baseDetailDto);
+
       expect(result.tags).toHaveLength(1);
       expect(result.tags[0]?.name).toBe('힐링');
     });
@@ -232,8 +245,7 @@ describe('travel-mappers', () => {
       const result = mapTravelDetailDto(baseDetailDto);
 
       expect(result.review).not.toBeNull();
-      expect(result.review?.id).toBe('review-1');
-      expect(result.review?.content).toBe('좋았어요');
+      expect(result.review?.oneLineSummary).toBe('최고');
       expect(result.review?.goodPoint).toBe('날씨');
     });
 
@@ -241,6 +253,16 @@ describe('travel-mappers', () => {
       const result = mapTravelDetailDto({ ...baseDetailDto, review: null });
 
       expect(result.review).toBeNull();
+    });
+
+    it('falls back to date when day id is absent', () => {
+      const { id: _id, ...dayWithoutId } = baseDay;
+      const result = mapTravelDetailDto({
+        ...baseDetailDto,
+        travelDays: [dayWithoutId],
+      });
+
+      expect(result.travelDays[0]?.id).toBe('2025-06-01');
     });
   });
 });

@@ -12,33 +12,37 @@ const validTravelRdo = {
   region: '제주',
   startDate: '2025-06-01',
   endDate: '2025-06-05',
-  coverPhotoId: null,
+  cover: null,
   oneLineReview: '좋았어요',
   nights: 4,
   days: 5,
   tags: [],
 };
 
-const validPhoto = {
-  id: 'photo-1',
-  travelId: 'travel-1',
-  travelDayId: 'day-1',
-  travelPlaceId: null,
-  photoFileId: 'file-1',
+const validFileBoxItem = {
+  id: 'fbox-1',
+  fileAssetId: 'asset-1',
+  targetType: 'TRAVEL_DAY',
+  targetId: 'day-1',
+  role: 'GALLERY',
   caption: null,
   sortOrder: 0,
+  file: {
+    fileId: 'f-1',
+    type: 'image/jpeg',
+    filename: 'photo.jpg',
+    path: '/uploads/photo.jpg',
+  },
 };
 
 const validPlace = {
-  id: 'place-1',
-  travelId: 'travel-1',
-  travelDayId: 'day-1',
+  placeKey: 'place-1',
   name: '한라산',
   category: 'TOURIST_SPOT',
   address: null,
   memo: null,
   description: null,
-  coverPhotoId: null,
+  cover: null,
   sortOrder: 0,
   photos: [],
 };
@@ -49,11 +53,11 @@ const validDay = {
   date: '2025-06-01',
   title: '1일차',
   memo: null,
-  coverPhotoId: null,
+  cover: null,
   dayNumber: 1,
   sortOrder: 0,
   places: [validPlace],
-  photos: [validPhoto],
+  photos: [validFileBoxItem],
 };
 
 const validDetailRdo = {
@@ -63,33 +67,14 @@ const validDetailRdo = {
   region: '제주',
   startDate: '2025-06-01',
   endDate: '2025-06-05',
-  coverPhotoId: null,
+  cover: null,
   oneLineReview: '좋았어요',
   nights: 4,
   days: 5,
   travelDays: [validDay],
-  places: [validPlace],
-  photos: [validPhoto],
+  files: [],
   tags: [],
   review: null,
-};
-
-const validTagRdo = {
-  id: 'tag-1',
-  travelId: 'travel-1',
-  name: '힐링',
-  sortOrder: 0,
-};
-
-const validReviewRdo = {
-  id: 'review-1',
-  travelId: 'travel-1',
-  content: '좋았어요',
-  oneLineSummary: null,
-  goodPoint: null,
-  badPoint: null,
-  revisitPlace: null,
-  finalReview: null,
 };
 
 function makeJsonResponse(body: unknown, status = 200) {
@@ -309,221 +294,6 @@ describe('travel-api', () => {
 
     const call = fetchFn.mock.calls[0];
     expect(call?.[0]).toBe('http://localhost:8080/api/travels/travel-1');
-    expect(call?.[1]?.method).toBe('DELETE');
-  });
-
-  it('updateTravelDay: PATCHes /travels/:id/days/:dayId and maps the day', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        makeJsonResponse({ ...validDay, title: '업데이트된 1일차' })
-      );
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const day = await api.updateTravelDay('travel-1', 'day-1', {
-      date: '2025-06-01',
-      title: '업데이트된 1일차',
-      sortOrder: 0,
-      photos: [],
-      places: [],
-    });
-
-    expect(day.id).toBe('day-1');
-    expect(day.displayDate).toBe('2025.06.01');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/days/day-1'
-    );
-    expect(call?.[1]?.method).toBe('PATCH');
-  });
-
-  it('createTravelPlace: POSTs to /travels/:id/days/:dayId/places and maps place', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeJsonResponse(validPlace));
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const place = await api.createTravelPlace('travel-1', 'day-1', {
-      travelDayId: 'day-1',
-      name: '한라산',
-    });
-
-    expect(place.id).toBe('place-1');
-    expect(place.name).toBe('한라산');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/days/day-1/places'
-    );
-    expect(call?.[1]?.method).toBe('POST');
-  });
-
-  it('updateTravelPlace: PATCHes /travels/:id/days/:dayId/places/:placeId', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        makeJsonResponse({ ...validPlace, name: '백록담' })
-      );
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const place = await api.updateTravelPlace('travel-1', 'day-1', 'place-1', {
-      name: '백록담',
-      category: 'TOURIST_SPOT',
-      sortOrder: 0,
-      photos: [],
-    });
-
-    expect(place.name).toBe('백록담');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/days/day-1/places/place-1'
-    );
-    expect(call?.[1]?.method).toBe('PATCH');
-  });
-
-  it('deleteTravelPlace: DELETEs /travels/:id/days/:dayId/places/:placeId', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeVoidResponse());
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    await api.deleteTravelPlace('travel-1', 'day-1', 'place-1');
-
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/days/day-1/places/place-1'
-    );
-    expect(call?.[1]?.method).toBe('DELETE');
-  });
-
-  it('addTravelPhoto: POSTs to /travels/:id/photos and maps the photo', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeJsonResponse(validPhoto));
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const photo = await api.addTravelPhoto('travel-1', {
-      photoFileId: 'file-1',
-    });
-
-    expect(photo.id).toBe('photo-1');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe('http://localhost:8080/api/travels/travel-1/photos');
-    expect(call?.[1]?.method).toBe('POST');
-  });
-
-  it('deleteTravelPhoto: DELETEs /travels/:id/photos/:photoId', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeVoidResponse());
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    await api.deleteTravelPhoto('travel-1', 'photo-1');
-
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/photos/photo-1'
-    );
-    expect(call?.[1]?.method).toBe('DELETE');
-  });
-
-  it('putTravelReview: PUTs /travels/:id/review with body and maps review', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeJsonResponse(validReviewRdo));
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const review = await api.putTravelReview('travel-1', {
-      content: '좋았어요',
-    });
-
-    expect(review.id).toBe('review-1');
-    expect(review.content).toBe('좋았어요');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe('http://localhost:8080/api/travels/travel-1/review');
-    expect(call?.[1]?.method).toBe('PUT');
-  });
-
-  it('addTravelTag: POSTs to /travels/:id/tags and maps tag', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeJsonResponse(validTagRdo));
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    const tag = await api.addTravelTag('travel-1', { name: '힐링' });
-
-    expect(tag.id).toBe('tag-1');
-    expect(tag.name).toBe('힐링');
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe('http://localhost:8080/api/travels/travel-1/tags');
-    expect(call?.[1]?.method).toBe('POST');
-  });
-
-  it('deleteTravelTag: DELETEs /travels/:id/tags/:tagId', async () => {
-    const fetchFn = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(makeVoidResponse());
-
-    const client = createApiClient({
-      fetchFn,
-      getBaseUrl: () => 'http://localhost:8080/api',
-      getAccessToken: () => 'token-123',
-    });
-    const api = createTravelApi(client);
-
-    await api.deleteTravelTag('travel-1', 'tag-1');
-
-    const call = fetchFn.mock.calls[0];
-    expect(call?.[0]).toBe(
-      'http://localhost:8080/api/travels/travel-1/tags/tag-1'
-    );
     expect(call?.[1]?.method).toBe('DELETE');
   });
 
