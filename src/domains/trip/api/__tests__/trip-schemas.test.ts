@@ -22,14 +22,22 @@ describe('trip-schemas', () => {
     expect(
       parseTripDetailResponse(
         {
+          id: 'trip-1',
           date: '2099-12-31',
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: firstMapAsset,
           firstMap: firstMapAsset,
           driveUrl: 'https://drive.google.com/x',
         },
         'detail'
       )
     ).toEqual({
+      id: 'trip-1',
       date: '2099-12-31',
+      type: 'year-end',
+      name: '연말 나들이',
+      logo: firstMapAsset,
       firstMap: firstMapAsset,
       secondMap: null,
       nextButtonText: '',

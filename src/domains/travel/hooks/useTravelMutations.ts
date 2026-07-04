@@ -1,14 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { travelQueryKeys } from '../../../lib/api/query-keys';
 import { travelApi } from '../api/travel-api';
+import { buildTravelUdoFromDetail } from '../mappers/travel-mappers';
 import type {
+  PlaceCategory,
   TravelCdo,
-  TravelDayUdo,
+  TravelDetail,
   TravelPhotoCdo,
   TravelPlaceCdo,
-  TravelPlaceUdo,
-  TravelReviewUdo,
-  TravelTagCdo,
   TravelUdo,
 } from '../types';
 
@@ -65,80 +64,41 @@ export function useDeleteTravel() {
   });
 }
 
-// ── Day mutation ──────────────────────────────────────────────────────────────
-
-export function useUpdateTravelDay(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      travelDayId,
-      payload,
-    }: {
-      travelDayId: string;
-      payload: TravelDayUdo;
-    }) => travelApi.updateTravelDay(travelId, travelDayId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
-      });
-    },
-  });
-}
-
-// ── Place mutations ───────────────────────────────────────────────────────────
+// ── Place mutation ────────────────────────────────────────────────────────────
 
 export function useCreateTravelPlace(travelId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
+      currentTravel,
       travelDayId,
       payload,
     }: {
+      currentTravel: TravelDetail;
       travelDayId: string;
       payload: TravelPlaceCdo;
-    }) => travelApi.createTravelPlace(travelId, travelDayId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
+    }) => {
+      const udo = buildTravelUdoFromDetail(currentTravel);
+      const updatedDays = udo.travelDays.map((day) => {
+        if (day.id !== travelDayId) return day;
+        const newPlace = {
+          name: payload.name,
+          category: (payload.category ?? 'ETC') as PlaceCategory,
+          address: payload.address,
+          memo: payload.memo,
+          description: payload.description,
+          sortOrder: day.places.length,
+          coverPhotoId: payload.coverPhotoId,
+          photos: [] as TravelPhotoCdo[],
+        };
+        return { ...day, places: [...day.places, newPlace] };
+      });
+      return travelApi.updateTravel(travelId, {
+        ...udo,
+        travelDays: updatedDays,
       });
     },
-  });
-}
-
-export function useUpdateTravelPlace(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      travelDayId,
-      placeId,
-      payload,
-    }: {
-      travelDayId: string;
-      placeId: string;
-      payload: TravelPlaceUdo;
-    }) => travelApi.updateTravelPlace(travelId, travelDayId, placeId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
-      });
-    },
-  });
-}
-
-export function useDeleteTravelPlace(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      travelDayId,
-      placeId,
-    }: {
-      travelDayId: string;
-      placeId: string;
-    }) => travelApi.deleteTravelPlace(travelId, travelDayId, placeId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: travelQueryKeys.detail(travelId),
@@ -153,38 +113,19 @@ export function useAddTravelPhoto(travelId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: TravelPhotoCdo) =>
-      travelApi.addTravelPhoto(travelId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
+    mutationFn: ({
+      currentTravel,
+      payloads,
+    }: {
+      currentTravel: TravelDetail;
+      payloads: TravelPhotoCdo[];
+    }) => {
+      const udo = buildTravelUdoFromDetail(currentTravel);
+      return travelApi.updateTravel(travelId, {
+        ...udo,
+        photos: [...udo.photos, ...payloads],
       });
     },
-  });
-}
-
-export function useDeleteTravelPhoto(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (photoId: string) =>
-      travelApi.deleteTravelPhoto(travelId, photoId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
-      });
-    },
-  });
-}
-
-// ── Review mutation ───────────────────────────────────────────────────────────
-
-export function usePutTravelReview(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (payload: TravelReviewUdo) =>
-      travelApi.putTravelReview(travelId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: travelQueryKeys.detail(travelId),
@@ -199,8 +140,19 @@ export function useAddTravelTag(travelId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: TravelTagCdo) =>
-      travelApi.addTravelTag(travelId, payload),
+    mutationFn: ({
+      currentTravel,
+      name,
+    }: {
+      currentTravel: TravelDetail;
+      name: string;
+    }) => {
+      const udo = buildTravelUdoFromDetail(currentTravel);
+      return travelApi.updateTravel(travelId, {
+        ...udo,
+        tags: [...udo.tags, name],
+      });
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: travelQueryKeys.detail(travelId),
@@ -213,7 +165,22 @@ export function useDeleteTravelTag(travelId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (tagId: string) => travelApi.deleteTravelTag(travelId, tagId),
+    mutationFn: ({
+      currentTravel,
+      tagId,
+    }: {
+      currentTravel: TravelDetail;
+      tagId: string;
+    }) => {
+      const udo = buildTravelUdoFromDetail(currentTravel);
+      const remainingTagNames = currentTravel.tags
+        .filter((t) => t.id !== tagId)
+        .map((t) => t.name);
+      return travelApi.updateTravel(travelId, {
+        ...udo,
+        tags: remainingTagNames,
+      });
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: travelQueryKeys.detail(travelId),
