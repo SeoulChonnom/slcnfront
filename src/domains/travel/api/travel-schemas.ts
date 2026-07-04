@@ -80,18 +80,6 @@ export const travelUdoSchema = z.object({
   review: travelReviewUdoSchema,
 });
 
-export const travelPlaceCdoSchema = z.object({
-  travelDayId: z.string(),
-  name: z.string(),
-  category: placeCategorySchema.optional(),
-  address: z.string().optional(),
-  memo: z.string().optional(),
-  description: z.string().optional(),
-  coverPhotoId: z.string().optional(),
-  photoFileIds: z.array(z.string()).optional(),
-  sortOrder: z.number().int().optional(),
-});
-
 // ── RDO schemas ───────────────────────────────────────────────────────────────
 
 const travelTagRdoSchema = z.object({
@@ -287,77 +275,6 @@ export function parseTravelRdoResponse(payload: unknown): TravelRdoDto {
 
   if (!result.success) {
     throw createInvalidResponseError('Travel rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelDayRdoResponse(payload: unknown): TravelDayRdoDto {
-  const result = travelDayRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelDay rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelPlaceRdoResponse(
-  payload: unknown
-): TravelPlaceRdoDto {
-  const result = travelPlaceRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelPlace rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelPhotoListResponse(
-  payload: unknown
-): TravelPhotoRdoDto[] {
-  const result = z.array(travelPhotoRdoSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelPhoto list', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelReviewRdoResponse(
-  payload: unknown
-): TravelReviewRdoDto {
-  const result = travelReviewRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelReview rdo', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
-}
-
-export function parseTravelTagRdoResponse(payload: unknown): TravelTagRdoDto {
-  const result = travelTagRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('TravelTag rdo', {
       issues: result.error.issues,
       payload,
     });

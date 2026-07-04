@@ -72,26 +72,24 @@ export function TravelDetailSection({
     travelDayId: string;
     payload: TravelPlaceCdo;
   }) {
-    createPlace.mutate(args, {
-      onSuccess: () => setPlaceModalDay(null),
-    });
+    createPlace.mutate(
+      {
+        currentTravel: travel,
+        travelDayId: args.travelDayId,
+        payload: args.payload,
+      },
+      { onSuccess: () => setPlaceModalDay(null) }
+    );
   }
 
   function handleAddPhotos(payloads: TravelPhotoCdo[]) {
     if (payloads.length === 0) {
       return;
     }
-    let remaining = payloads.length;
-    for (const payload of payloads) {
-      addPhoto.mutate(payload, {
-        onSettled: () => {
-          remaining -= 1;
-          if (remaining === 0) {
-            setIsPhotoModalOpen(false);
-          }
-        },
-      });
-    }
+    addPhoto.mutate(
+      { currentTravel: travel, payloads },
+      { onSettled: () => setIsPhotoModalOpen(false) }
+    );
   }
 
   return (
@@ -275,8 +273,10 @@ export function TravelDetailSection({
           tags={travel.tags}
           isAdding={addTag.isPending}
           isRemoving={deleteTag.isPending}
-          onAddTag={(name) => addTag.mutate({ name })}
-          onRemoveTag={(tagId) => deleteTag.mutate(tagId)}
+          onAddTag={(name) => addTag.mutate({ currentTravel: travel, name })}
+          onRemoveTag={(tagId) =>
+            deleteTag.mutate({ currentTravel: travel, tagId })
+          }
         />
       </section>
 

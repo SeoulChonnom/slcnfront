@@ -53,7 +53,11 @@ describe('trip-api', () => {
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({
+            id: 'trip-1',
             date: '2099-12-31',
+            type: 'year-end',
+            name: '연말 나들이',
+            logo: logoAsset,
             firstMap: firstMapAsset,
             secondMap: secondMapAsset,
             nextButtonText: '다음',
@@ -103,7 +107,11 @@ describe('trip-api', () => {
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({
+            id: 'trip-1',
             date: '2099-12-31',
+            type: 'year-end',
+            name: '연말 나들이',
+            logo: logoAsset,
             firstMap: firstMapAsset,
             secondMap: secondMapAsset,
             nextButtonText: '다음',

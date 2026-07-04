@@ -29,7 +29,11 @@ export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
 
 export function mapTripDetailDto(dto: TripDetailDto): TripDetail {
   return {
+    id: dto.id,
     date: dto.date,
+    type: dto.type,
+    name: dto.name,
+    logo: dto.logo,
     firstMap: dto.firstMap,
     secondMap: dto.secondMap,
     nextButtonText: dto.nextButtonText,

@@ -22,7 +22,11 @@ export type TripListItemDto = {
 };
 
 export type TripDetailDto = {
+  id: string;
   date: string;
+  type: string;
+  name: string;
+  logo: FileAsset;
   firstMap: FileAsset;
   secondMap: FileAsset | null;
   nextButtonText: string;
@@ -57,7 +61,11 @@ export type TripListItem = {
 };
 
 export type TripDetail = {
+  id: string;
   date: string;
+  type: string;
+  name: string;
+  logo: FileAsset;
   firstMap: FileAsset;
   secondMap: FileAsset | null;
   nextButtonText: string;

@@ -127,15 +127,6 @@ export type TravelPhotoCdo = {
   sortOrder?: number;
 };
 
-export type TravelReviewUdo = {
-  content?: string;
-  oneLineSummary?: string;
-  goodPoint?: string;
-  badPoint?: string;
-  revisitPlace?: string;
-  finalReview?: string;
-};
-
 export type TravelPlaceUdo = {
   name: string;
   category: PlaceCategory;
@@ -193,8 +184,4 @@ export type TravelPlaceCdo = {
   coverPhotoId?: string;
   photoFileIds?: string[];
   sortOrder?: number;
-};
-
-export type TravelTagCdo = {
-  name: string;
 };
