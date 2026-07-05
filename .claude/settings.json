@@ -10,6 +10,16 @@
             "description": "800줄 초과 파일 작성 차단"
           }
         ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const t=i.tool_input||{};const p=t.file_path;const img=['.png','.jpg','.jpeg','.gif','.webp','.svg','.pdf','.ipynb'];if(p&&!t.offset&&!t.limit&&!img.some(e=>p.toLowerCase().endsWith(e))){const fs=require('fs');if(fs.existsSync(p)){const mb=fs.statSync(p).size/1048576;if(mb>1){console.error('[Hook] BLOCKED: '+p+' ('+mb.toFixed(1)+'MB). 대용량 파일 통째 Read 금지 — Grep으로 검색하거나 Read에 offset/limit을 지정하세요.');process.exit(2)}}}}catch(e){}process.exit(0)})\"",
+            "description": "1MB 초과 텍스트 파일 전체 Read 차단 (offset/limit 없으면)"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -18,8 +28,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"$FILE_PATH\" | grep -qE '\\.(ts|tsx|css|json)$' && pnpm exec biome check --write \"$FILE_PATH\" 2>/dev/null || true",
-            "description": "Biome 포맷 + 린트 (TS/TSX/CSS/JSON 파일에만 적용)"
+            "command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); if echo \"$f\" | grep -qE '\\.(ts|tsx|css|json)$'; then out=$(pnpm exec biome check --write \"$f\" 2>&1); code=$?; if [ $code -ne 0 ]; then { echo \"[biome] 자동수정 불가 오류 — $f\"; echo \"$out\" | head -30; } >&2; exit 2; fi; fi",
+            "timeout": 30,
+            "description": "Biome 포맷+린트 — 자동수정 불가 오류는 exit 2로 모델에 강제 피드백"
           }
         ]
       },
@@ -28,8 +39,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"$FILE_PATH\" | grep -qE '\\.(ts|tsx)$' && timeout 60 pnpm tsc --noEmit --pretty false --incremental --tsBuildInfoFile node_modules/.cache/tsc-hook.tsbuildinfo 2>&1 | head -20 || true",
-            "description": "TypeScript 증분 타입 체크 (TS/TSX 파일에만 적용, 타임아웃 60초)"
+            "command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); if echo \"$f\" | grep -qE '\\.(ts|tsx)$'; then out=$(pnpm tsc --noEmit --pretty false --incremental --tsBuildInfoFile node_modules/.cache/tsc-hook.tsbuildinfo 2>&1); code=$?; if [ $code -ne 0 ]; then { echo '[tsc] 타입 오류 — 지금 수정하세요:'; echo \"$out\" | head -25; } >&2; exit 2; fi; fi",
+            "timeout": 90,
+            "description": "TypeScript 증분 체크 — 타입 오류를 exit 2로 모델에 강제 피드백"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/ryuilkwon/.claude/plugins/cache/fablize/fablize/2.1.0/hooks/finish-the-work.sh",
+            "timeout": 10,
+            "description": "fablize early-stop 방지 — 실행 없이 '~하겠습니다'로 끝나는 턴 차단"
           }
         ]
       }
@@ -49,5 +73,8 @@
       "Bash(pnpm tsc*)",
       "Bash(pnpm vitest*)"
     ]
+  },
+  "env": {
+    "ECC_DISABLED_HOOKS": "pre:bash:gateguard-fact-force"
   }
 }
