@@ -1,9 +1,14 @@
 import { z } from 'zod';
-import { createInvalidResponseError } from '../../../lib/api/errors';
+import { parseOrThrow } from '../../../lib/api/errors';
 
-const fileRefSchema = z.object({
+const fileAssetSchema = z.object({
+  fileId: z.string(),
   type: z.string(),
+  originalFilename: z.string(),
   filename: z.string(),
+  path: z.string(),
+  mimeType: z.string(),
+  size: z.number(),
 });
 
 const tripListItemSchema = z.object({
@@ -12,13 +17,17 @@ const tripListItemSchema = z.object({
   type: z.string(),
   name: z.string(),
   description: z.string().optional(),
-  logo: fileRefSchema,
+  logo: fileAssetSchema,
 });
 
 const tripDetailShape = {
+  id: z.string(),
   date: z.string(),
-  firstMap: fileRefSchema,
-  secondMap: fileRefSchema.nullable().default(null),
+  type: z.string(),
+  name: z.string(),
+  logo: fileAssetSchema,
+  firstMap: fileAssetSchema,
+  secondMap: fileAssetSchema.nullable().default(null),
   nextButtonText: z
     .string()
     .nullish()
@@ -52,59 +61,24 @@ export type TripListItemDto = z.infer<typeof tripListItemSchema>;
 export type TripDetailDto = z.infer<typeof tripDetailSchema>;
 
 export function parseTripListResponse(payload: unknown) {
-  const result = z.array(tripListItemSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Trip list', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(z.array(tripListItemSchema), payload, 'Trip list');
 }
 
 export function parseTripDetailResponse(
   payload: unknown,
   context: 'detail' | 'register'
 ) {
-  const result = tripDetailSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(
-      context === 'detail' ? 'Trip detail' : 'Trip register',
-      {
-        issues: result.error.issues,
-        payload,
-      }
-    );
-  }
-
-  return result.data;
+  return parseOrThrow(
+    tripDetailSchema,
+    payload,
+    context === 'detail' ? 'Trip detail' : 'Trip register'
+  );
 }
 
 export function parseTripQuizResponse(payload: unknown) {
-  const result = quizRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Trip quiz', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(quizRdoSchema, payload, 'Trip quiz');
 }
 
 export function parseTripQuizCheckResponse(payload: unknown) {
-  const result = quizResultRdoSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Trip quiz check', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(quizResultRdoSchema, payload, 'Trip quiz check');
 }

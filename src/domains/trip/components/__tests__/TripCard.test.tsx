@@ -9,7 +9,15 @@ const trip = {
   type: 'year-end',
   name: '연말 나들이',
   displayDate: '2099.12.31',
-  logo: { type: 'logo', filename: 'logo.png' },
+  logo: {
+    fileId: 'logo-1',
+    type: 'logo',
+    originalFilename: 'logo.png',
+    filename: 'logo.png',
+    path: '/files/logo.png',
+    mimeType: 'image/png',
+    size: 1024,
+  },
 };
 
 describe('TripCard', () => {

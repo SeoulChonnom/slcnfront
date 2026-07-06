@@ -3,7 +3,30 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
 import { tripApi } from '../../api/trip-api';
 import { tripFilesApi } from '../../api/trip-files-api';
+import type { FileAsset } from '../../types';
 import { TripRegisterWizard } from '../TripRegisterWizard';
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
+
+const logoAsset = fileAsset({
+  fileId: 'logo-1',
+  type: 'logo',
+  filename: 'logo.png',
+  originalFilename: 'logo.png',
+});
+const firstMapAsset = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
+const secondMapAsset = fileAsset({ fileId: 'map-2', filename: 'map2.png' });
 
 vi.mock('../../api/trip-files-api', () => ({
   tripFilesApi: {
@@ -136,13 +159,17 @@ describe('TripRegisterWizard', () => {
 
   it('uploads assets before posting the trip json payload', async () => {
     uploadTripFileMock
-      .mockResolvedValueOnce({ type: 'logo', filename: 'logo.png' })
-      .mockResolvedValueOnce({ type: 'map', filename: 'map1.png' })
-      .mockResolvedValueOnce({ type: 'map', filename: 'map2.png' });
+      .mockResolvedValueOnce(logoAsset)
+      .mockResolvedValueOnce(firstMapAsset)
+      .mockResolvedValueOnce(secondMapAsset);
     registerTripMock.mockResolvedValue({
+      id: 'trip-1',
       date: '2099-12-31',
-      firstMap: { type: 'map', filename: 'map1.png' },
-      secondMap: { type: 'map', filename: 'map2.png' },
+      type: 'A',
+      name: '연말 나들이',
+      logo: logoAsset,
+      firstMap: firstMapAsset,
+      secondMap: secondMapAsset,
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -174,9 +201,9 @@ describe('TripRegisterWizard', () => {
       date: '2099-12-31',
       type: 'A',
       name: '연말 나들이',
-      logo: { type: 'logo', filename: 'logo.png' },
-      firstMap: { type: 'map', filename: 'map1.png' },
-      secondMap: { type: 'map', filename: 'map2.png' },
+      logoFileId: 'logo-1',
+      firstMapFileId: 'map-1',
+      secondMapFileId: 'map-2',
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -219,8 +246,8 @@ describe('TripRegisterWizard', () => {
 
   it('surfaces /trip failures after uploads without fallback or cleanup', async () => {
     uploadTripFileMock
-      .mockResolvedValueOnce({ type: 'logo', filename: 'logo.png' })
-      .mockResolvedValueOnce({ type: 'map', filename: 'map1.png' });
+      .mockResolvedValueOnce(logoAsset)
+      .mockResolvedValueOnce(firstMapAsset);
     registerTripMock.mockRejectedValueOnce(new Error('trip create failed'));
 
     const { user, container } = renderWithProviders(

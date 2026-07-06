@@ -1,3 +1,5 @@
+import type { z } from 'zod';
+
 export type AppErrorCode = 'HTTP_ERROR' | 'NETWORK_ERROR' | 'INVALID_RESPONSE';
 
 type AppErrorOptions = {
@@ -21,10 +23,27 @@ export class AppError extends Error {
   }
 }
 
-export function createInvalidResponseError(context: string, details?: unknown) {
+function createInvalidResponseError(context: string, details?: unknown) {
   return new AppError({
     code: 'INVALID_RESPONSE',
     message: `${context} response payload is invalid.`,
     details,
   });
+}
+
+export function parseOrThrow<T>(
+  schema: z.ZodType<T>,
+  payload: unknown,
+  context: string
+): T {
+  const result = schema.safeParse(payload);
+
+  if (!result.success) {
+    throw createInvalidResponseError(context, {
+      issues: result.error.issues,
+      payload,
+    });
+  }
+
+  return result.data;
 }

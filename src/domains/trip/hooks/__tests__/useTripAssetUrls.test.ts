@@ -1,12 +1,25 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tripFilesApi } from '../../api/trip-files-api';
-import type { FileRef } from '../../types';
+import type { FileAsset } from '../../types';
 import { useTripAssetUrls } from '../useTripAssetUrls';
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
 
 vi.mock('../../api/trip-files-api', () => ({
   tripFilesApi: {
-    downloadTripFile: vi.fn(async (ref: FileRef) => {
+    downloadTripFile: vi.fn(async (ref: FileAsset) => {
       return new File([ref.filename], `${ref.filename}.png`, {
         type: 'image/png',
       });
@@ -28,16 +41,20 @@ describe('useTripAssetUrls', () => {
 
   it('batches unique asset fetches and cleans up object urls', async () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
-    const logoRef: FileRef = { type: 'logo', filename: 'logo.png' };
-    const map1Ref: FileRef = { type: 'map', filename: 'map1.png' };
+    const logoRef = fileAsset({
+      fileId: 'logo-1',
+      type: 'logo',
+      filename: 'logo.png',
+    });
+    const map1Ref = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
 
     const { result, unmount } = renderHook(() =>
       useTripAssetUrls([logoRef, map1Ref, logoRef])
     );
 
     await waitFor(() => {
-      expect(result.current['logo/logo.png']).toBe('blob:logo.png.png');
-      expect(result.current['map/map1.png']).toBe('blob:map1.png.png');
+      expect(result.current['logo-1']).toBe('blob:logo.png.png');
+      expect(result.current['map-1']).toBe('blob:map1.png.png');
     });
 
     expect(downloadTripFile).toHaveBeenCalledTimes(2);
@@ -52,10 +69,14 @@ describe('useTripAssetUrls', () => {
 
   it('keeps successful assets when one download fails', async () => {
     const downloadTripFile = vi.mocked(tripFilesApi.downloadTripFile);
-    const logoRef: FileRef = { type: 'logo', filename: 'logo.png' };
-    const brokenRef: FileRef = { type: 'map', filename: 'broken.png' };
+    const logoRef = fileAsset({
+      fileId: 'logo-1',
+      type: 'logo',
+      filename: 'logo.png',
+    });
+    const brokenRef = fileAsset({ fileId: 'broken-1', filename: 'broken.png' });
 
-    downloadTripFile.mockImplementation(async (ref: FileRef) => {
+    downloadTripFile.mockImplementation(async (ref: FileAsset) => {
       if (ref.filename === 'broken.png') {
         throw new Error('download failed');
       }
@@ -68,15 +89,19 @@ describe('useTripAssetUrls', () => {
     const { result } = renderHook(() => useTripAssetUrls([logoRef, brokenRef]));
 
     await waitFor(() => {
-      expect(result.current['logo/logo.png']).toBe('blob:logo.png.png');
+      expect(result.current['logo-1']).toBe('blob:logo.png.png');
     });
 
-    expect(result.current['map/broken.png']).toBeUndefined();
+    expect(result.current['broken-1']).toBeUndefined();
   });
 
   it('replaces prior object urls when the ref set changes', async () => {
-    const logoRef: FileRef = { type: 'logo', filename: 'logo.png' };
-    const map1Ref: FileRef = { type: 'map', filename: 'map1.png' };
+    const logoRef = fileAsset({
+      fileId: 'logo-1',
+      type: 'logo',
+      filename: 'logo.png',
+    });
+    const map1Ref = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
 
     const { result, rerender } = renderHook(
       ({ refs }) => useTripAssetUrls(refs),
@@ -88,7 +113,7 @@ describe('useTripAssetUrls', () => {
     );
 
     await waitFor(() => {
-      expect(result.current['logo/logo.png']).toBe('blob:logo.png.png');
+      expect(result.current['logo-1']).toBe('blob:logo.png.png');
     });
 
     rerender({
@@ -96,7 +121,7 @@ describe('useTripAssetUrls', () => {
     });
 
     await waitFor(() => {
-      expect(result.current['map/map1.png']).toBe('blob:map1.png.png');
+      expect(result.current['map-1']).toBe('blob:map1.png.png');
     });
 
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:logo.png.png');
