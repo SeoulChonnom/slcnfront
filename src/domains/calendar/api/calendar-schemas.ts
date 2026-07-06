@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createInvalidResponseError } from '../../../lib/api/errors';
+import { parseOrThrow } from '../../../lib/api/errors';
 
 const calendarMetaSchema = z.object({
   id: z.string(),
@@ -30,71 +30,38 @@ export type CalendarMetaDto = z.infer<typeof calendarMetaSchema>;
 export type ScheduleEventDto = z.infer<typeof scheduleEventSchema>;
 
 export function parseCalendarListResponse(payload: unknown) {
-  const result = z.array(calendarMetaSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError('Calendar list', {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(z.array(calendarMetaSchema), payload, 'Calendar list');
 }
 
 export function parseCalendarResponse(
   payload: unknown,
   context: 'create' | 'update'
 ) {
-  const result = calendarMetaSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(
-      context === 'create' ? 'Calendar create' : 'Calendar update',
-      {
-        issues: result.error.issues,
-        payload,
-      }
-    );
-  }
-
-  return result.data;
+  return parseOrThrow(
+    calendarMetaSchema,
+    payload,
+    context === 'create' ? 'Calendar create' : 'Calendar update'
+  );
 }
 
 export function parseScheduleListResponse(
   payload: unknown,
   context: 'current' | 'range'
 ) {
-  const result = z.array(scheduleEventSchema).safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(
-      context === 'current' ? 'Current schedules' : 'Schedule range',
-      {
-        issues: result.error.issues,
-        payload,
-      }
-    );
-  }
-
-  return result.data;
+  return parseOrThrow(
+    z.array(scheduleEventSchema),
+    payload,
+    context === 'current' ? 'Current schedules' : 'Schedule range'
+  );
 }
 
 export function parseScheduleResponse(
   payload: unknown,
   context: 'create' | 'update'
 ) {
-  const result = scheduleEventSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(
-      context === 'create' ? 'Schedule create' : 'Schedule update',
-      {
-        issues: result.error.issues,
-        payload,
-      }
-    );
-  }
-
-  return result.data;
+  return parseOrThrow(
+    scheduleEventSchema,
+    payload,
+    context === 'create' ? 'Schedule create' : 'Schedule update'
+  );
 }

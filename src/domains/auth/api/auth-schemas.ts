@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createInvalidResponseError } from '../../../lib/api/errors';
+import { parseOrThrow } from '../../../lib/api/errors';
 import type { AuthSuccess } from './auth-api';
 
 const userResponseSchema = z.object({
@@ -15,16 +15,11 @@ export function parseUserResponse(
   payload: unknown,
   context: keyof AuthSuccessMap
 ) {
-  const result = userResponseSchema.safeParse(payload);
-
-  if (!result.success) {
-    throw createInvalidResponseError(AUTH_SUCCESS_CONTEXT[context], {
-      issues: result.error.issues,
-      payload,
-    });
-  }
-
-  return result.data;
+  return parseOrThrow(
+    userResponseSchema,
+    payload,
+    AUTH_SUCCESS_CONTEXT[context]
+  );
 }
 
 const AUTH_SUCCESS_CONTEXT = {

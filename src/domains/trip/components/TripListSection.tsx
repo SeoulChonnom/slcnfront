@@ -13,7 +13,7 @@ import { useAuthStore } from '../../auth/store/auth-store';
 import { useTripAssetUrls } from '../hooks/useTripAssetUrls';
 import { useTripList } from '../hooks/useTripList';
 import { useTripQuiz } from '../hooks/useTripQuiz';
-import { fileRefKey } from '../types';
+import { fileAssetKey } from '../types';
 import { TripCard } from './TripCard';
 import { TripQuizModal } from './TripQuizModal';
 
@@ -170,7 +170,7 @@ export function TripListSection({ device }: TripListSectionProps) {
             <TripCard
               key={trip.id || trip.date}
               trip={trip}
-              logoObjectUrl={logoObjectUrls[fileRefKey(trip.logo)] ?? null}
+              logoObjectUrl={logoObjectUrls[fileAssetKey(trip.logo)] ?? null}
               onOpenQuiz={(nextTrip) => {
                 void quiz.openQuiz(nextTrip);
               }}

@@ -53,7 +53,7 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
   return {
     async login(values: LoginFormValues) {
       const response = await client.post<UserResponseDto>({
-        path: '/user/login',
+        path: '/users/login',
         body: toLoginRequest(values),
         auth: false,
       });
@@ -62,7 +62,7 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
     },
     async restoreSession(options?: Pick<ApiRequestOptions, 'signal'>) {
       const response = await client.post<UserResponseDto>({
-        path: '/user/token',
+        path: '/users/token',
         auth: false,
         signal: options?.signal,
       });
