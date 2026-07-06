@@ -128,7 +128,7 @@ export type TravelDetail = {
 
 // ── CDO / UDO view types (passed to mutation hooks) ──────────────────────────
 
-export type TravelPhotoCdo = {
+type TravelPhotoCdo = {
   travelDayId?: string;
   travelPlaceId?: string;
   photoFileId: string;
