@@ -12,7 +12,7 @@ describe('DesktopHeader', () => {
       screen.getByRole('link', { name: /SLCN 홈으로 이동/i })
     ).toBeTruthy();
     expect(screen.getByRole('link', { name: '나들이 기록' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '나들이 일정' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: '서울 촌놈 달력' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '신발 추천' })).toBeTruthy();
   });
 });

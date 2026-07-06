@@ -1,5 +1,5 @@
 import { apiClient, type createApiClient } from '../../../lib/api/api-client';
-import type { FileRef } from '../types';
+import type { FileAsset } from '../types';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 
@@ -11,13 +11,9 @@ function mapTripFileUploadType(kind: TripFileUploadKind): string {
 
 export function createTripFilesApi(client: ApiClientLike = apiClient) {
   return {
-    downloadTripFile(ref: FileRef) {
+    downloadTripFile(asset: FileAsset) {
       return client.get<Blob>({
-        path: '/file',
-        query: {
-          type: ref.type,
-          filename: ref.filename,
-        },
+        path: `/assets/files/${encodeURIComponent(asset.fileId)}`,
         responseType: 'blob',
       });
     },
@@ -26,8 +22,8 @@ export function createTripFilesApi(client: ApiClientLike = apiClient) {
 
       formData.append('file', file);
 
-      return client.post<FileRef>({
-        path: '/file',
+      return client.post<FileAsset>({
+        path: '/assets/file',
         query: {
           type: mapTripFileUploadType(kind),
         },

@@ -147,6 +147,7 @@ export function createApiClient(config: ApiClientConfig = {}) {
         headers: requestHeaders,
         body: requestBody,
         signal,
+        credentials: 'include',
       });
     } catch (error) {
       throw new AppError({
