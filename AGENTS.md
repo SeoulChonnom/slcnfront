@@ -50,6 +50,38 @@ Before capturing protected pages, sign in through the UI using the development s
 
 After submitting login, wait for the redirect target or expected protected route to render before taking screenshots. For desktop captures, use `/main/...` routes; for mobile captures, use `/mobile/...` routes and a mobile-sized viewport.
 
+## Definition of Done (Evidence Required)
+
+Never claim a task is complete without evidence produced in the current session:
+
+- Code changes: show the actual outputs of `npx @biomejs/biome check src/`, `pnpm tsc --noEmit` (or `pnpm build`), and `pnpm test` run after your last edit. "It should pass" is not evidence.
+- UI changes: capture the changed screens with Playwright at 1440px (`/main/...`) and 390px (`/mobile/...`) and compare against the reference before reporting done.
+- Verify rendered results, not declared styles. A font/token declared in CSS is not proof it loads — check `document.fonts.check(...)` or the rendered screenshot. (Past incident: Inter was declared in `tokens.css` but never loaded; static analysis missed it repeatedly.)
+- Every completion report must state explicitly: what was verified (with the command/screenshot), and what was NOT verified and why.
+- If verification fails, report the failure with output. Do not soften or omit it.
+
+## Context Budget
+
+- Never read large files whole. `docs/SeoulChonnom_Prototype.html` is ~2MB (over 1.5M tokens) — use Grep on it, or Read with `offset`/`limit`. A PreToolUse hook blocks whole reads of files over 1MB.
+- Delegate bulk work (mass screenshot analysis, many-file reads, mechanical edits) to subagents so the main context stays small; subagents start with fresh context and are the primary defense against compaction-driven quality loss.
+- Write intermediate artifacts (screenshots, analysis dumps, reports) to `screenshots/`, `docs/tmp/`, or the session scratchpad — never paste bulk content into the conversation.
+
+## Model Routing & Orchestration
+
+| Task type | Model |
+|---|---|
+| Mechanical work: captures, file moves, codemods, bulk renames | haiku |
+| Scoped implementation with a clear spec (a component, a hook, a mapper) | sonnet |
+| Visual diff judgment, architecture decisions, open-ended debugging | opus or stronger |
+
+- On large multi-part jobs the main agent orchestrates only; implementation runs in parallel subagents. Screenshot-comparison verdicts are made by the main agent directly, never delegated.
+- When background agents run in parallel, actively monitor them (TaskList/TaskOutput). If an agent shows no progress, inspect its output and intervene — do not wait passively for it to finish.
+- Escalate honestly: if an open-ended problem has resisted two genuine attempts, say so and recommend a stronger model or human review instead of iterating in circles.
+
+## Design Sync
+
+For any "match the prototype" work, use the `/design-sync` skill (`.claude/skills/design-sync/`). The design source of truth is `docs/SeoulChonnom_Prototype.html`; its top prototype navigation header is NOT part of the target design. The `.pen` file under `docs/design/` is outdated — do not use it.
+
 ## Commit & Pull Request Guidelines
 
 Recent history uses short conventional messages such as `feat: ...`, `fix: ...`, and `chore: ...`. Keep that format, use the imperative mood, and scope each commit to one logical change.

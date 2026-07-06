@@ -203,7 +203,3 @@ export type TravelPlaceCdo = {
   photoFileIds?: string[];
   sortOrder?: number;
 };
-
-export type TravelTagCdo = {
-  name: string;
-};

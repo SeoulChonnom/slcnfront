@@ -22,8 +22,6 @@ type ApiClientLike = Pick<
 
 export function createTravelApi(client: ApiClientLike = apiClient) {
   return {
-    // ── Travel CRUD ───────────────────────────────────────────────────────────
-
     async getTravelList(): Promise<TravelListItem[]> {
       const response = await client.get<unknown[]>({ path: '/travels' });
       return parseTravelListResponse(response).map(mapTravelListItemDto);

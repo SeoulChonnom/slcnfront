@@ -11,9 +11,11 @@ import type {
   TravelDetail,
   TravelListItem,
   TravelPhoto,
+  TravelPhotoCdo,
   TravelPlace,
   TravelReview,
   TravelTag,
+  TravelUdo,
 } from '../types';
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
@@ -51,7 +53,7 @@ export function mapFileBoxItemToPhoto(dto: FileBoxItemRdoDto): TravelPhoto {
   };
 }
 
-export function mapTravelPlaceDto(dto: TravelPlaceRdoDto): TravelPlace {
+function mapTravelPlaceDto(dto: TravelPlaceRdoDto): TravelPlace {
   return {
     id: dto.placeKey,
     name: dto.name,
@@ -65,7 +67,7 @@ export function mapTravelPlaceDto(dto: TravelPlaceRdoDto): TravelPlace {
   };
 }
 
-export function mapTravelDayDto(dto: TravelDayRdoDto): TravelDay {
+function mapTravelDayDto(dto: TravelDayRdoDto): TravelDay {
   return {
     id: dto.id ?? dto.date,
     travelId: dto.travelId ?? '',
@@ -81,7 +83,7 @@ export function mapTravelDayDto(dto: TravelDayRdoDto): TravelDay {
   };
 }
 
-export function mapTravelReviewDto(dto: TravelReviewRdoDto): TravelReview {
+function mapTravelReviewDto(dto: TravelReviewRdoDto): TravelReview {
   return {
     oneLineSummary: dto.oneLineSummary,
     goodPoint: dto.goodPoint,
@@ -134,5 +136,56 @@ export function mapTravelDetailDto(dto: TravelDetailRdoDto): TravelDetail {
     files: dto.files,
     tags: dto.tags.map(mapTravelTagString),
     review: dto.review ? mapTravelReviewDto(dto.review) : null,
+  };
+}
+
+function toPhotoCdo(photo: TravelPhoto): TravelPhotoCdo {
+  return {
+    photoFileId: photo.photoFileId,
+    travelDayId: photo.travelDayId ?? undefined,
+    travelPlaceId: photo.travelPlaceId ?? undefined,
+    caption: photo.caption ?? undefined,
+    sortOrder: photo.sortOrder,
+  };
+}
+
+export function buildTravelUdoFromDetail(travel: TravelDetail): TravelUdo {
+  return {
+    title: travel.title,
+    region: travel.region,
+    startDate: travel.startDate,
+    endDate: travel.endDate,
+    coverPhotoId: travel.coverPhotoId ?? undefined,
+    tags: travel.tags.map((t) => t.name),
+    confirmDeleteDays: false,
+    travelDays: travel.travelDays.map((day) => ({
+      id: day.id,
+      date: day.date,
+      title: day.title ?? undefined,
+      memo: day.memo ?? undefined,
+      coverPhotoId: day.coverPhotoId ?? undefined,
+      sortOrder: day.sortOrder,
+      photos: day.photos.map(toPhotoCdo),
+      places: day.places.map((place) => ({
+        name: place.name,
+        category: place.category,
+        address: place.address ?? undefined,
+        memo: place.memo ?? undefined,
+        description: place.description ?? undefined,
+        sortOrder: place.sortOrder,
+        coverPhotoId: place.coverPhotoId ?? undefined,
+        photos: place.photos.map(toPhotoCdo),
+      })),
+    })),
+    photos: travel.photos.map(toPhotoCdo),
+    review: travel.review
+      ? {
+          oneLineSummary: travel.review.oneLineSummary ?? undefined,
+          goodPoint: travel.review.goodPoint ?? undefined,
+          badPoint: travel.review.badPoint ?? undefined,
+          revisitPlace: travel.review.revisitPlace ?? undefined,
+          finalReview: travel.review.finalReview ?? undefined,
+        }
+      : {},
   };
 }
