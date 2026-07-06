@@ -44,7 +44,11 @@ describe('trip-mappers', () => {
 
     expect(
       mapTripDetailDto({
+        id: 'trip-1',
         date: '20991231',
+        type: 'year-end',
+        name: '연말 나들이',
+        logo: logoAsset,
         firstMap: firstMapAsset,
         secondMap: null,
         nextButtonText: '',
