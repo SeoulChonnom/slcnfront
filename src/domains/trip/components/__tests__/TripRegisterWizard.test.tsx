@@ -163,7 +163,11 @@ describe('TripRegisterWizard', () => {
       .mockResolvedValueOnce(firstMapAsset)
       .mockResolvedValueOnce(secondMapAsset);
     registerTripMock.mockResolvedValue({
+      id: 'trip-1',
       date: '2099-12-31',
+      type: 'A',
+      name: '연말 나들이',
+      logo: logoAsset,
       firstMap: firstMapAsset,
       secondMap: secondMapAsset,
       nextButtonText: '다음',

@@ -29,7 +29,11 @@ describe('TripDetailSection', () => {
     renderWithProviders(
       <TripDetailSection
         tripDetail={{
+          id: 'trip-1',
           date: '20991231',
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
           firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
           secondMap: null,
           nextButtonText: '',
@@ -49,7 +53,11 @@ describe('TripDetailSection', () => {
     const { user } = renderWithProviders(
       <TripDetailSection
         tripDetail={{
+          id: 'trip-1',
           date: '20991231',
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
           firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
           secondMap: fileAsset({ fileId: 'map-2', filename: 'map2.png' }),
           nextButtonText: '1차 경로',
