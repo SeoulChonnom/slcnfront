@@ -35,7 +35,7 @@ export type TravelPhoto = {
   sortOrder: number;
 };
 
-export type FileBoxItem = {
+type FileBoxItem = {
   id: string;
   fileAssetId: string;
   targetType: 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE' | 'TRIP';
@@ -136,7 +136,7 @@ export type TravelPhotoCdo = {
   sortOrder?: number;
 };
 
-export type TravelReviewUdo = {
+type TravelReviewUdo = {
   content?: string;
   oneLineSummary?: string;
   goodPoint?: string;
@@ -190,16 +190,4 @@ export type TravelUdo = {
   travelDays: TravelDayUdo[];
   photos: TravelPhotoCdo[];
   review: TravelReviewUdo;
-};
-
-export type TravelPlaceCdo = {
-  travelDayId: string;
-  name: string;
-  category?: PlaceCategory;
-  address?: string;
-  memo?: string;
-  description?: string;
-  coverPhotoId?: string;
-  photoFileIds?: string[];
-  sortOrder?: number;
 };

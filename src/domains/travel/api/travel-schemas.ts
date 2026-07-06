@@ -16,7 +16,7 @@ const placeCategorySchema = z.enum([
 
 // ── CDO / UDO schemas (request payloads) ───────────────────────────────────────
 
-export const travelPhotoCdoSchema = z.object({
+const travelPhotoCdoSchema = z.object({
   travelDayId: z.string().optional(),
   travelPlaceId: z.string().optional(),
   photoFileId: z.string(),
@@ -24,7 +24,7 @@ export const travelPhotoCdoSchema = z.object({
   sortOrder: z.number().int().optional(),
 });
 
-export const travelReviewUdoSchema = z.object({
+const travelReviewUdoSchema = z.object({
   content: z.string().optional(),
   oneLineSummary: z.string().optional(),
   goodPoint: z.string().optional(),
@@ -33,7 +33,7 @@ export const travelReviewUdoSchema = z.object({
   finalReview: z.string().optional(),
 });
 
-export const travelPlaceUdoSchema = z.object({
+const travelPlaceUdoSchema = z.object({
   name: z.string(),
   category: placeCategorySchema,
   address: z.string().optional(),
@@ -44,7 +44,7 @@ export const travelPlaceUdoSchema = z.object({
   photos: z.array(travelPhotoCdoSchema),
 });
 
-export const travelDayUdoSchema = z.object({
+const travelDayUdoSchema = z.object({
   id: z.string().optional(),
   date: z.string(),
   title: z.string().optional(),
