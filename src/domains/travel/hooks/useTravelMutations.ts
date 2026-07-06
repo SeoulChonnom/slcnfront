@@ -31,20 +31,6 @@ export function useUpdateTravel(travelId: string) {
   });
 }
 
-export function usePutTravel(travelId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (payload: TravelUdo) => travelApi.putTravel(travelId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: travelQueryKeys.list() });
-      void queryClient.invalidateQueries({
-        queryKey: travelQueryKeys.detail(travelId),
-      });
-    },
-  });
-}
-
 export function useDeleteTravel() {
   const queryClient = useQueryClient();
 
