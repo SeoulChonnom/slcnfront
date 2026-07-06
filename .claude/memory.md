@@ -1,13 +1,15 @@
 # 프로젝트 메모리
 
-> 마지막 업데이트: 2026-06-25
+> 마지막 업데이트: 2026-07-05
 > 코드에서 읽을 수 있는 정보는 적지 않음. 코드를 읽으면 알 수 없는 결정/상태/발견만 기록.
 
 ## 현재 상태
 
 - 최근 완료: 전체 UI 리디자인 + 파일 API 재설계 (`8ba7f76`)
 - CI 없음 — `.github/workflows/` 미설정 상태, 로컬에서만 검증 중
-- `.claude/settings.json`에 Biome + TypeScript 증분 체크 PostToolUse 훅 설정됨 (2026-06-25)
+- 하네스 개선 (2026-07-05): fablize local 상시 적용(CLAUDE.md 주입), AGENTS.md에 Definition of Done / Context Budget / Model Routing / Design Sync 섹션 추가, `/design-sync`·`/api-sync` 프로젝트 스킬 신설
+- **`.claude/settings.proposed.json` 적용 대기**: 훅 전면 개정본(biome/tsc 오류를 exit 2로 강제 피드백, 1MB 초과 Read 차단, fablize Stop 훅, ECC GateGuard 비활성화 env). 에이전트 셀프 수정이 차단되어 사용자가 직접 `cp .claude/settings.proposed.json .claude/settings.json` 후 proposed 파일 삭제 필요.
+- 기존 tsc 훅은 macOS에 `timeout` 명령이 없어 exit 127로 **한 번도 작동한 적 없음** (`|| true`가 은폐). 개정본은 셸 timeout 대신 훅 자체 `timeout` 필드 사용. `$FILE_PATH` 환경변수 방식도 stdin JSON + jq 방식으로 교체됨.
 
 ## 설계 결정 및 배경
 

@@ -54,7 +54,7 @@ describe('auth-api', () => {
       },
     });
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/login'
+      'http://localhost:8080/api/users/login'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
@@ -96,7 +96,7 @@ describe('auth-api', () => {
       },
     });
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/token'
+      'http://localhost:8080/api/users/token'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
@@ -126,7 +126,7 @@ describe('auth-api', () => {
       message: 'restore failed',
     } satisfies Partial<AppError>);
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
-      'http://localhost:8080/api/user/token'
+      'http://localhost:8080/api/users/token'
     );
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
