@@ -80,18 +80,6 @@ export const travelUdoSchema = z.object({
   review: travelReviewUdoSchema,
 });
 
-export const travelPlaceCdoSchema = z.object({
-  travelDayId: z.string(),
-  name: z.string(),
-  category: placeCategorySchema.optional(),
-  address: z.string().optional(),
-  memo: z.string().optional(),
-  description: z.string().optional(),
-  coverPhotoId: z.string().optional(),
-  photoFileIds: z.array(z.string()).optional(),
-  sortOrder: z.number().int().optional(),
-});
-
 // ── RDO schemas ───────────────────────────────────────────────────────────────
 
 const fileAssetSchema = z.object({

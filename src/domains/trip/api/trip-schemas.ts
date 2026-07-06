@@ -21,7 +21,11 @@ const tripListItemSchema = z.object({
 });
 
 const tripDetailShape = {
+  id: z.string(),
   date: z.string(),
+  type: z.string(),
+  name: z.string(),
+  logo: fileAssetSchema,
   firstMap: fileAssetSchema,
   secondMap: fileAssetSchema.nullable().default(null),
   nextButtonText: z
