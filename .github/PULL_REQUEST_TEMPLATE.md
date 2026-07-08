@@ -14,8 +14,9 @@
 
 - [ ] `pnpm test` 통과
 - [ ] `pnpm build` 통과
-- [ ] `npx @biomejs/biome check --write src/` 실행
-- [ ] `pnpm knip` 결과가 기존보다 늘지 않음
+- [ ] `pnpm typecheck` 통과
+- [ ] `npx @biomejs/biome check --write src/` 실행 후 남은 문제 없음
+- [ ] `pnpm knip` 통과 또는 실패 시 이번 변경에서 새로 생긴 항목이 아님을 확인
 
 ## UI 변경 사항
 

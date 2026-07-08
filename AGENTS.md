@@ -22,6 +22,7 @@ Use Node.js 24 and `pnpm`.
 
 - `pnpm dev`: start the Vite dev server
 - `pnpm build`: run TypeScript project builds, then create a production bundle
+- `pnpm typecheck`: run TypeScript project reference checks without emitting files
 - `pnpm preview`: serve the built app locally from `dist/`
 - `pnpm lint`: run ESLint across `ts` and `tsx` files
 - `pnpm test`: run the Vitest suite once
@@ -30,8 +31,8 @@ Use Node.js 24 and `pnpm`.
 ## Coding Style & Naming Conventions
 
 Follow existing TypeScript + React patterns with 2-space indentation and ES module imports. Use `PascalCase` for components and pages (`TripRegisterPage.tsx`), `camelCase` for hooks and utilities (`useRestoreSession.ts`, `trip-validation.ts`), and colocate tests in `__tests__/`.
-Biome is configured in `biome.json`. Before finish your job, please run `npx @biomejs/biome check --write src/` for formatting and linting.
-Before finish your job, please run `pnpm run knip` for checking unused files, dependencies, and exports. It is configured and executable, but currently reports known existing unused files, dependencies, and exports. Do not treat those as newly introduced unless a change adds to them.
+Biome is configured in `biome.json`. Before finishing your job, run `npx @biomejs/biome check --write src/` and make sure it reports no remaining problems.
+Before finishing your job, run `pnpm run knip` for checking unused files, dependencies, and exports. The current baseline should be clean; if it fails, distinguish whether the failure was introduced by your change.
 
 ## Testing Guidelines
 
@@ -54,7 +55,7 @@ After submitting login, wait for the redirect target or expected protected route
 
 Never claim a task is complete without evidence produced in the current session:
 
-- Code changes: show the actual outputs of `npx @biomejs/biome check src/`, `pnpm tsc --noEmit` (or `pnpm build`), and `pnpm test` run after your last edit. "It should pass" is not evidence.
+- Code changes: show the actual outputs of `npx @biomejs/biome check --write src/`, `pnpm typecheck` (or `pnpm build`), and `pnpm test` run after your last edit. "It should pass" is not evidence.
 - UI changes: capture the changed screens with Playwright at 1440px (`/main/...`) and 390px (`/mobile/...`) and compare against the reference before reporting done.
 - Verify rendered results, not declared styles. A font/token declared in CSS is not proof it loads — check `document.fonts.check(...)` or the rendered screenshot. (Past incident: Inter was declared in `tokens.css` but never loaded; static analysis missed it repeatedly.)
 - Every completion report must state explicitly: what was verified (with the command/screenshot), and what was NOT verified and why.
