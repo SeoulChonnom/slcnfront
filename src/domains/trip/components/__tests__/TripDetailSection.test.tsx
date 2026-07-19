@@ -1,23 +1,40 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../test/helpers/render';
-import type { FileRef } from '../../types';
+import type { FileAsset } from '../../types';
 import { TripDetailSection } from '../TripDetailSection';
 
 vi.mock('../../hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: (ref: FileRef | null | undefined) => ({
+  useTripAssetUrl: (ref: FileAsset | null | undefined) => ({
     objectUrl: ref ? `blob:${ref.filename}` : null,
     isPending: false,
   }),
 }));
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
 
 describe('TripDetailSection', () => {
   it('renders a single map without a switcher', () => {
     renderWithProviders(
       <TripDetailSection
         tripDetail={{
+          id: 'trip-1',
           date: '20991231',
-          firstMap: { type: 'map', filename: 'map1.png' },
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
+          firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
           secondMap: null,
           nextButtonText: '',
           previousButtonText: '',
@@ -36,9 +53,13 @@ describe('TripDetailSection', () => {
     const { user } = renderWithProviders(
       <TripDetailSection
         tripDetail={{
+          id: 'trip-1',
           date: '20991231',
-          firstMap: { type: 'map', filename: 'map1.png' },
-          secondMap: { type: 'map', filename: 'map2.png' },
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
+          firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
+          secondMap: fileAsset({ fileId: 'map-2', filename: 'map2.png' }),
           nextButtonText: '1차 경로',
           previousButtonText: '2차 경로',
           driveUrl: 'https://drive.google.com/x',

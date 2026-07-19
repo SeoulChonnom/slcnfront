@@ -2447,6 +2447,19 @@
   gap: 1.5rem;
 }
 
+.slcn-home-hub__card-new {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: #ffe8ef;
+  color: #e0678a;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin-bottom: 0.375rem;
+}
+
 .slcn-route-loading {
   display: grid;
 }

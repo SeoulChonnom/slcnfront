@@ -20,7 +20,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
   return {
     async getCalendars(): Promise<CalendarMeta[]> {
       const response = await client.get<CalendarMetaDto[]>({
-        path: '/calendar',
+        path: '/calendars',
       });
 
       return parseCalendarListResponse(response)
@@ -31,7 +31,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
       payload: CalendarCreatePayload
     ): Promise<CalendarMeta> {
       const response = await client.post<CalendarMetaDto>({
-        path: '/calendar',
+        path: '/calendars',
         body: payload,
       });
 
@@ -41,7 +41,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
       payload: CalendarUpdatePayload
     ): Promise<CalendarMeta> {
       const response = await client.put<CalendarMetaDto>({
-        path: '/calendar',
+        path: '/calendars',
         body: payload,
       });
 
@@ -49,7 +49,7 @@ export function createCalendarApi(client: ApiClientLike = apiClient) {
     },
     async deleteCalendar(id: string) {
       await client.delete<void>({
-        path: `/calendar/${encodeURIComponent(id)}`,
+        path: `/calendars/${encodeURIComponent(id)}`,
         responseType: 'void',
       });
     },

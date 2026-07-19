@@ -1,11 +1,11 @@
-import { type FileRef, fileRefKey } from '../types';
+import { type FileAsset, fileAssetKey } from '../types';
 import { useTripAssetObjectUrls } from './internal/useTripAssetObjectUrls';
 
-export function useTripAssetUrl(ref: FileRef | null | undefined) {
+export function useTripAssetUrl(ref: FileAsset | null | undefined) {
   const { objectUrls, isLoading } = useTripAssetObjectUrls([ref]);
 
   return {
-    objectUrl: ref ? (objectUrls[fileRefKey(ref)] ?? null) : null,
+    objectUrl: ref ? (objectUrls[fileAssetKey(ref)] ?? null) : null,
     isPending: isLoading,
   };
 }

@@ -27,6 +27,22 @@ const PAGE_LOADERS = {
       import('../../pages/main/TripDetailPage').then((module) => ({
         default: module.TripDetailPage,
       })),
+    travelList: () =>
+      import('../../pages/main/TravelListPage').then((module) => ({
+        default: module.TravelListPage,
+      })),
+    travelRegister: () =>
+      import('../../pages/main/TravelRegisterPage').then((module) => ({
+        default: module.TravelRegisterPage,
+      })),
+    travelDetail: () =>
+      import('../../pages/main/TravelDetailPage').then((module) => ({
+        default: module.TravelDetailPage,
+      })),
+    travelEdit: () =>
+      import('../../pages/main/TravelEditPage').then((module) => ({
+        default: module.TravelEditPage,
+      })),
     calendarMonth: () =>
       import('../../pages/main/CalendarMonthPage').then((module) => ({
         default: module.CalendarMonthPage,
@@ -60,6 +76,22 @@ const PAGE_LOADERS = {
     tripDetail: () =>
       import('../../pages/mobile/TripDetailPage').then((module) => ({
         default: module.TripDetailPage,
+      })),
+    travelList: () =>
+      import('../../pages/mobile/TravelListPage').then((module) => ({
+        default: module.TravelListPage,
+      })),
+    travelRegister: () =>
+      import('../../pages/mobile/TravelRegisterPage').then((module) => ({
+        default: module.TravelRegisterPage,
+      })),
+    travelDetail: () =>
+      import('../../pages/mobile/TravelDetailPage').then((module) => ({
+        default: module.TravelDetailPage,
+      })),
+    travelEdit: () =>
+      import('../../pages/mobile/TravelEditPage').then((module) => ({
+        default: module.TravelEditPage,
       })),
     calendarMonth: () =>
       import('../../pages/mobile/CalendarMonthPage').then((module) => ({

@@ -1,8 +1,31 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createApiClient } from '../../../../lib/api/api-client';
 import type { AppError } from '../../../../lib/api/errors';
+import type { FileAsset } from '../../types';
 import { createTripApi } from '../trip-api';
 import { createTripFilesApi } from '../trip-files-api';
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'map',
+    originalFilename: 'map.png',
+    filename: 'map.png',
+    path: '/files/map.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
+
+const logoAsset = fileAsset({
+  fileId: 'logo-1',
+  type: 'logo',
+  filename: 'logo.png',
+  originalFilename: 'logo.png',
+});
+const firstMapAsset = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
+const secondMapAsset = fileAsset({ fileId: 'map-2', filename: 'map2.png' });
 
 describe('trip-api', () => {
   it('calls trip endpoints with the expected request shapes', async () => {
@@ -16,7 +39,7 @@ describe('trip-api', () => {
               date: '2099-12-31',
               type: 'year-end',
               name: '연말 나들이',
-              logo: { type: 'logo', filename: 'logo.png' },
+              logo: logoAsset,
             },
           ]),
           {
@@ -30,9 +53,13 @@ describe('trip-api', () => {
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({
+            id: 'trip-1',
             date: '2099-12-31',
-            firstMap: { type: 'map', filename: 'map1.png' },
-            secondMap: { type: 'map', filename: 'map2.png' },
+            type: 'year-end',
+            name: '연말 나들이',
+            logo: logoAsset,
+            firstMap: firstMapAsset,
+            secondMap: secondMapAsset,
             nextButtonText: '다음',
             previousButtonText: '이전',
             driveUrl: 'https://drive.google.com/x',
@@ -80,9 +107,13 @@ describe('trip-api', () => {
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({
+            id: 'trip-1',
             date: '2099-12-31',
-            firstMap: { type: 'map', filename: 'map1.png' },
-            secondMap: { type: 'map', filename: 'map2.png' },
+            type: 'year-end',
+            name: '연말 나들이',
+            logo: logoAsset,
+            firstMap: firstMapAsset,
+            secondMap: secondMapAsset,
             nextButtonText: '다음',
             previousButtonText: '이전',
             driveUrl: 'https://drive.google.com/x',
@@ -97,13 +128,13 @@ describe('trip-api', () => {
       )
       .mockResolvedValueOnce(new Response('file-content', { status: 200 }))
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ type: 'logo', filename: 'logo.png' }), {
+        new Response(JSON.stringify(logoAsset), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
         })
       )
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ type: 'map', filename: 'map2.png' }), {
+        new Response(JSON.stringify(secondMapAsset), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
         })
@@ -127,9 +158,9 @@ describe('trip-api', () => {
       date: '2099-12-31',
       type: 'year-end',
       name: '연말 나들이',
-      logo: { type: 'logo', filename: 'logo.png' },
-      firstMap: { type: 'map', filename: 'map1.png' },
-      secondMap: { type: 'map', filename: 'map2.png' },
+      logoFileId: 'logo-1',
+      firstMapFileId: 'map-1',
+      secondMapFileId: 'map-2',
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -142,10 +173,7 @@ describe('trip-api', () => {
         options: [{ text: '보기1', isCorrect: true }],
       },
     });
-    const fileBlob = await tripFilesApi.downloadTripFile({
-      type: 'logo',
-      filename: 'logo.png',
-    });
+    const fileBlob = await tripFilesApi.downloadTripFile(logoAsset);
     const uploadedLogo = await tripFilesApi.uploadTripFile(
       'logo',
       new File(['logo'], 'logo.png', { type: 'image/png' })
@@ -155,9 +183,9 @@ describe('trip-api', () => {
       new File(['map-2'], 'map2.png', { type: 'image/png' })
     );
 
-    expect(tripList[0]?.logo).toEqual({ type: 'logo', filename: 'logo.png' });
+    expect(tripList[0]?.logo).toEqual(logoAsset);
     expect(tripList[0]?.type).toBe('year-end');
-    expect(tripDetail.firstMap).toEqual({ type: 'map', filename: 'map1.png' });
+    expect(tripDetail.firstMap).toEqual(firstMapAsset);
     expect(tripQuiz.options).toEqual([
       { id: 'option-1', text: '보기1' },
       { id: 'option-2', text: '보기2' },
@@ -169,25 +197,25 @@ describe('trip-api', () => {
     });
     expect(registeredTrip.driveUrl).toBe('https://drive.google.com/x');
     expect(await fileBlob.text()).toBe('file-content');
-    expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trip');
+    expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trips');
     expect(fetchFn.mock.calls[1]?.[0]).toBe(
-      'http://localhost:8080/api/trip/trip-1'
+      'http://localhost:8080/api/trips/trip-1'
     );
     expect(fetchFn.mock.calls[2]?.[0]).toBe(
-      'http://localhost:8080/api/trip/quiz/trip-1'
+      'http://localhost:8080/api/trips/quiz/trip-1'
     );
     expect(fetchFn.mock.calls[3]?.[0]).toBe(
-      'http://localhost:8080/api/trip/quiz/check?tripId=trip-1&optionId=option-2'
+      'http://localhost:8080/api/trips/quiz/check?tripId=trip-1&optionId=option-2'
     );
-    expect(fetchFn.mock.calls[4]?.[0]).toBe('http://localhost:8080/api/trip');
+    expect(fetchFn.mock.calls[4]?.[0]).toBe('http://localhost:8080/api/trips');
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
-      'http://localhost:8080/api/file?type=logo&filename=logo.png'
+      'http://localhost:8080/api/assets/files/logo-1'
     );
     expect(fetchFn.mock.calls[6]?.[0]).toBe(
-      'http://localhost:8080/api/file?type=logo'
+      'http://localhost:8080/api/assets/file?type=logo'
     );
     expect(fetchFn.mock.calls[7]?.[0]).toBe(
-      'http://localhost:8080/api/file?type=map'
+      'http://localhost:8080/api/assets/file?type=map'
     );
 
     const registerInit = fetchFn.mock.calls[4]?.[1];
@@ -202,9 +230,9 @@ describe('trip-api', () => {
         date: '2099-12-31',
         type: 'year-end',
         name: '연말 나들이',
-        logo: { type: 'logo', filename: 'logo.png' },
-        firstMap: { type: 'map', filename: 'map1.png' },
-        secondMap: { type: 'map', filename: 'map2.png' },
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+        secondMapFileId: 'map-2',
         nextButtonText: '다음',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
@@ -219,18 +247,22 @@ describe('trip-api', () => {
       })
     );
 
-    expect(uploadedLogo).toEqual({ type: 'logo', filename: 'logo.png' });
-    expect(uploadedMap).toEqual({ type: 'map', filename: 'map2.png' });
+    expect(uploadedLogo).toEqual(logoAsset);
+    expect(uploadedMap).toEqual(secondMapAsset);
     expect(uploadLogoInit?.method).toBe('POST');
-    expect(uploadLogoInit?.body).toBeInstanceOf(FormData);
     expect(new Headers(uploadLogoInit?.headers).get('content-type')).toBeNull();
-    expect((uploadLogoInit?.body as FormData).get('file')).toBeInstanceOf(File);
-    expect((uploadLogoInit?.body as FormData).get('type')).toBeNull();
+    if (!(uploadLogoInit?.body instanceof FormData)) {
+      throw new Error('Expected the logo upload body to be FormData.');
+    }
+    expect(uploadLogoInit.body.get('file')).toBeInstanceOf(File);
+    expect(uploadLogoInit.body.get('type')).toBeNull();
     expect(uploadMapInit?.method).toBe('POST');
-    expect(uploadMapInit?.body).toBeInstanceOf(FormData);
     expect(new Headers(uploadMapInit?.headers).get('content-type')).toBeNull();
-    expect((uploadMapInit?.body as FormData).get('file')).toBeInstanceOf(File);
-    expect((uploadMapInit?.body as FormData).get('type')).toBeNull();
+    if (!(uploadMapInit?.body instanceof FormData)) {
+      throw new Error('Expected the map upload body to be FormData.');
+    }
+    expect(uploadMapInit.body.get('file')).toBeInstanceOf(File);
+    expect(uploadMapInit.body.get('type')).toBeNull();
   });
 
   it('rejects malformed trip list payloads as INVALID_RESPONSE', async () => {
@@ -392,9 +424,9 @@ describe('trip-api', () => {
         date: '2099-12-31',
         type: 'year-end',
         name: '연말 나들이',
-        logo: { type: 'logo', filename: 'logo.png' },
-        firstMap: { type: 'map', filename: 'map1.png' },
-        secondMap: { type: 'map', filename: 'map2.png' },
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+        secondMapFileId: 'map-2',
         nextButtonText: '다음',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
