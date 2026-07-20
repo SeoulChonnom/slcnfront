@@ -1,2 +1,7 @@
 allowBuilds:
   msw: false
+
+# Reject lockfile entries for packages published less than this many minutes ago.
+# 1440 = 24h, matching pnpm's current implicit default — pinned explicitly so
+# future pnpm upgrades can't silently change this supply-chain policy.
+minimumReleaseAge: 1440
