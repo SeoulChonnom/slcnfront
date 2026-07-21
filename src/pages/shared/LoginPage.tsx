@@ -10,7 +10,10 @@ import {
   selectAuthPhase,
   useAuthStore,
 } from '../../domains/auth/store/auth-store';
-import { resolvePostAuthRedirectTarget } from '../../domains/auth/utils/redirect-target';
+import {
+  resolveExternalRedirectTarget,
+  resolvePostAuthRedirectTarget,
+} from '../../domains/auth/utils/redirect-target';
 
 type LoginPageProps = {
   device: DeviceType;
@@ -21,6 +24,7 @@ export function LoginPage({ device }: LoginPageProps) {
   const navigate = useNavigate();
   const authPhase = useAuthStore(selectAuthPhase);
   const loginMutation = useLogin();
+  const externalRedirectTarget = resolveExternalRedirectTarget(location.search);
   const redirectTarget = resolvePostAuthRedirectTarget(location.search, device);
   const userNameInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -28,10 +32,17 @@ export function LoginPage({ device }: LoginPageProps) {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    if (authPhase === 'authenticated') {
-      navigate(redirectTarget, { replace: true });
+    if (authPhase !== 'authenticated') {
+      return;
     }
-  }, [authPhase, navigate, redirectTarget]);
+
+    if (externalRedirectTarget) {
+      window.location.assign(externalRedirectTarget);
+      return;
+    }
+
+    navigate(redirectTarget, { replace: true });
+  }, [authPhase, navigate, redirectTarget, externalRedirectTarget]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

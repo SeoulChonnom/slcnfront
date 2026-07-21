@@ -7,6 +7,12 @@ export const DEVICE_PREFIX = {
   mobile: '/mobile',
 } as const satisfies Record<DeviceType, string>;
 
+// Other reverse-proxied SPAs on the same domain (see slcn_deploy/nginx.conf)
+// that may send users here to log in and expect to be sent back afterward.
+// These are separate apps, not slcnfront routes, so redirecting to them
+// requires a hard navigation rather than the SPA router.
+export const EXTERNAL_APP_PREFIXES = ['/stock'] as const;
+
 export const RESERVED_SHOE_BRAND_SEGMENTS = [
   'login',
   'map',
