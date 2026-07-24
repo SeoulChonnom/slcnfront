@@ -71,13 +71,22 @@
 
 .slcn-mobile-bottom-nav {
   position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  left: 1rem;
   z-index: 30;
-  border-top: 1px solid #f1e3e8;
-  background: rgba(255, 248, 248, 0.85);
-  backdrop-filter: saturate(180%) blur(20px);
+  max-width: 28rem;
+  margin-inline: auto;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 248, 248, 0.42);
+  backdrop-filter: blur(4px) saturate(1.7) url(#slcnLiquidGlass);
+  -webkit-backdrop-filter: blur(9px) saturate(1.7);
+  padding: 0.5625rem 0.5rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3),
+    0 8px 24px rgba(197, 142, 163, 0.2);
 }
 
 .slcn-mobile-bottom-nav__list {
@@ -85,9 +94,6 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.25rem;
   width: 100%;
-  max-width: 28rem;
-  margin: 0 auto;
-  padding: 0.5rem 0.5rem 1.125rem;
   list-style: none;
 }
 
@@ -130,7 +136,7 @@
 }
 
 .slcn-shell-mobile__bottom-spacer {
-  height: 4.5rem;
+  height: calc(6rem + env(safe-area-inset-bottom));
 }
 
 .slcn-trip-list-section__grid {
