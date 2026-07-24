@@ -57,48 +57,47 @@ describe('TripQuizModal', () => {
       buttonName: '목록으로 돌아가기',
       expected: 'close',
     },
-  ])('focuses the feedback CTA in the $name state', async ({
-    feedback,
-    buttonName,
-    expected,
-  }) => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
-    const onConfirmSuccess = vi.fn();
+  ])(
+    'focuses the feedback CTA in the $name state',
+    async ({ feedback, buttonName, expected }) => {
+      const user = userEvent.setup();
+      const onClose = vi.fn();
+      const onConfirmSuccess = vi.fn();
 
-    render(
-      <TripQuizModal
-        tripName='연말 나들이'
-        isOpen
-        quiz={quiz}
-        feedback={feedback}
-        isLoading={false}
-        isSubmitting={false}
-        errorMessage={null}
-        onClose={onClose}
-        onAnswer={vi.fn()}
-        onRetry={vi.fn()}
-        onConfirmSuccess={onConfirmSuccess}
-      />
-    );
+      render(
+        <TripQuizModal
+          tripName='연말 나들이'
+          isOpen
+          quiz={quiz}
+          feedback={feedback}
+          isLoading={false}
+          isSubmitting={false}
+          errorMessage={null}
+          onClose={onClose}
+          onAnswer={vi.fn()}
+          onRetry={vi.fn()}
+          onConfirmSuccess={onConfirmSuccess}
+        />
+      );
 
-    const ctaButton = screen.getByRole('button', { name: buttonName });
+      const ctaButton = screen.getByRole('button', { name: buttonName });
 
-    await waitFor(() => {
-      expect(document.activeElement).toBe(ctaButton);
-    });
+      await waitFor(() => {
+        expect(document.activeElement).toBe(ctaButton);
+      });
 
-    await user.click(ctaButton);
+      await user.click(ctaButton);
 
-    if (expected === 'confirm') {
-      expect(onConfirmSuccess).toHaveBeenCalledTimes(1);
-      expect(onClose).not.toHaveBeenCalled();
-      return;
+      if (expected === 'confirm') {
+        expect(onConfirmSuccess).toHaveBeenCalledTimes(1);
+        expect(onClose).not.toHaveBeenCalled();
+        return;
+      }
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+      expect(onConfirmSuccess).not.toHaveBeenCalled();
     }
-
-    expect(onClose).toHaveBeenCalledTimes(1);
-    expect(onConfirmSuccess).not.toHaveBeenCalled();
-  });
+  );
 
   it('shows retry UI when quiz loading fails', async () => {
     const user = userEvent.setup();
