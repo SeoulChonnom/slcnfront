@@ -3,6 +3,16 @@ export const authQueryKeys = {
   session: () => [...authQueryKeys.all, 'session'] as const,
 };
 
+export const profileQueryKeys = {
+  all: ['profile'] as const,
+  detail: (username: string | null) =>
+    [...profileQueryKeys.all, 'detail', username] as const,
+  passwordVerification: () =>
+    [...profileQueryKeys.all, 'password-verification'] as const,
+  update: (username: string | null) =>
+    [...profileQueryKeys.all, 'update', username] as const,
+};
+
 export const tripQueryKeys = {
   all: ['trip'] as const,
   list: () => [...tripQueryKeys.all, 'list'] as const,

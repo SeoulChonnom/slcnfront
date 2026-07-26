@@ -55,6 +55,18 @@ const PAGE_LOADERS = {
       import('../../pages/main/ShoesCatalogPage').then((module) => ({
         default: module.ShoesCatalogPage,
       })),
+    profile: () =>
+      import('../../pages/main/ProfilePage').then((module) => ({
+        default: module.ProfilePage,
+      })),
+    profileVerify: () =>
+      import('../../pages/main/ProfilePage').then((module) => ({
+        default: module.ProfilePage,
+      })),
+    profileEdit: () =>
+      import('../../pages/main/ProfilePage').then((module) => ({
+        default: module.ProfilePage,
+      })),
     shoeDetail: () =>
       import('../../pages/main/ShoeDetailPage').then((module) => ({
         default: module.ShoeDetailPage,
@@ -104,6 +116,18 @@ const PAGE_LOADERS = {
     shoesCatalog: () =>
       import('../../pages/mobile/ShoesCatalogPage').then((module) => ({
         default: module.ShoesCatalogPage,
+      })),
+    profile: () =>
+      import('../../pages/mobile/ProfilePage').then((module) => ({
+        default: module.ProfilePage,
+      })),
+    profileVerify: () =>
+      import('../../pages/mobile/ProfileVerifyPage').then((module) => ({
+        default: module.ProfileVerifyPage,
+      })),
+    profileEdit: () =>
+      import('../../pages/mobile/ProfileEditPage').then((module) => ({
+        default: module.ProfileEditPage,
       })),
     shoeDetail: () =>
       import('../../pages/mobile/ShoeDetailPage').then((module) => ({

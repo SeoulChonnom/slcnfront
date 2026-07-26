@@ -48,6 +48,18 @@ describe('AppRouter', () => {
     expect(await screen.findByRole('button', { name: '로그인' })).toBeTruthy();
   });
 
+  it('protects the mobile profile route with the mobile login page', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: null,
+      userInfo: null,
+      restoreState: 'error',
+    });
+    renderAppRouter('/mobile/profile');
+
+    expect(await screen.findByRole('button', { name: '로그인' })).toBeTruthy();
+  });
+
   it('renders authenticated internal routes inside the mobile shell', async () => {
     useAuthStore.setState({
       hydrated: true,

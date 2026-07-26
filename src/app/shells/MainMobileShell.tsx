@@ -1,8 +1,11 @@
 import type { PropsWithChildren } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { MobileBottomNav } from '../../components/layout/MobileBottomNav';
 import { MobileTopBar } from '../../components/layout/MobileTopBar';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
+import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';
+import { useProfile } from '../../domains/profile/hooks/useProfile';
+import { useProfileImageUrl } from '../../domains/profile/hooks/useProfileImageUrl';
+import { buildDeviceProfilePath } from '../../lib/routing/route-builders';
 import { cn } from '../../lib/utils/cn';
 
 type MainMobileShellProps = PropsWithChildren<{
@@ -43,12 +46,28 @@ function getMainMobileTitle(pathname: string) {
 
 export function MainMobileShell({ children, className }: MainMobileShellProps) {
   const { pathname } = useLocation();
-  const userInfo = useAuthStore((s) => s.userInfo);
-  const avatar = userInfo?.roleList.includes('admin') ? '관' : '촌';
+  const profile = useProfile();
+  const { profileImageUrl, isLoading: isProfileImageLoading } =
+    useProfileImageUrl(profile.data?.profileImage ?? null);
 
   return (
     <div className={cn('slcn-shell-mobile', className)}>
-      <MobileTopBar title={getMainMobileTitle(pathname)} avatar={avatar} />
+      <MobileTopBar
+        title={getMainMobileTitle(pathname)}
+        trailing={
+          <Link
+            to={buildDeviceProfilePath('mobile')}
+            className='slcn-mobile-topbar__profile-link'
+            aria-label='내 프로필'
+          >
+            <ProfileAvatar
+              imageUrl={profileImageUrl}
+              loading={profile.isLoading || isProfileImageLoading}
+              alt=''
+            />
+          </Link>
+        }
+      />
       <main className='slcn-shell-mobile__main'>{children ?? <Outlet />}</main>
       <MobileBottomNav device='mobile' />
       <div className='slcn-shell-mobile__bottom-spacer' aria-hidden='true' />

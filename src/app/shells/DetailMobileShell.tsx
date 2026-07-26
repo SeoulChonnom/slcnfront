@@ -1,7 +1,10 @@
 import type { PropsWithChildren } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { MobileTopBar } from '../../components/layout/MobileTopBar';
-import { buildDeviceRootPath } from '../../lib/routing/route-builders';
+import {
+  buildDeviceProfilePath,
+  buildDeviceRootPath,
+} from '../../lib/routing/route-builders';
 import { cn } from '../../lib/utils/cn';
 
 type DetailMobileShellProps = PropsWithChildren<{
@@ -10,6 +13,18 @@ type DetailMobileShellProps = PropsWithChildren<{
 }>;
 
 function getDetailMobileTitle(pathname: string) {
+  if (pathname.startsWith('/mobile/profile/edit')) {
+    return '사용자 정보 수정';
+  }
+
+  if (pathname.startsWith('/mobile/profile/verify')) {
+    return '본인 확인';
+  }
+
+  if (pathname.startsWith('/mobile/profile')) {
+    return '마이페이지';
+  }
+
   if (pathname.startsWith('/mobile/map/register')) {
     return '기록하기';
   }
@@ -25,6 +40,17 @@ function getDetailMobileTitle(pathname: string) {
   return 'DETAIL';
 }
 
+function getDetailMobileBackHref(pathname: string) {
+  if (
+    pathname.startsWith('/mobile/profile/verify') ||
+    pathname.startsWith('/mobile/profile/edit')
+  ) {
+    return buildDeviceProfilePath('mobile');
+  }
+
+  return buildDeviceRootPath('mobile');
+}
+
 export function DetailMobileShell({
   children,
   className,
@@ -33,14 +59,20 @@ export function DetailMobileShell({
   const { pathname } = useLocation();
   const resolvedTitle =
     title === 'DETAIL' ? getDetailMobileTitle(pathname) : title;
+  const isProfileRoute = pathname.startsWith('/mobile/profile');
 
   return (
     <div className={cn('slcn-shell-detail-mobile', className)}>
       <MobileTopBar
         title={resolvedTitle}
-        backHref={buildDeviceRootPath('mobile')}
+        backHref={getDetailMobileBackHref(pathname)}
       />
-      <main className='slcn-shell-detail-mobile__main'>
+      <main
+        className={cn(
+          'slcn-shell-detail-mobile__main',
+          isProfileRoute && 'slcn-shell-detail-mobile__main--profile'
+        )}
+      >
         {children ?? <Outlet />}
       </main>
     </div>

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { authQueryKeys } from '../../../lib/api/query-keys';
+import { revokeProfileEditAccess } from '../../profile/utils/profile-verification';
 import { authApi } from '../api/auth-api';
 import { useAuthStore } from '../store/auth-store';
 
@@ -9,6 +10,9 @@ export function useLogin() {
   return useMutation({
     mutationKey: authQueryKeys.session(),
     mutationFn: authApi.login,
+    onMutate: () => {
+      revokeProfileEditAccess();
+    },
     onSuccess: (session) => {
       setSession(session);
     },

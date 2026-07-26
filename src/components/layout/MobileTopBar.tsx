@@ -1,3 +1,4 @@
+import type { MouseEventHandler, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/img/SLCN.png';
 import { cn } from '../../lib/utils/cn';
@@ -6,14 +7,16 @@ type MobileTopBarProps = {
   title?: string;
   className?: string;
   backHref?: string;
-  avatar?: string;
+  onBackClick?: MouseEventHandler<HTMLAnchorElement>;
+  trailing?: ReactNode;
 };
 
 export function MobileTopBar({
   title = 'SLCN',
   className,
   backHref,
-  avatar,
+  onBackClick,
+  trailing,
 }: MobileTopBarProps) {
   return (
     <header className={cn('slcn-mobile-topbar pink-mesh', className)}>
@@ -23,8 +26,11 @@ export function MobileTopBar({
             to={backHref}
             aria-label='이전 화면으로 이동'
             className='slcn-mobile-topbar__leading'
+            onClick={onBackClick}
           >
-            ←
+            <svg viewBox='0 0 24 24' aria-hidden='true'>
+              <path d='M15 5l-7 7 7 7' />
+            </svg>
           </Link>
         ) : (
           <span className='slcn-mobile-topbar__leading'>
@@ -36,12 +42,10 @@ export function MobileTopBar({
           </span>
         )}
         <div className='slcn-mobile-topbar__title'>
-          <p className='slcn-mobile-topbar__title-text display-hand'>{title}</p>
+          <p className='slcn-mobile-topbar__title-text'>{title}</p>
         </div>
-        {avatar ? (
-          <span className='slcn-mobile-topbar__avatar' aria-hidden='true'>
-            {avatar}
-          </span>
+        {trailing ? (
+          <div className='slcn-mobile-topbar__trailing'>{trailing}</div>
         ) : (
           <span className='slcn-mobile-topbar__trailing' aria-hidden='true' />
         )}

@@ -69,6 +69,12 @@ export function createAuthApi(client: ApiClientLike = apiClient) {
 
       return mapUserResponse(parseUserResponse(response, 'restoreSession'));
     },
+    async logout() {
+      await client.post<void>({
+        path: '/users/logout',
+        responseType: 'void',
+      });
+    },
   };
 }
 

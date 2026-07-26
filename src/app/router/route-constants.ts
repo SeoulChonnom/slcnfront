@@ -19,6 +19,7 @@ export const RESERVED_SHOE_BRAND_SEGMENTS = [
   'calendar',
   'shoesRecom',
   'travel',
+  'profile',
   'main',
   'mobile',
 ];
@@ -36,6 +37,9 @@ export const MAIN_ROUTE_PATTERNS = {
   calendarMonth: '/main/calendar',
   calendarWeek: '/main/calendar/week',
   shoesCatalog: '/main/shoesRecom',
+  profile: '/main/profile',
+  profileVerify: '/main/profile/verify',
+  profileEdit: '/main/profile/edit',
   shoeDetail: '/main/:brand/:shoesName',
   notFound: '/main/404',
 } as const;
@@ -53,6 +57,9 @@ export const MOBILE_ROUTE_PATTERNS = {
   calendarMonth: '/mobile/calendar',
   calendarWeek: '/mobile/calendar/week',
   shoesCatalog: '/mobile/shoesRecom',
+  profile: '/mobile/profile',
+  profileVerify: '/mobile/profile/verify',
+  profileEdit: '/mobile/profile/edit',
   shoeDetail: '/mobile/:brand/:shoesName',
   notFound: '/mobile/404',
 } as const;

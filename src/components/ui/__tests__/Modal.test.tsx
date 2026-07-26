@@ -74,6 +74,25 @@ describe('Modal', () => {
     expect(document.activeElement).toBe(cancelButton);
   });
 
+  it('omits the built-in close control when a custom accessible close is supplied', async () => {
+    render(
+      <Modal isOpen onClose={vi.fn()} title='사용자 정보 수정' hideDefaultClose>
+        <button type='button' aria-label='닫기'>
+          닫기
+        </button>
+        <input aria-label='이름' />
+      </Modal>
+    );
+
+    expect(screen.queryByRole('button', { name: '모달 닫기' })).toBeNull();
+    expect(screen.getAllByRole('button', { name: '닫기' })).toHaveLength(1);
+    await waitFor(() => {
+      expect(document.activeElement).toBe(
+        screen.getByRole('button', { name: '닫기' })
+      );
+    });
+  });
+
   it('closes when the close button is clicked and restores body overflow and opener focus', async () => {
     const user = userEvent.setup();
 

@@ -15,6 +15,9 @@ export type RoutePageKey =
   | 'calendarMonth'
   | 'calendarWeek'
   | 'shoesCatalog'
+  | 'profile'
+  | 'profileVerify'
+  | 'profileEdit'
   | 'shoeDetail';
 
 export type DeviceProtectedRouteDefinition = {
@@ -38,6 +41,9 @@ export const BASE_PROTECTED_ROUTES: BaseRouteDefinition[] = [
   { path: 'calendar', page: 'calendarMonth' },
   { path: 'calendar/week', page: 'calendarWeek' },
   { path: 'shoesRecom', page: 'shoesCatalog' },
+  { path: 'profile', page: 'profile' },
+  { path: 'profile/verify', page: 'profileVerify' },
+  { path: 'profile/edit', page: 'profileEdit' },
   { path: ':brand/:shoesName', page: 'shoeDetail' },
 ];
 

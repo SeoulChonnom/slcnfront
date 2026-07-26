@@ -4,6 +4,7 @@
 @import "./components-common.css";
 @import "./components-pc.css";
 @import "./components-mobile.css";
+@import "./profile.css";
 
 :root {
   color: var(--color-ink);

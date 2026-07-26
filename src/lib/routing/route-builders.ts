@@ -78,6 +78,18 @@ export function buildDeviceShoesCatalogPath(device: DeviceType) {
   return buildDevicePath(device, 'shoesRecom');
 }
 
+export function buildDeviceProfilePath(device: DeviceType) {
+  return buildDevicePath(device, 'profile');
+}
+
+export function buildDeviceProfileVerifyPath(device: DeviceType) {
+  return buildDevicePath(device, 'profile', 'verify');
+}
+
+export function buildDeviceProfileEditPath(device: DeviceType) {
+  return buildDevicePath(device, 'profile', 'edit');
+}
+
 export function buildDeviceShoeDetailPath(
   device: DeviceType,
   brand: string,

@@ -23,6 +23,8 @@ type ModalProps = PropsWithChildren<{
   titleVariant?: ModalTitleVariant;
   /** Optional leading node rendered inline before the title (e.g. an icon). */
   titleIcon?: ReactNode;
+  /** Omits the built-in close control when a custom accessible close is provided. */
+  hideDefaultClose?: boolean;
 }> &
   HTMLAttributes<HTMLDivElement>;
 
@@ -54,6 +56,7 @@ export function Modal({
   align = 'center',
   titleVariant = 'display',
   titleIcon,
+  hideDefaultClose = false,
   onKeyDown,
   ...props
 }: ModalProps) {
@@ -187,14 +190,16 @@ export function Modal({
         }}
         tabIndex={-1}
       >
-        <button
-          type='button'
-          aria-label='모달 닫기'
-          onClick={onClose}
-          className='slcn-modal__close'
-        >
-          ✕
-        </button>
+        {hideDefaultClose ? null : (
+          <button
+            type='button'
+            aria-label='모달 닫기'
+            onClick={onClose}
+            className='slcn-modal__close'
+          >
+            ✕
+          </button>
+        )}
         <div className='slcn-modal__headline'>
           <div className='slcn-modal__title-wrap'>
             <h2
