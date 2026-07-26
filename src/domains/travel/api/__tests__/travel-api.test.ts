@@ -190,7 +190,7 @@ describe('travel-api', () => {
     });
   });
 
-  it('updateTravel: PATCHes /travels/:id with body and maps detail response', async () => {
+  it('updateTravel: PUTs /travels/:id with body and maps detail response', async () => {
     const fetchFn = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(
@@ -219,7 +219,7 @@ describe('travel-api', () => {
     expect(result.title).toBe('수정된 제주');
     const call = fetchFn.mock.calls[0];
     expect(call?.[0]).toBe('http://localhost:8080/api/travels/travel-1');
-    expect(call?.[1]?.method).toBe('PATCH');
+    expect(call?.[1]?.method).toBe('PUT');
     expect(JSON.parse(call?.[1]?.body as string)).toMatchObject({
       confirmDeleteDays: true,
       travelDays: [],

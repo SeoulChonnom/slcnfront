@@ -87,7 +87,7 @@ describe('schedule-api', () => {
     expect(fetchFn.mock.calls[4]?.[0]).toBe(
       'http://localhost:8080/api/schedule/schedule-1/hide'
     );
-    expect(fetchFn.mock.calls[4]?.[1]?.method).toBe('PATCH');
+    expect(fetchFn.mock.calls[4]?.[1]?.method).toBe('PUT');
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
       'http://localhost:8080/api/schedule/schedule-1'
     );

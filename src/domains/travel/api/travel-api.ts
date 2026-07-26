@@ -17,7 +17,7 @@ import {
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,
-  'get' | 'post' | 'patch' | 'put' | 'delete'
+  'get' | 'post' | 'put' | 'delete'
 >;
 
 export function createTravelApi(client: ApiClientLike = apiClient) {
@@ -43,7 +43,7 @@ export function createTravelApi(client: ApiClientLike = apiClient) {
     },
 
     async updateTravel(id: string, payload: TravelUdo): Promise<TravelDetail> {
-      const response = await client.patch<TravelDetailRdoDto>({
+      const response = await client.put<TravelDetailRdoDto>({
         path: `/travels/${encodeURIComponent(id)}`,
         body: payload,
       });

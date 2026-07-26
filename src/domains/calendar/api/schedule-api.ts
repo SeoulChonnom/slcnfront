@@ -13,7 +13,7 @@ import {
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,
-  'delete' | 'get' | 'patch' | 'post' | 'put'
+  'delete' | 'get' | 'post' | 'put'
 >;
 
 export function createScheduleApi(client: ApiClientLike = apiClient) {
@@ -66,7 +66,7 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
       });
     },
     async hideSchedule(id: string) {
-      await client.patch<void>({
+      await client.put<void>({
         path: `/schedule/${encodeURIComponent(id)}/hide`,
         responseType: 'void',
       });
