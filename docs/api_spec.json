@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9090/api",
+      "url": "http://localhost:8080/api",
       "description": "Generated server url"
     }
   ],
@@ -30,6 +30,64 @@
     }
   ],
   "paths": {
+    "/users/me": {
+      "get": {
+        "tags": ["회원 관리 API"],
+        "summary": "내 프로필 조회",
+        "description": "현재 로그인한 사용자의 프로필을 조회합니다.",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["회원 관리 API"],
+        "summary": "내 프로필 수정",
+        "description": "비밀번호 확인 후 이름, 비밀번호, 프로필 이미지를 수정합니다. 비밀번호 변경 시 현재 기기의 refresh 세션만 재발급됩니다.",
+        "operationId": "updateCurrentUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
     "/travels/{travelId}": {
       "get": {
         "tags": ["travel-resource"],
@@ -109,42 +167,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["travel-resource"],
-        "operationId": "modifyTravel_1",
-        "parameters": [
-          {
-            "name": "travelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TravelUdo"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TravelDetailRdo"
-                }
-              }
-            }
           }
         }
       }
@@ -244,6 +266,34 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/schedule/{scheduleId}/hide": {
+      "put": {
+        "tags": ["일정 정보 API"],
+        "summary": "일정 삭제(숨김)",
+        "description": "일정 목록 삭제 API",
+        "operationId": "hideSchedule",
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -411,6 +461,34 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/users/me/password/verify": {
+      "post": {
+        "tags": ["회원 관리 API"],
+        "summary": "프로필 수정 비밀번호 확인",
+        "description": "프로필 수정 전에 현재 비밀번호를 확인합니다.",
+        "operationId": "verifyCurrentUserPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPasswordVerifyCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -731,34 +809,6 @@
         ]
       }
     },
-    "/schedule/{scheduleId}/hide": {
-      "patch": {
-        "tags": ["일정 정보 API"],
-        "summary": "일정 삭제(숨김)",
-        "description": "일정 목록 삭제 API",
-        "operationId": "hideSchedule",
-        "parameters": [
-          {
-            "name": "scheduleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "X-AUTH-TOKEN": []
-          }
-        ]
-      }
-    },
     "/calendars/{calendarId}/hide": {
       "patch": {
         "tags": ["캘린더 정보 API"],
@@ -1023,6 +1073,62 @@
   },
   "components": {
     "schemas": {
+      "UserProfileUdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          },
+          "profileImageFileId": {
+            "type": "string"
+          }
+        }
+      },
+      "FileAssetRdo": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["logo", "map", "travel", "profile"]
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserProfileRdo": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "profileImage": {
+            "$ref": "#/components/schemas/FileAssetRdo"
+          }
+        }
+      },
       "FileBoxItemUdo": {
         "type": "object",
         "properties": {
@@ -1171,34 +1277,6 @@
             "items": {
               "$ref": "#/components/schemas/FileBoxItemUdo"
             }
-          }
-        }
-      },
-      "FileAssetRdo": {
-        "type": "object",
-        "properties": {
-          "fileId": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["logo", "map", "travel"]
-          },
-          "originalFilename": {
-            "type": "string"
-          },
-          "filename": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
@@ -1597,6 +1675,16 @@
             "type": "string"
           }
         }
+      },
+      "UserPasswordVerifyCdo": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["password"]
       },
       "UserLoginCdo": {
         "type": "object",
