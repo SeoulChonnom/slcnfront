@@ -179,14 +179,16 @@
 
 /* Mobile month view: taller, airier week rows so the centered day number and
    the event dots below it have clear vertical breathing room. */
-.slcn-shell-mobile .slcn-calendar-surface
+.slcn-shell-mobile
+  .slcn-calendar-surface
   .fc-dayGridMonth-view
   .fc-daygrid-day-frame {
   min-height: 3.25rem;
 }
 
 /* Mobile month view: collapse events to small colored dots */
-.slcn-shell-mobile .slcn-calendar-surface
+.slcn-shell-mobile
+  .slcn-calendar-surface
   .fc-dayGridMonth-view
   .fc-daygrid-day-events {
   display: flex;
@@ -217,7 +219,8 @@
  * event element itself is sized to a ~24px tap target so it can be tapped
  * reliably. Keep the background transparent so only the inner dot shows.
  */
-.slcn-shell-mobile .slcn-calendar-surface
+.slcn-shell-mobile
+  .slcn-calendar-surface
   .fc-dayGridMonth-view
   .fc-daygrid-block-event {
   position: relative;
