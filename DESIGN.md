@@ -1,7 +1,7 @@
 ---
 version: beta
 name: Seoul-Quiet-Editorial
-description: A photography-first personal Seoul diary interface. The project retains its warm paper, Seoul Pink, white, and ink-black palette, while adopting a quiet editorial visual system: restrained chrome, generous whitespace, full-width editorial sections, compact pill actions, quiet elevation, consistent typography, and content-first layouts. The application logo is supplied separately and must be used as the sole brand mark.
+description: A photography-first personal Seoul diary interface. The project retains its warm paper, Seoul Pink, white, and ink-black palette, while adopting a quiet editorial visual system: generous whitespace, full-width editorial sections, compact pill actions, quiet elevation on content, consistent typography, and content-first layouts. Content surfaces stay flat; navigation chrome is a deliberate exception rendered as floating Seoul Glass. The application logo is supplied separately and must be used as the sole brand mark.
 
 colors:
   primary: "#FE9FC8"
@@ -541,12 +541,31 @@ A two-column layout may be used only for image-led archive browsing on desktop. 
 
 The interface is mostly flat.
 
+The interface is flat where content lives. Depth is spent in exactly two places: on photographs, and on the navigation chrome that floats above the page.
+
 ### Allowed elevation
 
-- **No shadow:** sections, cards, buttons, text, navigation content.
+- **No shadow:** sections, cards, buttons, text, and any surface that holds a record.
 - **Hairline:** utility cards, inputs, chips, and subtle separators.
 - **Image resting shadow:** large hero photographs or printed-photo-style images resting on a surface.
 - **Floating shadow:** fixed add button, floating filter bar, or modal.
+- **Seoul Glass:** floating navigation chrome only. See below.
+
+### Seoul Glass (navigation chrome)
+
+Seoul Glass is a deliberate, named material, not a default. It is the one place the interface is allowed to look like an object rather than a page.
+
+It is composed of:
+
+- `backdrop-filter: blur(3px) saturate(1.5) url(#slcnLiquidGlass)` — a custom SVG refraction filter (`feTurbulence` + `feDisplacementMap`) defined in `src/components/LiquidGlassFilter.tsx` and mounted once globally in `src/app/AppRoot.tsx`
+- a `-webkit-backdrop-filter` fallback without the SVG reference, so Safari degrades to plain blur rather than losing translucency
+- Warm Paper at roughly 50% opacity as the base fill
+- a 1px `rgba(255, 255, 255, 0.55)` rim
+- a glass highlight and ambient pair: `inset 0 1px 1px rgba(255,255,255,0.7)`, `inset 0 -2px 3px rgba(255,255,255,0.3)`, `0 8px 26px rgba(197,142,163,0.16)`
+
+**Approved surfaces, and only these:** desktop app header, mobile top bar, mobile bottom tab bar, and the profile popover.
+
+**Why it is scoped this way:** the material earns its cost by separating "the app" from "the record". Chrome floats and refracts; content sits flat on paper. Applying Seoul Glass to a card, a section, a hero, or any surface that holds a photograph destroys that separation and is a defect, not a variation.
 
 ### Rules
 
@@ -555,6 +574,8 @@ The interface is mostly flat.
 - Never use thick black component borders.
 - Do not use irregular blob borders.
 - Do not simulate depth with overlapping decorative shapes.
+- Never apply Seoul Glass, its inset highlights, or its ambient shadow to a content surface.
+- Do not lift cards on hover with a shadow or a `translateY`. Hover changes the hairline or the icon, nothing more.
 - Prefer surface color, spacing, blur, and image composition.
 
 ---
@@ -588,33 +609,40 @@ The interface is mostly flat.
 
 *→ `src/components/layout/DesktopHeader.tsx`, `src/components/layout/MobileTopBar.tsx`*
 
-The header is compact, sticky, and translucent.
+The header is a compact, sticky, floating capsule rendered in Seoul Glass (Section 6). It is not a full-bleed bar; it sits inset from the viewport edges so the page reads as paper passing underneath it.
 
-- Height: 56px
-- Background: Warm Paper at approximately 82% opacity
-- Blur: `saturate(180%) blur(20px)`
-- Bottom separator: one soft hairline
-- Left: project logo
-- Right: archive/search/settings actions
-- Mobile: logo remains visible; secondary actions collapse into one menu
+- Minimum height: 62px (`3.875rem`)
+- Width: full width minus a small inset, capped at `77.5rem`, centered
+- Corner radius: `2.5rem` (capsule)
+- Material: Seoul Glass — see Section 6 for the exact composition
+- No bottom separator; the capsule's own rim replaces the hairline
+- Left: project logo and wordmark
+- Right: profile and account actions
+- Mobile: the top bar keeps the logo and uses the same material; secondary actions collapse into one menu
 
 The logo should be rendered from the supplied asset at a maximum height of 28px.
 
-### 8.2 Hero Record
+### 8.2 Home Timeline
 
-*→ `src/pages/shared/HomeHubPage.tsx` (hero section)*
+*→ `src/pages/shared/HomeHubPage.tsx`, `src/domains/home/`*
 
-Used for the latest or featured Seoul outing.
+The home surface is one chronological timeline, not a grid of destinations and not a single featured hero. Upcoming schedules sit at the top, a hairline marks today, and past records run below it newest-first. Outings, trips, and schedules share the one spine; they are never split into parallel blocks.
 
-Structure:
+Structure of the timeline:
 
-1. Date or neighborhood caption
-2. Large outing title
-3. One short lead sentence
-4. Primary action, if needed
-5. Large photograph
+- A narrow date rail on the left carries the day and weekday. It is the spine that makes the surface read as time rather than as a menu.
+- Each entry is one row: date rail, then content.
+- **Schedule entry:** title, time, location. No image.
+- **Outing entry:** outing name leads, with its kind and one description line. The uploaded outing graphic is a title mark, not a photograph — render it small at its own aspect ratio and never scale it up to fill a frame.
+- **Travel entry:** the cover photograph leads at full column width, with title, region, duration, and the one-line review beneath it.
 
-The hero photograph receives the image-resting shadow. Text and buttons do not.
+The travel photograph is the only large image on the surface, and it is the only element that receives the image-resting shadow. That asymmetry is the hierarchy: most rows are quiet type, and a photograph interrupts them. Giving every entry an equal frame destroys it.
+
+Spacing is deliberately uneven — text rows sit close together, and a travel entry takes generous room above and below. Never normalize the intervals into one repeated value.
+
+Navigation does not belong here. The desktop header and the mobile bottom tab bar already carry every destination; repeating them as cards on the home surface is duplication, not orientation.
+
+Empty regions become the next action, never a decorative placeholder: no upcoming schedule offers planning one, and an empty history offers the first record.
 
 ### 8.3 Outing Card
 
@@ -843,9 +871,12 @@ Map Switcher (displayed only when two maps exist):
 ### Mobile
 
 - Logo remains in the header
+- A fixed bottom tab bar carries the primary destinations, rendered in Seoul Glass as a floating pill inset from the screen edges
+- The scroll container must reserve bottom padding equal to the tab bar height plus the safe-area inset, so no content ever rests underneath it
 - One add action remains visible
 - Archive filters move into a menu or bottom sheet
 - Maintain 44px touch targets
+- Tab bar labels are never smaller than 11px
 - Do not shrink text links below readable sizes
 
 ---
