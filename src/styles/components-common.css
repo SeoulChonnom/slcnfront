@@ -6,7 +6,7 @@
   border: none;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   transition:
     opacity var(--duration-fast) ease,
     background-color var(--duration-fast) ease,
@@ -103,7 +103,7 @@
 
 .slcn-field__label {
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   line-height: 1.5;
   letter-spacing: normal;
   color: var(--color-ink);
@@ -136,7 +136,7 @@
   border: none;
   background: transparent;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: var(--weight-body);
   outline: none;
 }
 
@@ -154,7 +154,7 @@
 }
 
 .slcn-field__message[data-kind="error"] {
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-error);
 }
 
@@ -243,7 +243,7 @@
   gap: 0.4rem;
   color: var(--color-ink);
   font-size: 2.125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   text-align: center;
 }
 
@@ -275,13 +275,13 @@
 
 .slcn-modal__title[data-variant="heading"] {
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   text-align: left;
 }
 
 .slcn-modal__title[data-variant="eyebrow"] {
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.04em;
   text-align: left;
   color: var(--color-ink-muted);
@@ -316,15 +316,15 @@
 .slcn-calendar-toolbar__eyebrow {
   margin: 0;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.08em;
-  color: #c58ea3;
+  color: var(--color-accent-muted);
 }
 
 .slcn-calendar-toolbar__title {
   margin: 0;
   font-size: 2.125rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   line-height: 1.05;
 }
 
@@ -357,7 +357,7 @@
 .slcn-calendar-toolbar__nav .slcn-button[data-variant="secondary"] {
   border: none;
   background: transparent;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-calendar-toolbar__nav-arrow {
@@ -394,7 +394,7 @@
 .slcn-calendar-toolbar__legend-label {
   margin: 0;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgb(0 0 0 / 58%);
@@ -412,7 +412,7 @@
   background: var(--color-surface-soft);
   color: var(--color-ink);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-calendar-toolbar__chip[data-active="true"] {
@@ -420,7 +420,10 @@
 }
 
 .slcn-calendar-toolbar__chip[data-active="false"] {
-  opacity: 0.45;
+  /* Off-state is carried by the dropped fill, not by dimming the label:
+     opacity below ~0.7 pushes this text under 4.5:1. */
+  background: transparent;
+  color: var(--color-body-muted);
 }
 
 .slcn-calendar-toolbar__chip-dot {
@@ -476,12 +479,12 @@
 .slcn-calendar-surface .fc-timegrid-axis-cushion,
 .slcn-calendar-surface .fc-timegrid-slot-label-cushion {
   color: var(--color-ink);
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-calendar-surface .fc-daygrid-day-number {
   padding: 0.5rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 /* Day number at top-left of each cell (FullCalendar default is top-right).
@@ -491,25 +494,37 @@
   justify-content: flex-start;
 }
 
-.slcn-calendar-surface .fc-day-other .fc-daygrid-day-number {
-  opacity: 0.25;
+/* FullCalendar dims adjacent-month days with opacity 0.3 on the day-top
+   wrapper,
+which lands their still-clickable numbers near 1.5:1. Keep them
+   secondary through colour instead. */
+.slcn-calendar-surface .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+
+.slcn-calendar-surface .fc-day-other .fc-daygrid-day-number,
+.slcn-calendar-surface .fc-day-other.fc-day-sun .fc-daygrid-day-number,
+.slcn-calendar-surface .fc-day-other.fc-day-sat .fc-daygrid-day-number {
+  /* Adjacent-month days drop the weekend colour too, so the month boundary
+     still reads now that the dimming opacity is gone. */
+  color: var(--color-body-muted);
 }
 
 .slcn-calendar-surface .fc-day-sun .fc-col-header-cell-cushion,
 .slcn-calendar-surface .fc-day-sun .fc-daygrid-day-number,
 .slcn-calendar-surface .fc-day-sun .fc-timegrid-axis-cushion {
-  color: #d64545;
+  color: #c93c3c;
 }
 
 .slcn-calendar-surface .fc-day-sat .fc-col-header-cell-cushion,
 .slcn-calendar-surface .fc-day-sat .fc-daygrid-day-number,
 .slcn-calendar-surface .fc-day-sat .fc-timegrid-axis-cushion {
-  color: #3b7dd8;
+  color: #2f66b4;
 }
 
 .slcn-calendar-surface .fc-day-today .fc-daygrid-day-number {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   border-radius: 999px;
   width: 2rem;
   height: 2rem;
@@ -561,7 +576,7 @@
 /* biome-ignore lint/style/noDescendingSpecificity: FullCalendar base styles follow override rules */
 .slcn-calendar-surface .fc-event-time {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   margin: 0 0.5rem;
 }
 
@@ -605,7 +620,7 @@
   border-radius: var(--radius-full);
   background: var(--color-canvas-pure);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   cursor: pointer;
   transition:
@@ -636,7 +651,7 @@
   align-items: center;
   gap: 0.625rem;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-calendar-modal__datetime-grid {
@@ -656,7 +671,7 @@
 .slcn-calendar-modal__error {
   margin: 0;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-error);
 }
 
@@ -691,7 +706,7 @@
   background: transparent;
   text-align: left;
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   cursor: pointer;
 }
@@ -756,7 +771,7 @@
   border-radius: var(--radius-md);
   background: transparent;
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
   cursor: pointer;
 }
@@ -801,7 +816,7 @@
   border: none;
   background: transparent;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   outline: none;
 }
 
@@ -815,7 +830,7 @@
   border-radius: var(--radius-md);
   background: rgb(255 255 255 / 86%);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-page-section-header {
@@ -824,17 +839,10 @@
   gap: 1rem;
 }
 
-.slcn-page-section-header__eyebrow {
-  font-size: 0.875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-}
-
 .slcn-page-section-header__title {
   margin-top: 0.5rem;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-page-section-header__description {
@@ -922,54 +930,13 @@
   object-fit: contain;
 }
 
-.slcn-login-page__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 3.25rem;
-  padding: 0 1.25rem;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  color: var(--color-ink);
-}
-
-.slcn-login-page__brand-text {
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-}
-
 .slcn-login-page__welcome {
   margin: 0 0 1.625rem;
   font-size: 0.8125rem;
-  font-weight: 400;
+  font-weight: var(--weight-body);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #9b8c92;
-}
-
-.slcn-route-page__meta {
-  display: grid;
-  gap: 0.875rem;
-}
-
-.slcn-route-page__device-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  min-height: 2rem;
-  padding: 0 0.875rem;
-  border: 1px solid var(--color-hairline);
-  border-radius: 999px;
-  background: var(--color-brand-pink-soft);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.slcn-route-page__note {
-  color: var(--color-ink-muted);
+  color: var(--color-body-muted);
 }
 
 .slcn-route-page__actions,
@@ -991,7 +958,7 @@
 
 .slcn-login-page .slcn-field__label {
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
   margin-bottom: 0.4375rem;
@@ -1053,23 +1020,8 @@
   align-items: center;
   gap: 0.4375rem;
   margin: 0;
-  color: #d64545;
+  color: #c93c3c;
   font-size: 0.8125rem;
-}
-
-.slcn-login-page__links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  color: var(--color-ink-soft);
-  font-size: 0.75rem;
-}
-
-.slcn-login-page__links button {
-  padding: 0;
-  background: transparent;
-  color: inherit;
 }
 
 .slcn-trip-list-section,
@@ -1102,13 +1054,13 @@
 .slcn-trip-list-section__title {
   margin: 0;
   font-size: clamp(2rem, 4vw, 2.125rem);
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
 
 .slcn-trip-list-section__subtitle {
   margin: 0.5rem 0 0;
-  color: #9b8c92;
+  color: var(--color-body-muted);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -1177,12 +1129,12 @@
 .slcn-trip-list-section__no-result-title {
   margin: 0 0 0.375rem;
   font-size: 1.1875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-list-section__no-result-desc {
   margin: 0;
-  color: #9b8c92;
+  color: var(--color-body-muted);
   font-size: 0.875rem;
 }
 
@@ -1221,8 +1173,9 @@
   left: 0.5rem;
   background: rgba(27, 27, 27, 0.78);
   color: #fff;
-  font-size: 0.625rem;
-  font-weight: 600;
+  /* 11px is the readable floor for functional text (DESIGN.md section 10). */
+  font-size: 0.6875rem;
+  font-weight: var(--weight-strong);
   padding: 0.1875rem 0.5rem;
   border-radius: 999px;
   display: flex;
@@ -1246,13 +1199,13 @@
 
 .slcn-trip-card__date {
   font-size: 0.8125rem;
-  color: #9b8c92;
+  color: var(--color-body-muted);
 }
 
 .slcn-trip-card__type-badge {
   font-size: 0.6875rem;
-  font-weight: 600;
-  color: #c58ea3;
+  font-weight: var(--weight-strong);
+  color: var(--color-accent-muted);
   background: #ffe8ef;
   padding: 0.125rem 0.5625rem;
   border-radius: 999px;
@@ -1261,13 +1214,13 @@
 .slcn-trip-card__title {
   margin: 0 0 0.25rem;
   font-size: 1.1875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-card__desc {
   margin: 0 0 0.25rem;
   font-size: 0.8125rem;
-  color: #9b8c92;
+  color: var(--color-body-muted);
   line-height: 1.55;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1309,7 +1262,7 @@
 .slcn-trip-quiz-modal__question {
   margin: 0 0 0.25rem;
   font-size: 1.125rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   line-height: 1.45;
   color: var(--color-ink);
 }
@@ -1331,14 +1284,14 @@
   padding: 0 1.625rem;
   border-color: #ead9df;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-step .slcn-button.slcn-trip-register-step__toggle-map {
   border-radius: 14px;
   border-color: #ead9df;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-quiz-modal__answer {
@@ -1352,7 +1305,7 @@
   background: var(--color-canvas-pure);
   text-align: left;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   transition:
     border-color 0.15s ease,
@@ -1382,7 +1335,7 @@
   border-radius: var(--radius-full);
   background: rgb(254 159 200 / 16%);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
   flex: none;
 }
@@ -1413,7 +1366,7 @@
   border-radius: var(--radius-full);
   color: #fff;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-quiz-modal__result[data-tone="correct"]
@@ -1429,7 +1382,7 @@
 .slcn-trip-quiz-modal__result-title {
   margin: 0;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -1470,9 +1423,9 @@
 }
 
 .slcn-trip-detail-section__drive-kicker {
-  color: #c58ea3;
+  color: var(--color-accent-muted);
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -1480,7 +1433,7 @@
 .slcn-trip-detail-section__drive-title {
   margin-top: 0.375rem;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-detail-section__drive-copy {
@@ -1504,15 +1457,15 @@
   border-radius: 999px;
   background: #fff;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #9b8c92;
+  font-weight: var(--weight-strong);
+  color: var(--color-body-muted);
 }
 
 .slcn-trip-register-wizard__step-indicator > span[data-active="true"] {
   background: var(--color-brand-pink);
   border-color: var(--color-brand-pink);
   color: var(--color-ink);
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-wizard__step-num {
@@ -1526,9 +1479,9 @@
   border: 0;
   border-radius: 999px;
   background: #f1e3e8;
-  color: #9b8c92;
+  color: var(--color-body-muted);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   line-height: 1;
 }
 
@@ -1547,7 +1500,7 @@
 .slcn-trip-register-step__hint,
 .slcn-trip-register-step__file-name {
   margin: 0;
-  color: #9b8c92;
+  color: var(--color-body-muted);
   font-size: 0.8125rem;
 }
 
@@ -1558,14 +1511,14 @@
 
 .slcn-trip-register-wizard .slcn-page-section-header__description {
   margin-top: 0.5rem;
-  color: #9b8c92;
+  color: var(--color-body-muted);
 }
 
 .slcn-trip-register-wizard .slcn-field__label,
 .slcn-trip-register-wizard .slcn-file-dropzone__field-label,
 .slcn-trip-register-wizard .slcn-radio-group__field-label {
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   margin-bottom: -0.0625rem;
 }
 
@@ -1603,7 +1556,7 @@
 }
 
 .slcn-trip-register-wizard .slcn-file-dropzone__title {
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-wizard .slcn-file-dropzone__hint {
@@ -1626,14 +1579,14 @@
 
 .slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__label {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-step__error {
   margin: 0;
   color: var(--color-error);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-guard-pending {
@@ -1655,7 +1608,7 @@
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__field-label {
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -1704,7 +1657,7 @@
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__label {
   display: block;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
@@ -1734,7 +1687,7 @@
   padding: 0.5rem 1rem;
   border-radius: 999px;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-segmented-control__button[data-active="true"] {
@@ -1766,7 +1719,7 @@
 .slcn-error-state__title {
   margin-top: 0.5rem;
   font-size: 1.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-empty-state__description,
@@ -1797,7 +1750,7 @@
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__field-label {
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -1832,7 +1785,7 @@
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__title {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -1853,146 +1806,11 @@
   border: 0;
 }
 
-.slcn-logo-blob {
-  display: inline-flex;
-  align-items: center;
-}
-
-.slcn-logo-blob img {
-  width: auto;
-  display: block;
-}
-
-.slcn-logo-blob[data-size="sm"] img {
-  height: 1.75rem;
-}
-
-.slcn-logo-blob[data-size="md"] img {
-  height: 2rem;
-}
-
-.slcn-logo-blob[data-size="lg"] img {
-  height: 2.5rem;
-}
-
-.slcn-foundation-page {
-  position: relative;
-  min-height: 100vh;
-  padding-bottom: 7rem;
-}
-
-.slcn-foundation-page__main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 72rem;
-  min-height: calc(100vh - 9.75rem);
-  margin: 0 auto;
-  padding: 4rem 1.5rem;
-}
-
-.slcn-foundation-page__grid {
-  display: grid;
-  gap: 2rem;
-  width: 100%;
-  max-width: 64rem;
-}
-
-.slcn-foundation-page__hero-card {
-  padding: 2rem;
-  border-width: 1px;
-}
-
-.slcn-foundation-page__logo-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.slcn-foundation-page__kicker {
-  margin-top: 0.75rem;
-  font-size: 0.625rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgb(0 0 0 / 60%);
-}
-
-.slcn-foundation-page__field-grid {
-  display: grid;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.slcn-foundation-page__button-grid {
-  display: grid;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.slcn-foundation-page__button-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.slcn-foundation-page__stack {
-  display: grid;
-  gap: 1.25rem;
-}
-
-.slcn-foundation-page__dark-card {
-  padding: 2rem;
-  color: var(--color-surface);
-  background: var(--color-ink);
-}
-
-.slcn-foundation-page__dark-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-}
-
-.slcn-foundation-page__dark-copy {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: rgb(255 255 255 / 75%);
-}
-
-.slcn-foundation-page__notes-card,
-.slcn-foundation-page__mobile-card {
-  padding: 2rem;
-  border-width: 1px;
-}
-
-.slcn-foundation-page__notes-title,
-.slcn-foundation-page__mobile-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.slcn-foundation-page__notes-list {
-  margin: 1rem 0 0;
-  padding-left: 1rem;
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: var(--color-ink-muted);
-}
-
-.slcn-foundation-page__mobile-copy {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-ink-muted);
-}
-
 @keyframes slcn-pulse {
   0%,
   100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0.45;
   }
@@ -2010,55 +1828,31 @@
   padding: 1.625rem;
 }
 
-.slcn-shoes-catalog-page__eyebrow,
-.slcn-shoe-detail-page__eyebrow,
-.slcn-shoe-detail-page__reviews-eyebrow,
 .slcn-shoe-detail-hero__eyebrow,
-.slcn-shoe-video-panel__eyebrow,
-.slcn-shoe-detail-page__fallback-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c58ea3;
-}
-
-.slcn-shoes-brand-section__eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c58ea3;
+.slcn-shoe-video-panel__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.5;
 }
 
 .slcn-shoes-catalog-page__title,
 .slcn-shoe-detail-page__fallback-title {
   margin-top: 0.625rem;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
 
 .slcn-shoes-catalog-page__description,
-.slcn-shoe-detail-page__fallback-description {
-  margin-top: 0.875rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: #8a7177;
-}
-
 .slcn-shoe-video-panel__description,
 .slcn-shoe-detail-hero__desc {
   margin-top: 0.875rem;
   font-size: 0.9375rem;
   line-height: 1.5;
-  color: #9b8c92;
-}
-
-.slcn-shoes-catalog-page__loading {
-  display: grid;
-  gap: 1rem;
+  color: var(--color-body-muted);
 }
 
 .slcn-shoes-catalog-page__brand-nav {
@@ -2076,7 +1870,7 @@
   border-radius: 999px;
   background: var(--color-surface);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: #6b5e63;
   text-decoration: none;
 }
@@ -2084,11 +1878,7 @@
 .slcn-shoes-catalog-page__brand-link--active {
   background: #ffe8ef;
   border-color: var(--color-primary);
-  color: #c58ea3;
-}
-
-.slcn-shoes-catalog-page__loading-card {
-  min-height: 14rem;
+  color: var(--color-accent-muted);
 }
 
 .slcn-shoes-catalog-page__warning {
@@ -2110,7 +1900,7 @@
   margin: 0;
   font-size: 0.8125rem;
   line-height: 1.6;
-  color: #8a7177;
+  color: var(--color-body-muted);
 }
 
 .slcn-shoes-brand-section {
@@ -2150,14 +1940,10 @@
   row-gap: 0.125rem;
 }
 
-.slcn-shoes-brand-section__eyebrow {
-  flex-basis: 100%;
-}
-
 .slcn-shoes-brand-section__title {
   margin-top: 0.125rem;
   font-size: 1.375rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
@@ -2166,13 +1952,13 @@
   margin-top: 0;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #9b8c92;
+  color: var(--color-body-muted);
 }
 
 .slcn-shoe-detail-page__reviews-title {
   margin-top: 0.25rem;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
@@ -2231,15 +2017,15 @@
 
 .slcn-shoe-card__brand {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
-  color: #c58ea3;
+  color: var(--color-accent-muted);
 }
 
 .slcn-shoe-card__name {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.35;
   color: var(--color-ink);
@@ -2248,7 +2034,7 @@
 .slcn-shoe-card__desc {
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: #9b8c92;
+  color: var(--color-body-muted);
 }
 
 .slcn-shoe-card__footer {
@@ -2260,7 +2046,7 @@
 
 .slcn-shoe-card__price {
   font-size: 1.0625rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -2269,10 +2055,10 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
-  color: var(--color-brand-pink-strong);
+  color: var(--color-accent-muted);
 }
 
 .slcn-shoe-detail-page__header {
@@ -2287,8 +2073,8 @@
   align-items: center;
   gap: 0.375rem;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #9b8c92;
+  font-weight: var(--weight-strong);
+  color: var(--color-body-muted);
   text-decoration: none;
 }
 
@@ -2305,7 +2091,7 @@
   border-radius: 0.875rem;
   padding: 0.8125rem 1.125rem;
   font-size: 0.8125rem;
-  color: #8a7177;
+  color: var(--color-body-muted);
 }
 
 .slcn-shoe-detail-page__fallback {
@@ -2348,14 +2134,14 @@
 
 .slcn-shoe-detail-hero__title {
   font-size: 2.125rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
 
 .slcn-shoe-detail-hero__price {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   color: #c9477b;
 }
 
@@ -2443,8 +2229,10 @@
 }
 
 /* ---- Home timeline ----
-   One chronological spine shared by both devices: upcoming schedules, a hairline
-   for today, then past outings and travels newest-first. The rail on the left is
+   One chronological spine shared by both devices: upcoming schedules,
+a hairline
+   for today,
+then past outings and travels newest-first. The rail on the left is
    what makes the surface read as time rather than as a menu of destinations. */
 .slcn-home {
   --home-rail: 3.25rem;
@@ -2464,19 +2252,11 @@
 .slcn-home__title {
   margin: 0;
   font-size: clamp(1.75rem, 3.4vw, 2.5rem);
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--color-ink);
   text-wrap: balance;
-}
-
-.slcn-home__subtitle {
-  margin: 0;
-  max-width: 34ch;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--color-body-muted);
 }
 
 .slcn-home__dday {
@@ -2486,7 +2266,7 @@
 }
 
 .slcn-home__dday strong {
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -2504,7 +2284,8 @@
   list-style: none;
 }
 
-/* Rhythm is deliberately uneven: text rows sit close, a photograph takes room. */
+/* Rhythm is deliberately uneven: text rows sit close,
+a photograph takes room. */
 .slcn-home-row + .slcn-home-row {
   margin-top: var(--space-6);
 }
@@ -2537,7 +2318,7 @@
 
 .slcn-home__today-label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.02em;
   color: var(--color-body-muted);
 }
@@ -2551,7 +2332,15 @@
 }
 
 .slcn-home__nudge-action {
-  font-weight: 600;
+  /* The action reads as one label, so it wraps as a whole rather than
+     splitting its underline across two lines. */
+  white-space: nowrap;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
@@ -2567,7 +2356,7 @@
   padding: var(--space-3) 0 var(--space-3)
     calc(var(--home-rail) + var(--space-4));
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-body-muted);
   text-decoration: none;
 }
@@ -2605,7 +2394,7 @@
 
 .slcn-home-row__rail-day {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   color: var(--color-ink);
 }
@@ -2624,7 +2413,7 @@
 .slcn-home-row__title {
   margin: 0;
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   line-height: 1.35;
   letter-spacing: -0.01em;
   color: var(--color-ink);
@@ -2650,9 +2439,11 @@
   color: var(--color-body);
 }
 
-/* The travel cover is the only large image on this surface, and the only
+/* The travel cover is the only large image on this surface,
+and the only
    element that takes the image-resting shadow. That asymmetry is the hierarchy. */
-/* The frame is reserved before the authenticated blob resolves, so a late
+/* The frame is reserved before the authenticated blob resolves,
+so a late
    image never pushes the rest of the timeline down. */
 .slcn-home-row__photo {
   overflow: hidden;
@@ -2671,7 +2462,8 @@
   object-fit: cover;
 }
 
-/* An outing's uploaded graphic is a title mark, not a photograph: it keeps its
+/* An outing's uploaded graphic is a title mark,
+not a photograph: it keeps its
    own aspect ratio at a small fixed height and is never scaled up to fill. */
 .slcn-home-row__mark {
   display: flex;
@@ -2721,7 +2513,6 @@
   100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0.5;
   }

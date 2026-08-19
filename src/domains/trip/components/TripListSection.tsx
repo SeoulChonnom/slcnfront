@@ -155,9 +155,9 @@ export function TripListSection({ device }: TripListSectionProps) {
               <path d='M20 20l-3.2-3.2' />
             </svg>
           </div>
-          <h3 className='slcn-trip-list-section__no-result-title'>
+          <h2 className='slcn-trip-list-section__no-result-title'>
             검색 결과가 없어요
-          </h3>
+          </h2>
           <p className='slcn-trip-list-section__no-result-desc'>
             &ldquo;{query}&rdquo; 와 맞는 나들이를 찾지 못했어요.
           </p>

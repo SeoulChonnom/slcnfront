@@ -27,7 +27,6 @@ export function TravelListSection({ device }: TravelListSectionProps) {
     <section className='slcn-travel-list-section'>
       <div className='slcn-travel-list-section__header'>
         <div className='slcn-travel-list-section__header-text'>
-          <p className='slcn-travel-list-section__eyebrow'>JOURNEY</p>
           <h1 className='slcn-travel-list-section__title'>여행 기록</h1>
           <p className='slcn-travel-list-section__subtitle'>
             1박 이상 머문 여행을 날짜별로 차곡차곡 남겨요.
@@ -59,7 +58,6 @@ export function TravelListSection({ device }: TravelListSectionProps) {
       {!isPending && isError ? (
         <ErrorState
           title='여행 기록을 불러오지 못했어요.'
-          description='잠시 후 다시 시도해주세요.'
           onRetry={() => {
             void refetch();
           }}
@@ -69,8 +67,8 @@ export function TravelListSection({ device }: TravelListSectionProps) {
       {!isPending && !isError && data?.length === 0 ? (
         <EmptyState
           title='아직 등록된 여행이 없어요.'
-          description='새 여행 기록하기로 첫 번째 여행을 남겨보세요.'
-          actionLabel='기록하러 가기'
+          description='첫 여행을 남기면 여기에 차곡차곡 쌓여요.'
+          actionLabel='새 여행 기록하기'
           actionTo={buildDeviceTravelRegisterPath(device)}
         />
       ) : null}

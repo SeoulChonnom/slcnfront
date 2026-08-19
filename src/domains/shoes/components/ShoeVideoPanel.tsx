@@ -15,7 +15,7 @@ export function ShoeVideoPanel({ shoe }: ShoeVideoPanelProps) {
   return (
     <Card className='slcn-shoe-video-panel' tone='default'>
       <div className='slcn-shoe-video-panel__header'>
-        <p className='slcn-shoe-video-panel__eyebrow'>참고 영상</p>
+        <h2 className='slcn-shoe-video-panel__title'>참고 영상</h2>
         {shoe.videoDesc ? (
           <p className='slcn-shoe-video-panel__description'>{shoe.videoDesc}</p>
         ) : null}

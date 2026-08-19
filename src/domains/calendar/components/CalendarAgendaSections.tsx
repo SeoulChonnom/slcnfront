@@ -169,7 +169,7 @@ export function CalendarAgendaSections({
           className='slcn-calendar-agenda-day'
           ref={section.isToday ? todayRef : undefined}
         >
-          <h3 className='slcn-calendar-agenda__heading'>{section.heading}</h3>
+          <h2 className='slcn-calendar-agenda__heading'>{section.heading}</h2>
 
           {section.events.length === 0 ? (
             <p className='slcn-calendar-agenda__empty'>

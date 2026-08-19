@@ -29,7 +29,7 @@ export function TravelReviewSection({ review }: TravelReviewSectionProps) {
   if (!hasContent) {
     return (
       <p className='slcn-travel-detail__empty'>
-        아직 여행 후기가 없어요. 여행 수정에서 후기를 남겨보세요.
+        아직 여행 후기가 없어요. 여행 수정에서 후기를 남겨 보세요.
       </p>
     );
   }

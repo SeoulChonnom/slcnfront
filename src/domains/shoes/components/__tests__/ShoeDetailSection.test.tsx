@@ -18,6 +18,6 @@ describe('ShoeDetailSection', () => {
       <ShoeDetailSection device='main' brandSlug='nike' shoesSlug='missing' />
     );
 
-    expect(screen.getByText('존재하지 않는 신발입니다.')).toBeTruthy();
+    expect(screen.getByText('찾는 신발이 없어요.')).toBeTruthy();
   });
 });

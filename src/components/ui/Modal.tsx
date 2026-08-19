@@ -206,7 +206,7 @@ export function Modal({
               id={titleId}
               className={cn(
                 'slcn-modal__title',
-                titleVariant === 'display' && 'display-hand'
+                titleVariant === 'display' && 'display-type'
               )}
               data-variant={titleVariant}
             >

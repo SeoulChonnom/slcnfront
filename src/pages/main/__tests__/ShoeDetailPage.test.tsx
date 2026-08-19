@@ -17,7 +17,8 @@ describe('ShoeDetailPage', () => {
 
     expect(await screen.findByText('V2K 런')).toBeTruthy();
     expect(screen.getByText('영상 보러가기')).toBeTruthy();
-    expect(screen.getByText('여러 착용 샷')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '참고 영상' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '착용 후기' })).toBeTruthy();
   });
 
   it('hides the video panel when the shoe does not have video data', async () => {
@@ -44,7 +45,7 @@ describe('ShoeDetailPage', () => {
       }
     );
 
-    expect(await screen.findByText('존재하지 않는 신발입니다.')).toBeTruthy();
+    expect(await screen.findByText('찾는 신발이 없어요.')).toBeTruthy();
     expect(
       screen.getByRole('link', { name: '신발 추천으로 돌아가기' })
     ).toBeTruthy();

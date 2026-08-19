@@ -26,13 +26,9 @@ export function ShoeDetailSection({
     return (
       <section className='slcn-shoe-detail-page'>
         <Card className='slcn-shoe-detail-page__fallback' tone='muted'>
-          <p className='slcn-shoe-detail-page__fallback-eyebrow'>SLCN Shoes</p>
-          <h1 className='slcn-shoe-detail-page__fallback-title display-hand'>
-            존재하지 않는 신발입니다.
+          <h1 className='slcn-shoe-detail-page__fallback-title display-type'>
+            찾는 신발이 없어요.
           </h1>
-          <p className='slcn-shoe-detail-page__fallback-description'>
-            찾으시는 신발 정보를 다시 확인해주세요.
-          </p>
           <div className='slcn-shoe-detail-page__fallback-actions'>
             <LinkButton to={buildDeviceShoesCatalogPath(device)}>
               신발 추천으로 돌아가기
@@ -91,9 +87,8 @@ export function ShoeDetailSection({
 
       <section className='slcn-shoe-detail-page__reviews'>
         <div className='slcn-shoe-detail-page__reviews-header'>
-          <p className='slcn-shoe-detail-page__reviews-eyebrow'>착용 후기</p>
-          <h2 className='slcn-shoe-detail-page__reviews-title display-hand'>
-            여러 착용 샷
+          <h2 className='slcn-shoe-detail-page__reviews-title display-type'>
+            착용 후기
           </h2>
         </div>
         <div className='slcn-shoe-detail-page__reviews-grid'>

@@ -1,15 +1,18 @@
 import { NavLink } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
 import { cn } from '../../lib/utils/cn';
-import { getMobileNavigationItems } from './navigation-items';
+import {
+  getMobileNavigationItems,
+  type NavigationIconName,
+} from './navigation-items';
 
 type MobileBottomNavProps = {
   className?: string;
   device?: DeviceType;
 };
 
-function NavIcon({ label }: { label: string }) {
-  if (label === '홈') {
+function NavIcon({ name }: { name?: NavigationIconName }) {
+  if (name === 'home') {
     return (
       <svg
         width='22'
@@ -25,7 +28,7 @@ function NavIcon({ label }: { label: string }) {
       </svg>
     );
   }
-  if (label === '기록') {
+  if (name === 'trip') {
     return (
       <svg
         width='22'
@@ -41,7 +44,7 @@ function NavIcon({ label }: { label: string }) {
       </svg>
     );
   }
-  if (label === '여행') {
+  if (name === 'travel') {
     return (
       <svg
         width='22'
@@ -58,7 +61,7 @@ function NavIcon({ label }: { label: string }) {
       </svg>
     );
   }
-  if (label === '달력') {
+  if (name === 'calendar') {
     return (
       <svg
         width='22'
@@ -74,7 +77,7 @@ function NavIcon({ label }: { label: string }) {
       </svg>
     );
   }
-  if (label === '신발') {
+  if (name === 'shoes') {
     return (
       <svg
         width='22'
@@ -118,7 +121,7 @@ export function MobileBottomNav({
               }
             >
               <span className='slcn-mobile-bottom-nav__icon'>
-                <NavIcon label={item.label} />
+                <NavIcon name={item.icon} />
               </span>
               <span className='slcn-mobile-bottom-nav__label'>
                 {item.label}

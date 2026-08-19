@@ -41,7 +41,7 @@ function OutboundIcon() {
 }
 
 export function HomeHubPage({ device }: HomeHubPageProps) {
-  const { upcoming, past, isLoading, isError } = useHomeTimeline();
+  const { upcoming, past, isLoading, isError, retry } = useHomeTimeline();
   const ddayDays = getDdayCount();
 
   const tripLogoUrls = useTripAssetUrls(
@@ -69,9 +69,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     <section className={cn('slcn-home', `slcn-home--${device}`)}>
       <header className='slcn-home__intro'>
         <h1 className='slcn-home__title'>서울 촌놈 나들이 기록</h1>
-        <p className='slcn-home__subtitle'>
-          사진과 지도로 남기는 조용한 서울 포토 저널.
-        </p>
         <p className='slcn-home__dday'>
           만난 지 <strong className='slcn-num'>{ddayDays}</strong>일째
         </p>
@@ -86,7 +83,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
           </ol>
         ) : (
           <p className='slcn-home__nudge'>
-            이번 달은 아직 약속이 없어요.{' '}
+            이번 달은 아직 계획한 나들이가 없어요.{' '}
             <Link
               to={buildDeviceCalendarMonthPath(device)}
               className='slcn-home__nudge-action'
@@ -113,7 +110,14 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
 
         {!isLoading && isError ? (
           <p className='slcn-home__nudge'>
-            기록을 불러오지 못했어요. 잠시 뒤에 다시 열어 주세요.
+            기록을 불러오지 못했어요.{' '}
+            <button
+              type='button'
+              onClick={retry}
+              className='slcn-home__nudge-action'
+            >
+              다시 시도
+            </button>
           </p>
         ) : null}
 

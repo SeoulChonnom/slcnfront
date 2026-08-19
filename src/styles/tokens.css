@@ -7,6 +7,10 @@
   --color-ink: #1b1b1b;
   --color-body: #1b1b1b;
   --color-body-muted: #6f666a;
+  /* Seoul Pink darkened until label text clears 4.5:1 on paper, pearl, and
+     soft-pink surfaces alike. Use this for accent TEXT; --color-primary stays
+     the fill/mark colour. */
+  --color-accent-muted: #a34f6d;
   --color-body-on-dark: #ffffff;
   --color-body-muted-on-dark: #d8ced2;
 
@@ -34,8 +38,6 @@
   --color-surface: #ffffff;
   --color-ink-muted: #6f666a;
   --color-ink-soft: #6f666a;
-  --color-border-soft: rgba(27, 27, 27, 0.12);
-  --color-border-strong: rgba(27, 27, 27, 0.12);
 
   /* Semantic */
   --color-success: #1f9d68;
@@ -44,15 +46,17 @@
   --color-warning: #f2a93b;
 
   /* Typography */
-  --font-display:
-    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
-    sans-serif;
-  --font-body:
-    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
-    sans-serif;
-  --font-caption:
-    Inter, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
-    sans-serif;
+  --font-stack:
+    Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+  --font-display: var(--font-stack);
+  --font-body: var(--font-stack);
+  --font-caption: var(--font-stack);
+
+  /* Type ramp. DESIGN.md section 4: body 400, everything emphatic 600,
+     and no intermediate 500. */
+  --weight-body: 400;
+  --weight-strong: 600;
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -67,20 +71,12 @@
   --space-section-lg: 7rem;
 
   /* Elevation */
-  --shadow-card: none;
-  --shadow-pink: none;
-  --shadow-soft: none;
   --shadow-floating: 0 8px 30px rgba(27, 27, 27, 0.08);
   --shadow-image: 3px 5px 30px rgba(27, 27, 27, 0.18);
   --shadow-modal: 0 24px 80px rgba(27, 27, 27, 0.16);
   --elevation-hairline: 0 0 0 1px rgba(27, 27, 27, 0.08);
 
-  /* Borders */
-  --border-thick: 1px;
-  --border-medium: 1px;
-
   /* Radius */
-  --radius-none: 0px;
   --radius-xs: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;

@@ -18,7 +18,7 @@ export function ShoeDetailHero({ brand, shoe }: ShoeDetailHeroProps) {
       </Card>
       <Card className='slcn-shoe-detail-hero__summary'>
         <p className='slcn-shoe-detail-hero__eyebrow'>{brand.name}</p>
-        <h1 className='slcn-shoe-detail-hero__title display-hand'>
+        <h1 className='slcn-shoe-detail-hero__title display-type'>
           {shoe.name}
         </h1>
         <p className='slcn-shoe-detail-hero__desc'>{shoe.desc}</p>

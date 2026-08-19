@@ -1,7 +1,8 @@
 /* ============================================================
-   Travel Register / Edit Page Styles
-   BEM root: slcn-travel-register-section, slcn-travel-register-form,
-             slcn-travel-day-editor
+Travel Register / Edit Page Styles
+   BEM root: slcn-travel-register-section,
+slcn-travel-register-form,
+slcn-travel-day-editor
    ============================================================ */
 
 /* ── Section wrapper ──────────────────────────────────────── */
@@ -31,7 +32,7 @@
   border: none;
   background: transparent;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--weight-body);
   color: var(--color-ink-muted);
   cursor: pointer;
   transition: color var(--duration-fast) ease;
@@ -44,7 +45,7 @@
 
 .slcn-travel-register-section__title {
   font-size: 1.625rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--color-ink);
@@ -60,7 +61,7 @@
 
 .slcn-travel-register-section__submit-error {
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-error);
   background: var(--color-error-surface);
   border-radius: var(--radius-sm);
@@ -159,7 +160,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__duration-label {
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   line-height: 1.4;
 }
@@ -189,7 +190,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: var(--color-surface-pearl);
   color: var(--color-primary-focus);
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   line-height: 1;
   cursor: pointer;
   transition:
@@ -209,7 +210,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__duration-value {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   min-width: 4.5rem;
   text-align: center;
@@ -232,7 +233,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__section-title {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   margin: 0;
 }
@@ -246,7 +247,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__section-count {
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
 }
 
@@ -284,7 +285,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__dropzone-text {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -338,7 +339,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: var(--color-surface-soft);
   color: var(--color-ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-register-form__tag-remove {
@@ -408,13 +409,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   letter-spacing: 0.02em;
 }
 
 .slcn-travel-day-editor__date {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--weight-body);
   color: var(--color-ink-muted);
 }
 
@@ -440,7 +441,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: var(--color-surface-soft);
   color: var(--color-ink-muted);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -496,7 +497,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: var(--color-surface-pearl);
   color: var(--color-ink-muted);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   cursor: pointer;
   transition:
     background var(--duration-fast) ease,
@@ -521,7 +522,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
   gap: 0.375rem;
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   cursor: pointer;
   padding: 0.375rem 0.75rem;
@@ -562,7 +563,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: none;
   background: transparent;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
   cursor: pointer;
   transition: opacity var(--duration-fast) ease;

@@ -54,7 +54,7 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
             <span className='slcn-trip-card__type-badge'>{trip.type}</span>
           ) : null}
         </div>
-        <h3 className='slcn-trip-card__title'>{trip.name}</h3>
+        <h2 className='slcn-trip-card__title'>{trip.name}</h2>
         {trip.description ? (
           <p className='slcn-trip-card__desc'>{trip.description}</p>
         ) : null}

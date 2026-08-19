@@ -34,20 +34,6 @@
   color: var(--color-ink);
 }
 
-.slcn-mobile-topbar__avatar {
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  background: #ffe8ef;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 0.75rem;
-  color: #c58ea3;
-}
-
 .slcn-mobile-topbar__logo {
   display: block;
   height: 1.75rem;
@@ -63,7 +49,7 @@
 .slcn-mobile-topbar__title-text {
   overflow: hidden;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -105,12 +91,12 @@
   min-height: 3rem;
   gap: 0.1875rem;
   text-align: center;
-  color: #b7a7ad;
+  color: var(--color-body-muted);
   text-decoration: none;
 }
 
 .slcn-mobile-bottom-nav__link--active {
-  color: var(--color-primary);
+  color: var(--color-accent-muted);
 }
 
 .slcn-mobile-bottom-nav__icon {
@@ -121,7 +107,7 @@
 .slcn-mobile-bottom-nav__label {
   /* 11px is the readable floor for functional text (DESIGN.md section 10). */
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-shell-mobile,
@@ -178,7 +164,8 @@
   border-radius: var(--radius-md);
 }
 
-/* Mobile month view: taller, airier week rows so the centered day number and
+/* Mobile month view: taller,
+airier week rows so the centered day number and
    the event dots below it have clear vertical breathing room. */
 .slcn-shell-mobile
   .slcn-calendar-surface
@@ -216,7 +203,8 @@
 }
 
 /*
- * The visible mark stays a small ~6px dot (drawn via ::after), but the <a>
+ * The visible mark stays a small ~6px dot (drawn via ::after),
+but the <a>
  * event element itself is sized to a ~24px tap target so it can be tapped
  * reliably. Keep the background transparent so only the inner dot shows.
  */
@@ -325,13 +313,13 @@
 
 .slcn-shell-mobile .slcn-calendar-agenda__chip-weekday {
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-body-muted);
 }
 
 .slcn-shell-mobile .slcn-calendar-agenda__chip-day {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-shell-mobile
@@ -363,11 +351,12 @@
 .slcn-shell-mobile .slcn-calendar-agenda__heading {
   margin: 0;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-body);
 }
 
-/* ---- Scrollable agenda (whole period, grouped by day) ---- */
+/* ---- Scrollable agenda (whole period,
+grouped by day) ---- */
 .slcn-shell-mobile .slcn-calendar-agenda-scroll {
   display: flex;
   flex-direction: column;
@@ -445,7 +434,7 @@
 
 .slcn-shell-mobile .slcn-calendar-agenda__event-title {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-body);
 }
 

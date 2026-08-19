@@ -1,8 +1,7 @@
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/inter/800.css';
+// Per-weight dynamic subsets: the browser fetches only the Hangul ranges a
+// page actually renders. Only the two weights the type ramp uses are loaded.
+import 'pretendard/dist/web/static/Pretendard-Regular.css';
+import 'pretendard/dist/web/static/Pretendard-SemiBold.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AppRoot } from './app/AppRoot';

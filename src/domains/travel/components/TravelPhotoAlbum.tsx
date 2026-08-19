@@ -125,7 +125,9 @@ export function TravelPhotoAlbum({
       </div>
 
       {photos.length === 0 ? (
-        <p className='slcn-travel-detail__empty'>아직 사진이 없어요.</p>
+        <p className='slcn-travel-detail__empty'>
+          아직 사진이 없어요. 사진 추가로 첫 장을 올려 보세요.
+        </p>
       ) : filter === 'all' ? (
         <PhotoGrid photos={photos} objectUrls={photoObjectUrls} />
       ) : (

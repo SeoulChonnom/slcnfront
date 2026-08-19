@@ -19,8 +19,7 @@ export function ShoeBrandSection({ device, brand }: ShoeBrandSectionProps) {
           />
         </div>
         <div className='slcn-shoes-brand-section__copy'>
-          <p className='slcn-shoes-brand-section__eyebrow'>Walking Brand</p>
-          <h2 className='slcn-shoes-brand-section__title display-hand'>
+          <h2 className='slcn-shoes-brand-section__title display-type'>
             {brand.name}
           </h2>
           <p className='slcn-shoes-brand-section__description'>{brand.desc}</p>

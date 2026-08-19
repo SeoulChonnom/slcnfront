@@ -27,7 +27,7 @@ export function ShoeCard({ device, brand, shoe }: ShoeCardProps) {
         </div>
         <div className='slcn-shoe-card__body'>
           <p className='slcn-shoe-card__brand'>{brand.name}</p>
-          <h3 className='slcn-shoe-card__name display-hand'>{shoe.name}</h3>
+          <h3 className='slcn-shoe-card__name display-type'>{shoe.name}</h3>
           <p className='slcn-shoe-card__desc'>{shoe.desc}</p>
         </div>
         <div className='slcn-shoe-card__footer'>

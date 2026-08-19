@@ -9,7 +9,9 @@ type TravelDayListProps = {
 export function TravelDayList({ days, onAddPlace }: TravelDayListProps) {
   if (days.length === 0) {
     return (
-      <p className='slcn-travel-detail__empty'>아직 날짜별 기록이 없어요.</p>
+      <p className='slcn-travel-detail__empty'>
+        아직 날짜별 기록이 없어요. 여행 수정에서 날짜별로 남겨 보세요.
+      </p>
     );
   }
 

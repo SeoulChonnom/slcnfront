@@ -261,7 +261,7 @@ export function TravelRegisterSection({
 
       {isEdit && isError ? (
         <p className='slcn-travel-register-section__load-error' role='alert'>
-          여행 정보를 불러오지 못했어요. 다시 시도해 주세요.
+          여행 정보를 불러오지 못했어요. 여행 목록에서 다시 열어 주세요.
         </p>
       ) : null}
 

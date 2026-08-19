@@ -17,7 +17,7 @@ export function PageSectionHeader({
   return (
     <div className={cn('slcn-page-section-header', className)}>
       <div>
-        <h2 className='slcn-page-section-header__title display-hand'>
+        <h2 className='slcn-page-section-header__title display-type'>
           {title}
         </h2>
         {description ? (

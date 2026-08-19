@@ -1,5 +1,4 @@
 /* Travel detail page + modal styles (slcn-travel-detail / slcn-travel-* BEM). */
-
 /* ── Cover image (fills its absolutely-positioned container) ─────────────── */
 .slcn-travel-cover-img {
   position: absolute;
@@ -65,7 +64,7 @@
   padding: 0.5rem 1rem;
   border-radius: var(--radius-pill);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 
@@ -122,7 +121,7 @@
   background: var(--color-surface-dark-1);
   color: var(--color-on-dark);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 /* Map placeholder icon centered in hero */
@@ -162,7 +161,7 @@
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-detail__dates {
@@ -173,7 +172,7 @@
 .slcn-travel-detail__title {
   margin: 0;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   line-height: 1.2;
   color: var(--color-ink);
 }
@@ -206,7 +205,7 @@
 
 .slcn-travel-detail__stat-label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -214,14 +213,14 @@
 
 .slcn-travel-detail__stat-value {
   font-size: 1.375rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
   line-height: 1.1;
 }
 
 .slcn-travel-detail__stat-unit {
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   margin-left: 0.1em;
 }
@@ -263,7 +262,7 @@
   background: var(--color-canvas-pure);
   color: var(--color-ink-muted);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
   cursor: pointer;
   transition:
     border-color var(--duration-fast),
@@ -292,7 +291,7 @@
 .slcn-travel-detail__section-title {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -339,7 +338,7 @@
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-day__date {
@@ -349,7 +348,7 @@
 
 .slcn-travel-day__title {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -385,7 +384,7 @@
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 
@@ -432,7 +431,7 @@
 
 .slcn-travel-place__name {
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -444,7 +443,7 @@
   background: var(--color-surface-muted);
   color: var(--color-ink-muted);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-place__memo {
@@ -493,7 +492,7 @@
   background: var(--color-canvas-pure);
   color: var(--color-ink-muted);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 
@@ -513,7 +512,7 @@
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 
@@ -537,7 +536,7 @@
 .slcn-travel-album__group-title {
   margin: 0;
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
@@ -568,7 +567,7 @@
   background: var(--color-surface-soft);
   color: var(--color-ink);
   font-size: 1.0625rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-review__grid {
@@ -599,7 +598,7 @@
 .slcn-travel-review__card-label {
   margin: 0;
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
 }
 
@@ -636,7 +635,7 @@
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
 }
 
 .slcn-travel-tags__remove {
@@ -674,208 +673,13 @@
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 
 .slcn-travel-tags__submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* ── Add place modal ─────────────────────────────────────────────────────── */
-.slcn-add-place-modal {
-  max-width: 30rem;
-}
-
-.slcn-add-place-modal__subtitle {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
-  color: var(--color-ink-muted);
-}
-
-.slcn-add-place-modal__day {
-  color: var(--color-primary-focus);
-  font-weight: 700;
-}
-
-.slcn-add-place-modal__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  margin-top: var(--space-2);
-}
-
-.slcn-add-place-modal__categories {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.slcn-add-place-modal__category-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-}
-
-.slcn-category-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.8rem;
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-pill);
-  background: var(--color-canvas-pure);
-  color: var(--color-ink-muted);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.slcn-category-chip__icon {
-  color: inherit;
-}
-
-.slcn-category-chip[data-active="true"] {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-
-.slcn-add-place-modal__photos {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.slcn-add-place-modal__photo-add {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  width: 4rem;
-  height: 4rem;
-  border: 1px dashed var(--color-primary);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-soft);
-  color: var(--color-primary-focus);
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.slcn-add-place-modal__photo-add:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.slcn-add-place-modal__photo-add span:first-child {
-  font-size: 1.25rem;
-  line-height: 1;
-}
-
-.slcn-add-place-modal__error,
-.slcn-add-photo-modal__error {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-error);
-}
-
-.slcn-add-place-modal__footer,
-.slcn-add-photo-modal__footer {
-  display: flex;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-
-/* Cancel button hugs its label; primary button fills the rest. */
-.slcn-add-place-modal__footer > :first-child,
-.slcn-add-photo-modal__footer > :first-child {
-  flex: 0 0 auto;
-  white-space: nowrap;
-}
-
-.slcn-add-place-modal__footer > :last-child,
-.slcn-add-photo-modal__footer > :last-child {
-  flex: 1 1 auto;
-  white-space: nowrap;
-}
-
-/* ── Add photo modal ─────────────────────────────────────────────────────── */
-.slcn-add-photo-modal {
-  max-width: 32rem;
-}
-
-.slcn-add-photo-modal__tabs {
-  margin-top: var(--space-2);
-}
-
-.slcn-add-photo-modal__helper {
-  margin: var(--space-3) 0 0;
-  font-size: 0.875rem;
-  color: var(--color-ink-muted);
-}
-
-.slcn-add-photo-modal__empty,
-.slcn-add-photo-modal__upload-empty {
-  margin: var(--space-4) 0;
-  font-size: 0.9375rem;
-  color: var(--color-ink-muted);
-  text-align: center;
-}
-
-.slcn-add-photo-modal__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
-  margin: var(--space-3) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.slcn-add-photo-modal__thumb {
-  width: 100%;
-  border: 1px solid var(--color-divider-soft);
-  cursor: pointer;
-}
-
-.slcn-add-photo-modal__thumb[data-selected="true"] {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary);
-}
-
-.slcn-add-photo-modal__check {
-  position: absolute;
-  top: 0.3rem;
-  right: 0.3rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.slcn-add-photo-modal__banner {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: var(--space-4) 0 0;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-soft);
-  color: var(--color-ink-muted);
-  font-size: 0.8125rem;
-}
-
-.slcn-add-photo-modal__banner strong {
-  color: var(--color-primary-focus);
 }
 
 /* ── Mobile tuning ───────────────────────────────────────────────────────── */
@@ -902,9 +706,5 @@
 @media (max-width: 540px) {
   .slcn-travel-review__grid {
     grid-template-columns: 1fr;
-  }
-
-  .slcn-add-photo-modal__grid {
-    grid-template-columns: repeat(3, 1fr);
   }
 }

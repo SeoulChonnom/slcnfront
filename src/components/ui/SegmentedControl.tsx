@@ -29,7 +29,7 @@ export function SegmentedControl({
             type='button'
             role='tab'
             aria-selected={active}
-            className='slcn-segmented-control__button display-hand'
+            className='slcn-segmented-control__button display-type'
             data-active={active}
             onClick={() => onChange(option.value)}
           >

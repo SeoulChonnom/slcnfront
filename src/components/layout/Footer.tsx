@@ -10,9 +10,6 @@ export function Footer({ className }: FooterProps) {
   return (
     <footer className={cn('slcn-footer pink-mesh', className)}>
       <div className='slcn-footer__inner'>
-        <p className='slcn-footer__headline display-hand'>
-          This is for Seoul Trip Records.
-        </p>
         <a
           href={FILM_URL}
           target='_blank'

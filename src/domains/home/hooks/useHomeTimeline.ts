@@ -104,5 +104,10 @@ export function useHomeTimeline() {
     past,
     isLoading: trips.isLoading || travels.isLoading || schedules.isLoading,
     isError: trips.isError && travels.isError && schedules.isError,
+    retry: () => {
+      void trips.refetch();
+      void travels.refetch();
+      void schedules.refetch();
+    },
   };
 }

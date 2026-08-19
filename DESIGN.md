@@ -34,8 +34,8 @@ colors:
   pink-mesh-end: "#F793C2"
 
 typography:
-  font-stack-display: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  font-stack-body: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  font-stack-display: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
+  font-stack-body: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
 
   hero-display:
     fontFamily: "{typography.font-stack-display}"
@@ -462,23 +462,27 @@ Because Seoul Pink is light, text placed on it should normally use `{colors.ink}
 
 ## 4. Typography
 
-The typography follows restrained editorial sizing, spacing, and weight discipline, but uses a web-safe system stack.
+The typography follows restrained editorial sizing, spacing, and weight discipline on a single bundled family.
 
 ### Font strategy
 
 Use:
 
-`Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+`Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`
 
-On platforms that provide a native system UI font, the stack may resolve to that font. On other platforms, Inter provides a close neutral substitute.
+Pretendard is bundled with the app and draws both Hangul and Latin, so the interface renders identically on every OS. This replaces an earlier Inter-based stack: Inter carries no Hangul, so every Korean character — which is nearly all of this interface — silently fell through to whatever gothic the operating system happened to provide.
+
+Load only the weights the ramp below uses, through the per-weight dynamic subsets (`pretendard/dist/web/static/Pretendard-Regular.css` and `Pretendard-SemiBold.css`). The browser then fetches only the Hangul ranges a page actually renders. Do not add a weight to the ramp without also adding its stylesheet.
 
 ### Hierarchy principles
 
+- The ramp has exactly two weights: `--weight-body` (400) and `--weight-strong` (600). No literal `font-weight` numbers in component CSS.
 - Hero headlines use 56px / 600 with tight line-height.
 - Section headlines use 34–40px / 600.
 - Body text uses 17px / 400 with a 1.47 line-height.
-- Strong text uses weight 600.
+- Strong text uses weight 600. Never 700 or 800: emphasis comes from size, space, and colour, not from another weight step.
 - Avoid weight 500 as an intermediate default.
+- Express sizes in `rem` so browser and OS text-size settings still apply.
 - Use negative letter-spacing on display text.
 - Keep diary body copy spacious and highly readable.
 - Do not use handwriting fonts as a primary UI font.
