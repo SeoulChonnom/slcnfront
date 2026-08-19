@@ -16,7 +16,7 @@ export function TripDetailPage() {
     return (
       <ErrorState
         title='나들이 상세를 불러오지 못했어요.'
-        description='상세 경로 또는 파일 경로를 다시 확인해주세요.'
+        description='상세 경로 또는 파일 경로를 다시 확인해 주세요.'
         onRetry={() => {
           void tripDetailQuery.refetch();
         }}

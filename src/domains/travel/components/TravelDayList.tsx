@@ -39,7 +39,7 @@ export function TravelDayList({ days, onAddPlace }: TravelDayListProps) {
             </ul>
           ) : (
             <p className='slcn-travel-day__no-place'>
-              이 날의 장소를 추가해보세요.
+              이 날의 장소를 추가해 보세요.
             </p>
           )}
 

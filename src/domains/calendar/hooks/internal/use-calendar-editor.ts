@@ -127,7 +127,7 @@ export function useCalendarEditor({
         ...current,
         error: getMutationErrorMessage(
           submitError,
-          '일정을 저장하지 못했어요. 잠시 후 다시 시도해주세요.'
+          '일정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'
         ),
       }));
     }
@@ -153,7 +153,7 @@ export function useCalendarEditor({
         ...current,
         error: getMutationErrorMessage(
           deleteError,
-          '일정을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.'
+          '일정을 삭제하지 못했어요. 잠시 후 다시 시도해 주세요.'
         ),
       }));
     }

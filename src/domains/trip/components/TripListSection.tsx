@@ -119,7 +119,7 @@ export function TripListSection({ device }: TripListSectionProps) {
       {!isPending && isError ? (
         <ErrorState
           title='나들이 기록을 불러오지 못했어요.'
-          description='잠시 후 다시 시도해주세요.'
+          description='잠시 후 다시 시도해 주세요.'
           onRetry={() => {
             void refetch();
           }}
@@ -129,7 +129,7 @@ export function TripListSection({ device }: TripListSectionProps) {
       {!isPending && !isError && data?.length === 0 ? (
         <EmptyState
           title='아직 등록된 나들이가 없어요.'
-          description='새 나들이 기록하기로 첫 번째 추억을 남겨보세요.'
+          description='새 나들이 기록하기로 첫 번째 추억을 남겨 보세요.'
           actionLabel={isAdmin ? '기록하러 가기' : undefined}
           actionTo={isAdmin ? buildDeviceTripRegisterPath(device) : undefined}
         />

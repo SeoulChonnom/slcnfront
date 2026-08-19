@@ -16,7 +16,7 @@ export function TravelDetailPage() {
     return (
       <ErrorState
         title='여행 상세를 불러오지 못했어요.'
-        description='잠시 후 다시 시도해주세요.'
+        description='잠시 후 다시 시도해 주세요.'
         onRetry={() => {
           void travelDetailQuery.refetch();
         }}

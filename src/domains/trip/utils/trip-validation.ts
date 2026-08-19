@@ -34,7 +34,7 @@ export type TripValidationErrors = Partial<
 
 function validateTripFile(file: File | null | undefined) {
   if (!file) {
-    return '파일을 선택해주세요.';
+    return '파일을 선택해 주세요.';
   }
 
   const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
@@ -43,7 +43,7 @@ function validateTripFile(file: File | null | undefined) {
     !IMAGE_EXTENSIONS.includes(extension) ||
     !IMAGE_MIME_TYPES.includes(file.type as (typeof IMAGE_MIME_TYPES)[number])
   ) {
-    return '허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해주세요.';
+    return '허용되지 않은 파일 형식입니다. 이미지 파일만 업로드해 주세요.';
   }
 
   if (file.size > MAX_FILE_SIZE) {
@@ -61,15 +61,15 @@ export function validateTripRegisterStep(
 
   if (step === 1) {
     if (!values.type) {
-      errors.type = '유형을 선택해주세요.';
+      errors.type = '유형을 선택해 주세요.';
     }
 
     if (!values.date) {
-      errors.date = '날짜를 입력해주세요.';
+      errors.date = '날짜를 입력해 주세요.';
     }
 
     if (!values.info2.trim()) {
-      errors.info2 = '나들이 이름을 입력해주세요.';
+      errors.info2 = '나들이 이름을 입력해 주세요.';
     }
 
     const logoError = validateTripFile(values.logo);
@@ -87,7 +87,7 @@ export function validateTripRegisterStep(
     }
 
     if (!values.drive.trim()) {
-      errors.drive = '드라이브 링크를 입력해주세요.';
+      errors.drive = '드라이브 링크를 입력해 주세요.';
     }
 
     if (values.hasSecondMap) {
@@ -98,34 +98,34 @@ export function validateTripRegisterStep(
       }
 
       if (!values.button1.trim()) {
-        errors.button1 = '첫 번째 버튼 라벨을 입력해주세요.';
+        errors.button1 = '첫 번째 버튼 라벨을 입력해 주세요.';
       }
 
       if (!values.button2.trim()) {
-        errors.button2 = '두 번째 버튼 라벨을 입력해주세요.';
+        errors.button2 = '두 번째 버튼 라벨을 입력해 주세요.';
       }
     }
   }
 
   if (step === 3) {
     if (!values.quizTitle.trim()) {
-      errors.quizTitle = '퀴즈 제목을 입력해주세요.';
+      errors.quizTitle = '퀴즈 제목을 입력해 주세요.';
     }
 
     if (!values.quizAnswerTitle.trim()) {
-      errors.quizAnswerTitle = '정답 제목을 입력해주세요.';
+      errors.quizAnswerTitle = '정답 제목을 입력해 주세요.';
     }
 
     if (!values.quizAnswerText.trim()) {
-      errors.quizAnswerText = '정답 텍스트를 입력해주세요.';
+      errors.quizAnswerText = '정답 텍스트를 입력해 주세요.';
     }
 
     if (!values.quizErrorTitle.trim()) {
-      errors.quizErrorTitle = '오답 제목을 입력해주세요.';
+      errors.quizErrorTitle = '오답 제목을 입력해 주세요.';
     }
 
     if (!values.quizErrorText.trim()) {
-      errors.quizErrorText = '오답 텍스트를 입력해주세요.';
+      errors.quizErrorText = '오답 텍스트를 입력해 주세요.';
     }
 
     const filledOptions = values.quizOptions.filter(
@@ -133,11 +133,11 @@ export function validateTripRegisterStep(
     );
 
     if (filledOptions.length < 2) {
-      errors.quizOptions = '보기는 최소 2개 이상 입력해주세요.';
+      errors.quizOptions = '보기는 최소 2개 이상 입력해 주세요.';
     }
 
     if (!values.quizAnswer) {
-      errors.quizAnswer = '정답 번호를 선택해주세요.';
+      errors.quizAnswer = '정답 번호를 선택해 주세요.';
     }
 
     const selectedAnswerIndex = Number(values.quizAnswer) - 1;

@@ -69,11 +69,11 @@ function createDraftFromCalendar(calendar: CalendarMeta): CalendarManageDraft {
 
 function validateCalendarDraft(draft: CalendarCreatePayload) {
   if (!draft.name.trim()) {
-    return '캘린더 이름을 입력해주세요.';
+    return '캘린더 이름을 입력해 주세요.';
   }
 
   if (draft.sortOrder < 0 || Number.isNaN(draft.sortOrder)) {
-    return '정렬 순서는 0 이상의 숫자로 입력해주세요.';
+    return '정렬 순서는 0 이상의 숫자로 입력해 주세요.';
   }
 
   return null;
@@ -206,7 +206,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         error:
           error instanceof Error && error.message.trim()
             ? error.message
-            : '캘린더를 저장하지 못했어요. 잠시 후 다시 시도해주세요.',
+            : '캘린더를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
       }));
     }
   };
@@ -226,7 +226,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
         error:
           error instanceof Error && error.message.trim()
             ? error.message
-            : '캘린더를 삭제하지 못했어요. 잠시 후 다시 시도해주세요.',
+            : '캘린더를 삭제하지 못했어요. 잠시 후 다시 시도해 주세요.',
       }));
     }
   };
@@ -249,7 +249,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
       {!controller.status.isLoading && controller.status.isError ? (
         <ErrorState
           title='일정을 불러오지 못했어요.'
-          description='잠시 후 다시 시도하거나, 네트워크 상태를 확인해주세요.'
+          description='잠시 후 다시 시도하거나, 네트워크 상태를 확인해 주세요.'
           onRetry={() => {
             controller.status.onRetry();
           }}

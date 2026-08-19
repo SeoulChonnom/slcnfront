@@ -48,7 +48,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
         ) : (
           <EmptyState
             title='지도를 불러오지 못했어요.'
-            description='파일 경로를 다시 확인해주세요.'
+            description='파일 경로를 다시 확인해 주세요.'
           />
         )}
       </Card>

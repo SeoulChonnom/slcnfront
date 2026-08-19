@@ -22,12 +22,12 @@ describe('TextField', () => {
 
   it('renders an error message and marks the field invalid', () => {
     renderWithProviders(
-      <TextField label='비밀번호' error='비밀번호를 입력해주세요.' />
+      <TextField label='비밀번호' error='비밀번호를 입력해 주세요.' />
     );
 
     const input = screen.getByLabelText('비밀번호') as HTMLInputElement;
 
     expect(input.getAttribute('aria-invalid')).toBe('true');
-    expect(screen.getByText('비밀번호를 입력해주세요.')).toBeTruthy();
+    expect(screen.getByText('비밀번호를 입력해 주세요.')).toBeTruthy();
   });
 });

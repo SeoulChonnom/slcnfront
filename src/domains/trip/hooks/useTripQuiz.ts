@@ -47,7 +47,7 @@ export function useTripQuiz() {
         return null;
       }
 
-      setErrorMessage('퀴즈를 불러오지 못했어요. 잠시 후 다시 시도해주세요.');
+      setErrorMessage('퀴즈를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
 
       return null;
     } finally {
@@ -110,7 +110,7 @@ export function useTripQuiz() {
         return null;
       }
 
-      setErrorMessage('답변을 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setErrorMessage('답변을 확인하지 못했어요. 잠시 후 다시 시도해 주세요.');
 
       return null;
     } finally {

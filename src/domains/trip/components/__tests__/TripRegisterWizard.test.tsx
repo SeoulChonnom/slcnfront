@@ -134,7 +134,7 @@ describe('TripRegisterWizard', () => {
     );
 
     await user.click(screen.getByRole('button', { name: '다음' }));
-    expect(screen.getByText('유형을 선택해주세요.')).toBeTruthy();
+    expect(screen.getByText('유형을 선택해 주세요.')).toBeTruthy();
 
     await completeTripRegistrationForm(user, container);
 

@@ -100,11 +100,11 @@ export function createDraftFromSchedule(
 
 export function validateCalendarEventDraft(draft: CalendarEventDraft) {
   if (!draft.calendarId) {
-    return '캘린더를 선택해주세요.';
+    return '캘린더를 선택해 주세요.';
   }
 
   if (!draft.title.trim()) {
-    return '제목을 입력해주세요.';
+    return '제목을 입력해 주세요.';
   }
 
   const start = formatDraftDateTime(
@@ -117,7 +117,7 @@ export function validateCalendarEventDraft(draft: CalendarEventDraft) {
   const endDate = dayjs(end);
 
   if (!startDate.isValid() || !endDate.isValid()) {
-    return '일정 시간을 다시 확인해주세요.';
+    return '일정 시간을 다시 확인해 주세요.';
   }
 
   if (draft.allDay) {
