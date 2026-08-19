@@ -5,6 +5,7 @@ export const calendarQueryKeys = {
 
 export const calendarScheduleQueryKeys = {
   all: ['calendar', 'schedule'] as const,
+  now: () => [...calendarScheduleQueryKeys.all, 'now'] as const,
   range: (start: string, end: string) =>
     [...calendarScheduleQueryKeys.all, 'range', start, end] as const,
   month: (year: number, month: number) =>
