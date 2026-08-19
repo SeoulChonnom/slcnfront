@@ -86,67 +86,6 @@ export function TravelCard({
             ))}
           </div>
         ) : null}
-
-        {/* Hairline divider */}
-        <hr className='slcn-travel-card__divider' />
-
-        {/* Stats row */}
-        <div className='slcn-travel-card__stats'>
-          <span className='slcn-travel-card__stat'>
-            <svg
-              width='13'
-              height='13'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              aria-hidden='true'
-            >
-              <rect x='3' y='4' width='18' height='18' rx='2' />
-              <path d='M16 2v4M8 2v4M3 10h18' />
-            </svg>
-            {travel.days} 일
-          </span>
-          <span className='slcn-travel-card__stat-sep' aria-hidden='true'>
-            ·
-          </span>
-          {/* placeCount is not in TravelRdo — shows dash until API adds it */}
-          <span className='slcn-travel-card__stat'>
-            <svg
-              width='13'
-              height='13'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              aria-hidden='true'
-            >
-              <path d='M12 21s-7-5.3-7-11a7 7 0 0114 0c0 5.7-7 11-7 11z' />
-              <circle cx='12' cy='10' r='2' />
-            </svg>
-            — 곳
-          </span>
-          <span className='slcn-travel-card__stat-sep' aria-hidden='true'>
-            ·
-          </span>
-          {/* photoCount is not in TravelRdo — shows dash until API adds it */}
-          <span className='slcn-travel-card__stat'>
-            <svg
-              width='13'
-              height='13'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              aria-hidden='true'
-            >
-              <rect x='3' y='5' width='18' height='14' rx='2' />
-              <circle cx='8.5' cy='10.5' r='1.5' />
-              <path d='M21 15l-5-5L5 19' />
-            </svg>
-            — 장
-          </span>
-        </div>
       </div>
     </Link>
   );

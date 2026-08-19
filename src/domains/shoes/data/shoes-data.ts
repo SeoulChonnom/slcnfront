@@ -60,7 +60,7 @@ const globalShoes: ShoeBrand[] = [
         price: '119,000원',
         imageUrl: nb530Image,
         videoLink: 'https://www.youtube.com/watch?v=MfQbPgEFc_Q',
-        videoDesc: '뉴발란스 화이팅~!(링크)',
+        videoDesc: '뉴발란스 화이팅~!',
         videoUrl: null,
         info: [
           '한동안 품절 대란이였던 그 신발!',
@@ -131,7 +131,7 @@ const globalShoes: ShoeBrand[] = [
         price: '139,000원',
         imageUrl: nikeV2KImage,
         videoLink: 'https://youtu.be/KMIDJb942bc?si=CzpgAAaJaUP2OQe6',
-        videoDesc: '참고 영상(링크)🎞',
+        videoDesc: null,
         videoUrl: mjV2KVideo,
         info: [
           '2024년 나이키 신상!',
@@ -164,7 +164,7 @@ const globalShoes: ShoeBrand[] = [
         price: '189,000원',
         imageUrl: nikeZoomVomeroImage,
         videoLink: 'https://youtu.be/KMIDJb942bc?si=CzpgAAaJaUP2OQe6',
-        videoDesc: '참고 영상(링크)🎞',
+        videoDesc: null,
         videoUrl: mjZB5Video,
         info: [
           '요즘 대세 v2k의 선배님!',

@@ -129,8 +129,8 @@ export function TripListSection({ device }: TripListSectionProps) {
       {!isPending && !isError && data?.length === 0 ? (
         <EmptyState
           title='아직 등록된 나들이가 없어요.'
-          description='새 나들이 기록하기로 첫 번째 추억을 남겨 보세요.'
-          actionLabel={isAdmin ? '기록하러 가기' : undefined}
+          description='첫 나들이를 남기면 여기에 차곡차곡 쌓여요.'
+          actionLabel={isAdmin ? '새 나들이 기록하기' : undefined}
           actionTo={isAdmin ? buildDeviceTripRegisterPath(device) : undefined}
         />
       ) : null}
