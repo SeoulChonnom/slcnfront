@@ -896,10 +896,27 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.875rem;
 }
 
-.slcn-calendar-manage-modal__color-grid,
-.slcn-calendar-manage-modal__toggle-grid {
+.slcn-calendar-manage-modal__color-grid {
   display: grid;
   gap: 0.75rem;
+}
+
+/* The parent toggle (editable) gates its two children (startEditable,
+   durationEditable). Stack rather than grid so that relationship reads
+   visually. */
+.slcn-calendar-manage-modal__toggle-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.slcn-calendar-manage-modal__toggle-subgroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  margin-left: var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--color-hairline);
 }
 
 .slcn-calendar-manage-modal__color-control {
@@ -943,12 +960,18 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   cursor: not-allowed;
 }
 
+/* Secondary to the swatch: the hex value is a non-colour confirmation of
+   the selection (§13), not a co-equal input, so it reads smaller, lighter
+   and unbolded next to the swatch button. */
 .slcn-calendar-manage-modal__color-code {
   width: 100%;
+  min-width: 0;
   border: none;
   background: transparent;
-  font-size: 0.9375rem;
-  font-weight: var(--weight-strong);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-body);
+  color: var(--color-ink-muted);
+  letter-spacing: 0.02em;
   outline: none;
 }
 
@@ -963,6 +986,28 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: rgb(255 255 255 / 86%);
   font-size: 0.9375rem;
   font-weight: var(--weight-strong);
+}
+
+/* Korean line-breaking defaults to per-syllable, so a narrow viewport can
+   split a word like "캘린더" mid-character. Keep labels intact and only
+   wrap between words. */
+.slcn-calendar-manage-modal__toggle span {
+  word-break: keep-all;
+}
+
+/* Sub-toggles read as lighter, indented children of the parent toggle
+   above them (see .toggle-subgroup) rather than equal-weight cards. */
+.slcn-calendar-manage-modal__toggle--sub {
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: var(--weight-body);
+}
+
+.slcn-calendar-manage-modal__toggle--sub:has(input:disabled) span {
+  color: var(--color-ink-muted);
 }
 
 .slcn-page-section-header {

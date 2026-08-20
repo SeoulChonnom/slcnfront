@@ -118,6 +118,60 @@ describe('CalendarManageModal', () => {
     expect(onDraftChange).toHaveBeenCalledWith({ name: '수정된 캘린더' });
   });
 
+  it('labels the editing toggles in plain terms and disables the sub-toggles when the parent is off', () => {
+    render(
+      <CalendarManageModal
+        isOpen
+        view='editor'
+        calendars={calendars}
+        visibleCalendarIds={['cal-1']}
+        draft={{
+          ...draft,
+          editable: false,
+          startEditable: false,
+          durationEditable: false,
+        }}
+        editingCalendarId={null}
+        errorMessage={null}
+        isSubmitting={false}
+        onClose={vi.fn()}
+        onToggleVisibility={vi.fn()}
+        onDraftChange={vi.fn()}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+        onCreateNew={vi.fn()}
+        onEditCalendar={vi.fn()}
+        onBackToList={vi.fn()}
+      />
+    );
+
+    // Labels describe what the person experiences, not FullCalendar's
+    // internal option names.
+    const parentToggle = screen.getByLabelText('일정 추가·수정하기');
+    expect(parentToggle).toBeTruthy();
+    expect(screen.getByLabelText('시작 시간 옮기기')).toBeInstanceOf(
+      HTMLInputElement
+    );
+    expect(screen.getByLabelText('길이 조절하기')).toBeInstanceOf(
+      HTMLInputElement
+    );
+
+    // The two sub-toggles are conditions of the parent toggle: turning it
+    // off disables them, and the UI should reflect that.
+    expect(
+      (screen.getByLabelText('시작 시간 옮기기') as HTMLInputElement).disabled
+    ).toBe(true);
+    expect(
+      (screen.getByLabelText('길이 조절하기') as HTMLInputElement).disabled
+    ).toBe(true);
+
+    // defaultSelected has no working UI (nothing in the app reads it to
+    // pick a default calendar) and was removed from the form entirely.
+    // The value itself is still carried on `draft` and round-tripped by
+    // CalendarSection - see CalendarSection.test.tsx.
+    expect(screen.queryByLabelText('기본 선택 캘린더')).toBeNull();
+    expect(screen.queryByText('기본 선택 캘린더')).toBeNull();
+  });
+
   it('shows delete action in edit mode', () => {
     const onDelete = vi.fn().mockResolvedValue(undefined);
 

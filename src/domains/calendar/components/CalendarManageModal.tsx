@@ -211,7 +211,7 @@ export function CalendarManageModal({
               }}
               required
             />
-            <div className='slcn-calendar-manage-modal__toggle-grid'>
+            <div className='slcn-calendar-manage-modal__toggle-group'>
               <label className='slcn-calendar-manage-modal__toggle'>
                 <input
                   type='checkbox'
@@ -227,40 +227,36 @@ export function CalendarManageModal({
                     });
                   }}
                 />
-                <span>전체 편집 허용</span>
+                <span>일정 추가·수정하기</span>
               </label>
-              <label className='slcn-calendar-manage-modal__toggle'>
-                <input
-                  type='checkbox'
-                  checked={draft.startEditable}
-                  onChange={(event) => {
-                    onDraftChange({ startEditable: event.target.checked });
-                  }}
-                  disabled={!draft.editable}
-                />
-                <span>시작 시간 이동 허용</span>
-              </label>
-              <label className='slcn-calendar-manage-modal__toggle'>
-                <input
-                  type='checkbox'
-                  checked={draft.durationEditable}
-                  onChange={(event) => {
-                    onDraftChange({ durationEditable: event.target.checked });
-                  }}
-                  disabled={!draft.editable}
-                />
-                <span>기간 변경 허용</span>
-              </label>
-              <label className='slcn-calendar-manage-modal__toggle'>
-                <input
-                  type='checkbox'
-                  checked={draft.defaultSelected}
-                  onChange={(event) => {
-                    onDraftChange({ defaultSelected: event.target.checked });
-                  }}
-                />
-                <span>기본 선택 캘린더</span>
-              </label>
+              <div className='slcn-calendar-manage-modal__toggle-subgroup'>
+                <label className='slcn-calendar-manage-modal__toggle slcn-calendar-manage-modal__toggle--sub'>
+                  <input
+                    type='checkbox'
+                    checked={draft.startEditable}
+                    onChange={(event) => {
+                      onDraftChange({
+                        startEditable: event.target.checked,
+                      });
+                    }}
+                    disabled={!draft.editable}
+                  />
+                  <span>시작 시간 옮기기</span>
+                </label>
+                <label className='slcn-calendar-manage-modal__toggle slcn-calendar-manage-modal__toggle--sub'>
+                  <input
+                    type='checkbox'
+                    checked={draft.durationEditable}
+                    onChange={(event) => {
+                      onDraftChange({
+                        durationEditable: event.target.checked,
+                      });
+                    }}
+                    disabled={!draft.editable}
+                  />
+                  <span>길이 조절하기</span>
+                </label>
+              </div>
             </div>
 
             {errorMessage ? (

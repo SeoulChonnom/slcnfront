@@ -463,8 +463,12 @@ describe('CalendarSection', () => {
     await user.click(screen.getByRole('button', { name: '저장' }));
 
     await waitFor(() => {
+      // defaultSelected has no checkbox in the manage form (nothing in the
+      // app reads it to pick a default calendar), but the create flow
+      // still computes and sends it - it must keep round-tripping even
+      // though the UI never lets a person set it directly.
       expect(createCalendar).toHaveBeenCalledWith(
-        expect.objectContaining({ name: '새 캘린더' })
+        expect.objectContaining({ name: '새 캘린더', defaultSelected: false })
       );
     });
 
@@ -475,8 +479,15 @@ describe('CalendarSection', () => {
     await user.click(screen.getByRole('button', { name: '저장' }));
 
     await waitFor(() => {
+      // The fixture calendar has defaultSelected: true; editing its name
+      // must not drop or flip that value, since there is no control in
+      // the form that could legitimately change it.
       expect(updateCalendar).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'cal-1', name: '아영 메인' })
+        expect.objectContaining({
+          id: 'cal-1',
+          name: '아영 메인',
+          defaultSelected: true,
+        })
       );
     });
   });
