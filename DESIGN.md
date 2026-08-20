@@ -816,6 +816,8 @@ Inputs are quiet, white, and rounded.
 - Do not fill the entire input pink on focus.
 - Error states use `{colors.error}` (`#C53030`, on-fill `{colors.error-on}`, subtle surface `{colors.error-surface}`), the verified semantic error triad defined separately from the brand palette (§3).
 
+Checkbox, radio, number, colour, date, and time controls are specified separately in §8.14 Form Controls — they stay native inputs rather than the text-field treatment above.
+
 ### 8.8 Floating Add Button
 
 *→ not yet implemented (admin-only FAB, planned)*
@@ -897,6 +899,39 @@ A visually grouped set of options where exactly one is active at a time (radio g
 - Minimum height: 36px
 
 Use for: calendar month ↔ week switch, any two- or three-option toggle where a dropdown would be excessive.
+
+### 8.14 Form Controls (Checkbox, Radio, Number, Colour, Date, Time)
+
+*→ `src/components/ui/RadioGroup.tsx`, `src/domains/calendar/components/CalendarEventModal.tsx`, `CalendarManageModal.tsx`, `src/domains/trip/components/TripRegisterStepBasic.tsx`, `src/domains/travel/components/TravelRegisterForm.tsx`*
+
+These sit alongside §8.7 Inputs but stay native `<input>` elements — no custom-widget rebuild. Each is restyled in place with box-model properties, `appearance`, and vendor pseudo-elements on the real control, so native keyboard behavior, screen-reader semantics, and `:checked` / `:disabled` / `:indeterminate` state are untouched.
+
+#### Checkbox and radio
+
+- Box: `20px` square (checkbox) or circle (radio), 1px hairline border, `{colors.canvas-pure}` background, `appearance: none`.
+- This engine only honors author border/background/radius on `type="checkbox"`/`type="radio"` once `appearance: none` is set — verified against the rendered element, not assumed — and `accent-color` paints nothing once appearance is none. So the checked mark (a checkmark for checkbox, a dot for radio) is hand-drawn with a `::before` pseudo-element in `{colors.ink}`, scaled in on `:checked`. That mark is the non-colour pairing required by §13; colour is never the only signal.
+- Checked/indeterminate fill: `{colors.primary}` background and border, ink mark on top — the same fill-with-ink-mark logic as a primary button (§8.5).
+- Checkbox radius: `{rounded.sm}`. Radio radius: `{rounded.full}` (a circle).
+- Indeterminate checkbox: same pink fill, a horizontal ink dash instead of a check.
+- Disabled: `0.6` opacity, `not-allowed` cursor.
+- Focus uses the global `focus-ring` `:focus-visible` outline (§3, §8.5) — no component override; it is unaffected by `appearance: none`.
+- The clickable label wraps the control and carries the 44px touch target (§10); the raw input itself does not need to be inflated.
+
+#### Number
+
+- Field body matches a text field (§8.7): hairline border, `{rounded.md}`, `{colors.canvas-pure}`.
+- The native step (spin) buttons are hidden so the control reads like its text-field siblings; Up/Down arrow-key stepping is a built-in behavior of `type="number"` and keeps working without the visible buttons.
+
+#### Colour
+
+- Rendered as a small swatch button: `1px` hairline border, `{rounded.sm}`, pointer cursor.
+- The inner platform swatch is trimmed flush to the border radius — no nested OS chrome.
+- Pair each colour input with its hex value in an adjacent text field (already the pattern in `CalendarManageModal`) so the selection is never colour-only.
+
+#### Date and time
+
+- Field body matches a text field (§8.7) via the shared `.slcn-field__input` class — no separate treatment needed for the border, radius, or background.
+- The native picker-indicator icon gets a pointer cursor and a `{colors.surface-soft}` hover/focus mark so it reads as part of the field rather than a bare OS icon. This is a WebKit-only enhancement (Chrome, Safari, Edge); Firefox does not expose an equivalent pseudo-element and falls back to its own picker icon.
 
 ---
 

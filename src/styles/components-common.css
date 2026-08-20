@@ -177,6 +177,124 @@
   border-color: var(--color-error);
 }
 
+/* ── Native form controls: checkbox, radio, number, colour, date, time ──
+   Checkbox and radio keep the real <input>; this Chromium/WebKit
+   generation only honors author border/background/border-radius on
+   these two types once appearance:none is set (verified by rendered
+   screenshot, not assumed), so the box is drawn with appearance:none
+   and the checked mark is hand-drawn with a ::before pseudo-element.
+   accent-color is dropped for these two types because it paints
+   nothing once appearance is none. Native keyboard handling (Space,
+   arrow keys inside a radio group), screen-reader semantics, and
+   :checked/:disabled/:indeterminate all keep working exactly as
+   before — only the paint is custom, the element and its state model
+   are untouched. See DESIGN.md §8.14. */
+input[type="checkbox"],
+input[type="radio"] {
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: var(--space-5);
+  height: var(--space-5);
+  flex-shrink: 0;
+  margin: 0;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas-pure);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    background-color var(--duration-fast) var(--easing-standard);
+}
+
+input[type="checkbox"] {
+  border-radius: var(--radius-sm);
+}
+
+input[type="radio"] {
+  border-radius: var(--radius-full);
+}
+
+input[type="checkbox"]::before,
+input[type="radio"]::before {
+  content: "";
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--easing-standard);
+  background-color: var(--color-ink);
+}
+
+input[type="checkbox"]::before {
+  width: 0.65em;
+  height: 0.65em;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:indeterminate::before {
+  width: 0.65em;
+  height: 0.2em;
+  clip-path: none;
+  border-radius: var(--radius-full);
+}
+
+input[type="radio"]::before {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: var(--radius-full);
+}
+
+input[type="checkbox"]:checked::before,
+input[type="checkbox"]:indeterminate::before,
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:checked,
+input[type="checkbox"]:indeterminate,
+input[type="radio"]:checked {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Number: hide the native step buttons so the field reads like its
+   text-field siblings. Up/Down arrow-key stepping is a built-in
+   behavior of the input type and keeps working without the visible
+   buttons. */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/* Date & time: the field body already matches text fields via
+   .slcn-field__input (§8.7); only the native picker-indicator icon
+   needs a pointer cursor and a hover/focus mark. Firefox does not
+   expose an equivalent pseudo-element, so this is a webkit-only
+   enhancement layered on an already-themed field. */
+.slcn-field__input[type="date"]::-webkit-calendar-picker-indicator,
+.slcn-field__input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: var(--space-1);
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.slcn-field__input[type="date"]:hover::-webkit-calendar-picker-indicator,
+.slcn-field__input[type="time"]:hover::-webkit-calendar-picker-indicator,
+.slcn-field__input[type="date"]:focus::-webkit-calendar-picker-indicator,
+.slcn-field__input[type="time"]:focus::-webkit-calendar-picker-indicator {
+  background-color: var(--color-surface-soft);
+}
+
 .slcn-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -640,8 +758,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
+  min-height: 2.75rem;
   font-size: 0.9375rem;
   font-weight: var(--weight-strong);
+  cursor: pointer;
 }
 
 .slcn-calendar-modal__datetime-grid {
@@ -797,8 +917,30 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 2.25rem;
   height: 2.25rem;
   padding: 0;
-  border: none;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
   background: transparent;
+  cursor: pointer;
+}
+
+.slcn-calendar-manage-modal__color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: calc(var(--radius-sm) - 1px);
+  overflow: hidden;
+}
+
+.slcn-calendar-manage-modal__color-picker::-webkit-color-swatch {
+  border: none;
+}
+
+.slcn-calendar-manage-modal__color-picker::-moz-color-swatch {
+  border: none;
+  border-radius: calc(var(--radius-sm) - 1px);
+}
+
+.slcn-calendar-manage-modal__color-picker:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .slcn-calendar-manage-modal__color-code {
@@ -1673,10 +1815,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-radio-group--inline .slcn-radio-group__option {
   align-items: center;
   border-radius: 0.875rem;
-}
-
-.slcn-radio-group--inline .slcn-radio-group__option input {
-  accent-color: var(--color-primary);
 }
 
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
