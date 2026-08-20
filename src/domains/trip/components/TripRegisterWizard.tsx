@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../../app/router/route-constants';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
-import { PageSectionHeader } from '../../../components/ui/PageSectionHeader';
 import { buildDeviceTripListPath } from '../../../lib/routing/route-builders';
 import { useTripRegisterForm } from '../hooks/useTripRegisterForm';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
@@ -79,10 +78,7 @@ export function TripRegisterWizard({
   return (
     <section className='slcn-trip-register-wizard'>
       {device === 'main' ? (
-        <PageSectionHeader
-          title='새 나들이 기록하기'
-          description='날짜 · 지도 · 퀴즈 정보를 차례로 입력해 기록을 남겨요.'
-        />
+        <h1 className='slcn-trip-register-wizard__title'>새 나들이 기록하기</h1>
       ) : null}
       <Card className='slcn-trip-register-wizard__card'>
         <div className='slcn-trip-register-wizard__step-indicator'>

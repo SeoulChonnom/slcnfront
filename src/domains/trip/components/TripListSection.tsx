@@ -50,14 +50,30 @@ export function TripListSection({ device }: TripListSectionProps) {
 
   return (
     <section className='slcn-trip-list-section'>
-      <div className='slcn-trip-list-section__header'>
-        <div>
-          <h1 className='slcn-trip-list-section__title'>
-            서울 촌놈 나들이 기록
-          </h1>
-          <p className='slcn-trip-list-section__subtitle'>
-            걸었던 날들을 모았어요. 퀴즈를 풀면 상세 지도가 열려요.
-          </p>
+      <h1 className='slcn-trip-list-section__title'>서울 촌놈 나들이 기록</h1>
+
+      <div className='slcn-trip-list-section__toolbar'>
+        <div className='slcn-trip-list-section__search-wrap'>
+          <svg
+            className='slcn-trip-list-section__search-icon'
+            width='18'
+            height='18'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='#B7A7AD'
+            strokeWidth='2'
+            aria-hidden='true'
+          >
+            <circle cx='11' cy='11' r='7' />
+            <path d='M20 20l-3.2-3.2' />
+          </svg>
+          <input
+            type='search'
+            className='slcn-trip-list-section__search-input'
+            placeholder='날짜 · 나들이 이름 · 유형으로 검색'
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
         </div>
         {isAdmin ? (
           <LinkButton
@@ -79,29 +95,6 @@ export function TripListSection({ device }: TripListSectionProps) {
             새 나들이 기록하기
           </LinkButton>
         ) : null}
-      </div>
-
-      <div className='slcn-trip-list-section__search-wrap'>
-        <svg
-          className='slcn-trip-list-section__search-icon'
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          fill='none'
-          stroke='#B7A7AD'
-          strokeWidth='2'
-          aria-hidden='true'
-        >
-          <circle cx='11' cy='11' r='7' />
-          <path d='M20 20l-3.2-3.2' />
-        </svg>
-        <input
-          type='search'
-          className='slcn-trip-list-section__search-input'
-          placeholder='날짜 · 나들이 이름 · 유형으로 검색'
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
       </div>
 
       {isPending ? (

@@ -181,11 +181,3 @@
   gap: 1.125rem;
   align-items: stretch;
 }
-
-@media (min-width: 768px) {
-  .slcn-page-section-header {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-}

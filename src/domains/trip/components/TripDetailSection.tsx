@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/ui/EmptyState';
-import { PageSectionHeader } from '../../../components/ui/PageSectionHeader';
 import { Skeleton } from '../../../components/ui/Skeleton';
 import { useTripAssetUrl } from '../hooks/useTripAssetUrl';
 import type { TripDetail } from '../types';
@@ -22,10 +21,7 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
 
   return (
     <section className='slcn-trip-detail-section'>
-      <PageSectionHeader
-        title='서울 촌놈 나들이 경로'
-        description='사진은 드라이브에서 확인할 수 있어요.'
-      />
+      <h1 className='slcn-trip-detail-section__title'>서울 촌놈 나들이 경로</h1>
 
       {hasSecondMap ? (
         <TripMapSwitcher
@@ -55,7 +51,6 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
 
       <Card className='slcn-trip-detail-section__drive-card' tone='pink'>
         <div>
-          <p className='slcn-trip-detail-section__drive-kicker'>SLCN Drive</p>
           <h3 className='slcn-trip-detail-section__drive-title'>
             사진은 드라이브에서 보기
           </h3>

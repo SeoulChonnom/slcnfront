@@ -26,12 +26,7 @@ export function TravelListSection({ device }: TravelListSectionProps) {
   return (
     <section className='slcn-travel-list-section'>
       <div className='slcn-travel-list-section__header'>
-        <div className='slcn-travel-list-section__header-text'>
-          <h1 className='slcn-travel-list-section__title'>여행 기록</h1>
-          <p className='slcn-travel-list-section__subtitle'>
-            1박 이상 머문 여행을 날짜별로 차곡차곡 남겨요.
-          </p>
-        </div>
+        <h1 className='slcn-travel-list-section__title'>여행 기록</h1>
         <LinkButton
           to={buildDeviceTravelRegisterPath(device)}
           className='slcn-travel-list-section__register-btn'

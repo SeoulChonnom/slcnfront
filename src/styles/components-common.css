@@ -415,20 +415,6 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 1rem;
 }
 
-.slcn-calendar-toolbar__heading {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.slcn-calendar-toolbar__eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: var(--weight-strong);
-  letter-spacing: 0.08em;
-  color: var(--color-accent-muted);
-}
-
 .slcn-calendar-toolbar__title {
   margin: 0;
   font-size: 2.125rem;
@@ -1010,26 +996,16 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   color: var(--color-ink-muted);
 }
 
-.slcn-page-section-header {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.slcn-page-section-header__title {
-  margin-top: 0.5rem;
+.slcn-route-page__title {
+  margin: 0;
   font-size: 2rem;
   font-weight: var(--weight-strong);
 }
 
-.slcn-page-section-header__description {
+.slcn-route-page__description {
   margin-top: 0.5rem;
   max-width: 42rem;
   color: var(--color-ink-muted);
-}
-
-.slcn-page-section-header__action {
-  flex-shrink: 0;
 }
 
 .slcn-shell-desktop {
@@ -1220,27 +1196,19 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   );
 }
 
-/* ---- Trip list header + search ---- */
-.slcn-trip-list-section__header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
+/* ---- Trip list title + toolbar (search + register action) ---- */
 .slcn-trip-list-section__title {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 2.125rem);
+  font-size: 1.75rem;
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
 
-.slcn-trip-list-section__subtitle {
-  margin: 0.5rem 0 0;
-  color: var(--color-body-muted);
-  font-size: 1rem;
-  line-height: 1.6;
+.slcn-trip-list-section__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .slcn-trip-list-section__register-btn {
@@ -1249,6 +1217,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-list-section__search-wrap {
   position: relative;
+  flex: 1 1 20rem;
   max-width: 32.5rem;
 }
 
@@ -1414,6 +1383,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-card__skeleton {
   width: 100%;
   min-height: 7rem;
+}
+
+.slcn-trip-detail-section__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
 }
 
 .slcn-trip-detail-section__map-skeleton {
@@ -1644,14 +1620,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid #f6d6e0;
 }
 
-.slcn-trip-detail-section__drive-kicker {
-  color: var(--color-accent-muted);
-  font-size: 0.6875rem;
-  font-weight: var(--weight-strong);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .slcn-trip-detail-section__drive-title {
   margin-top: 0.375rem;
   font-size: 1.25rem;
@@ -1727,13 +1695,11 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 /* ---- Register: match prototype field/dropzone/radio styling ---- */
-.slcn-trip-register-wizard .slcn-page-section-header__title {
-  margin-top: 0;
-}
-
-.slcn-trip-register-wizard .slcn-page-section-header__description {
-  margin-top: 0.5rem;
-  color: var(--color-body-muted);
+.slcn-trip-register-wizard__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
 }
 
 .slcn-trip-register-wizard .slcn-field__label,
@@ -2055,7 +2021,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   line-height: 1.5;
 }
 
-.slcn-shoes-catalog-page__title,
+.slcn-shoes-catalog-page__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
 .slcn-shoe-detail-page__fallback-title {
   margin-top: 0.625rem;
   font-size: 2rem;
@@ -2064,7 +2037,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   line-height: 1.5;
 }
 
-.slcn-shoes-catalog-page__description,
 .slcn-shoe-video-panel__description,
 .slcn-shoe-detail-hero__desc {
   margin-top: 0.875rem;
