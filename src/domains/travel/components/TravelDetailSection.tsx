@@ -16,20 +16,6 @@ type TravelDetailSectionProps = {
   travel: TravelDetail;
 };
 
-const NAV_ITEMS = [
-  { label: '날짜별 기록', sectionId: 'section-days' },
-  { label: '사진 앨범', sectionId: 'section-album' },
-  { label: '여행 후기', sectionId: 'section-review' },
-  { label: '태그', sectionId: 'section-tags' },
-] as const;
-
-function scrollToSection(id: string) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
 export function TravelDetailSection({
   device,
   travel,
@@ -37,15 +23,6 @@ export function TravelDetailSection({
   const navigate = useNavigate();
 
   const { objectUrl: heroCoverUrl } = useTravelAssetUrl(travel.coverPhotoId);
-
-  // Place count: sum of places across all travelDays (or fall back to travel.places)
-  const placeCount =
-    travel.travelDays.length > 0
-      ? travel.travelDays.reduce((sum, day) => sum + day.places.length, 0)
-      : travel.places.length;
-
-  // Photo count from travel.photos
-  const photoCount = travel.photos.length;
 
   return (
     <section className='slcn-travel-detail' data-device={device}>
@@ -153,54 +130,8 @@ export function TravelDetailSection({
               {travel.oneLineReview}
             </p>
           ) : null}
-
-          {/* Stats row */}
-          <div
-            className='slcn-travel-detail__stats-divider'
-            aria-hidden='true'
-          />
-          <div className='slcn-travel-detail__stats'>
-            <div className='slcn-travel-detail__stat'>
-              <span className='slcn-travel-detail__stat-label'>날짜</span>
-              <span className='slcn-travel-detail__stat-value'>
-                {travel.days}
-                <span className='slcn-travel-detail__stat-unit'>일</span>
-              </span>
-            </div>
-            <div className='slcn-travel-detail__stat'>
-              <span className='slcn-travel-detail__stat-label'>장소</span>
-              <span className='slcn-travel-detail__stat-value'>
-                {placeCount}
-                <span className='slcn-travel-detail__stat-unit'>곳</span>
-              </span>
-            </div>
-            <div className='slcn-travel-detail__stat'>
-              <span className='slcn-travel-detail__stat-label'>사진</span>
-              <span className='slcn-travel-detail__stat-value'>
-                {photoCount}
-                <span className='slcn-travel-detail__stat-unit'>장</span>
-              </span>
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* Section nav pill row */}
-      <nav
-        className='slcn-travel-detail__section-nav'
-        aria-label='페이지 내 섹션 이동'
-      >
-        {NAV_ITEMS.map((item) => (
-          <button
-            key={item.sectionId}
-            type='button'
-            className='slcn-travel-detail__section-nav-pill'
-            onClick={() => scrollToSection(item.sectionId)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
 
       <section className='slcn-travel-detail__section' id='section-days'>
         <h2 className='slcn-travel-detail__section-title'>날짜별 기록</h2>
