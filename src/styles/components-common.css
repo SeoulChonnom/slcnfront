@@ -1894,11 +1894,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: var(--color-surface-muted);
 }
 
-.slcn-empty-state__icon,
-.slcn-error-state__icon {
-  font-size: 2.25rem;
-}
-
 .slcn-empty-state__title,
 .slcn-error-state__title {
   margin-top: 0.5rem;

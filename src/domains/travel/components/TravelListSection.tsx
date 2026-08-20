@@ -52,6 +52,7 @@ export function TravelListSection({ device }: TravelListSectionProps) {
 
       {!isPending && isError ? (
         <ErrorState
+          headingLevel={2}
           title='여행 기록을 불러오지 못했어요.'
           onRetry={() => {
             void refetch();
@@ -61,10 +62,11 @@ export function TravelListSection({ device }: TravelListSectionProps) {
 
       {!isPending && !isError && data?.length === 0 ? (
         <EmptyState
-          title='아직 등록된 여행이 없어요.'
-          description='첫 여행을 남기면 여기에 차곡차곡 쌓여요.'
+          title='아직 남긴 여행이 없어요.'
+          description='같이 다녀온 여행을 날짜별로 기록할 수 있어요.'
           actionLabel='새 여행 기록하기'
           actionTo={buildDeviceTravelRegisterPath(device)}
+          headingLevel={2}
         />
       ) : null}
 

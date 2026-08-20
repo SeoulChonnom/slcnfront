@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
-import { EmptyState } from '../../../components/ui/EmptyState';
+import { ErrorState } from '../../../components/ui/ErrorState';
 import { Skeleton } from '../../../components/ui/Skeleton';
 import { useTripAssetUrl } from '../hooks/useTripAssetUrl';
 import type { TripDetail } from '../types';
@@ -42,9 +42,10 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
         ) : map1Asset.isPending || map2Asset.isPending ? (
           <Skeleton className='slcn-trip-detail-section__map-skeleton' />
         ) : (
-          <EmptyState
+          <ErrorState
             title='지도를 불러오지 못했어요.'
             description='파일 경로를 다시 확인해 주세요.'
+            headingLevel={2}
           />
         )}
       </Card>

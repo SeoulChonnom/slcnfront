@@ -50,8 +50,8 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
 
       {!catalog.length ? (
         <EmptyState
-          title='추천할 신발이 아직 없어요.'
-          description='신발 추천 목록이 준비되면 여기에서 바로 확인할 수 있어요.'
+          title='아직 추천할만한 신발 정보가 없어요.'
+          headingLevel={2}
         />
       ) : null}
 

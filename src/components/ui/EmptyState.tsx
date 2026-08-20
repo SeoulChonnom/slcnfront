@@ -6,6 +6,7 @@ type EmptyStateProps = {
   description?: string;
   actionLabel?: string;
   actionTo?: string;
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 export function EmptyState({
@@ -13,11 +14,15 @@ export function EmptyState({
   description,
   actionLabel,
   actionTo,
+  headingLevel = 3,
 }: EmptyStateProps) {
+  const Heading = `h${headingLevel}` as const;
+
   return (
-    <Card blob className='slcn-empty-state pink-mesh'>
-      <p className='slcn-empty-state__icon display-type'>◌</p>
-      <h3 className='slcn-empty-state__title display-type'>{title}</h3>
+    <Card blob className='slcn-empty-state'>
+      <Heading className='slcn-empty-state__title display-type'>
+        {title}
+      </Heading>
       {description ? (
         <p className='slcn-empty-state__description'>{description}</p>
       ) : null}

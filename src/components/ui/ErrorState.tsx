@@ -5,13 +5,22 @@ type ErrorStateProps = {
   title: string;
   description?: string;
   onRetry?: () => void;
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
-export function ErrorState({ title, description, onRetry }: ErrorStateProps) {
+export function ErrorState({
+  title,
+  description,
+  onRetry,
+  headingLevel = 3,
+}: ErrorStateProps) {
+  const Heading = `h${headingLevel}` as const;
+
   return (
     <Card blob className='slcn-error-state'>
-      <p className='slcn-error-state__icon display-type'>!</p>
-      <h3 className='slcn-error-state__title display-type'>{title}</h3>
+      <Heading className='slcn-error-state__title display-type'>
+        {title}
+      </Heading>
       {description ? (
         <p className='slcn-error-state__description'>{description}</p>
       ) : null}

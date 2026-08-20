@@ -4,11 +4,15 @@ import { renderWithProviders } from '../../../../test/helpers/render';
 import type { FileAsset } from '../../types';
 import { TripDetailSection } from '../TripDetailSection';
 
-vi.mock('../../hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: (ref: FileAsset | null | undefined) => ({
+const { useTripAssetUrlMock } = vi.hoisted(() => ({
+  useTripAssetUrlMock: vi.fn((ref: FileAsset | null | undefined) => ({
     objectUrl: ref ? `blob:${ref.filename}` : null,
     isPending: false,
-  }),
+  })),
+}));
+
+vi.mock('../../hooks/useTripAssetUrl', () => ({
+  useTripAssetUrl: useTripAssetUrlMock,
 }));
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
@@ -81,5 +85,48 @@ describe('TripDetailSection', () => {
       '_blank',
       'noopener,noreferrer'
     );
+  });
+
+  it('reports a failure when the map file cannot be loaded', () => {
+    useTripAssetUrlMock.mockImplementation(() => ({
+      objectUrl: null,
+      isPending: false,
+    }));
+
+    try {
+      renderWithProviders(
+        <TripDetailSection
+          tripDetail={{
+            id: 'trip-1',
+            date: '20991231',
+            type: 'year-end',
+            name: '연말 나들이',
+            logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
+            firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
+            secondMap: null,
+            nextButtonText: '',
+            previousButtonText: '',
+            driveUrl: 'https://drive.google.com/x',
+          }}
+        />
+      );
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: '지도를 불러오지 못했어요.',
+        })
+      ).toBeTruthy();
+      expect(screen.getByText('파일 경로를 다시 확인해 주세요.')).toBeTruthy();
+      expect(screen.queryByRole('img', { name: '나들이 지도' })).toBeNull();
+    } finally {
+      useTripAssetUrlMock.mockReset();
+      useTripAssetUrlMock.mockImplementation(
+        (ref: FileAsset | null | undefined) => ({
+          objectUrl: ref ? `blob:${ref.filename}` : null,
+          isPending: false,
+        })
+      );
+    }
   });
 });

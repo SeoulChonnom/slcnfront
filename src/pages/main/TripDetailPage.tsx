@@ -15,6 +15,7 @@ export function TripDetailPage() {
   if (tripDetailQuery.isError || !tripDetailQuery.data) {
     return (
       <ErrorState
+        headingLevel={1}
         title='나들이 상세를 불러오지 못했어요.'
         description='상세 경로 또는 파일 경로를 다시 확인해 주세요.'
         onRetry={() => {

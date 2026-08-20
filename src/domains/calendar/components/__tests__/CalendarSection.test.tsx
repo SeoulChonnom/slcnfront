@@ -404,7 +404,9 @@ describe('CalendarSection', () => {
       name: '일정 추가',
     }) as HTMLButtonElement;
 
-    expect(screen.getByText('캘린더가 아직 없어요.')).toBeTruthy();
+    expect(
+      screen.getByRole('heading', { level: 2, name: '캘린더가 아직 없어요.' })
+    ).toBeTruthy();
     expect(screen.getByTestId('calendar-month-view')).toBeTruthy();
     expect(createButton.disabled).toBe(true);
     expect(screen.queryByRole('button', { name: 'select-range' })).toBeNull();
@@ -420,7 +422,12 @@ describe('CalendarSection', () => {
       name: '일정 추가',
     }) as HTMLButtonElement;
 
-    expect(screen.getByText('표시 중인 캘린더가 없어요.')).toBeTruthy();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: '표시 중인 캘린더가 없어요.',
+      })
+    ).toBeTruthy();
     expect(screen.getByTestId('calendar-month-view')).toBeTruthy();
     expect(createButton.disabled).toBe(true);
     expect(screen.queryByRole('button', { name: 'select-range' })).toBeNull();

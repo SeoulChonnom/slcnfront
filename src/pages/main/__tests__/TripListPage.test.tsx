@@ -61,7 +61,15 @@ describe('TripListPage', () => {
       route: '/main/map',
     });
 
-    expect(screen.getByText('아직 등록된 나들이가 없어요.')).toBeTruthy();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: '아직 남긴 나들이가 없어요.',
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getByText('다녀온 기록을 적어 두면 다시 꺼내 볼 수 있어요.')
+    ).toBeTruthy();
   });
 
   it('renders error state', () => {

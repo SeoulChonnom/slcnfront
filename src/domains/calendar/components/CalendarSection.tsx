@@ -248,6 +248,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
 
       {!controller.status.isLoading && controller.status.isError ? (
         <ErrorState
+          headingLevel={2}
           title='일정을 불러오지 못했어요.'
           description='잠시 후 다시 시도하거나, 네트워크 상태를 확인해 주세요.'
           onRetry={() => {
@@ -309,6 +310,7 @@ export function CalendarSection({ device, view, state }: CalendarSectionProps) {
             <EmptyState
               title={supplementalEmptyState.title}
               description={supplementalEmptyState.description}
+              headingLevel={2}
             />
           ) : null}
         </>
