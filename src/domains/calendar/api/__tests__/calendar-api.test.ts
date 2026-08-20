@@ -18,7 +18,6 @@ describe('calendar-api', () => {
             editable: true,
             startEditable: true,
             durationEditable: true,
-            defaultSelected: false,
             sortOrder: 2,
           },
           {
@@ -31,7 +30,6 @@ describe('calendar-api', () => {
             editable: true,
             startEditable: true,
             durationEditable: true,
-            defaultSelected: true,
             sortOrder: 1,
           },
         ]),
@@ -67,7 +65,6 @@ describe('calendar-api', () => {
       editable: true,
       startEditable: true,
       durationEditable: true,
-      defaultSelected: true,
       sortOrder: 1,
     };
     const fetchFn = vi
@@ -100,7 +97,6 @@ describe('calendar-api', () => {
       editable: true,
       startEditable: true,
       durationEditable: true,
-      defaultSelected: true,
       sortOrder: 1,
     });
     await calendarApi.updateCalendar({
@@ -112,7 +108,6 @@ describe('calendar-api', () => {
       editable: true,
       startEditable: true,
       durationEditable: true,
-      defaultSelected: true,
       sortOrder: 1,
     });
     await calendarApi.deleteCalendar('cal-1');
@@ -139,7 +134,6 @@ describe('calendar-api', () => {
             editable: true,
             startEditable: true,
             durationEditable: true,
-            defaultSelected: true,
             sortOrder: 1,
           },
         ]),
@@ -176,7 +170,6 @@ describe('calendar-api', () => {
           editable: true,
           startEditable: true,
           durationEditable: true,
-          defaultSelected: true,
           sortOrder: '1',
         }),
         {
@@ -201,7 +194,6 @@ describe('calendar-api', () => {
         editable: true,
         startEditable: true,
         durationEditable: true,
-        defaultSelected: true,
         sortOrder: 1,
       })
     ).rejects.toMatchObject({
@@ -224,7 +216,6 @@ describe('calendar-api', () => {
           editable: true,
           startEditable: true,
           durationEditable: 'true',
-          defaultSelected: true,
           sortOrder: 1,
         }),
         {
@@ -250,7 +241,6 @@ describe('calendar-api', () => {
         editable: true,
         startEditable: true,
         durationEditable: true,
-        defaultSelected: true,
         sortOrder: 1,
       })
     ).rejects.toMatchObject({

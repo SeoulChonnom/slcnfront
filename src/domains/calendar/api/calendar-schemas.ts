@@ -11,7 +11,6 @@ const calendarMetaSchema = z.object({
   editable: z.boolean(),
   startEditable: z.boolean(),
   durationEditable: z.boolean(),
-  defaultSelected: z.boolean(),
   sortOrder: z.number(),
 });
 

@@ -12,7 +12,6 @@ export type CalendarMetaDto = {
   editable: boolean;
   startEditable: boolean;
   durationEditable: boolean;
-  defaultSelected: boolean;
   sortOrder: number;
 };
 
@@ -26,7 +25,6 @@ export type CalendarCreatePayload = {
   editable: boolean;
   startEditable: boolean;
   durationEditable: boolean;
-  defaultSelected: boolean;
   sortOrder: number;
 };
 

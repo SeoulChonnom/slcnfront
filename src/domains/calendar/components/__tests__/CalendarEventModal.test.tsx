@@ -14,7 +14,6 @@ const calendars = [
     editable: true,
     startEditable: true,
     durationEditable: true,
-    defaultSelected: true,
     sortOrder: 1,
   },
   {
@@ -27,7 +26,6 @@ const calendars = [
     editable: false,
     startEditable: false,
     durationEditable: false,
-    defaultSelected: false,
     sortOrder: 2,
   },
 ];

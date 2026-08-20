@@ -14,7 +14,6 @@ const calendars = [
     editable: true,
     startEditable: true,
     durationEditable: true,
-    defaultSelected: true,
     sortOrder: 1,
   },
   {
@@ -27,7 +26,6 @@ const calendars = [
     editable: false,
     startEditable: false,
     durationEditable: false,
-    defaultSelected: false,
     sortOrder: 2,
   },
 ];
@@ -40,7 +38,6 @@ const draft = {
   editable: true,
   startEditable: true,
   durationEditable: true,
-  defaultSelected: true,
   sortOrder: 3,
 };
 
@@ -164,10 +161,8 @@ describe('CalendarManageModal', () => {
       (screen.getByLabelText('길이 조절하기') as HTMLInputElement).disabled
     ).toBe(true);
 
-    // defaultSelected has no working UI (nothing in the app reads it to
-    // pick a default calendar) and was removed from the form entirely.
-    // The value itself is still carried on `draft` and round-tripped by
-    // CalendarSection - see CalendarSection.test.tsx.
+    // defaultSelected was removed entirely - control and data both -
+    // because nothing in the app ever read it.
     expect(screen.queryByLabelText('기본 선택 캘린더')).toBeNull();
     expect(screen.queryByText('기본 선택 캘린더')).toBeNull();
   });

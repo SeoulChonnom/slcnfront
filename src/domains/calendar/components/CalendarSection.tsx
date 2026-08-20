@@ -44,7 +44,6 @@ function createEmptyCalendarDraft(
     editable: true,
     startEditable: true,
     durationEditable: true,
-    defaultSelected: calendars.length === 0,
     sortOrder:
       calendars.reduce(
         (max, calendar) => Math.max(max, calendar.sortOrder),
@@ -62,7 +61,6 @@ function createDraftFromCalendar(calendar: CalendarMeta): CalendarManageDraft {
     editable: calendar.editable,
     startEditable: calendar.startEditable,
     durationEditable: calendar.durationEditable,
-    defaultSelected: calendar.defaultSelected,
     sortOrder: calendar.sortOrder,
   };
 }

@@ -35,7 +35,6 @@ describe('CalendarToolbar', () => {
               editable: true,
               startEditable: true,
               durationEditable: true,
-              defaultSelected: true,
               sortOrder: 1,
             },
           ],

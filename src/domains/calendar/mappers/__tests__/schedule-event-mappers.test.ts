@@ -28,7 +28,6 @@ describe('schedule-event-mappers', () => {
         editable: true,
         startEditable: true,
         durationEditable: true,
-        defaultSelected: true,
         sortOrder: 1,
       }
     );
