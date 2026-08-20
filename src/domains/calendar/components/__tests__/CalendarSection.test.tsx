@@ -227,7 +227,7 @@ describe('CalendarSection', () => {
     });
   });
 
-  it('opens an existing schedule for edit and deletes it', async () => {
+  it('opens an existing schedule for edit and deletes it after confirming', async () => {
     deleteSchedule.mockResolvedValueOnce(undefined);
 
     const { user } = renderSection();
@@ -237,6 +237,14 @@ describe('CalendarSection', () => {
     expect(screen.getByDisplayValue('봄 산책')).toBeTruthy();
 
     await user.click(screen.getByRole('button', { name: '삭제' }));
+
+    const confirmDialog = await screen.findByRole('dialog', {
+      name: '일정을 삭제할까요?',
+    });
+    expect(confirmDialog.textContent).toContain('봄 산책');
+    expect(deleteSchedule).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: '삭제할게요' }));
 
     await waitFor(() => {
       expect(deleteSchedule).toHaveBeenCalledWith('schedule-1');

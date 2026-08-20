@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CalendarEventModal } from '../CalendarEventModal';
 
@@ -150,7 +151,8 @@ describe('CalendarEventModal', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('emits delete requests in edit mode', async () => {
+  it('requires confirmation before deleting, and cancelling leaves the event alone', async () => {
+    const user = userEvent.setup();
     const onDelete = vi.fn().mockResolvedValue(undefined);
     render(
       <CalendarEventModal
@@ -190,7 +192,125 @@ describe('CalendarEventModal', () => {
 
     expect(screen.getByText('일정 수정')).toBeTruthy();
 
-    fireEvent.click(screen.getByRole('button', { name: '삭제' }));
-    expect(onDelete).toHaveBeenCalledTimes(1);
+    await user.click(screen.getByRole('button', { name: '삭제' }));
+
+    // Clicking the delete button opens a confirmation naming the event; it
+    // must not call onDelete yet.
+    const confirmDialog = await screen.findByRole('dialog', {
+      name: '일정을 삭제할까요?',
+    });
+    expect(confirmDialog.textContent).toContain('편집 일정');
+    expect(onDelete).not.toHaveBeenCalled();
+
+    const cancelButton = screen.getByRole('button', { name: '계속 둘게요' });
+    await waitFor(() => {
+      expect(document.activeElement).toBe(cancelButton);
+    });
+
+    // Cancelling leaves the event alone.
+    await user.click(cancelButton);
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole('dialog', { name: '일정을 삭제할까요?' })
+    ).toBeNull();
+  });
+
+  it('cancels the delete confirmation on Escape without deleting', async () => {
+    const user = userEvent.setup();
+    const onDelete = vi.fn().mockResolvedValue(undefined);
+    render(
+      <CalendarEventModal
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            start: '2026-04-14T09:00:00+09:00',
+            end: '2026-04-14T10:00:00+09:00',
+            allDay: false,
+          },
+          errorMessage: null,
+          isSubmitting: false,
+          onClose: vi.fn(),
+          onDraftChange: vi.fn(),
+          onSubmit: vi.fn().mockResolvedValue(undefined),
+          onDelete,
+        }}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: '삭제' }));
+    await screen.findByRole('dialog', { name: '일정을 삭제할까요?' });
+
+    await user.keyboard('{Escape}');
+
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole('dialog', { name: '일정을 삭제할까요?' })
+    ).toBeNull();
+  });
+
+  it('deletes the event only once the confirm action is clicked', async () => {
+    const user = userEvent.setup();
+    const onDelete = vi.fn().mockResolvedValue(undefined);
+    render(
+      <CalendarEventModal
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '편집 일정',
+            body: '',
+            location: '',
+            start: '2026-04-14T09:00:00+09:00',
+            end: '2026-04-14T10:00:00+09:00',
+            allDay: false,
+          },
+          errorMessage: null,
+          isSubmitting: false,
+          onClose: vi.fn(),
+          onDraftChange: vi.fn(),
+          onSubmit: vi.fn().mockResolvedValue(undefined),
+          onDelete,
+        }}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: '삭제' }));
+    await screen.findByRole('dialog', { name: '일정을 삭제할까요?' });
+
+    fireEvent.click(screen.getByRole('button', { name: '삭제할게요' }));
+
+    await waitFor(() => {
+      expect(onDelete).toHaveBeenCalledTimes(1);
+    });
   });
 });

@@ -138,10 +138,6 @@ describe('DesktopHeader', () => {
 
   it('confirms before closing an edit dialog that contains an unsaved draft', async () => {
     verifyPassword.mockResolvedValue(undefined);
-    const confirmClose = vi
-      .spyOn(window, 'confirm')
-      .mockReturnValueOnce(false)
-      .mockReturnValueOnce(true);
     const { user } = renderWithProviders(<DesktopHeader />, {
       route: '/main/calendar',
     });
@@ -156,17 +152,35 @@ describe('DesktopHeader', () => {
     await user.type(screen.getByLabelText('이름'), '저장 전 이름');
 
     await user.click(screen.getByRole('button', { name: '닫기' }));
-    expect(confirmClose).toHaveBeenCalledTimes(1);
+    await screen.findByRole('dialog', {
+      name: '저장하지 않은 변경 사항이 있어요',
+    });
+    expect(
+      screen.getByRole('dialog', { name: '사용자 정보 수정' })
+    ).toBeTruthy();
+    const stayButton = screen.getByRole('button', { name: '계속 수정' });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(stayButton);
+    });
+
+    // Cancelling the confirm dialog leaves the edit dialog and draft alone.
+    await user.keyboard('{Escape}');
+    expect(
+      screen.queryByRole('dialog', { name: '저장하지 않은 변경 사항이 있어요' })
+    ).toBeNull();
     expect(
       screen.getByRole('dialog', { name: '사용자 정보 수정' })
     ).toBeTruthy();
 
     await user.click(screen.getByRole('button', { name: '닫기' }));
-    expect(confirmClose).toHaveBeenCalledTimes(2);
+    await screen.findByRole('dialog', {
+      name: '저장하지 않은 변경 사항이 있어요',
+    });
+    await user.click(screen.getByRole('button', { name: '변경 사항 버리기' }));
     expect(
       screen.queryByRole('dialog', { name: '사용자 정보 수정' })
     ).toBeNull();
-    confirmClose.mockRestore();
   });
 
   it('clears the local session and returns to login even when server logout fails', async () => {

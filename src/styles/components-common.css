@@ -278,6 +278,13 @@
   margin-top: 1.25rem;
 }
 
+.slcn-confirm-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
 .slcn-calendar-page {
   display: flex;
   flex-direction: column;

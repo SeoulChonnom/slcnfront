@@ -15,6 +15,7 @@ import {
   buildDeviceRootPath,
 } from '../../lib/routing/route-builders';
 import { cn } from '../../lib/utils/cn';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { Modal } from '../ui/Modal';
 import { getDesktopNavigationItems } from './navigation-items';
 
@@ -61,6 +62,7 @@ export function DesktopHeader({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [dialog, setDialog] = useState<ProfileDialog>(null);
   const [isEditDirty, setIsEditDirty] = useState(false);
+  const [isConfirmingClose, setIsConfirmingClose] = useState(false);
   const displayName = profile.data?.name ?? fallbackUser?.name ?? '';
 
   useEffect(() => {
@@ -105,14 +107,18 @@ export function DesktopHeader({
   }, [isPopoverOpen]);
 
   function closeDialog() {
-    if (
-      dialog === 'edit' &&
-      isEditDirty &&
-      !window.confirm('저장하지 않은 변경 사항이 있어요. 닫을까요?')
-    ) {
+    if (dialog === 'edit' && isEditDirty) {
+      setIsConfirmingClose(true);
       return;
     }
 
+    setIsEditDirty(false);
+    setDialog(null);
+    setIsPopoverOpen(true);
+  }
+
+  function confirmCloseDialog() {
+    setIsConfirmingClose(false);
     setIsEditDirty(false);
     setDialog(null);
     setIsPopoverOpen(true);
@@ -330,6 +336,18 @@ export function DesktopHeader({
           onDirtyChange={setIsEditDirty}
         />
       </Modal>
+
+      <ConfirmDialog
+        isOpen={isConfirmingClose}
+        title='저장하지 않은 변경 사항이 있어요'
+        description='닫으면 지금까지 수정한 내용이 사라져요. 그래도 닫을까요?'
+        confirmLabel='변경 사항 버리기'
+        cancelLabel='계속 수정'
+        onCancel={() => {
+          setIsConfirmingClose(false);
+        }}
+        onConfirm={confirmCloseDialog}
+      />
     </>
   );
 }
