@@ -1,7 +1,6 @@
 import {
   type HTMLAttributes,
   type PropsWithChildren,
-  type ReactNode,
   useEffect,
   useId,
   useRef,
@@ -9,7 +8,7 @@ import {
 import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils/cn';
 
-type ModalTitleVariant = 'display' | 'heading' | 'eyebrow';
+type ModalTitleVariant = 'display' | 'heading';
 
 type ModalProps = PropsWithChildren<{
   isOpen: boolean;
@@ -21,8 +20,6 @@ type ModalProps = PropsWithChildren<{
   align?: 'center' | 'left';
   /** Visual style of the title text. */
   titleVariant?: ModalTitleVariant;
-  /** Optional leading node rendered inline before the title (e.g. an icon). */
-  titleIcon?: ReactNode;
   /** Omits the built-in close control when a custom accessible close is provided. */
   hideDefaultClose?: boolean;
 }> &
@@ -55,7 +52,6 @@ export function Modal({
   className,
   align = 'center',
   titleVariant = 'display',
-  titleIcon,
   hideDefaultClose = false,
   onKeyDown,
   ...props
@@ -210,11 +206,6 @@ export function Modal({
               )}
               data-variant={titleVariant}
             >
-              {titleIcon ? (
-                <span className='slcn-modal__title-icon' aria-hidden='true'>
-                  {titleIcon}
-                </span>
-              ) : null}
               {title}
             </h2>
           </div>

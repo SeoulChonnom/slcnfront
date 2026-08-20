@@ -54,14 +54,15 @@ describe('TripQuizModal', () => {
         title: '오답',
         description: '다시 골라보세요.',
       },
-      buttonName: '목록으로 돌아가기',
-      expected: 'close',
+      buttonName: '다시 풀어보기',
+      expected: 'retry',
     },
   ])(
     'focuses the feedback CTA in the $name state',
     async ({ feedback, buttonName, expected }) => {
       const user = userEvent.setup();
       const onClose = vi.fn();
+      const onRetry = vi.fn();
       const onConfirmSuccess = vi.fn();
 
       render(
@@ -75,7 +76,7 @@ describe('TripQuizModal', () => {
           errorMessage={null}
           onClose={onClose}
           onAnswer={vi.fn()}
-          onRetry={vi.fn()}
+          onRetry={onRetry}
           onConfirmSuccess={onConfirmSuccess}
         />
       );
@@ -90,14 +91,44 @@ describe('TripQuizModal', () => {
 
       if (expected === 'confirm') {
         expect(onConfirmSuccess).toHaveBeenCalledTimes(1);
+        expect(onRetry).not.toHaveBeenCalled();
         expect(onClose).not.toHaveBeenCalled();
         return;
       }
 
-      expect(onClose).toHaveBeenCalledTimes(1);
+      // A wrong answer must offer the question again, not eject to the list.
+      expect(onRetry).toHaveBeenCalledTimes(1);
+      expect(onClose).not.toHaveBeenCalled();
       expect(onConfirmSuccess).not.toHaveBeenCalled();
     }
   );
+
+  it('keeps a way back to the list after a wrong answer', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const onRetry = vi.fn();
+
+    render(
+      <TripQuizModal
+        tripName='연말 나들이'
+        isOpen
+        quiz={quiz}
+        feedback={{ isCorrect: false, title: '오답', description: '아쉬워요.' }}
+        isLoading={false}
+        isSubmitting={false}
+        errorMessage={null}
+        onClose={onClose}
+        onAnswer={vi.fn()}
+        onRetry={onRetry}
+        onConfirmSuccess={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: '목록으로 돌아가기' }));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onRetry).not.toHaveBeenCalled();
+  });
 
   it('shows retry UI when quiz loading fails', async () => {
     const user = userEvent.setup();

@@ -247,11 +247,6 @@
   text-align: center;
 }
 
-.slcn-modal__title-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
 .slcn-modal__description {
   margin-top: 0.75rem;
   font-size: 0.875rem;
@@ -277,18 +272,6 @@
   font-size: 1.25rem;
   font-weight: var(--weight-strong);
   text-align: left;
-}
-
-.slcn-modal__title[data-variant="eyebrow"] {
-  font-size: 0.8125rem;
-  font-weight: var(--weight-strong);
-  letter-spacing: 0.04em;
-  text-align: left;
-  color: var(--color-ink-muted);
-}
-
-.slcn-modal__title[data-variant="eyebrow"] .slcn-modal__title-icon svg {
-  display: block;
 }
 
 .slcn-modal__body {
@@ -1260,18 +1243,26 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-quiz-modal__question {
-  margin: 0 0 0.25rem;
-  font-size: 1.125rem;
+  margin: 0 0 var(--space-4);
+  font-size: 1.3125rem;
   font-weight: var(--weight-strong);
-  line-height: 1.45;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
   color: var(--color-ink);
+  text-wrap: pretty;
 }
 
-.slcn-trip-quiz-modal__answers,
 .slcn-trip-quiz-modal__feedback,
 .slcn-trip-register-wizard__actions {
   display: flex;
   gap: 0.75rem;
+}
+
+/* Options stack: real answer text is a Korean sentence, not a keycap label. */
+.slcn-trip-quiz-modal__answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .slcn-trip-register-wizard__actions .slcn-button {
@@ -1295,26 +1286,29 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-quiz-modal__answer {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   width: 100%;
-  padding: 0.75rem 0.875rem;
+  padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-hairline);
-  border-radius: 0.875rem;
+  border-radius: var(--radius-md);
   background: var(--color-canvas-pure);
   text-align: left;
-  font-size: 0.9375rem;
-  font-weight: var(--weight-strong);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-body);
+  line-height: 1.45;
   color: var(--color-ink);
   transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
+    border-color var(--duration-fast) var(--easing-standard),
+    background var(--duration-fast) var(--easing-standard);
 }
 
 .slcn-trip-quiz-modal__answer:hover:not(:disabled) {
   border-color: var(--color-primary);
-  background: rgb(254 159 200 / 8%);
+  background: var(--color-surface-soft);
+}
+
+.slcn-trip-quiz-modal__answer:focus-visible {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 3px;
 }
 
 .slcn-trip-quiz-modal__answer:disabled {
@@ -1322,83 +1316,116 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   cursor: default;
 }
 
-.slcn-trip-quiz-modal__answer-text {
-  min-width: 0;
-}
+/* ── Result: the note the other person sealed with the record ────────────── */
 
-.slcn-trip-quiz-modal__option-key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--radius-full);
-  background: rgb(254 159 200 / 16%);
-  font-size: 0.8125rem;
-  font-weight: var(--weight-strong);
-  color: var(--color-primary-focus);
-  flex: none;
-}
-
-.slcn-trip-quiz-modal__result {
+.slcn-trip-quiz-modal__note {
   display: grid;
-  justify-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem 1.25rem;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-hairline);
   border-radius: var(--radius-lg);
-  text-align: center;
 }
 
-.slcn-trip-quiz-modal__result[data-tone="correct"] {
-  background: rgb(34 197 94 / 10%);
+/* Unlocked reads as warm paper; still-locked stays neutral. State never rides
+   on a second accent colour — see DESIGN.md sections 3 and 13. */
+.slcn-trip-quiz-modal__note[data-state="unlocked"] {
+  background: var(--color-surface-soft);
 }
 
-.slcn-trip-quiz-modal__result[data-tone="wrong"] {
-  background: rgb(239 68 68 / 8%);
+.slcn-trip-quiz-modal__note[data-state="locked"] {
+  background: var(--color-surface-muted);
 }
 
-.slcn-trip-quiz-modal__result-badge {
-  display: inline-flex;
+.slcn-trip-quiz-modal__note-head {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: var(--weight-strong);
-}
-
-.slcn-trip-quiz-modal__result[data-tone="correct"]
-  .slcn-trip-quiz-modal__result-badge {
-  background: rgb(34 197 94);
-}
-
-.slcn-trip-quiz-modal__result[data-tone="wrong"]
-  .slcn-trip-quiz-modal__result-badge {
-  background: rgb(239 68 68);
-}
-
-.slcn-trip-quiz-modal__result-title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: var(--weight-strong);
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-hairline);
   color: var(--color-ink);
 }
 
-.slcn-trip-quiz-modal__result-title {
-  color: var(--color-ink);
-}
-
-.slcn-trip-quiz-modal__result[data-tone="wrong"]
-  .slcn-trip-quiz-modal__result-title {
-  color: rgb(220 38 38);
-}
-
-.slcn-trip-quiz-modal__result-copy {
-  margin: 0 0 0.5rem;
+.slcn-trip-quiz-modal__note-state {
   font-size: 0.875rem;
+  font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
+}
+
+.slcn-trip-quiz-modal__note-title {
+  margin: 0;
+  font-size: 1.3125rem;
+  font-weight: var(--weight-strong);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+
+.slcn-trip-quiz-modal__note-copy {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  white-space: pre-line;
+}
+
+.slcn-trip-quiz-modal__note-actions {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+/* ── The lock's one authored moment ─────────────────────────────────────── */
+
+.slcn-trip-quiz-modal__lock {
+  flex: none;
+  overflow: visible;
+}
+
+.slcn-trip-quiz-modal__lock-shackle {
+  transform-origin: 16px 11px;
+}
+
+.slcn-trip-quiz-modal__lock[data-unlocked="true"]
+  .slcn-trip-quiz-modal__lock-shackle {
+  animation: slcn-lock-open var(--duration-page) var(--easing-standard) both;
+}
+
+/* Wrong answer: the shackle takes the strain and settles back. It does not
+   shake — the lock simply did not turn. */
+.slcn-trip-quiz-modal__lock[data-unlocked="false"]
+.slcn-trip-quiz-modal__lock-shackle {
+  animation: slcn-lock-resist var(--duration-page) var(--easing-standard) both;
+}
+
+@keyframes slcn-lock-open {
+  from {
+    transform: rotate(0deg) translateY(0);
+  }
+  to {
+    transform: rotate(-32deg) translateY(-1px);
+  }
+}
+
+@keyframes slcn-lock-resist {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  55% {
+    transform: rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slcn-trip-quiz-modal__lock-shackle {
+    animation: none !important;
+  }
+
+  .slcn-trip-quiz-modal__lock[data-unlocked="true"]
+    .slcn-trip-quiz-modal__lock-shackle {
+    transform: rotate(-32deg);
+  }
 }
 
 .slcn-trip-detail-section__map-card,
