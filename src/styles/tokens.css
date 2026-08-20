@@ -11,6 +11,16 @@
      soft-pink surfaces alike. Use this for accent TEXT; --color-primary stays
      the fill/mark colour. */
   --color-accent-muted: #a34f6d;
+  /* Focus ring colour. Neither --color-primary (1.82/1.91/1.64:1 on
+     canvas/white/soft-pink) nor --color-primary-focus (2.23/2.34/2.01:1)
+     clears the WCAG 1.4.11 non-text 3:1 minimum, so the ring cannot reuse
+     either brand pink. --color-accent-muted measures 5.14/5.39/4.63:1 on
+     the same three surfaces, so the ring borrows it instead. On dark
+     surfaces the ring uses --color-primary-on-dark instead (see the DARK
+     PALETTE block below) because accent-muted only reaches 2.76-3.20:1
+     there while plain Seoul Pink reaches 7.80-9.03:1. See DESIGN.md §8.5
+     and §13 for the source discussion. */
+  --color-focus-ring: var(--color-accent-muted);
   --color-body-on-dark: #ffffff;
   --color-body-muted-on-dark: #d8ced2;
 
@@ -39,11 +49,22 @@
   --color-ink-muted: #6f666a;
   --color-ink-soft: #6f666a;
 
-  /* Semantic */
-  --color-success: #1f9d68;
-  --color-error: #d64545;
+  /* Semantic. Each state is a verified fill + on-fill text + subtle
+     surface (light tint) + on-surface text triad, checked against WCAG
+     relative-luminance contrast (see DESIGN.md §3 for the full table).
+     Values were pushed darker than the original palette until white
+     on-fill text and fill-as-text-on-surface both clear 4.5:1; the fill
+     also clears 3:1 as a non-text indicator (e.g. border-left-color)
+     directly on white/canvas. */
+  --color-success: #15794f;
+  --color-success-on: #ffffff;
+  --color-success-surface: #eaf6f0;
+  --color-error: #c53030;
+  --color-error-on: #ffffff;
   --color-error-surface: #fff1f1;
-  --color-warning: #f2a93b;
+  --color-warning: #955b0a;
+  --color-warning-on: #ffffff;
+  --color-warning-surface: #fbefe0;
 
   /* Typography */
   --font-stack:
@@ -91,4 +112,60 @@
   --duration-page: 360ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --press-scale: 0.96;
+
+  /* ─────────────────────────────────────────────────────────────────
+     DARK PALETTE — definition only, not wired to rendering.
+
+     These tokens exist so a later task can switch the app into dark
+     mode. Nothing below is referenced by any selector, media query, or
+     [data-theme] rule yet: no component reads them, and none of the
+     ~51 hardcoded (non-token) colours across the stylesheets point at
+     a dark equivalent. Activating dark mode before that hardcoded-
+     colour sweep runs would render a half-dark, half-light interface,
+     so this block stays inert until that sweep is done. See DESIGN.md
+     §17 Known Gaps.
+
+     Derived from the existing warm identity (not a neutral grey-black):
+     --color-surface-dark-1/2/3, --color-body-on-dark,
+     --color-body-muted-on-dark, and --color-primary-on-dark already
+     exist above and are reused here rather than duplicated. All pairs
+     below are checked with the same WCAG relative-luminance formula
+     used for the light palette (see DESIGN.md §3).
+     ───────────────────────────────────────────────────────────────── */
+
+  /* Layered dark surfaces, parallel to canvas / canvas-pure / surface-soft
+     / surface-muted in the light palette. */
+  --color-canvas-dark: var(--color-surface-dark-1); /* #1b1b1b */
+  --color-surface-pearl-dark: var(--color-surface-dark-2); /* #242124 */
+  --color-surface-soft-dark: var(--color-surface-dark-3); /* #2b2629 */
+  --color-surface-muted-dark: #211d20;
+
+  --color-hairline-dark: rgba(255, 255, 255, 0.14);
+  --color-divider-dark: rgba(255, 255, 255, 0.09);
+  --color-overlay-dark: rgba(0, 0, 0, 0.6);
+
+  /* Text placed on the Seoul Pink fill stays --color-ink in both
+     themes: ink on #fe9fc8 measures 9.03:1, so the button does not
+     need a dark-specific on-primary value. Kept as an explicit alias
+     so a future theme file can name it without recomputing. */
+  --color-on-primary-dark: #1b1b1b;
+
+  /* Focus ring on dark surfaces. --color-accent-muted (the light-mode
+     ring) only reaches 2.76-3.20:1 against surface-dark-1/2/3 and
+     fails the 3:1 minimum on two of the three. Plain Seoul Pink reaches
+     7.80/8.35/9.03:1 there instead, so the dark ring reuses
+     --color-primary-on-dark rather than a muted tone. */
+  --color-focus-ring-dark: var(--color-primary-on-dark);
+
+  /* Semantic on-dark variants: fill + on-fill for badges/alerts rendered
+     on the dark surfaces above. Text-on-fill contrast against
+     --color-surface-dark-1/2/3:
+       error   #ff6b6b  6.21 / 5.74 / 5.36
+       success #34d399  8.96 / 8.29 / 7.74
+       warning #f2a93b  8.62 / 7.98 / 7.45 (the original light-mode
+         warning value — it was only unreadable on light surfaces; on
+         dark ink it already clears AA with room to spare). */
+  --color-error-on-dark: #ff6b6b;
+  --color-success-on-dark: #34d399;
+  --color-warning-on-dark: #f2a93b;
 }

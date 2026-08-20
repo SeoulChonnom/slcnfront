@@ -83,7 +83,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 }
 
 .slcn-travel-card:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 

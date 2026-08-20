@@ -7,6 +7,13 @@ colors:
   primary: "#FE9FC8"
   primary-focus: "#FF7FB8"
   primary-on-dark: "#FE9FC8"
+  # Accent-muted is Seoul Pink darkened until it clears 4.5:1 as TEXT on
+  # canvas/pearl/soft-pink. focus-ring reuses it as the keyboard focus
+  # indicator (a non-text use, 3:1 minimum) because neither primary nor
+  # primary-focus clears 3:1 on any surface. See §3 and §8.5.
+  accent-muted: "#A34F6D"
+  focus-ring: "{colors.accent-muted}"
+  focus-ring-dark: "{colors.primary-on-dark}"
 
   ink: "#1B1B1B"
   body: "#1B1B1B"
@@ -23,6 +30,16 @@ colors:
   surface-dark-1: "#1B1B1B"
   surface-dark-2: "#242124"
   surface-dark-3: "#2B2629"
+  # Dark palette — defined only, not wired to any selector/media-query/
+  # [data-theme] rule yet. See §17.
+  canvas-dark: "{colors.surface-dark-1}"
+  surface-pearl-dark: "{colors.surface-dark-2}"
+  surface-soft-dark: "{colors.surface-dark-3}"
+  surface-muted-dark: "#211D20"
+  hairline-dark: "rgba(255, 255, 255, 0.14)"
+  divider-dark: "rgba(255, 255, 255, 0.09)"
+  overlay-dark: "rgba(0, 0, 0, 0.6)"
+  on-primary-dark: "#1B1B1B"
 
   divider-soft: "rgba(27, 27, 27, 0.08)"
   hairline: "rgba(27, 27, 27, 0.12)"
@@ -32,6 +49,22 @@ colors:
   on-dark: "#FFFFFF"
 
   pink-mesh-end: "#F793C2"
+
+  # Semantic — fill + on-fill text + subtle surface tint per state, each
+  # contrast-verified. See §3 for the full table. Dark on-fill variants
+  # are reserved alongside the dark palette above.
+  success: "#15794F"
+  success-on: "#FFFFFF"
+  success-surface: "#EAF6F0"
+  success-on-dark: "#34D399"
+  error: "#C53030"
+  error-on: "#FFFFFF"
+  error-surface: "#FFF1F1"
+  error-on-dark: "#FF6B6B"
+  warning: "#955B0A"
+  warning-on: "#FFFFFF"
+  warning-surface: "#FBEFE0"
+  warning-on-dark: "#F2A93B"
 
 typography:
   font-stack-display: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
@@ -187,8 +220,13 @@ components:
     border: "none"
 
   button-primary-focus:
-    outline: "2px solid {colors.primary-focus}"
+    outline: "2px solid {colors.focus-ring}"
     outlineOffset: 3px
+    # colors.primary-focus does not meet this need: measured at 2.23 / 2.34 /
+    # 2.01:1 against canvas / white / soft-pink, below the WCAG 1.4.11 3:1
+    # minimum. colors.focus-ring (colors.accent-muted, #A34F6D) measures
+    # 5.14 / 5.39 / 4.63:1 on the same three surfaces. Applies to every
+    # focusable control, not only buttons — see §8.5 and §13.
 
   button-secondary:
     backgroundColor: "{colors.canvas-pure}"
@@ -458,6 +496,37 @@ The original project palette is retained. External blue accent systems are not i
 
 Because Seoul Pink is light, text placed on it should normally use `{colors.ink}`, not white. White text is reserved for Ink or other verified dark surfaces.
 
+All ratios below use the WCAG 2.x relative-luminance contrast formula (`(L1 + 0.05) / (L2 + 0.05)` over sRGB-linearized channels). Thresholds: 4.5:1 for normal text (WCAG 1.4.3), 3:1 for large text, UI component boundaries, and focus indicators (WCAG 1.4.3 large-text / 1.4.11 non-text).
+
+**Focus ring.** The keyboard focus indicator must clear 3:1 against every surface it can appear on (canvas, white, soft-pink). Neither brand pink does:
+
+| Colour | vs canvas #FFF8F8 | vs white #FFFFFF | vs soft-pink #FFE8EF | Pass? |
+|---|---|---|---|---|
+| `primary` #FE9FC8 | 1.82:1 | 1.91:1 | 1.64:1 | Fail |
+| `primary-focus` #FF7FB8 | 2.23:1 | 2.34:1 | 2.01:1 | Fail |
+| `accent-muted` #A34F6D (`focus-ring`) | 5.14:1 | 5.39:1 | 4.63:1 | **Pass** |
+
+`focus-ring` is the token every `:focus-visible` rule in the app must use. On dark surfaces `accent-muted` weakens (2.76–3.20:1, failing on two of three), so the dark-mode ring uses `focus-ring-dark` (= `primary-on-dark`, plain Seoul Pink) instead, which reaches 7.80–9.03:1 against `surface-dark-1/2/3` — dark ink is exactly the background Seoul Pink was always high-contrast against.
+
+**Danger button.** `button` `data-variant="danger"` puts `canvas-pure` (white) text on an `error` fill. The original `#D64545` measured 4.38:1, below the 4.5:1 text minimum:
+
+| Fill | White-text contrast | Pass? |
+|---|---|---|
+| `#D64545` (previous) | 4.38:1 | Fail |
+| `error` #C53030 (adopted) | 5.47:1 | **Pass** |
+
+**Semantic triad.** `success`, `error`, and `warning` are each a fill + on-fill text + subtle surface tint, verified against every light surface the fill can sit on directly (e.g. `border-left-color` accents) and against its own surface tint:
+
+| State | Fill | vs canvas | vs white | vs soft-pink | on-fill (white) | on own surface tint |
+|---|---|---|---|---|---|---|
+| Success | `#15794F` | 5.16:1 | 5.41:1 | 4.65:1 | 5.41:1 | 4.88:1 (`#EAF6F0`) |
+| Error | `#C53030` | 5.22:1 | 5.47:1 | 4.70:1 | 5.47:1 | 4.98:1 (`#FFF1F1`) |
+| Warning | `#955B0A` | 5.30:1 | 5.56:1 | 4.77:1 | 5.56:1 | 4.90:1 (`#FBEFE0`) |
+
+All three clear both the 4.5:1 text minimum and the 3:1 non-text minimum on every light surface. The original `warning` (`#F2A93B`) is kept as `warning-on-dark`: it fails badly on light surfaces (white-text 2.00:1) but reaches 7.45–8.62:1 against the dark surfaces below, so nothing about the original value was wrong — it was only ever safe on dark ink.
+
+**Button text on Seoul Pink itself is unaffected.** `on-primary` (ink `#1B1B1B`) on `primary` `#FE9FC8` measures 9.03:1 — this pairing was never the bug; only the *focus ring* and the *danger fill* were.
+
 ---
 
 ## 4. Typography
@@ -688,7 +757,7 @@ Used for a particularly meaningful record.
 - Full pill radius
 - Minimum 44px height
 - Press state: `scale(0.96)`
-- Focus state: 2px Pink Focus outline
+- Focus state: 2px `focus-ring` outline (`{colors.accent-muted}`, not Seoul Pink — see §3)
 
 #### Secondary
 
@@ -704,7 +773,17 @@ Used for a particularly meaningful record.
 - 8px radius
 - Used only for compact administrative actions
 
+#### Danger
+
+- `{colors.error}` `#C53030` background
+- `{colors.error-on}` (white) text
+- Full pill radius
+- Used for destructive and retry actions only (delete, discard, retry-after-failure)
+- White-on-fill measures 5.47:1, clearing the 4.5:1 text minimum — see §3
+
 Do not use hover tilt, sticker movement, or block shadows.
+
+Every focusable control — every button variant, every input, every card and link that receives keyboard focus — uses the same `focus-ring` token via the global `:focus-visible` rule. Component-level `:focus-visible` overrides exist only to change offset or radius, never to substitute a different colour.
 
 ### 8.6 Chips
 
@@ -733,9 +812,9 @@ Inputs are quiet, white, and rounded.
 - Text fields use 12px radius.
 - Textareas use 18px radius.
 - Border is a 1px hairline.
-- Focus uses Pink Focus outline.
+- Focus uses the `focus-ring` outline (§3, §8.5).
 - Do not fill the entire input pink on focus.
-- Error states use an accessible semantic error color defined separately from the brand palette.
+- Error states use `{colors.error}` (`#C53030`, on-fill `{colors.error-on}`, subtle surface `{colors.error-surface}`), the verified semantic error triad defined separately from the brand palette (§3).
 
 ### 8.8 Floating Add Button
 
@@ -961,10 +1040,12 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
 
 - Minimum touch target: 44 × 44px.
 - Maintain visible keyboard focus.
+- The focus indicator (outline, or a component's `:focus-visible` box-shadow ring) must use `{colors.focus-ring}` in light mode and `{colors.focus-ring-dark}` in dark mode, never `{colors.primary}` or `{colors.primary-focus}` directly — both fail the WCAG 1.4.11 3:1 non-text minimum on every light surface (§3). A component may change offset or radius; it may not substitute a different colour.
 - Do not rely on Pink alone to communicate state.
 - Pair selected state with an icon, text label, border, or weight change.
 - Verify color contrast for Ink on Seoul Pink.
 - Do not use white text on Seoul Pink unless contrast has been independently verified.
+- Destructive/danger actions use `{colors.error}` fill with `{colors.error-on}` text (5.47:1) — not the brand pink, not the previous unverified `#D64545` (4.38:1, failed AA).
 - All images require meaningful alt text or an empty alt attribute when decorative.
 - Date and location metadata should remain available to screen readers.
 - Modal focus must be trapped and returned to the trigger on close.
@@ -1143,8 +1224,7 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
 ## 17. Known Gaps
 
 - The exact logo dimensions and clear-space requirements depend on the supplied logo file.
-- Semantic success, warning, and error colors must be defined separately after accessibility testing.
 - Map styling is not specified.
-- Dark mode is not included in this version.
+- Dark mode is adopted, with its palette defined in this document (colors block: `canvas-dark`, `surface-pearl-dark`, `surface-soft-dark`, `surface-muted-dark`, `hairline-dark`, `divider-dark`, `overlay-dark`, `on-primary-dark`, `focus-ring-dark`, and the `-on-dark` semantic variants, alongside the pre-existing `surface-dark-1/2/3`, `body-on-dark`, `body-muted-on-dark`, and `primary-on-dark`), all contrast-verified against `surface-dark-1/2/3` (§3, §4). It is **not yet active**: no component, media query, or `[data-theme]` selector reads these tokens. Activation is gated on a separate sweep of the ~51 hardcoded (non-token) colours currently scattered across the stylesheets — flipping the theme before that sweep would render a half-dark, half-light interface, since a theme switch cannot reach a colour that isn't a token. That sweep is a distinct, already-tracked follow-up task; dark mode switches on once it lands.
 - Photo gallery behavior and image ordering rules require product-level decisions.
 - Record privacy, export, backup, and deletion flows are outside the visual design scope.

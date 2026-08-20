@@ -973,7 +973,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-login-page .slcn-field__input:focus-visible,
 .slcn-login-page__clear-button:focus-visible {
-  outline: none;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 .slcn-login-page__clear-button {
@@ -1314,7 +1315,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-quiz-modal__answer:focus-visible {
-  outline: 2px solid var(--color-primary-focus);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 3px;
 }
 
@@ -2415,7 +2416,7 @@ a photograph takes room. */
 }
 
 .slcn-home-row__link:focus-visible {
-  outline: 2px solid var(--color-primary-focus);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 4px;
   border-radius: var(--radius-sm);
 }

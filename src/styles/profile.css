@@ -111,7 +111,8 @@
 .slcn-desktop-header__avatar:focus-visible,
 .slcn-desktop-header__avatar[aria-expanded="true"] {
   border-color: var(--slcn-profile-pink);
-  outline: none;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
   box-shadow: 0 0 0 4px rgb(254 159 200 / 30%);
 }
 
@@ -428,7 +429,8 @@
 
 .slcn-profile-password-field input:focus-visible {
   border-color: var(--slcn-profile-pink);
-  outline: none;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
   box-shadow: 0 0 0 3px rgb(254 159 200 / 20%);
 }
 
