@@ -234,9 +234,14 @@ describe('profile hooks', () => {
       updateProfile.mock.invocationCallOrder[0] ?? 0
     );
     expect(restoreSession).not.toHaveBeenCalled();
-    expect(client.getQueryData(profileQueryKeys.detail('string'))).toEqual(
-      updatedProfile
-    );
+    // The cache write happens in the mutation's onSuccess, which React Query
+    // schedules separately from mutateAsync resolving — read it through waitFor
+    // rather than synchronously, or this races.
+    await waitFor(() => {
+      expect(client.getQueryData(profileQueryKeys.detail('string'))).toEqual(
+        updatedProfile
+      );
+    });
     expect(hasProfileEditAccess('string')).toBe(false);
   });
 
