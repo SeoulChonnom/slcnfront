@@ -1,5 +1,5 @@
 :root {
-  --slcn-profile-disabled: #f3dde6;
+  --slcn-profile-disabled: var(--color-border);
   --slcn-profile-disabled-ink: #c9aeb9;
 }
 
@@ -25,7 +25,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1.5px solid rgb(255 255 255 / 85%);
+  border: 1.5px solid
+    color-mix(in srgb, var(--color-canvas-pure) 85%, transparent);
   border-radius: 999px;
   background: linear-gradient(
     160deg,
@@ -53,9 +54,9 @@
   border-radius: inherit;
   background: linear-gradient(
     110deg,
-    rgb(255 255 255 / 12%) 20%,
-    rgb(255 255 255 / 64%) 45%,
-    rgb(255 255 255 / 12%) 70%
+    color-mix(in srgb, var(--color-canvas-pure) 12%, transparent) 20%,
+    color-mix(in srgb, var(--color-canvas-pure) 64%, transparent) 45%,
+    color-mix(in srgb, var(--color-canvas-pure) 12%, transparent) 70%
   );
   background-size: 220% 100%;
   content: "";
@@ -68,7 +69,7 @@
   display: grid;
   place-items: center;
   border-radius: inherit;
-  background: rgb(251 234 234 / 85%);
+  background: color-mix(in srgb, var(--color-error-surface) 85%, transparent);
   color: var(--color-error);
   content: "!";
   font-size: 1.25rem;
@@ -89,7 +90,8 @@
   justify-content: center;
   overflow: hidden;
   padding: 0;
-  border: 2px solid rgb(255 255 255 / 85%);
+  border: 2px solid
+    color-mix(in srgb, var(--color-canvas-pure) 85%, transparent);
   border-radius: 999px;
   background: transparent;
   box-shadow: 0 2px 6px var(--color-shadow-warm);
@@ -140,24 +142,34 @@
   width: 14px;
   height: 14px;
   transform: rotate(45deg);
-  border-top: 1px solid rgb(255 255 255 / 70%);
-  border-left: 1px solid rgb(255 255 255 / 70%);
-  background: rgb(255 248 248 / 72%);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 70%, transparent);
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 70%, transparent);
+  background: color-mix(in srgb, var(--color-canvas) 72%, transparent);
 }
 
 .slcn-profile-popover__surface {
   position: relative;
   overflow: hidden;
   padding: 8px;
-  border: 1px solid rgb(255 255 255 / 68%);
+  border: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 68%, transparent);
   border-radius: 20px;
-  background: rgb(255 249 251 / 62%);
+  background: color-mix(in srgb, var(--color-canvas) 62%, transparent);
   backdrop-filter: blur(16px) saturate(1.7) url(#slcnLiquidGlass);
   -webkit-backdrop-filter: blur(18px) saturate(1.7);
   box-shadow:
-    inset 0 1px 1px rgb(255 255 255 / 85%),
-    inset 0 -3px 6px rgb(255 255 255 / 30%),
-    0 20px 46px rgb(150 110 130 / 26%);
+    inset 0 1px 1px
+    color-mix(in srgb, var(--color-canvas-pure) 85%, transparent),
+    inset 0 -3px 6px
+    color-mix(in srgb, var(--color-canvas-pure) 30%, transparent),
+    /* rgb(150 110 130 / 26%) left as a literal: it shares --color-shadow-warm's
+       base but at a HIGHER alpha (26%) than the token's own 18%, and
+       color-mix can only dilute an already-alpha'd token toward transparent,
+       never raise its alpha past its own value. See report. */
+    0
+    20px 46px rgb(150 110 130 / 26%);
 }
 
 .slcn-profile-popover__identity {
@@ -199,9 +211,10 @@
   align-items: center;
   gap: 11px;
   padding: 12px 13px;
-  border: 1px solid rgb(255 255 255 / 60%);
+  border: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 60%, transparent);
   border-radius: 13px;
-  background: rgb(255 255 255 / 50%);
+  background: color-mix(in srgb, var(--color-canvas-pure) 50%, transparent);
   color: var(--color-ink);
   font-size: 0.9375rem;
   font-weight: var(--weight-strong);
@@ -210,7 +223,7 @@
 
 .slcn-profile-popover__item:hover,
 .slcn-profile-popover__item:focus-visible {
-  background: rgb(255 255 255 / 85%);
+  background: color-mix(in srgb, var(--color-canvas-pure) 85%, transparent);
 }
 
 .slcn-profile-popover__item-icon {
@@ -275,14 +288,27 @@
 .slcn-modal.slcn-profile-dialog {
   overflow: hidden;
   padding: 0;
-  border: 1px solid rgb(255 255 255 / 72%);
+  border: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 72%, transparent);
   border-radius: 24px;
-  background: rgb(255 252 253 / 90%);
+  background: color-mix(in srgb, var(--color-canvas-pure) 90%, transparent);
   backdrop-filter: blur(20px) saturate(1.5) url(#slcnLiquidGlass);
   -webkit-backdrop-filter: blur(22px) saturate(1.5);
   box-shadow:
-    inset 0 1px 1px rgb(255 255 255 / 90%),
-    0 30px 70px rgb(80 45 60 / 32%);
+    inset 0 1px 1px
+    color-mix(in srgb, var(--color-canvas-pure) 90%, transparent),
+    /* rgb(80 45 60 / 32%): distinct tone, not a token base. Expressed as a
+       nested mix of --color-accent-muted (39%) and --color-ink (61%) for the
+       opaque base, computed to land within ~2/255 per channel of the
+       original: R 80.0 (Δ0.0), G 47.3 (Δ2.3), B 59.0 (Δ1.0). See report. */
+    0
+    30px 70px
+    color-mix(
+      in srgb,
+      color-mix(in srgb, var(--color-accent-muted) 39%, var(--color-ink) 61%)
+        32%,
+      transparent
+    );
   animation: slcn-profile-pop 240ms ease both;
 }
 
@@ -323,7 +349,15 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: #e3b9c9 transparent;
+  /* #e3b9c9: distinct tone, expressed as a mix of --color-icon-soft (72%)
+     and --color-surface-soft (28%), within ~2/255 of the original
+     (R 226.9 Δ0.1, G 186.6 Δ1.6, B 202.3 Δ1.3). See report. */
+  scrollbar-color: color-mix(
+      in srgb,
+      var(--color-icon-soft) 72%,
+      var(--color-surface-soft) 28%
+    )
+    transparent;
 }
 
 .slcn-profile-dialog__close {
@@ -548,13 +582,13 @@
 .slcn-profile-secondary-action:hover,
 .slcn-profile-secondary-action:focus-visible {
   border-color: var(--color-primary);
-  background: #fff6fa;
+  background: var(--color-canvas);
 }
 
 .slcn-profile-spinner {
   width: 16px;
   height: 16px;
-  border: 2.4px solid rgb(27 27 27 / 28%);
+  border: 2.4px solid color-mix(in srgb, var(--color-ink) 28%, transparent);
   border-top-color: var(--color-ink);
   border-radius: 999px;
   animation: slcn-profile-spin 700ms linear infinite;
@@ -680,7 +714,7 @@
 .slcn-profile-image-picker:hover,
 .slcn-profile-image-picker:focus-visible {
   border-color: var(--color-primary);
-  background: #fff6fa;
+  background: var(--color-canvas);
 }
 
 .slcn-profile-image-editor__helper {
@@ -884,14 +918,20 @@
   gap: 15px;
   margin-bottom: 22px;
   padding: 18px;
-  border: 1px solid rgb(255 255 255 / 65%);
+  border: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 65%, transparent);
   border-radius: 20px;
-  background: rgb(255 249 251 / 55%);
+  background: color-mix(in srgb, var(--color-canvas) 55%, transparent);
   backdrop-filter: blur(14px) saturate(1.6) url(#slcnLiquidGlass);
   -webkit-backdrop-filter: blur(16px) saturate(1.6);
   box-shadow:
-    inset 0 1px 1px rgb(255 255 255 / 80%),
-    0 10px 26px rgb(150 110 130 / 16%);
+    inset 0 1px 1px
+    color-mix(in srgb, var(--color-canvas-pure) 80%, transparent),
+    /* rgb(150 110 130 / 16%): --color-shadow-warm's base at 16%, lower than
+       the token's own 18%, so diluting the token itself is exact:
+       0.18 * 88.89% = 0.16002. */
+    0
+    10px 26px color-mix(in srgb, var(--color-shadow-warm) 88.89%, transparent);
 }
 
 .slcn-mobile-profile-card h1 {
@@ -941,7 +981,7 @@
 
 .slcn-mobile-profile-page__edit:hover,
 .slcn-mobile-profile-page__edit:focus-visible {
-  background: #fcf5f8;
+  background: var(--color-canvas);
 }
 
 .slcn-mobile-profile-page__edit-icon {
@@ -1086,7 +1126,7 @@
   margin: auto -22px 0;
   padding: 12px 22px calc(14px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--color-border);
-  background: rgb(255 248 248 / 90%);
+  background: color-mix(in srgb, var(--color-canvas) 90%, transparent);
 }
 
 .slcn-profile-verify-form[data-device="mobile"] .slcn-profile-primary-action {
@@ -1175,7 +1215,7 @@
   margin: auto -18px 0;
   padding: 12px 18px calc(18px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--color-border);
-  background: rgb(255 248 248 / 92%);
+  background: color-mix(in srgb, var(--color-canvas) 92%, transparent);
 }
 
 .slcn-profile-edit-form[data-device="mobile"] .slcn-profile-primary-action {

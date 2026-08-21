@@ -80,6 +80,11 @@
      a blur instead of relying on opacity alone. */
   --color-overlay-soft: rgb(70 40 55 / 28%);
 
+  /* A true cast shadow: it models one surface occluding another, so it stays
+     black in both themes. Anything that instead tints a surface belongs to
+     --color-ink or --color-shadow-warm, which do flip. */
+  --color-cast: rgb(0 0 0 / 20%);
+
   /* Backward compat aliases */
   --color-brand-pink: #fe9fc8;
   --color-brand-pink-strong: #ff7fb8;
@@ -160,59 +165,5 @@
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --press-scale: 0.96;
 
-  /* ─────────────────────────────────────────────────────────────────
-     DARK PALETTE — definition only, not wired to rendering.
-
-     These tokens exist so a later task can switch the app into dark
-     mode. Nothing below is referenced by any selector, media query, or
-     [data-theme] rule yet: no component reads them, and none of the
-     ~51 hardcoded (non-token) colours across the stylesheets point at
-     a dark equivalent. Activating dark mode before that hardcoded-
-     colour sweep runs would render a half-dark, half-light interface,
-     so this block stays inert until that sweep is done. See DESIGN.md
-     §17 Known Gaps.
-
-     Derived from the existing warm identity (not a neutral grey-black):
-     --color-surface-dark-1/2/3, --color-body-on-dark,
-     --color-body-muted-on-dark, and --color-primary-on-dark already
-     exist above and are reused here rather than duplicated. All pairs
-     below are checked with the same WCAG relative-luminance formula
-     used for the light palette (see DESIGN.md §3).
-     ───────────────────────────────────────────────────────────────── */
-
-  /* Layered dark surfaces, parallel to canvas / canvas-pure / surface-soft
-     / surface-muted in the light palette. */
-  --color-canvas-dark: var(--color-surface-dark-1); /* #1b1b1b */
-  --color-surface-pearl-dark: var(--color-surface-dark-2); /* #242124 */
-  --color-surface-soft-dark: var(--color-surface-dark-3); /* #2b2629 */
-  --color-surface-muted-dark: #211d20;
-
-  --color-hairline-dark: rgba(255, 255, 255, 0.14);
-  --color-divider-dark: rgba(255, 255, 255, 0.09);
-  --color-overlay-dark: rgba(0, 0, 0, 0.6);
-
-  /* Text placed on the Seoul Pink fill stays --color-ink in both
-     themes: ink on #fe9fc8 measures 9.03:1, so the button does not
-     need a dark-specific on-primary value. Kept as an explicit alias
-     so a future theme file can name it without recomputing. */
-  --color-on-primary-dark: #1b1b1b;
-
-  /* Focus ring on dark surfaces. --color-accent-muted (the light-mode
-     ring) only reaches 2.76-3.20:1 against surface-dark-1/2/3 and
-     fails the 3:1 minimum on two of the three. Plain Seoul Pink reaches
-     7.80/8.35/9.03:1 there instead, so the dark ring reuses
-     --color-primary-on-dark rather than a muted tone. */
-  --color-focus-ring-dark: var(--color-primary-on-dark);
-
-  /* Semantic on-dark variants: fill + on-fill for badges/alerts rendered
-     on the dark surfaces above. Text-on-fill contrast against
-     --color-surface-dark-1/2/3:
-       error   #ff6b6b  6.21 / 5.74 / 5.36
-       success #34d399  8.96 / 8.29 / 7.74
-       warning #f2a93b  8.62 / 7.98 / 7.45 (the original light-mode
-         warning value — it was only unreadable on light surfaces; on
-         dark ink it already clears AA with room to spare). */
-  --color-error-on-dark: #ff6b6b;
-  --color-success-on-dark: #34d399;
-  --color-warning-on-dark: #f2a93b;
+  color-scheme: light;
 }

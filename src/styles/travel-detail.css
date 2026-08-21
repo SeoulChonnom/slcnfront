@@ -25,10 +25,10 @@
   background-color: var(--color-surface-soft);
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(254, 159, 200, 0.22) 0,
-    rgba(254, 159, 200, 0.22) 6px,
-    rgba(255, 255, 255, 0.6) 6px,
-    rgba(255, 255, 255, 0.6) 12px
+    color-mix(in srgb, var(--color-primary) 22%, transparent) 0,
+    color-mix(in srgb, var(--color-primary) 22%, transparent) 6px,
+    color-mix(in srgb, var(--color-canvas-pure) 60%, transparent) 6px,
+    color-mix(in srgb, var(--color-canvas-pure) 60%, transparent) 12px
   );
 }
 
@@ -565,7 +565,7 @@
   height: 1.1rem;
   border: 0;
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.6);
+  background: color-mix(in srgb, var(--color-canvas-pure) 60%, transparent);
   color: var(--color-ink-muted);
   font-size: 0.7rem;
   cursor: pointer;

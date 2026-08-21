@@ -60,7 +60,7 @@ export function TripListSection({ device }: TripListSectionProps) {
             height='18'
             viewBox='0 0 24 24'
             fill='none'
-            stroke='#B7A7AD'
+            stroke='color-mix(in srgb, var(--color-border-strong) 75%, var(--color-ink) 25%)'
             strokeWidth='2'
             aria-hidden='true'
           >
@@ -142,7 +142,7 @@ export function TripListSection({ device }: TripListSectionProps) {
               height='24'
               viewBox='0 0 24 24'
               fill='none'
-              stroke='#C9B9BF'
+              stroke='color-mix(in srgb, var(--color-border-strong) 84%, var(--color-ink) 16%)'
               strokeWidth='2'
               aria-hidden='true'
             >

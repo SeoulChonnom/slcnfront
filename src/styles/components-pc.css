@@ -15,14 +15,17 @@
   margin: 0 auto 0.75rem;
   padding: 0.875rem 1.625rem;
   border-radius: 2.5rem;
-  background: rgba(255, 248, 248, 0.5);
+  background: color-mix(in srgb, var(--color-canvas) 50%, transparent);
   backdrop-filter: blur(3px) saturate(1.5) url(#slcnLiquidGlass);
   -webkit-backdrop-filter: blur(6px) saturate(1.5);
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid
+    color-mix(in srgb, var(--color-canvas-pure) 55%, transparent);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.7),
-    inset 0 -2px 3px rgba(255, 255, 255, 0.3),
-    0 8px 26px rgba(197, 142, 163, 0.16);
+    inset 0 1px 1px
+    color-mix(in srgb, var(--color-canvas-pure) 70%, transparent),
+    inset 0 -2px 3px
+    color-mix(in srgb, var(--color-canvas-pure) 30%, transparent),
+    0 8px 26px color-mix(in srgb, var(--color-icon-muted) 16%, transparent);
 }
 
 .slcn-desktop-header__home {
@@ -128,7 +131,7 @@
 .slcn-footer__caption {
   font-size: 0.8125rem;
   font-weight: var(--weight-body);
-  color: rgb(0 0 0 / 60%);
+  color: var(--color-body-muted);
 }
 
 .slcn-shell-desktop {

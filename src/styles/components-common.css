@@ -303,7 +303,7 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: center;
   justify-content: center;
   padding: 1.5rem 1rem;
-  background: rgb(0 0 0 / 45%);
+  background: var(--color-overlay);
   backdrop-filter: blur(4px);
 }
 
@@ -491,7 +491,7 @@ input[type="number"]::-webkit-inner-spin-button {
   font-weight: var(--weight-strong);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgb(0 0 0 / 58%);
+  color: var(--color-body-muted);
   flex-shrink: 0;
 }
 
@@ -553,8 +553,12 @@ input[type="number"]::-webkit-inner-spin-button {
   --fc-button-hover-border-color: var(--color-ink);
   --fc-button-text-color: var(--color-canvas-pure);
   --fc-page-bg-color: transparent;
-  --fc-neutral-bg-color: rgb(27 27 27 / 3%);
-  --fc-today-bg-color: rgb(254 159 200 / 14%);
+  --fc-neutral-bg-color: color-mix(in srgb, var(--color-ink) 3%, transparent);
+  --fc-today-bg-color: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    transparent
+  );
   font-family: var(--font-body);
 }
 
@@ -637,7 +641,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: color-mix(
     in srgb,
     var(--slcn-event-color, #fe9fc8) 18%,
-    #fff
+    var(--color-canvas-pure)
   ) !important;
 }
 
@@ -725,7 +729,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-calendar-modal__chip[data-active="true"] {
   border-color: var(--color-primary);
-  background: rgb(254 159 200 / 16%);
+  background: color-mix(in srgb, var(--color-primary) 16%, transparent);
   color: var(--color-ink);
 }
 
@@ -829,7 +833,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   padding: 0;
   border: none;
   border-radius: var(--radius-full);
-  background: rgb(27 27 27 / 16%);
+  background: color-mix(in srgb, var(--color-ink) 16%, transparent);
   cursor: pointer;
   transition: background 0.18s ease;
 }
@@ -846,7 +850,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   height: 1.25rem;
   border-radius: var(--radius-full);
   background: var(--color-canvas-pure);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  box-shadow: 0 1px 2px var(--color-cast);
   transform: translateY(-50%);
   transition: left 0.18s ease;
 }
@@ -873,7 +877,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-calendar-manage-modal__add:hover {
-  background: rgb(254 159 200 / 8%);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .slcn-calendar-manage-modal__form {
@@ -969,7 +973,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   padding: 0.75rem 0.875rem;
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 86%);
+  background: color-mix(in srgb, var(--color-canvas-pure) 86%, transparent);
   font-size: 0.9375rem;
   font-weight: var(--weight-strong);
 }
@@ -1061,7 +1065,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: var(--color-canvas-pure);
   border-radius: 24px;
   border-color: var(--color-border);
-  box-shadow: 0 14px 44px rgba(27, 27, 27, 0.07);
+  box-shadow: 0 14px 44px color-mix(in srgb, var(--color-ink) 7%, transparent);
 }
 
 .slcn-login-page::after {
@@ -1246,7 +1250,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-list-section__search-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(254, 159, 200, 0.22);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 .slcn-trip-list-section__grid {
@@ -1318,7 +1323,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   position: absolute;
   top: 0.5rem;
   left: 0.5rem;
-  background: rgba(27, 27, 27, 0.78);
+  background: color-mix(in srgb, var(--color-ink) 78%, transparent);
   color: var(--color-on-dark);
   /* 11px is the readable floor for functional text (DESIGN.md section 10). */
   font-size: 0.6875rem;
@@ -1762,7 +1767,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   .slcn-radio-group--inline
   .slcn-radio-group__option[data-checked="true"] {
   border-color: var(--color-brand-pink);
-  background: #fff1f6;
+  background: var(--color-canvas);
 }
 
 .slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__label {
@@ -1881,7 +1886,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-skeleton {
   border-radius: 1rem;
-  background: linear-gradient(90deg, #ffe2ef 0%, #fff6fb 50%, #ffe2ef 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-soft) 0%,
+    var(--color-canvas) 50%,
+    var(--color-surface-soft) 100%
+  );
   animation: slcn-pulse 1.6s ease-in-out infinite;
 }
 

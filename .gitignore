@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 .env
+
+# Agent working artifacts: browser session dumps, capture batches, and
+# scratch analysis. AGENTS.md directs intermediate output here so it stays
+# out of the conversation; none of it belongs in history.
+.playwright-cli/
+screenshots/
+docs/tmp/
