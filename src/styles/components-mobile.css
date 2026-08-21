@@ -446,7 +446,19 @@ grouped by day) ---- */
   grid-template-columns: minmax(0, 1fr);
 }
 
-.slcn-shoe-detail-hero__media {
+/* Detail pages sit in .slcn-shell-detail-mobile, not .slcn-shell-mobile, so
+   the unscoped desktop rules in components-pc.css were reaching them. The
+   two-column hero squeezed the info column to 178px at 390px, and the square
+   media card -- aspect-ratio 1/1, stretched to the row height by
+   align-items: stretch -- resolved that height back into a 523px width and
+   pushed the page sideways by 149-178px. */
+.slcn-shell-detail-mobile .slcn-shoe-detail-hero {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Scoped for the same reason: unscoped, this overrode the desktop card's own
+   18rem floor from components-common.css. */
+.slcn-shell-detail-mobile .slcn-shoe-detail-hero__media {
   min-height: 14rem;
   padding: 1.5rem;
 }
