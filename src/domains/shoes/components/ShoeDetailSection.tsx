@@ -73,7 +73,7 @@ export function ShoeDetailSection({
           height='16'
           viewBox='0 0 24 24'
           fill='none'
-          stroke='#C58EA3'
+          stroke='var(--color-icon-muted)'
           strokeWidth='2'
           aria-hidden='true'
         >

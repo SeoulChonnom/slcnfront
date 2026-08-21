@@ -845,7 +845,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 1.25rem;
   height: 1.25rem;
   border-radius: var(--radius-full);
-  background: #fff;
+  background: var(--color-canvas-pure);
   box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
   transform: translateY(-50%);
   transition: left 0.18s ease;
@@ -1058,9 +1058,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   max-width: 440px;
   margin: 0 auto;
   padding: 2.375rem 1.875rem;
-  background: #fff;
+  background: var(--color-canvas-pure);
   border-radius: 24px;
-  border-color: #efe0e5;
+  border-color: var(--color-border-subtle);
   box-shadow: 0 14px 44px rgba(27, 27, 27, 0.07);
 }
 
@@ -1118,11 +1118,11 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-login-page .slcn-field__label span[aria-hidden] {
-  color: #fe9fc8;
+  color: var(--color-primary);
 }
 
 .slcn-login-page .slcn-field__control {
-  border-color: #ead9df;
+  border-color: var(--color-border-soft);
   transition:
     border-color 150ms ease,
     box-shadow 150ms ease,
@@ -1131,7 +1131,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-login-page .slcn-field__control:focus-within {
   border-color: var(--color-brand-pink);
-  box-shadow: 0 0 0 3px rgb(254 159 200 / 20%);
+  box-shadow: 0 0 0 3px var(--color-focus-halo);
 }
 
 .slcn-login-page .slcn-field__input:focus-visible,
@@ -1174,7 +1174,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   gap: 0.4375rem;
   margin: 0;
-  color: #c93c3c;
+  color: var(--color-error);
   font-size: 0.8125rem;
 }
 
@@ -1189,10 +1189,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-stripe {
   background-image: repeating-linear-gradient(
     135deg,
-    #f8eef1 0,
-    #f8eef1 10px,
-    #fcf4f6 10px,
-    #fcf4f6 20px
+    var(--color-surface-muted) 0,
+    var(--color-surface-muted) 10px,
+    var(--color-stripe-highlight) 10px,
+    var(--color-stripe-highlight) 20px
   );
 }
 
@@ -1233,9 +1233,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 100%;
   min-height: 3rem;
   padding: 0 1rem 0 2.75rem;
-  border: 1px solid #ead9df;
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--color-canvas-pure);
   font-size: 0.9375rem;
   font-family: var(--font-body);
   outline: none;
@@ -1255,8 +1255,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-list-section__no-result {
-  background: #f8eef1;
-  border: 1px solid #efe0e5;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-xl);
   padding: 3rem 1.5rem;
   text-align: center;
@@ -1266,7 +1266,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 3.25rem;
   height: 3.25rem;
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-canvas-pure);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1290,8 +1290,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   display: flex;
   gap: 1rem;
   align-items: stretch;
-  background: #fff;
-  border: 1px solid #efe0e5;
+  background: var(--color-canvas-pure);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
   padding: 1rem;
 }
@@ -1300,7 +1300,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 8rem;
   flex: none;
   border-radius: var(--radius-md);
-  border: 1px solid #f1e3e8;
+  border: 1px solid var(--color-border-pale);
   position: relative;
   display: flex;
   align-items: center;
@@ -1319,7 +1319,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   top: 0.5rem;
   left: 0.5rem;
   background: rgba(27, 27, 27, 0.78);
-  color: #fff;
+  color: var(--color-on-dark);
   /* 11px is the readable floor for functional text (DESIGN.md section 10). */
   font-size: 0.6875rem;
   font-weight: var(--weight-strong);
@@ -1353,7 +1353,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   font-size: 0.6875rem;
   font-weight: var(--weight-strong);
   color: var(--color-accent-muted);
-  background: #ffe8ef;
+  background: var(--color-surface-soft);
   padding: 0.125rem 0.5625rem;
   border-radius: 999px;
 }
@@ -1444,14 +1444,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard__actions .slcn-button[data-variant="secondary"] {
   flex: none;
   padding: 0 1.625rem;
-  border-color: #ead9df;
+  border-color: var(--color-border-soft);
   font-size: 0.9375rem;
   font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-step .slcn-button.slcn-trip-register-step__toggle-map {
   border-radius: 14px;
-  border-color: #ead9df;
+  border-color: var(--color-border-soft);
   font-size: 0.875rem;
   font-weight: var(--weight-strong);
 }
@@ -1609,7 +1609,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard__card {
   padding: 1.625rem;
   border-radius: 24px;
-  border-color: #efe0e5;
+  border-color: var(--color-border-subtle);
   gap: 1.375rem;
 }
 
@@ -1643,9 +1643,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   gap: 0.5625rem;
   padding: 0.5625rem 1rem;
-  border: 1px solid #ead9df;
+  border: 1px solid var(--color-border-soft);
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-canvas-pure);
   font-size: 0.875rem;
   font-weight: var(--weight-strong);
   color: var(--color-body-muted);
@@ -1679,7 +1679,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   > span[data-active="true"]
   .slcn-trip-register-wizard__step-num {
   background: var(--color-ink);
-  color: #fff;
+  color: var(--color-on-dark);
 }
 
 .slcn-trip-register-step {
@@ -1711,7 +1711,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-register-wizard .slcn-field__control {
-  border-color: #ead9df;
+  border-color: var(--color-border-soft);
   min-height: 2.875rem;
 }
 
@@ -1732,15 +1732,15 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background-color: transparent;
   background-image: repeating-linear-gradient(
     135deg,
-    #f8eef1 0,
-    #f8eef1 10px,
-    #fcf4f6 10px,
-    #fcf4f6 20px
+    var(--color-surface-muted) 0,
+    var(--color-surface-muted) 10px,
+    var(--color-stripe-highlight) 10px,
+    var(--color-stripe-highlight) 20px
   );
 }
 
 .slcn-trip-register-wizard .slcn-file-dropzone__icon {
-  color: #d8a9bc;
+  color: var(--color-icon-soft);
 }
 
 .slcn-trip-register-wizard .slcn-file-dropzone__title {
@@ -1754,8 +1754,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__option {
   padding: 0.9375rem 1.125rem;
   border-width: 1.5px;
-  border-color: #ead9df;
-  background: #fff;
+  border-color: var(--color-border-soft);
+  background: var(--color-canvas-pure);
 }
 
 .slcn-trip-register-wizard
@@ -2051,17 +2051,17 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   justify-content: center;
   padding: 0.5625rem 1.125rem;
-  border: 1px solid #ead9df;
+  border: 1px solid var(--color-border-soft);
   border-radius: 999px;
   background: var(--color-surface);
   font-size: 0.875rem;
   font-weight: var(--weight-strong);
-  color: #6b5e63;
+  color: var(--color-body-muted);
   text-decoration: none;
 }
 
 .slcn-shoes-catalog-page__brand-link--active {
-  background: #ffe8ef;
+  background: var(--color-surface-soft);
   border-color: var(--color-primary);
   color: var(--color-accent-muted);
 }
@@ -2106,7 +2106,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 2.875rem;
   height: 2.875rem;
   padding: 0.5rem;
-  border: 1px solid #efe0e5;
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
@@ -2183,7 +2183,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   justify-content: center;
   min-height: 10rem;
   padding: 1rem;
-  border: 1px solid #f1e3e8;
+  border: 1px solid var(--color-border-pale);
   border-radius: var(--radius-md);
   background: var(--color-surface-soft);
 }
@@ -2272,7 +2272,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   gap: 0.5625rem;
   background: var(--color-surface-muted);
-  border: 1px solid #efe0e5;
+  border: 1px solid var(--color-border-subtle);
   border-radius: 0.875rem;
   padding: 0.8125rem 1.125rem;
   font-size: 0.8125rem;
@@ -2395,7 +2395,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   flex: none;
   width: 7.5rem;
   overflow: hidden;
-  border: 1px solid #efe0e5;
+  border: 1px solid var(--color-border-subtle);
   border-radius: 1rem;
   background: var(--color-surface-muted);
 }
@@ -2410,7 +2410,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-shoe-review-card__caption {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #6b5e63;
+  color: var(--color-body-muted);
 }
 
 /* ---- Home timeline ----

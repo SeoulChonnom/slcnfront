@@ -4,5 +4,5 @@
 }
 
 .pink-mesh {
-  background: linear-gradient(180deg, #fe9fc8 0%, #f793c2 100%);
+  background: linear-gradient(180deg, var(--color-primary) 0%, #f793c2 100%);
 }

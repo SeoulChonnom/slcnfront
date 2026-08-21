@@ -23,7 +23,7 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
             height='34'
             viewBox='0 0 24 24'
             fill='none'
-            stroke='#D8A9BC'
+            stroke='var(--color-icon-soft)'
             strokeWidth='1.6'
             aria-hidden='true'
           >
@@ -37,7 +37,7 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
             height='9'
             viewBox='0 0 24 24'
             fill='none'
-            stroke='#fff'
+            stroke='var(--color-on-dark)'
             strokeWidth='2.5'
             aria-hidden='true'
           >

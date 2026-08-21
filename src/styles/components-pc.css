@@ -70,7 +70,7 @@
 
 .slcn-desktop-header__nav-link--active {
   color: var(--color-ink);
-  background: #ffe8ef;
+  background: var(--color-surface-soft);
 }
 
 .slcn-desktop-header__avatar {
@@ -79,7 +79,7 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  background: #ffe8ef;
+  background: var(--color-surface-soft);
   display: flex;
   align-items: center;
   justify-content: center;

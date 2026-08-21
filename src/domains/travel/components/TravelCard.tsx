@@ -37,7 +37,7 @@ export function TravelCard({
             height='34'
             viewBox='0 0 24 24'
             fill='none'
-            stroke='#D8A9BC'
+            stroke='var(--color-icon-soft)'
             strokeWidth='1.5'
             aria-hidden='true'
           >

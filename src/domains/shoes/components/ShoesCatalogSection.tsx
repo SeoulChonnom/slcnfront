@@ -66,7 +66,7 @@ export function ShoesCatalogSection({ device }: ShoesCatalogSectionProps) {
             height='20'
             viewBox='0 0 24 24'
             fill='none'
-            stroke='#F2A93B'
+            stroke='var(--color-warning)'
             strokeWidth='2'
             className='slcn-shoes-catalog-page__warning-icon'
             aria-hidden='true'

@@ -37,9 +37,19 @@
   --color-divider-soft: rgba(27, 27, 27, 0.08);
   --color-hairline: rgba(27, 27, 27, 0.12);
   --color-overlay: rgba(27, 27, 27, 0.42);
+  --color-focus-halo: rgb(254 159 200 / 20%);
 
   --color-on-primary: #1b1b1b;
   --color-on-dark: #ffffff;
+
+  /* Repeated authored surfaces, borders, and icon treatments. These keep
+     visual intent distinct where the nearby semantic tokens differ in value. */
+  --color-stripe-highlight: #fcf4f6;
+  --color-border-soft: #ead9df;
+  --color-border-subtle: #efe0e5;
+  --color-border-pale: #f1e3e8;
+  --color-icon-soft: #d8a9bc;
+  --color-icon-muted: #c58ea3;
 
   /* Backward compat aliases */
   --color-brand-pink: #fe9fc8;
