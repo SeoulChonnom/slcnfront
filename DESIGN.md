@@ -153,32 +153,45 @@ typography:
   font-stack-display: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
   font-stack-body: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
 
-  hero-display:
-    fontFamily: "{typography.font-stack-display}"
-    fontSize: 56px
-    fontWeight: 600
-    lineHeight: 1.07
-    letterSpacing: -0.03em
+  # The ramp, measured from the codebase rather than asserted over it. An
+  # earlier version documented 56 / 40 / 34 / 28 / 21 / 17 / 14 / 13 / 12
+  # while the app actually used nearly every integer px from 11 to 24 and
+  # never used 40 or 56 at all — the spec and the product had drifted apart
+  # in both directions. The small end below is unchanged from what the app
+  # already used most (12/13/14/15/16 cover 159 declarations); the sparse
+  # 17-34 range was consolidated onto five steps, each move at most 2px.
+  #
+  # Note that `body` is 15px, not the 17px previously written here. 17px
+  # appeared five times in the whole codebase; 15px appeared thirty.
 
-  display-lg:
+  # 40px survives only as the upper endpoint of the hero's fluid clamp
+  # (clamp(28px, 3.4vw, 40px)); no rule sets it as a fixed size.
+  display-xl:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 40px
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: -0.02em
 
-  display-md:
+  display-lg:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 34px
     fontWeight: 600
     lineHeight: 1.18
     letterSpacing: -0.02em
 
-  lead:
+  display-md:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 28px
-    fontWeight: 400
+    fontWeight: 600
     lineHeight: 1.2
+    letterSpacing: -0.02em
+
+  display-sm:
+    fontFamily: "{typography.font-stack-display}"
+    fontSize: 24px
+    fontWeight: 600
+    lineHeight: 1.25
     letterSpacing: -0.01em
 
   tagline:
@@ -188,16 +201,30 @@ typography:
     lineHeight: 1.2
     letterSpacing: -0.01em
 
+  lead:
+    fontFamily: "{typography.font-stack-display}"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: -0.01em
+
+  body-lg:
+    fontFamily: "{typography.font-stack-body}"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: -0.01em
+
   body-strong:
     fontFamily: "{typography.font-stack-body}"
-    fontSize: 17px
+    fontSize: 15px
     fontWeight: 600
     lineHeight: 1.45
     letterSpacing: -0.01em
 
   body:
     fontFamily: "{typography.font-stack-body}"
-    fontSize: 17px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1.47
     letterSpacing: -0.01em

@@ -171,7 +171,7 @@
 
 .slcn-travel-detail__title {
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.125rem;
   font-weight: var(--weight-strong);
   line-height: 1.2;
   color: var(--color-ink);
@@ -200,7 +200,7 @@
 
 .slcn-travel-detail__section-title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.3125rem;
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -485,7 +485,7 @@
   border-radius: var(--radius-md);
   background: var(--color-surface-soft);
   color: var(--color-ink);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: var(--weight-strong);
 }
 
@@ -501,17 +501,8 @@
   gap: var(--space-2);
   padding: var(--space-4);
   border: 1px solid var(--color-divider-soft);
-  border-left: 3px solid var(--color-hairline);
   border-radius: var(--radius-md);
   background: var(--color-canvas-pure);
-}
-
-.slcn-travel-review__card[data-tone="good"] {
-  border-left-color: var(--color-success);
-}
-
-.slcn-travel-review__card[data-tone="bad"] {
-  border-left-color: var(--color-warning);
 }
 
 .slcn-travel-review__card-label {
@@ -567,7 +558,7 @@
   border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--color-canvas-pure) 60%, transparent);
   color: var(--color-ink-muted);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   cursor: pointer;
 }
 
@@ -607,7 +598,7 @@
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title-block {

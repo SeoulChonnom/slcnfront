@@ -14,7 +14,7 @@
   min-height: 3.875rem;
   margin: 0 auto 0.75rem;
   padding: 0.875rem 1.625rem;
-  border-radius: 2.5rem;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--color-canvas) 50%, transparent);
   backdrop-filter: blur(3px) saturate(1.5) url(#slcnLiquidGlass);
   -webkit-backdrop-filter: blur(6px) saturate(1.5);
@@ -44,7 +44,7 @@
 }
 
 .slcn-desktop-header__brand-name {
-  font-size: 1.1875rem;
+  font-size: 1.125rem;
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
@@ -81,7 +81,7 @@
   flex: none;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   display: flex;
   align-items: center;

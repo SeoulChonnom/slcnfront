@@ -44,7 +44,7 @@ slcn-travel-day-editor
 }
 
 .slcn-travel-register-section__title {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
   font-weight: var(--weight-strong);
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -602,6 +602,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .slcn-travel-register-section__title {
-    font-size: 1.375rem;
+    font-size: 1.3125rem;
   }
 }

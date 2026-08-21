@@ -156,6 +156,9 @@
   --radius-lg: 18px;
   --radius-xl: 24px;
   --radius-pill: 9999px;
+  /* A radius nested inside a 1px border: the inner edge has to be the outer
+     radius minus the border width or the two curves do not stay concentric. */
+  --radius-sm-inner: calc(var(--radius-sm) - 1px);
   --radius-full: 9999px;
 
   /* Motion */

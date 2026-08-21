@@ -7,12 +7,19 @@ type TravelReviewSectionProps = {
 type ReviewField = {
   key: keyof TravelReview;
   label: string;
-  tone?: 'good' | 'bad';
 };
 
+/**
+ * Two of these used to carry a `tone` that painted a coloured rail down the
+ * card — green on 좋았던 점, amber on 아쉬운 점. Those are the semantic status
+ * colours, and they mean "succeeded" and "needs attention"; spending them on
+ * someone's memory of a trip borrows a dashboard's vocabulary for a diary.
+ * It also gave two of the four cards a language the other two did not have.
+ * The label already says which is which.
+ */
 const REVIEW_FIELDS: ReviewField[] = [
-  { key: 'goodPoint', label: '좋았던 점', tone: 'good' },
-  { key: 'badPoint', label: '아쉬운 점', tone: 'bad' },
+  { key: 'goodPoint', label: '좋았던 점' },
+  { key: 'badPoint', label: '아쉬운 점' },
   { key: 'revisitPlace', label: '다시 가고 싶은 곳' },
   { key: 'finalReview', label: '최종 후기' },
 ];
@@ -45,11 +52,7 @@ export function TravelReviewSection({ review }: TravelReviewSectionProps) {
       {filledFields.length > 0 ? (
         <div className='slcn-travel-review__grid'>
           {filledFields.map((field) => (
-            <div
-              key={field.key}
-              className='slcn-travel-review__card'
-              data-tone={field.tone}
-            >
+            <div key={field.key} className='slcn-travel-review__card'>
               <p className='slcn-travel-review__card-label'>{field.label}</p>
               <p className='slcn-travel-review__card-text'>
                 {review[field.key]}
