@@ -45,6 +45,7 @@ function PhotoGrid({
                 src={url}
                 alt={photo.caption ?? '여행 사진'}
                 className='slcn-travel-thumb-img'
+                decoding='async'
               />
             ) : null}
           </li>

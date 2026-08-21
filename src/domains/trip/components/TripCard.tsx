@@ -16,6 +16,7 @@ export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
             src={logoObjectUrl}
             alt={`${trip.name} 로고`}
             className='slcn-trip-card__thumb-img'
+            decoding='async'
           />
         ) : (
           <svg

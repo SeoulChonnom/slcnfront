@@ -29,6 +29,7 @@ export function TravelCard({
             src={coverObjectUrl}
             alt={travel.title}
             className='slcn-travel-cover-img'
+            decoding='async'
           />
         ) : (
           <svg

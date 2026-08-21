@@ -87,7 +87,7 @@ export function HomeTimelineRow({
             </p>
           </div>
           <span className='slcn-home-row__mark'>
-            {imageUrl ? <img src={imageUrl} alt='' /> : null}
+            {imageUrl ? <img src={imageUrl} alt='' decoding='async' /> : null}
           </span>
         </Link>
       </li>
@@ -104,7 +104,7 @@ export function HomeTimelineRow({
         <div className='slcn-home-row__body'>
           {entry.travel.coverPhotoId ? (
             <div className='slcn-home-row__photo'>
-              {imageUrl ? <img src={imageUrl} alt='' /> : null}
+              {imageUrl ? <img src={imageUrl} alt='' decoding='async' /> : null}
             </div>
           ) : null}
           <h2 className='slcn-home-row__title slcn-home-row__title--travel'>

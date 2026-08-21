@@ -85,7 +85,20 @@
      --color-ink or --color-shadow-warm, which do flip. */
   --color-cast: rgb(0 0 0 / 20%);
 
-  /* Backward compat aliases */
+  /* Backward compat aliases. --color-brand-pink and --color-brand-pink-strong
+     are safe to leave as literals: they mirror --color-primary and
+     --color-primary-focus, which are themselves theme-invariant (plain Seoul
+     Pink reads fine on both paper and ink), so no dark restatement is needed.
+
+     --color-brand-pink-soft is different: it is not decorative pastel, it is
+     the pink brand wash for .slcn-card[data-tone="pink"] (shoe catalog
+     intro, shoe detail hero, trip drive card) and the login clear-button
+     hover. Those want to stay visibly PINK-branded in dark mode, which is a
+     different job from --color-surface-soft (a generic soft panel used all
+     over travel/profile/calendar UI that intentionally goes theme-neutral
+     grey in dark, see the DARK THEME block). So this token keeps its own
+     identity rather than being repointed at --color-surface-soft, and gets
+     its own dark-mode value below. */
   --color-brand-pink: #fe9fc8;
   --color-brand-pink-strong: #ff7fb8;
   --color-brand-pink-soft: #ffe8ef;
@@ -270,4 +283,18 @@
      red. Sunday needs no entry: --color-weekend-sun resolves through
      --color-error, so it follows that token into the dark theme by itself. */
   --color-weekend-sat: #7aa9e8;
+
+  /* Pink brand wash. The pale pastel (#ffe8ef) glows on a dark ground the
+     same way the semantic *-surface pastels did, so it follows the same
+     fix: a low-alpha wash of the fill colour instead of a pastel. White ink
+     text sits on both consumers, and this wash stays close to the
+     surrounding dark surfaces (16% pink over #1b1b1b/#242124 resolves to
+     roughly rgb(63,48,55)/rgb(71,53,62)), so contrast is not close --
+     white-on-wash measures ~12-13:1, verified live on all three tone="pink"
+     surfaces (shoe catalog intro, shoe detail hero, trip drive card). */
+  --color-brand-pink-soft: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    transparent
+  );
 }

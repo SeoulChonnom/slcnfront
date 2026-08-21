@@ -152,6 +152,7 @@ export function CalendarManageModal({
                     type='text'
                     value={draft.backgroundColor}
                     className='slcn-calendar-manage-modal__color-code'
+                    aria-label='배경 색상 코드'
                     onChange={(event) => {
                       onDraftChange({ backgroundColor: event.target.value });
                     }}
@@ -173,6 +174,7 @@ export function CalendarManageModal({
                     type='text'
                     value={draft.borderColor}
                     className='slcn-calendar-manage-modal__color-code'
+                    aria-label='테두리 색상 코드'
                     onChange={(event) => {
                       onDraftChange({ borderColor: event.target.value });
                     }}
@@ -194,6 +196,7 @@ export function CalendarManageModal({
                     type='text'
                     value={draft.textColor}
                     className='slcn-calendar-manage-modal__color-code'
+                    aria-label='텍스트 색상 코드'
                     onChange={(event) => {
                       onDraftChange({ textColor: event.target.value });
                     }}

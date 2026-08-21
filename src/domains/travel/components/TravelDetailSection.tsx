@@ -69,6 +69,7 @@ export function TravelDetailSection({
               src={heroCoverUrl}
               alt={travel.title}
               className='slcn-travel-cover-img'
+              decoding='async'
             />
           ) : (
             /* Map placeholder icon (shown when no cover photo) */

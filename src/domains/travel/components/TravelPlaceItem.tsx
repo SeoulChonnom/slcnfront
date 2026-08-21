@@ -40,6 +40,7 @@ export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
                       src={url}
                       alt={photo.caption ?? '장소 사진'}
                       className='slcn-travel-thumb-img'
+                      decoding='async'
                     />
                   ) : null}
                 </li>
