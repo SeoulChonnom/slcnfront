@@ -13,6 +13,11 @@ export type ShoeItem = {
   imageUrl: string;
   videoLink: string | null;
   videoUrl: string | null;
+  /**
+   * First visible frame, shown before playback starts. Without it the panel
+   * opens on an empty black box that says nothing about what the clip holds.
+   */
+  videoPosterUrl: string | null;
   videoDesc: string | null;
   info: string[];
   reviews: ShoeReview[];

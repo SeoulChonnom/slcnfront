@@ -24,6 +24,7 @@ export function ShoeVideoPanel({ shoe }: ShoeVideoPanelProps) {
         <video
           className='slcn-shoe-video-panel__video'
           src={shoe.videoUrl}
+          poster={shoe.videoPosterUrl ?? undefined}
           controls
           preload='metadata'
           muted

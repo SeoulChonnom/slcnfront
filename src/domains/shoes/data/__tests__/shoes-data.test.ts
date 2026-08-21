@@ -20,6 +20,21 @@ describe('shoes-data', () => {
 
     expect(nb574?.videoLink).toBeNull();
     expect(nb574?.videoUrl).toBeNull();
+    expect(nb574?.videoPosterUrl).toBeNull();
     expect(nb574?.videoDesc).toBeNull();
+  });
+
+  it('pairs every self-hosted clip with a poster frame', () => {
+    const withVideo = getShoesCatalog()
+      .flatMap((brand) => brand.shoes)
+      .filter((shoe) => shoe.videoUrl !== null);
+
+    expect(withVideo.length).toBeGreaterThan(0);
+
+    for (const shoe of withVideo) {
+      // Without a poster the panel opens on an empty black box, which says
+      // nothing about what the clip holds.
+      expect(shoe.videoPosterUrl).toMatch(/\.webp$/);
+    }
   });
 });

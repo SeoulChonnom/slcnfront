@@ -11,7 +11,9 @@ import nikeP6000Image from '../../../assets/img/shoes/NikeP6000.png';
 import nikeV2KImage from '../../../assets/img/shoes/NikeV2K.png';
 import nikeZoomVomeroImage from '../../../assets/img/shoes/NikeZoomBomero5.png';
 import mjV2KVideo from '../../../assets/video/mjV2K.mp4';
+import mjV2KPoster from '../../../assets/video/mjV2K.poster.webp';
 import mjZB5Video from '../../../assets/video/mjZB5.mp4';
+import mjZB5Poster from '../../../assets/video/mjZB5.poster.webp';
 import type { ShoeBrand } from '../types';
 
 const globalShoes: ShoeBrand[] = [
@@ -31,6 +33,7 @@ const globalShoes: ShoeBrand[] = [
         imageUrl: nb574Image,
         videoLink: null,
         videoUrl: null,
+        videoPosterUrl: null,
         videoDesc: null,
         info: [
           '1988년 출시해 약 45년간 꾸준히 사랑받는 신발',
@@ -62,6 +65,7 @@ const globalShoes: ShoeBrand[] = [
         videoLink: 'https://www.youtube.com/watch?v=MfQbPgEFc_Q',
         videoDesc: '뉴발란스 화이팅~!',
         videoUrl: null,
+        videoPosterUrl: null,
         info: [
           '한동안 품절 대란이였던 그 신발!',
           '여전히 특정 색은 구하기 어렵다는...',
@@ -101,6 +105,7 @@ const globalShoes: ShoeBrand[] = [
         imageUrl: nikeP6000Image,
         videoLink: null,
         videoUrl: null,
+        videoPosterUrl: null,
         videoDesc: null,
         info: [
           '놀면 뭐하니에서 이효리가 신었던 신발',
@@ -133,6 +138,7 @@ const globalShoes: ShoeBrand[] = [
         videoLink: 'https://youtu.be/KMIDJb942bc?si=CzpgAAaJaUP2OQe6',
         videoDesc: null,
         videoUrl: mjV2KVideo,
+        videoPosterUrl: mjV2KPoster,
         info: [
           '2024년 나이키 신상!',
           '레트로 + 미래적 디자인 데일리 운동화로 찰떡~',
@@ -166,6 +172,7 @@ const globalShoes: ShoeBrand[] = [
         videoLink: 'https://youtu.be/KMIDJb942bc?si=CzpgAAaJaUP2OQe6',
         videoDesc: null,
         videoUrl: mjZB5Video,
+        videoPosterUrl: mjZB5Poster,
         info: [
           '요즘 대세 v2k의 선배님!',
           '과거 러닝화 기술을 적용해 편한 신발',
@@ -205,6 +212,7 @@ const globalShoes: ShoeBrand[] = [
         imageUrl: asicsJog100Image,
         videoLink: null,
         videoUrl: null,
+        videoPosterUrl: null,
         videoDesc: null,
         info: [
           '최근 MZ들 사이에서 유행하는 아식스',
