@@ -42,14 +42,43 @@
   --color-on-primary: #1b1b1b;
   --color-on-dark: #ffffff;
 
-  /* Repeated authored surfaces, borders, and icon treatments. These keep
-     visual intent distinct where the nearby semantic tokens differ in value. */
+  /* Repeated authored surfaces, borders, and icon treatments. Two border
+     steps only: --color-border is the hairline every card, pill, and track
+     draws, --color-border-strong the one step darker used where a dashed or
+     load-bearing edge has to read on its own. An earlier pass had three
+     (#ead9df / #efe0e5 / #f1e3e8); the last two differ by 2-3 of 255 and
+     were indistinguishable at 1px, so they are one token now. */
   --color-stripe-highlight: #fcf4f6;
-  --color-border-soft: #ead9df;
-  --color-border-subtle: #efe0e5;
-  --color-border-pale: #f1e3e8;
+  --color-border: #efe0e5;
+  --color-border-strong: #ead9df;
   --color-icon-soft: #d8a9bc;
   --color-icon-muted: #c58ea3;
+
+  /* Disabled controls. This pair was pure neutral grey (#f5f5f5 on #a3a3a3),
+     which reads as a second design system nested inside the warm one. WCAG
+     1.4.3 exempts disabled controls, but 3.02:1 keeps the text legible
+     rather than merely present. */
+  --color-surface-disabled: var(--color-surface-muted);
+  --color-body-disabled: #9c9295;
+
+  /* Calendar weekday accents. Korean calendars mark Sunday red and Saturday
+     blue, so these are semantic, not decorative. Both are text and clear
+     4.5:1 on paper, pearl, and soft pink. Four values used to cover these
+     two meanings -- desktop #c93c3c/#2f66b4 against mobile
+     --color-error/#2563eb -- and two of them failed on soft pink (#c93c3c
+     4.30, #2563eb 4.44). Sunday now reuses the error red (4.70) instead of
+     carrying a fourth near-identical red. */
+  --color-weekend-sun: var(--color-error);
+  --color-weekend-sat: #2f66b4;
+
+  /* Warm shadow tints. The avatar stack casts pink-grey rather than the
+     ink-grey of --shadow-floating. */
+  --color-shadow-warm: rgb(150 110 130 / 18%);
+  --color-shadow-warm-strong: rgb(150 80 110 / 35%);
+
+  /* A lighter backdrop than --color-overlay, for dialogs that pair it with
+     a blur instead of relying on opacity alone. */
+  --color-overlay-soft: rgb(70 40 55 / 28%);
 
   /* Backward compat aliases */
   --color-brand-pink: #fe9fc8;
@@ -75,6 +104,14 @@
   --color-warning: #955b0a;
   --color-warning-on: #ffffff;
   --color-warning-surface: #fbefe0;
+
+  /* The border member of each triad: a hairline drawn on the matching
+     *-surface tint. These are decoration beside already-coloured text, never
+     the sole indicator of the state, so they are not held to 3:1. The error
+     indicator ON A CONTROL is --color-error itself. */
+  --color-error-border: #f2caca;
+  --color-success-border: #bfe5cf;
+  --color-warning-border: #e8d08a;
 
   /* Typography */
   --font-stack:

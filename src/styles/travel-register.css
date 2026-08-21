@@ -264,7 +264,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .slcn-travel-register-form__dropzone:hover {
-  background: #fdd8e8;
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 40%,
+    var(--color-canvas-pure)
+  );
 }
 
 .slcn-travel-register-form__dropzone-inner {

@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 1px solid var(--color-border-pale);
+  border-bottom: 1px solid var(--color-border);
   background: rgba(255, 248, 248, 0.85);
   backdrop-filter: saturate(180%) blur(20px);
 }
@@ -325,13 +325,13 @@ but the <a>
 .slcn-shell-mobile
   .slcn-calendar-agenda__chip--sunday
   .slcn-calendar-agenda__chip-day {
-  color: var(--color-error);
+  color: var(--color-weekend-sun);
 }
 
 .slcn-shell-mobile
   .slcn-calendar-agenda__chip--saturday
   .slcn-calendar-agenda__chip-day {
-  color: #2563eb;
+  color: var(--color-weekend-sat);
 }
 
 .slcn-shell-mobile .slcn-calendar-agenda__chip--selected {
