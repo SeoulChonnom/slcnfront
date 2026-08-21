@@ -228,3 +228,21 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   min-height: 22rem;
   border-radius: var(--radius-lg);
 }
+
+/* ── prefers-reduced-motion: reduce ───────────────────────────────────────
+   This file's only motion is .slcn-travel-card's hover/focus-visible lift
+   (transform: translateY(-3px)), gathered here in its own block so this
+   file's coverage stays a one-place answer, same as components-common.css
+   and profile.css. The line drawn there applies here too: motion is a
+   change of position or size, colour is not. The lift is pure hover
+   decoration, not a state the user needs to read back, so it is removed
+   outright rather than snapped -- a jumped 3px on hover would read worse
+   than no lift at all. box-shadow is left untouched: it still grows on
+   hover/focus-visible, which is the affordance that says "this is
+   interactive," and a shadow change is not motion. */
+@media (prefers-reduced-motion: reduce) {
+  .slcn-travel-card:hover,
+  .slcn-travel-card:focus-visible {
+    transform: none;
+  }
+}

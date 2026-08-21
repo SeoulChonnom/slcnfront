@@ -1672,17 +1672,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slcn-trip-quiz-modal__lock-shackle {
-    animation: none !important;
-  }
-
-  .slcn-trip-quiz-modal__lock[data-unlocked="true"]
-    .slcn-trip-quiz-modal__lock-shackle {
-    transform: rotate(-32deg);
-  }
-}
-
 .slcn-trip-detail-section__map-card,
 .slcn-trip-detail-section__drive-card,
 .slcn-trip-register-wizard__card {
@@ -2797,13 +2786,6 @@ not a photograph: it keeps its
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slcn-home-row__skeleton-rail,
-  .slcn-home-row__skeleton-line {
-    animation: none;
-  }
-}
-
 .slcn-route-loading {
   display: grid;
 }
@@ -2879,4 +2861,99 @@ not a photograph: it keeps its
 .slcn-theme-choice__option:has(input:focus-visible) {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
+}
+
+/* ── prefers-reduced-motion: reduce ───────────────────────────────────────
+   Every keyframe animation in this file, plus every transition that moves
+   or resizes something, gathered into one query instead of living next to
+   each rule it covers. That scattering is exactly how .slcn-skeleton's
+   pulse went uncovered for a while -- three separate blocks for one concern
+   is hard to audit. One block per stylesheet keeps the question "does this
+   file's motion fully respect the setting?" answerable by reading one
+   place. (profile.css and travel-list.css keep their own equivalent block,
+   since those files are their own surfaces' stylesheets.)
+
+   The line drawn here: motion is a change of position or size; a change of
+   colour is not motion. Every colour/background/border transition in this
+   file (button fills, chip and field focus rings, the segmented control,
+   etc.) is left exactly as it was -- those are short, non-vestibular, and
+   not what this setting exists to stop. Only the transform/position
+   transitions below are touched, and even those split two ways: some are
+   the visible representation of real state (a checkbox's tick, a toggle's
+   thumb side, a pressed button) and must still land correctly, just without
+   the travel; others are pure hover decoration and are removed outright. */
+@media (prefers-reduced-motion: reduce) {
+  /* Skeleton loaders: infinite opacity pulses that exist only to say
+     "loading". The signal survives being static -- the loop is exactly
+     the kind of motion this setting exists to stop. */
+  .slcn-skeleton,
+  .slcn-home-row__skeleton-rail,
+  .slcn-home-row__skeleton-line {
+    animation: none !important;
+  }
+
+  /* Quiz padlock: the shackle's rotated position is the only way a player
+     learns whether they answered correctly (see "The lock's one authored
+     moment" above), so the animation cannot just be turned off -- that
+     would leave a correct answer looking identical to a wrong one. Jump
+     straight to the end frame instead of playing the rotation, matching
+     slcn-lock-open's own `to` frame exactly (rotate(-32deg) translateY(-1px))
+     so this is genuinely the same resting position, not an approximation.
+     The data-unlocked="false" case needs no override: slcn-lock-resist's
+     own 0%/100% keyframes are both rotate(0deg), so animation:none already
+     lands it on the right frame without help. */
+  .slcn-trip-quiz-modal__lock-shackle {
+    animation: none !important;
+  }
+
+  .slcn-trip-quiz-modal__lock[data-unlocked="true"]
+    .slcn-trip-quiz-modal__lock-shackle {
+    transform: rotate(-32deg) translateY(-1px);
+  }
+
+  /* Snap, don't remove: the transform below is the state itself (a pressed
+     button, a checked box, a toggle's thumb side), so it must still land --
+     only the travel between states is cut. Dropping `transform` from each
+     transition list (rather than blanket `transition: none`) leaves any
+     colour/background transition on the same element working normally. */
+  .slcn-button {
+    transition:
+      opacity var(--duration-fast) ease,
+      background-color var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+
+  input[type="checkbox"]::before,
+  input[type="radio"]::before {
+    transition: none;
+  }
+
+  .slcn-toggle__thumb {
+    transition: none;
+  }
+
+  /* Shoe card hover/focus lift: pure decoration, not a state the user
+     needs to read back, so the transform is dropped entirely rather than
+     snapped -- a jumped 2px hover jump would read worse than no lift at
+     all. It is NOT paired with a real box-shadow change the way the travel
+     card is: the hover rule's `box-shadow: none` is a no-op, because
+     .slcn-card (this card's base class) sets no box-shadow at rest either.
+     That means the lift was this card's *only* hover/focus affordance --
+     removing it with nothing in its place would leave the card with none
+     at all, a worse outcome than the small motion this setting exists to
+     remove. A border-colour step replaces it instead of a shadow: DESIGN.md
+     keeps content-surface elevation flat (floating shadow is reserved for
+     Seoul-Glass navigation chrome), so a hover shadow would be the wrong
+     fix even if the dead declaration were repaired. --color-border-strong
+     against the card's resting --color-hairline is the natural pairing and
+     is visibly, if quietly, darker -- confirmed both by computing the
+     composited colours (light: hairline over white ~#e4e4e4 vs
+     --color-border-strong's #ead9df; dark: hairline over --color-surface
+     ~#433f43 vs --color-border-strong's #4a4247) and by rendering both
+     side by side in-browser. */
+  .slcn-shoe-card-link:hover .slcn-shoe-card,
+  .slcn-shoe-card-link:focus-visible .slcn-shoe-card {
+    transform: none;
+    border-color: var(--color-border-strong);
+  }
 }

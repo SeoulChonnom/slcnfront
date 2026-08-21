@@ -1260,6 +1260,24 @@
   }
 }
 
+/* ── prefers-reduced-motion: reduce ───────────────────────────────────────
+   Every keyframe animation this file defines, plus its one transform
+   transition, gathered in one query so the whole file's coverage is
+   auditable at a glance. Three animations are infinite loops that exist
+   only to say "this is working" -- avatar shimmer, the spinner, and the
+   indeterminate upload bar -- and a static state says that just as well, so
+   they are stopped outright. The popover and the profile dialog both use
+   slcn-profile-pop purely as an entrance (opacity 0->1, translateY(-6px)
+   scale(0.98) -> none/1); neither has any other opacity or transform
+   declared, so removing the animation leaves them at that exact "to"
+   keyframe rather than stuck mid-transition.
+
+   The header avatar's press effect (transform: scale(0.94) on :active) is
+   the state itself -- motion is a change of position or size, and this is
+   one -- so its transition is trimmed to drop `transform` rather than
+   killed outright: the scale still lands instantly, and the border-color /
+   box-shadow transitions on the same element (colour, not motion) keep
+   animating normally. */
 @media (prefers-reduced-motion: reduce) {
   .slcn-profile-popover,
   .slcn-modal.slcn-profile-dialog,
@@ -1267,6 +1285,12 @@
   .slcn-profile-spinner,
   .slcn-profile-upload-progress > span {
     animation: none;
+  }
+
+  .slcn-desktop-header__avatar {
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
   }
 }
 
