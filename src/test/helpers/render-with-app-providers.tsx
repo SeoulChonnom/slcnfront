@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { AuthBootstrap } from '../../app/providers/AuthBootstrap';
 import { QueryProvider } from '../../app/providers/QueryProvider';
 import { SessionRestoreBootstrap } from '../../app/providers/SessionRestoreBootstrap';
+import { ThemeProvider } from '../../lib/theme/ThemeProvider';
 import { createTestQueryClient } from './query-client';
 
 type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
@@ -20,9 +21,11 @@ export function renderWithAppProviders(
   function Wrapper({ children }: PropsWithChildren) {
     return (
       <QueryProvider client={queryClient}>
-        <AuthBootstrap />
-        <SessionRestoreBootstrap />
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        <ThemeProvider>
+          <AuthBootstrap />
+          <SessionRestoreBootstrap />
+          <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        </ThemeProvider>
       </QueryProvider>
     );
   }

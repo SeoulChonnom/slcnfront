@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { ThemeChoice } from '../../components/ui/ThemeChoice';
 import { useLogout } from '../../domains/auth/hooks/useLogout';
 import { useAuthStore } from '../../domains/auth/store/auth-store';
 import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';
@@ -76,6 +77,9 @@ export function ProfilePage() {
           <path d='M9 6l6 6-6 6' />
         </svg>
       </button>
+
+      <p className='slcn-mobile-profile-page__section-label'>화면</p>
+      <ThemeChoice className='slcn-mobile-profile-page__theme' />
 
       <button
         type='button'

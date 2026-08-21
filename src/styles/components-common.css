@@ -2737,3 +2737,67 @@ not a photograph: it keeps its
   font-size: 0.95rem;
   color: var(--color-ink-muted);
 }
+
+/* Theme choice. Three options in one row: the group reads as a single
+   control rather than three loose buttons, which is what keeps it from
+   looking like a settings panel dropped into an account menu. */
+.slcn-theme-choice {
+  display: grid;
+  min-inline-size: 0;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  /* --color-hairline rather than a white mix: a mix off canvas-pure reads on
+     paper but vanishes on the dark surface, and the three options then look
+     like loose buttons instead of one control. This token flips. */
+  border: 1px solid var(--color-hairline);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.slcn-theme-choice__option {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--color-body-muted);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--weight-body);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+}
+
+/* The native radio carries the semantics and the keyboard behaviour; the
+   label draws the state, so the input is hidden from sight but not from the
+   accessibility tree or focus order. */
+.slcn-theme-choice__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.slcn-theme-choice__option:hover {
+  color: var(--color-ink);
+}
+
+.slcn-theme-choice__option[data-checked="true"] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-theme-choice__option:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}

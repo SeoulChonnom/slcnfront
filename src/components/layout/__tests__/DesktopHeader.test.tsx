@@ -85,11 +85,24 @@ describe('DesktopHeader', () => {
       'inline-flex'
     );
 
+    // The theme options sit between the two actions, so ArrowDown walks
+    // through them rather than jumping straight to logout. They are
+    // menuitemradio rather than menuitem, and the popover's roving focus has
+    // to reach both roles or the choice becomes mouse-only.
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(
+      screen.getByRole('menuitemradio', { name: '시스템' })
+    );
+    await user.keyboard('{ArrowDown}{ArrowDown}');
+    expect(document.activeElement).toBe(
+      screen.getByRole('menuitemradio', { name: '어둡게' })
+    );
     await user.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(
       screen.getByRole('menuitem', { name: '로그아웃' })
     );
-    await user.keyboard('{ArrowUp}');
+
+    await user.keyboard('{Home}');
     expect(document.activeElement).toBe(
       screen.getByRole('menuitem', { name: '사용자 정보 수정' })
     );

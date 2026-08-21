@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import type { PropsWithChildren, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryProvider } from '../../app/providers/QueryProvider';
+import { ThemeProvider } from '../../lib/theme/ThemeProvider';
 import { createTestQueryClient } from './query-client';
 
 type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
@@ -18,7 +19,9 @@ export function renderWithMinimalProviders(
   function Wrapper({ children }: PropsWithChildren) {
     return (
       <QueryProvider client={queryClient}>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        <ThemeProvider>
+          <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        </ThemeProvider>
       </QueryProvider>
     );
   }

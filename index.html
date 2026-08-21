@@ -4,7 +4,38 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Filled in by the pre-paint script below from the resolved --color-canvas. -->
+    <meta name="theme-color" content="#fff8f8" />
     <title>slcnfront</title>
+    <script>
+      /* Resolve the theme before first paint. Without this the page renders
+         once on the light default and then repaints dark, which reads as a
+         flash on every load for anyone who chose dark. Kept inline and
+         blocking for that reason, and deliberately duplicating
+         src/lib/theme/theme.ts rather than importing it -- a module import
+         would run after paint and defeat the point. The storage key and the
+         three preference values must stay in step with that file. */
+      (function () {
+        try {
+          var stored = localStorage.getItem('slcn-theme');
+          var preference =
+            stored === 'light' || stored === 'dark' ? stored : 'system';
+          var resolved =
+            preference === 'system'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+              : preference;
+          document.documentElement.dataset.theme = resolved;
+          if (resolved === 'dark') {
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.content = '#1b1b1b';
+          }
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

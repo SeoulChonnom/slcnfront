@@ -17,6 +17,7 @@ import {
 import { cn } from '../../lib/utils/cn';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { Modal } from '../ui/Modal';
+import { ThemeChoice } from '../ui/ThemeChoice';
 import { getDesktopNavigationItems } from './navigation-items';
 
 type DesktopHeaderProps = {
@@ -203,7 +204,7 @@ export function DesktopHeader({
                 onKeyDown={(event) => {
                   const items = Array.from(
                     event.currentTarget.querySelectorAll<HTMLButtonElement>(
-                      '[role="menuitem"]:not([disabled])'
+                      '[role="menuitem"]:not([disabled]), [role="menuitemradio"]:not([disabled])'
                     )
                   );
                   const currentIndex = items.indexOf(
@@ -264,6 +265,8 @@ export function DesktopHeader({
                       <path d='M9 6l6 6-6 6' />
                     </svg>
                   </button>
+                  <span className='slcn-profile-popover__divider' />
+                  <ThemeChoice inMenu />
                   <span className='slcn-profile-popover__divider' />
                   <button
                     type='button'

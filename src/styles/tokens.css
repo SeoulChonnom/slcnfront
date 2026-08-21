@@ -165,5 +165,106 @@
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --press-scale: 0.96;
 
+  /* Light is the authored default; every token above has its value here so
+     the dark block below only needs to state what differs. */
   color-scheme: light;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   DARK THEME
+
+   Only the tokens whose VALUE differs are restated here; everything else is
+   inherited from :root above. Components never branch on theme -- they read
+   the same token names in both, which is why the earlier `--color-*-dark`
+   naming had to go: it would have forced every rule to carry a media query.
+
+   The theme is resolved in JS and stamped onto <html data-theme>, including
+   the "system" case (see src/lib/theme/theme.ts and the pre-paint script in
+   index.html). That is why there is one block here and not the usual pair of
+   a prefers-color-scheme query plus a [data-theme] override: with the
+   attribute always present, the media query would be dead weight that can
+   only disagree with the resolved value.
+
+   Contrast pairs below were checked with the same WCAG relative-luminance
+   formula as the light palette (DESIGN.md section 3). This is not a neutral
+   grey-black: the surfaces keep the warm cast of the paper identity.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Layered surfaces, parallel to canvas / canvas-pure / soft / muted. */
+  --color-canvas: #1b1b1b;
+  --color-canvas-pure: #242124;
+  --color-surface-pearl: #242124;
+  --color-surface-soft: #2b2629;
+  --color-surface-muted: #211d20;
+  --color-surface: #242124;
+
+  /* Text. Ink and paper trade places. */
+  --color-ink: #ffffff;
+  --color-body: #ffffff;
+  --color-body-muted: #d8ced2;
+  --color-ink-muted: #d8ced2;
+  --color-ink-soft: #d8ced2;
+  --color-on-dark: #ffffff;
+
+  /* Seoul Pink needs no darkening on ink: it measures 7.80/8.35/9.03:1 on
+     surface-dark-1/2/3. --color-accent-muted, the light-mode accent TEXT
+     colour, only reaches 2.76-3.20:1 there, so accent text reverts to plain
+     pink rather than staying muted. */
+  --color-accent-muted: #fe9fc8;
+  --color-focus-ring: #fe9fc8;
+
+  /* Hairlines invert: dark themes separate with light, not with darker ink. */
+  --color-divider-soft: rgba(255, 255, 255, 0.09);
+  --color-hairline: rgba(255, 255, 255, 0.14);
+  --color-border: #3a3438;
+  --color-border-strong: #4a4247;
+  --color-stripe-highlight: #262023;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-overlay-soft: rgba(0, 0, 0, 0.45);
+
+  /* Icons keep their pink cast but lose the light-surface darkening. */
+  --color-icon-soft: #8a6a76;
+  --color-icon-muted: #a3808e;
+
+  --color-surface-disabled: #2b2629;
+  --color-body-disabled: #7d7378;
+
+  /* Elevation reads as a lifted surface, not a cast shadow: on near-black,
+     a 8% ink shadow is invisible, so the shadows go opaque-black and deeper. */
+  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-image: 3px 5px 30px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.6);
+  --elevation-hairline: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --color-shadow-warm: rgb(0 0 0 / 45%);
+  --color-shadow-warm-strong: rgb(0 0 0 / 60%);
+
+  /* Semantic states. The light values were pushed DARK so white-on-fill and
+     fill-as-text-on-tint both cleared 4.5:1 on paper; on ink they have to go
+     the other way. Text-on-fill contrast against canvas / pearl / soft:
+       error   #ff6b6b  6.21 / 5.74 / 5.36
+       success #34d399  8.96 / 8.29 / 7.74
+       warning #f2a93b  8.62 / 7.98 / 7.45
+     The *-surface tints become low-alpha washes of the fill rather than the
+     pale pastels, which would glow on a dark ground. */
+  --color-error: #ff6b6b;
+  --color-error-on: #1b1b1b;
+  --color-error-surface: color-mix(in srgb, #ff6b6b 14%, transparent);
+  --color-error-border: color-mix(in srgb, #ff6b6b 32%, transparent);
+  --color-success: #34d399;
+  --color-success-on: #1b1b1b;
+  --color-success-surface: color-mix(in srgb, #34d399 14%, transparent);
+  --color-success-border: color-mix(in srgb, #34d399 32%, transparent);
+  --color-warning: #f2a93b;
+  --color-warning-on: #1b1b1b;
+  --color-warning-surface: color-mix(in srgb, #f2a93b 14%, transparent);
+  --color-warning-border: color-mix(in srgb, #f2a93b 32%, transparent);
+
+  /* Saturday blue at #2f66b4 measures 3.02/2.79/2.61/2.92 on the four dark
+     surfaces and fails 4.5:1 on all of them; lifted to a tint that measures
+     7.11/6.58/6.14/6.87 while staying unmistakably blue beside the Sunday
+     red. Sunday needs no entry: --color-weekend-sun resolves through
+     --color-error, so it follows that token into the dark theme by itself. */
+  --color-weekend-sat: #7aa9e8;
 }

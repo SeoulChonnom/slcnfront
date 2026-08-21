@@ -1269,3 +1269,10 @@
     animation: none;
   }
 }
+
+/* Matches the 26px the account row above it uses, so the two settings blocks
+   keep one rhythm. Without it the fieldset's own `margin: 0` reset drops the
+   logout button flush against the theme control. */
+.slcn-mobile-profile-page__theme {
+  margin-bottom: 26px;
+}

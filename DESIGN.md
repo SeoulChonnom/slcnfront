@@ -30,41 +30,124 @@ colors:
   surface-dark-1: "#1B1B1B"
   surface-dark-2: "#242124"
   surface-dark-3: "#2B2629"
-  # Dark palette — defined only, not wired to any selector/media-query/
-  # [data-theme] rule yet. See §17.
-  canvas-dark: "{colors.surface-dark-1}"
-  surface-pearl-dark: "{colors.surface-dark-2}"
-  surface-soft-dark: "{colors.surface-dark-3}"
-  surface-muted-dark: "#211D20"
-  hairline-dark: "rgba(255, 255, 255, 0.14)"
-  divider-dark: "rgba(255, 255, 255, 0.09)"
-  overlay-dark: "rgba(0, 0, 0, 0.6)"
-  on-primary-dark: "#1B1B1B"
 
   divider-soft: "rgba(27, 27, 27, 0.08)"
   hairline: "rgba(27, 27, 27, 0.12)"
   overlay: "rgba(27, 27, 27, 0.42)"
+  # A lighter scrim for dialogs that pair it with a blur rather than
+  # relying on opacity alone.
+  overlay-soft: "rgb(70 40 55 / 28%)"
 
   on-primary: "#1B1B1B"
   on-dark: "#FFFFFF"
 
+  # Two border steps, no more. `border` is the hairline every card, pill,
+  # and track draws; `border-strong` is the single step darker used where a
+  # dashed or load-bearing edge has to read on its own. Anything between
+  # them is invisible at 1px and must not be added.
+  border: "#EFE0E5"
+  border-strong: "#EAD9DF"
+  stripe-highlight: "#FCF4F6"
+  icon-soft: "#D8A9BC"
+  icon-muted: "#C58EA3"
+  focus-halo: "rgb(254 159 200 / 20%)"
+
+  # Warm shadow tints. The avatar stack casts pink-grey, not the ink-grey
+  # of shadow-floating.
+  shadow-warm: "rgb(150 110 130 / 18%)"
+  shadow-warm-strong: "rgb(150 80 110 / 35%)"
+
+  # Disabled controls stay warm. A neutral #F5F5F5/#A3A3A3 pair reads as a
+  # second design system nested inside this one.
+  surface-disabled: "{colors.surface-muted}"
+  body-disabled: "#9C9295"
+
+  # Korean calendars mark Sunday red and Saturday blue, so these are
+  # semantic rather than decorative. Sunday resolves through `error` so it
+  # follows that token across themes on its own.
+  weekend-sun: "{colors.error}"
+  weekend-sat: "#2F66B4"
+
   pink-mesh-end: "#F793C2"
 
-  # Semantic — fill + on-fill text + subtle surface tint per state, each
-  # contrast-verified. See §3 for the full table. Dark on-fill variants
-  # are reserved alongside the dark palette above.
+  # Semantic — fill + on-fill text + subtle surface tint + border per
+  # state, each contrast-verified. See §3 for the full table. The border is
+  # decoration beside already-coloured text and is never the sole indicator
+  # of the state, so it is not held to 3:1; the error indicator ON A
+  # CONTROL is `error` itself.
   success: "#15794F"
   success-on: "#FFFFFF"
   success-surface: "#EAF6F0"
-  success-on-dark: "#34D399"
+  success-border: "#BFE5CF"
   error: "#C53030"
   error-on: "#FFFFFF"
   error-surface: "#FFF1F1"
-  error-on-dark: "#FF6B6B"
+  error-border: "#F2CACA"
   warning: "#955B0A"
   warning-on: "#FFFFFF"
   warning-surface: "#FBEFE0"
+  warning-border: "#E8D08A"
+
+  # ── Dark theme ─────────────────────────────────────────────────────
+  # These are VALUES for the dark theme, not additional CSS token names.
+  # In `src/styles/tokens.css` they are applied by redefining the LIGHT
+  # token names above inside a single `:root[data-theme="dark"]` block, so
+  # a component reads one name in both themes and never branches on the
+  # theme. The `-dark` suffix here marks which theme a value belongs to;
+  # it is not a name any rule may reference. Only tokens whose value
+  # differs are listed — everything else is inherited from the light
+  # palette. All pairs are checked against surface-dark-1/2/3 with the
+  # same relative-luminance formula as §3.
+  canvas-dark: "{colors.surface-dark-1}"
+  canvas-pure-dark: "{colors.surface-dark-2}"
+  surface-pearl-dark: "{colors.surface-dark-2}"
+  surface-soft-dark: "{colors.surface-dark-3}"
+  surface-muted-dark: "#211D20"
+
+  ink-dark: "#FFFFFF"
+  body-dark: "#FFFFFF"
+  body-muted-dark: "#D8CED2"
+  # Seoul Pink needs no darkening on ink (7.80–9.03:1), while accent-muted
+  # weakens to 2.76–3.20:1, so accent text and the focus ring revert to
+  # plain pink here.
+  accent-muted-dark: "{colors.primary-on-dark}"
+  focus-ring-dark: "{colors.primary-on-dark}"
+
+  divider-soft-dark: "rgba(255, 255, 255, 0.09)"
+  hairline-dark: "rgba(255, 255, 255, 0.14)"
+  overlay-dark: "rgba(0, 0, 0, 0.6)"
+  overlay-soft-dark: "rgba(0, 0, 0, 0.45)"
+  border-dark: "#3A3438"
+  border-strong-dark: "#4A4247"
+  stripe-highlight-dark: "#262023"
+
+  icon-soft-dark: "#8A6A76"
+  icon-muted-dark: "#A3808E"
+  surface-disabled-dark: "{colors.surface-dark-3}"
+  body-disabled-dark: "#7D7378"
+  on-primary-dark: "#1B1B1B"
+
+  # On near-black an 8% ink shadow is invisible, so elevation goes opaque
+  # and deeper rather than staying a tint.
+  shadow-warm-dark: "rgb(0 0 0 / 45%)"
+  shadow-warm-strong-dark: "rgb(0 0 0 / 60%)"
+
+  # The light values were pushed DARK so white-on-fill and fill-as-text-on-
+  # tint both cleared 4.5:1 on paper; on ink they have to go the other way.
+  # The *-surface tints become low-alpha washes of the fill, because the
+  # pale pastels would glow on a dark ground.
+  success-on-dark: "#34D399"
+  error-on-dark: "#FF6B6B"
   warning-on-dark: "#F2A93B"
+
+  # #2F66B4 measures 2.61–3.02:1 on the dark surfaces and fails; lifted to
+  # 6.14–7.11:1 while staying unmistakably blue beside the Sunday red.
+  weekend-sat-dark: "#7AA9E8"
+
+  # A true cast shadow models one surface occluding another, so it stays
+  # black in both themes. Anything that tints a surface uses ink or
+  # shadow-warm, which do flip.
+  cast: "rgb(0 0 0 / 20%)"
 
 typography:
   font-stack-display: "Pretendard, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
@@ -506,7 +589,7 @@ All ratios below use the WCAG 2.x relative-luminance contrast formula (`(L1 + 0.
 | `primary-focus` #FF7FB8 | 2.23:1 | 2.34:1 | 2.01:1 | Fail |
 | `accent-muted` #A34F6D (`focus-ring`) | 5.14:1 | 5.39:1 | 4.63:1 | **Pass** |
 
-`focus-ring` is the token every `:focus-visible` rule in the app must use. On dark surfaces `accent-muted` weakens (2.76–3.20:1, failing on two of three), so the dark-mode ring uses `focus-ring-dark` (= `primary-on-dark`, plain Seoul Pink) instead, which reaches 7.80–9.03:1 against `surface-dark-1/2/3` — dark ink is exactly the background Seoul Pink was always high-contrast against.
+`focus-ring` is the token every `:focus-visible` rule in the app must use. On dark surfaces `accent-muted` weakens (2.76–3.20:1, failing on two of three), so the dark theme redefines `focus-ring` as plain Seoul Pink (`colors-dark.focus-ring`), which reaches 7.80–9.03:1 against `surface-dark-1/2/3` — dark ink is exactly the background Seoul Pink was always high-contrast against. Rules do not branch on the theme: they name `focus-ring` and the theme supplies the value.
 
 **Danger button.** `button` `data-variant="danger"` puts `canvas-pure` (white) text on an `error` fill. The original `#D64545` measured 4.38:1, below the 4.5:1 text minimum:
 
@@ -523,7 +606,7 @@ All ratios below use the WCAG 2.x relative-luminance contrast formula (`(L1 + 0.
 | Error | `#C53030` | 5.22:1 | 5.47:1 | 4.70:1 | 5.47:1 | 4.98:1 (`#FFF1F1`) |
 | Warning | `#955B0A` | 5.30:1 | 5.56:1 | 4.77:1 | 5.56:1 | 4.90:1 (`#FBEFE0`) |
 
-All three clear both the 4.5:1 text minimum and the 3:1 non-text minimum on every light surface. The original `warning` (`#F2A93B`) is kept as `warning-on-dark`: it fails badly on light surfaces (white-text 2.00:1) but reaches 7.45–8.62:1 against the dark surfaces below, so nothing about the original value was wrong — it was only ever safe on dark ink.
+All three clear both the 4.5:1 text minimum and the 3:1 non-text minimum on every light surface. The original `warning` (`#F2A93B`) returns as the dark theme's `warning`: it fails badly on light surfaces (white-text 2.00:1) but reaches 7.45–8.62:1 against the dark surfaces below, so nothing about the original value was wrong — it was only ever safe on dark ink.
 
 **Button text on Seoul Pink itself is unaffected.** `on-primary` (ink `#1B1B1B`) on `primary` `#FE9FC8` measures 9.03:1 — this pairing was never the bug; only the *focus ring* and the *danger fill* were.
 
@@ -1260,6 +1343,6 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
 
 - The exact logo dimensions and clear-space requirements depend on the supplied logo file.
 - Map styling is not specified.
-- Dark mode is adopted, with its palette defined in this document (colors block: `canvas-dark`, `surface-pearl-dark`, `surface-soft-dark`, `surface-muted-dark`, `hairline-dark`, `divider-dark`, `overlay-dark`, `on-primary-dark`, `focus-ring-dark`, and the `-on-dark` semantic variants, alongside the pre-existing `surface-dark-1/2/3`, `body-on-dark`, `body-muted-on-dark`, and `primary-on-dark`), all contrast-verified against `surface-dark-1/2/3` (§3, §4). It is **not yet active**: no component, media query, or `[data-theme]` selector reads these tokens. Activation is gated on a separate sweep of the ~51 hardcoded (non-token) colours currently scattered across the stylesheets — flipping the theme before that sweep would render a half-dark, half-light interface, since a theme switch cannot reach a colour that isn't a token. That sweep is a distinct, already-tracked follow-up task; dark mode switches on once it lands.
+- Dark mode is **active**. Its values live in the `colors-dark` block above and are applied by redefining the light token names inside a single `:root[data-theme="dark"]` rule, so no component branches on the theme. The gate this entry previously described — the sweep of hardcoded, non-token colours that a theme switch cannot reach — has been completed; there are no remaining raw colour literals outside `src/styles/tokens.css`. The theme is resolved in JS (including the `system` case) and stamped onto `<html data-theme>`, with a blocking pre-paint script in `index.html` so a dark preference does not flash light on load. Photographs and user-supplied calendar colours are deliberately unthemed: they are content, not chrome.
 - Photo gallery behavior and image ordering rules require product-level decisions.
 - Record privacy, export, backup, and deletion flows are outside the visual design scope.
