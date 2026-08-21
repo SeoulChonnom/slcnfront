@@ -297,18 +297,13 @@
   box-shadow:
     inset 0 1px 1px
     color-mix(in srgb, var(--color-canvas-pure) 90%, transparent),
-    /* rgb(80 45 60 / 32%): distinct tone, not a token base. Expressed as a
-       nested mix of --color-accent-muted (39%) and --color-ink (61%) for the
-       opaque base, computed to land within ~2/255 per channel of the
-       original: R 80.0 (Δ0.0), G 47.3 (Δ2.3), B 59.0 (Δ1.0). See report. */
+    /* This is a cast shadow -- the dialog occluding the backdrop -- so it
+       uses --color-cast-glass (rgb(80 47 59 / 32%), tokens.css) instead of
+       the color-mix of --color-accent-muted and --color-ink this used to be:
+       both of those flip in dark mode, which turned the shadow into a pink
+       glow. See tokens.css for the derivation. */
     0
-    30px 70px
-    color-mix(
-      in srgb,
-      color-mix(in srgb, var(--color-accent-muted) 39%, var(--color-ink) 61%)
-        32%,
-      transparent
-    );
+    30px 70px var(--color-cast-glass);
   animation: slcn-profile-pop 240ms ease both;
 }
 
@@ -557,7 +552,11 @@
   gap: 9px;
   border: 0;
   background: var(--color-primary);
-  color: var(--color-ink);
+  /* --color-ink flips to white in dark mode, but this fill stays Seoul Pink
+     in both themes -- --color-on-primary is the verified pair for text on
+     this fill (9.03:1 in both themes), same fix as the trip register
+     wizard's active step. */
+  color: var(--color-on-primary);
 }
 
 .slcn-profile-primary-action:disabled {
@@ -588,8 +587,13 @@
 .slcn-profile-spinner {
   width: 16px;
   height: 16px;
-  border: 2.4px solid color-mix(in srgb, var(--color-ink) 28%, transparent);
-  border-top-color: var(--color-ink);
+  /* Only ever rendered inside .slcn-profile-primary-action, whose fill stays
+     Seoul Pink in both themes -- same reasoning as that button's text
+     colour, so the ring uses --color-on-primary rather than the
+     dark-mode-flipping --color-ink. */
+  border: 2.4px solid
+    color-mix(in srgb, var(--color-on-primary) 28%, transparent);
+  border-top-color: var(--color-on-primary);
   border-radius: var(--radius-pill);
   animation: slcn-profile-spin 700ms linear infinite;
 }

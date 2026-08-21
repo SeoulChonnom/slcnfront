@@ -85,6 +85,32 @@
      --color-ink or --color-shadow-warm, which do flip. */
   --color-cast: rgb(0 0 0 / 20%);
 
+  /* --color-cast family, continued: these were `color-mix(var(--color-ink)
+     N%, transparent)` before dark mode shipped, so they inherited ink's flip
+     to white and turned into white scrims/glows on dark surfaces. Each is
+     ink's LIGHT value (#1b1b1b = rgb(27 27 27)) frozen at the alpha the
+     component was already tuned to, so light mode is bit-for-bit unchanged
+     and dark mode stops re-theming a layer that sits on photo content, not
+     app chrome.
+
+     Two badges (trip card lock badge, travel card nights pill) sit on a
+     photo thumbnail and pair this with fixed-white --color-on-dark text;
+     the scrim has to stay dark enough for that pairing to hold on either
+     theme. */
+  --color-cast-scrim: rgb(27 27 27 / 78%);
+  /* Resting card shadow (login page card) -- a soft, wide-blur elevation cue
+     that must stay a shadow, not brighten into a halo once ink goes white. */
+  --color-cast-soft: rgb(27 27 27 / 7%);
+  /* Hover/focus-lifted card shadow (travel card) -- one step deeper than
+     --color-cast-soft because the card has physically lifted further. */
+  --color-cast-lifted: rgb(27 27 27 / 10%);
+  /* Cast shadow behind the liquid-glass profile dialog. Matches the specific
+     warm-mauve tone this dialog was tuned to (accent-muted mixed 39% into
+     ink's light value, R80/G47/B59) rather than --color-cast's neutral
+     black, but for the same reason: a dialog's drop shadow occludes the
+     backdrop behind it and must not turn into a pink glow when ink flips. */
+  --color-cast-glass: rgb(80 47 59 / 32%);
+
   /* Backward compat aliases. --color-brand-pink and --color-brand-pink-strong
      are safe to leave as literals: they mirror --color-primary and
      --color-primary-focus, which are themselves theme-invariant (plain Seoul

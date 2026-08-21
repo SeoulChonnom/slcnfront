@@ -348,7 +348,13 @@ but the <a>
 .slcn-shell-mobile
   .slcn-calendar-agenda__chip--selected
   .slcn-calendar-agenda__chip-day {
-  color: var(--color-body-on-dark);
+  /* --color-body-on-dark is fixed white and assumes a genuinely dark
+     surface underneath, but this chip's fill is --color-primary (Seoul
+     Pink, also fixed) in both themes -- white-on-pink measures 1.91:1 in
+     both. --color-on-primary is the verified pair for text on this fill
+     (9.03:1 in both themes), same fix as the trip register wizard and
+     profile primary action. */
+  color: var(--color-on-primary);
 }
 
 .slcn-shell-mobile .slcn-calendar-agenda__heading {

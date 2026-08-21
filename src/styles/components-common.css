@@ -1144,7 +1144,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: var(--color-canvas-pure);
   border-radius: var(--radius-xl);
   border-color: var(--color-border);
-  box-shadow: 0 14px 44px color-mix(in srgb, var(--color-ink) 7%, transparent);
+  box-shadow: 0 14px 44px var(--color-cast-soft);
 }
 
 .slcn-login-page::after {
@@ -1402,7 +1402,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   position: absolute;
   top: 0.5rem;
   left: 0.5rem;
-  background: color-mix(in srgb, var(--color-ink) 78%, transparent);
+  background: var(--color-cast-scrim);
   color: var(--color-on-dark);
   /* 11px is the readable floor for functional text (DESIGN.md section 10). */
   font-size: 0.75rem;
@@ -1727,7 +1727,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard__step-indicator > span[data-active="true"] {
   background: var(--color-brand-pink);
   border-color: var(--color-brand-pink);
-  color: var(--color-ink);
+  /* --color-ink flips to white in dark mode, but this fill stays Seoul Pink
+     in both themes -- use --color-on-primary, the token already verified
+     for text on this exact fill (9.03:1 in both themes). */
+  color: var(--color-on-primary);
   font-weight: var(--weight-strong);
 }
 
@@ -1751,7 +1754,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard__step-indicator
   > span[data-active="true"]
   .slcn-trip-register-wizard__step-num {
-  background: var(--color-ink);
+  /* --color-ink flipped to white in dark mode here, going invisible under
+     the fixed-white --color-on-dark number. --color-surface-dark-1 is the
+     same literal as ink's light value (#1b1b1b) but never flips, matching
+     the "always-dark chip" pattern already used by the travel nights badge
+     (travel-detail.css .slcn-travel-detail__nights). */
+  background: var(--color-surface-dark-1);
   color: var(--color-on-dark);
 }
 
