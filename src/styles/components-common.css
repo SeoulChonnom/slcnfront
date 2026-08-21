@@ -318,13 +318,85 @@ input[type="number"]::-webkit-inner-spin-button {
 .slcn-modal {
   position: relative;
   z-index: 1;
+  display: flex;
   width: 100%;
   max-width: 26.25rem;
+  /* The backdrop is fixed and cannot scroll, so a dialog taller than the
+     viewport used to put its own footer out of reach -- the calendar event
+     form measured 844px against a 667px phone and its 저장 button simply
+     could not be tapped. The dialog is bounded here and the body scrolls
+     instead, which keeps the title and the actions on screen. 3rem is the
+     backdrop's own vertical padding. */
+  max-height: calc(100dvh - 3rem);
+  flex-direction: column;
   padding: 1.5rem;
   border: 1px solid var(--color-divider-soft);
   border-radius: var(--radius-xl);
   background: var(--color-canvas-pure);
   box-shadow: var(--shadow-modal);
+}
+
+/* Below this width a centred card is the wrong shape: it leaves slivers of
+   backdrop on every side while the dialog itself runs the full height anyway,
+   and its actions sit furthest from the thumb. The dialog becomes a sheet
+   anchored to the bottom edge instead -- the reading order is unchanged, but
+   the controls land where the hand already is. Kept as a viewport query
+   rather than a route or shell rule because the dialog renders through a
+   portal on document.body, outside either shell, and because a desktop window
+   narrowed this far has exactly the same problem. */
+@media (max-width: 640px) {
+  .slcn-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .slcn-modal {
+    max-width: none;
+    /* Leaves the top of the page visible, so the sheet still reads as a layer
+       over the screen rather than a new one. */
+    max-height: 92dvh;
+    border-bottom: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* ---- Touch targets ---- */
+
+/* WCAG 2.5.5 asks for 44x44. Everything here already clears 2.5.8's 24px AA
+   floor; these are the controls drawn compact on purpose -- a 44px-tall
+   calendar toolbar would shove the month grid down the screen -- so the
+   target grows behind them rather than the box growing. Nothing moves.
+   `pointer: coarse` is included because a touch laptop needs the same thing
+   at any width; only the width branch is exercised in the browser here. */
+@media (max-width: 640px), (pointer: coarse) {
+  .slcn-mobile-topbar__leading,
+  .slcn-mobile-topbar__profile-link,
+  .slcn-button[data-size="sm"],
+  .slcn-calendar-toolbar__chip,
+  .slcn-segmented-control__button,
+  .slcn-shoes-catalog-page__brand-link,
+  .slcn-calendar-manage-modal__row-main {
+    position: relative;
+  }
+
+  .slcn-mobile-topbar__leading::after,
+  .slcn-mobile-topbar__profile-link::after,
+  .slcn-button[data-size="sm"]::after,
+  .slcn-calendar-toolbar__chip::after,
+  .slcn-segmented-control__button::after,
+  .slcn-shoes-catalog-page__brand-link::after,
+  .slcn-calendar-manage-modal__row-main::after,
+  .slcn-toggle::after,
+  .slcn-modal__close::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }
 
 .slcn-modal__close {
@@ -393,7 +465,14 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .slcn-modal__body {
+  min-height: 0;
   margin-top: 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* A scroll container clips on both axes, which would shave the focus ring
+     off any control sitting flush against the edge. Bleed out, pad back in. */
+  margin-inline: -0.5rem;
+  padding-inline: 0.5rem;
 }
 
 .slcn-confirm-dialog__actions {
