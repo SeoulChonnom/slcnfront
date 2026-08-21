@@ -23,6 +23,8 @@ export function ShoeCard({ device, brand, shoe }: ShoeCardProps) {
             src={shoe.imageUrl}
             alt={shoe.name}
             className='slcn-shoe-card__image'
+            loading='lazy'
+            decoding='async'
           />
         </div>
         <div className='slcn-shoe-card__body'>

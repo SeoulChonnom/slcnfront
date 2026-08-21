@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
-import logo from '../../assets/img/SLCN.png';
+import logo from '../../assets/img/SLCN.webp';
 import { useLogout } from '../../domains/auth/hooks/useLogout';
 import { useAuthStore } from '../../domains/auth/store/auth-store';
 import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';

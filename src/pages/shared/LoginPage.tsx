@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { DeviceType } from '../../app/router/route-constants';
-import logo from '../../assets/img/SLCN.png';
+import logo from '../../assets/img/SLCN.webp';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { TextField } from '../../components/ui/TextField';

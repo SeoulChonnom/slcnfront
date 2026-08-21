@@ -16,6 +16,8 @@ export function ShoeBrandSection({ device, brand }: ShoeBrandSectionProps) {
             src={brand.imageUrl}
             alt={brand.name}
             className='slcn-shoes-brand-section__badge-image'
+            loading='lazy'
+            decoding='async'
           />
         </div>
         <div className='slcn-shoes-brand-section__copy'>

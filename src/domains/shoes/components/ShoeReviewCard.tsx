@@ -19,6 +19,8 @@ export function ShoeReviewCard({ review }: ShoeReviewCardProps) {
             src={review.imageUrl}
             alt={review.description}
             className='slcn-shoe-review-card__image'
+            loading='lazy'
+            decoding='async'
           />
         </div>
         <p className='slcn-shoe-review-card__caption'>{review.description}</p>
