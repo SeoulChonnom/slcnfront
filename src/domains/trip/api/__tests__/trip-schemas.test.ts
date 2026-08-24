@@ -24,7 +24,7 @@ describe('trip-schemas', () => {
         {
           id: 'trip-1',
           date: '2099-12-31',
-          type: 'year-end',
+          type: 'AYO',
           name: '연말 나들이',
           logo: firstMapAsset,
           firstMap: firstMapAsset,
@@ -35,7 +35,7 @@ describe('trip-schemas', () => {
     ).toEqual({
       id: 'trip-1',
       date: '2099-12-31',
-      type: 'year-end',
+      type: 'AYO',
       name: '연말 나들이',
       logo: firstMapAsset,
       firstMap: firstMapAsset,
@@ -53,6 +53,23 @@ describe('trip-schemas', () => {
           date: '2099-12-31',
           firstMap: firstMapAsset,
           drive: 'https://drive.google.com/x',
+        },
+        'detail'
+      )
+    ).toThrowError(AppError);
+  });
+
+  it('rejects trip responses with a type outside the API enum', () => {
+    expect(() =>
+      parseTripDetailResponse(
+        {
+          id: 'trip-1',
+          date: '2099-12-31',
+          type: 'year-end',
+          name: '연말 나들이',
+          logo: firstMapAsset,
+          firstMap: firstMapAsset,
+          driveUrl: 'https://drive.google.com/x',
         },
         'detail'
       )

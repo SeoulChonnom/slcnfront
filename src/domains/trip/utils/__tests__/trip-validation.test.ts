@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { TripRegisterWizardValues } from '../trip-form-data';
 import { createInitialTripRegisterValues } from '../trip-form-data';
 import { validateTripRegisterStep } from '../trip-validation';
 
@@ -23,6 +24,18 @@ describe('trip-validation', () => {
       'quizOptions',
       'quizAnswer',
     ]);
+  });
+
+  it('rejects a legacy trip type before allowing step one to continue', () => {
+    const errors = validateTripRegisterStep(1, {
+      ...createInitialTripRegisterValues(),
+      type: 'A' as TripRegisterWizardValues['type'],
+      date: '2099-12-31',
+      info2: '구형 유형 나들이',
+      logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
+    });
+
+    expect(errors.type).toBe('유형을 선택해 주세요.');
   });
 
   it('accepts an original quiz slot number when that specific slot is filled', () => {

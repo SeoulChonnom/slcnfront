@@ -1,6 +1,7 @@
 import { FileDropzone } from '../../../components/ui/FileDropzone';
 import { RadioGroup } from '../../../components/ui/RadioGroup';
 import { TextField } from '../../../components/ui/TextField';
+import { isTripType } from '../types';
 import type { TripRegisterWizardValues } from '../utils/trip-form-data';
 import type { TripValidationErrors } from '../utils/trip-validation';
 
@@ -38,10 +39,14 @@ export function TripRegisterStepBasic({
         className='slcn-radio-group--inline'
         value={values.type}
         options={[
-          { label: '아영', value: 'A' },
-          { label: '일권', value: 'I' },
+          { label: '아영', value: 'AYO' },
+          { label: '일권', value: 'RYU' },
         ]}
-        onChange={(value) => onFieldChange('type', value)}
+        onChange={(value) => {
+          if (isTripType(value)) {
+            onFieldChange('type', value);
+          }
+        }}
       />
       {errors.type ? (
         <p className='slcn-trip-register-step__error'>{errors.type}</p>

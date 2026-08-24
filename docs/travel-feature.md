@@ -167,11 +167,12 @@ src/styles/travel-{list,detail,register}.css   # main.tsx에서 import
 - `/trip*` → `/trips*`, `/calendar*` → `/calendars*`
 - 파일 API: `/file` → `/assets/file` (+ `/assets/files`, `/assets/files/{fileId}`)
 - 스키마: `FileRefSdo` → `FileAssetRdo`(`fileId,type,originalFilename,filename,path,mimeType,size`);
-  `TripCdo`의 `logo/firstMap/secondMap`(객체) → `logoFileId/firstMapFileId/secondMapFileId`(문자열 id);
+  `TripCdo`의 파일 필드는 현재 `files: FileBoxItemCdo[]`이며, 생성 시
+  `targetType: 'TRIP'`과 `role: 'LOGO'|'FIRST_MAP'|'SECOND_MAP'`를 사용한다.
   `TripDetailRdo`/`TripListRdo`의 logo/map → `FileAssetRdo`.
 
 반영: `auth-api`/`trip-api`/`calendar-api`/`trip-files-api` 경로 변경, `trip-schemas`/`trip` types/mappers의
-FileAsset 전환, 업로드 흐름(업로드→fileId 회신→`*FileId` 전송) 수정, 관련 테스트 일괄 갱신. `/travels`는 이미 복수형이라 변경 없음.
+FileAsset 전환, 업로드 흐름(업로드→fileId 회신→`files` 항목 전송) 수정, 관련 테스트 일괄 갱신. `/travels`는 이미 복수형이라 변경 없음.
 
 > 백엔드 `/users/login`은 이제 경로상 정상 동작(404/500 아님)하나, 문서화된 dev 계정(`string`/`string`)에 대해
 > **401**(`인증이 필요합니다`)을 반환한다. 이는 서버측(계정/데이터) 사안이라 사용자 지침대로 넘어가고,

@@ -58,7 +58,7 @@ const past: HomeTimelineEntry[] = [
     trip: {
       id: 'trip-1',
       date: '2026-06-20',
-      type: '산책',
+      type: 'AYO',
       name: '남산 야경',
       description: '계단이 많았다',
       displayDate: '2026.06.20',

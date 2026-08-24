@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import type { FileAsset } from '../../types';
+import type { FileAsset, FileBoxItemCdo, TripFileBoxItemCdo } from '../../types';
 import {
   buildTripRegisterPayload,
   mapTripDetailDto,
   mapTripListItemDto,
 } from '../trip-mappers';
+import type { TripRegisterWizardValues } from '../../utils/trip-form-data';
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {
@@ -32,21 +33,21 @@ describe('trip-mappers', () => {
       mapTripListItemDto({
         id: 'trip-1',
         date: '20991231',
-        type: 'year-end',
+        type: 'AYO',
         name: '연말 나들이',
         logo: logoAsset,
       })
     ).toMatchObject({
       displayDate: '2099.12.31',
       logo: logoAsset,
-      type: 'year-end',
+      type: 'AYO',
     });
 
     expect(
       mapTripDetailDto({
         id: 'trip-1',
         date: '20991231',
-        type: 'year-end',
+        type: 'AYO',
         name: '연말 나들이',
         logo: logoAsset,
         firstMap: firstMapAsset,
@@ -67,7 +68,7 @@ describe('trip-mappers', () => {
   it('builds a TripCdo-shaped payload with one correct quiz option', () => {
     const payload = buildTripRegisterPayload(
       {
-        type: 'A',
+        type: 'AYO',
         date: '2099-12-31',
         info2: '연말 나들이',
         logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
@@ -94,11 +95,13 @@ describe('trip-mappers', () => {
 
     expect(payload).toEqual({
       date: '2099-12-31',
-      type: 'A',
+      type: 'AYO',
       name: '연말 나들이',
-      logoFileId: 'logo-1',
-      firstMapFileId: 'map-1',
-      secondMapFileId: 'map-2',
+      files: [
+        { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+        { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+        { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+      ],
       nextButtonText: '1차 경로',
       previousButtonText: '2차 경로',
       driveUrl: 'https://drive.google.com/x',
@@ -120,10 +123,43 @@ describe('trip-mappers', () => {
     ).toHaveLength(1);
   });
 
+  it.each([
+    ['', 'empty'],
+    ['A', 'legacy'],
+  ])('rejects %s trip types before building a payload', (type) => {
+    expect(() =>
+      buildTripRegisterPayload(
+        {
+          type: type as TripRegisterWizardValues['type'],
+          date: '2099-12-31',
+          info2: '잘못된 유형 나들이',
+          logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
+          map1: new File(['map1'], 'map1.png', { type: 'image/png' }),
+          hasSecondMap: false,
+          map2: null,
+          button1: '',
+          button2: '',
+          drive: 'https://drive.google.com/invalid-type',
+          quizTitle: '정답은?',
+          quizOptions: ['보기1', '보기2', '', ''],
+          quizAnswer: '1',
+          quizAnswerTitle: '정답',
+          quizAnswerText: '맞았습니다.',
+          quizErrorTitle: '오답',
+          quizErrorText: '다시 시도하세요.',
+        },
+        {
+          logoFileId: 'logo-1',
+          firstMapFileId: 'map-1',
+        }
+      )
+    ).toThrowError('Trip type must be AYO or RYU.');
+  });
+
   it('preserves the selected answer when blank options appear earlier in the original slots', () => {
     const payload = buildTripRegisterPayload(
       {
-        type: 'A',
+        type: 'AYO',
         date: '2099-12-31',
         info2: '여름 나들이',
         logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
@@ -159,7 +195,7 @@ describe('trip-mappers', () => {
   it('omits blank optional fields from the TripCdo payload', () => {
     const payload = buildTripRegisterPayload(
       {
-        type: 'A',
+        type: 'AYO',
         date: '2099-12-31',
         info2: '봄 나들이',
         logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
@@ -186,10 +222,12 @@ describe('trip-mappers', () => {
 
     expect(payload).toEqual({
       date: '2099-12-31',
-      type: 'A',
+      type: 'AYO',
       name: '봄 나들이',
-      logoFileId: 'logo-1',
-      firstMapFileId: 'map-1',
+      files: [
+        { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+        { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+      ],
       driveUrl: 'https://drive.google.com/spring',
       quiz: {
         title: '정답은?',
@@ -203,8 +241,94 @@ describe('trip-mappers', () => {
         ],
       },
     });
+    expect(payload).not.toHaveProperty('logoFileId');
+    expect(payload).not.toHaveProperty('firstMapFileId');
     expect(payload).not.toHaveProperty('secondMapFileId');
     expect(payload).not.toHaveProperty('nextButtonText');
     expect(payload).not.toHaveProperty('previousButtonText');
+  });
+
+  it('builds file-box entries for trip creation', () => {
+    const payload = buildTripRegisterPayload(
+      {
+        type: 'AYO',
+        date: '2099-12-31',
+        info2: '가을 나들이',
+        logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
+        map1: new File(['map1'], 'map1.png', { type: 'image/png' }),
+        hasSecondMap: true,
+        map2: new File(['map2'], 'map2.png', { type: 'image/png' }),
+        button1: '다음',
+        button2: '이전',
+        drive: 'https://drive.google.com/autumn',
+        quizTitle: '정답은?',
+        quizOptions: ['보기1', '보기2', '', ''],
+        quizAnswer: '1',
+        quizAnswerTitle: '정답',
+        quizAnswerText: '맞았습니다.',
+        quizErrorTitle: '오답',
+        quizErrorText: '다시 시도하세요.',
+      },
+      {
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+        secondMapFileId: 'map-2',
+      }
+    );
+
+    const expectedFiles: (TripFileBoxItemCdo & FileBoxItemCdo)[] = [
+      { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+      { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+      { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+    ];
+
+    expect(payload).toMatchObject({
+      type: 'AYO',
+      files: expectedFiles,
+    });
+    expect(payload).not.toHaveProperty('logoFileId');
+    expect(payload).not.toHaveProperty('firstMapFileId');
+    expect(payload).not.toHaveProperty('secondMapFileId');
+  });
+
+  it('omits the optional second map file-box entry when no asset id exists', () => {
+    const payload = buildTripRegisterPayload(
+      {
+        type: 'RYU',
+        date: '2099-12-31',
+        info2: '겨울 나들이',
+        logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
+        map1: new File(['map1'], 'map1.png', { type: 'image/png' }),
+        hasSecondMap: false,
+        map2: null,
+        button1: '',
+        button2: '',
+        drive: 'https://drive.google.com/winter',
+        quizTitle: '정답은?',
+        quizOptions: ['보기1', '보기2', '', ''],
+        quizAnswer: '2',
+        quizAnswerTitle: '정답',
+        quizAnswerText: '맞았습니다.',
+        quizErrorTitle: '오답',
+        quizErrorText: '다시 시도하세요.',
+      },
+      {
+        logoFileId: 'logo-1',
+        firstMapFileId: 'map-1',
+      }
+    );
+
+    const expectedFiles: (TripFileBoxItemCdo & FileBoxItemCdo)[] = [
+      { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+      { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+    ];
+
+    expect(payload).toMatchObject({
+      type: 'RYU',
+      files: expectedFiles,
+    });
+    expect(payload).not.toHaveProperty('logoFileId');
+    expect(payload).not.toHaveProperty('firstMapFileId');
+    expect(payload).not.toHaveProperty('secondMapFileId');
   });
 });

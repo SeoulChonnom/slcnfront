@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { isTripType } from '../types';
 import type {
   OptionCdo,
   QuizRdo,
@@ -70,15 +71,35 @@ export function buildTripRegisterPayload(
     }))
     .filter((option) => option.text !== '');
 
+  if (!isTripType(values.type)) {
+    throw new Error('Trip type must be AYO or RYU.');
+  }
+
   return {
     date: dayjs(values.date).format('YYYY-MM-DD'),
     type: values.type,
     name: values.info2.trim(),
-    logoFileId: assetIds.logoFileId,
-    firstMapFileId: assetIds.firstMapFileId,
-    ...(assetIds.secondMapFileId !== undefined
-      ? { secondMapFileId: assetIds.secondMapFileId }
-      : {}),
+    files: [
+      {
+        fileAssetId: assetIds.logoFileId,
+        targetType: 'TRIP',
+        role: 'LOGO',
+      },
+      {
+        fileAssetId: assetIds.firstMapFileId,
+        targetType: 'TRIP',
+        role: 'FIRST_MAP',
+      },
+      ...(assetIds.secondMapFileId
+        ? [
+            {
+              fileAssetId: assetIds.secondMapFileId,
+              targetType: 'TRIP' as const,
+              role: 'SECOND_MAP' as const,
+            },
+          ]
+        : []),
+    ],
     ...(values.hasSecondMap
       ? {
           ...(toOptionalTrimmedEntry('nextButtonText', values.button1) ?? {}),

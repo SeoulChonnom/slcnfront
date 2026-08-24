@@ -11,10 +11,12 @@ const fileAssetSchema = z.object({
   size: z.number(),
 });
 
+const tripTypeSchema = z.enum(['AYO', 'RYU']);
+
 const tripListItemSchema = z.object({
   id: z.string(),
   date: z.string(),
-  type: z.string(),
+  type: tripTypeSchema,
   name: z.string(),
   description: z.string().optional(),
   logo: fileAssetSchema,
@@ -23,7 +25,7 @@ const tripListItemSchema = z.object({
 const tripDetailShape = {
   id: z.string(),
   date: z.string(),
-  type: z.string(),
+  type: tripTypeSchema,
   name: z.string(),
   logo: fileAssetSchema,
   firstMap: fileAssetSchema,

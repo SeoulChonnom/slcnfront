@@ -46,9 +46,9 @@ const registerTripMock = vi.mocked(tripApi.registerTrip);
 async function completeTripRegistrationForm(
   user: ReturnType<typeof renderWithProviders>['user'],
   container: HTMLElement,
-  options: { includeSecondMap?: boolean } = {}
+  options: { includeSecondMap?: boolean; type?: '아영' | '일권' } = {}
 ) {
-  await user.click(screen.getByRole('radio', { name: '아영' }));
+  await user.click(screen.getByRole('radio', { name: options.type ?? '아영' }));
   await user.type(screen.getByLabelText('날짜'), '2099-12-31');
   await user.type(screen.getByLabelText('나들이 이름'), '연말 나들이');
 
@@ -151,10 +151,30 @@ describe('TripRegisterWizard', () => {
     });
 
     expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({
+      type: 'AYO',
       info2: '연말 나들이',
       quizTitle: '정답은?',
       quizAnswer: '2',
     });
+  });
+
+  it('submits RYU when the 일권 option is selected', async () => {
+    const onSubmit = vi.fn();
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={onSubmit} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container, { type: '일권' });
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({ type: 'RYU' });
   });
 
   it('uploads assets before posting the trip json payload', async () => {
@@ -165,7 +185,7 @@ describe('TripRegisterWizard', () => {
     registerTripMock.mockResolvedValue({
       id: 'trip-1',
       date: '2099-12-31',
-      type: 'A',
+      type: 'AYO',
       name: '연말 나들이',
       logo: logoAsset,
       firstMap: firstMapAsset,
@@ -199,11 +219,13 @@ describe('TripRegisterWizard', () => {
     ]);
     expect(registerTripMock).toHaveBeenCalledWith({
       date: '2099-12-31',
-      type: 'A',
+      type: 'AYO',
       name: '연말 나들이',
-      logoFileId: 'logo-1',
-      firstMapFileId: 'map-1',
-      secondMapFileId: 'map-2',
+      files: [
+        { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+        { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+        { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+      ],
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',

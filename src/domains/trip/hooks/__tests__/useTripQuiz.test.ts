@@ -1,11 +1,12 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
+import type { TripListItem } from '../../types';
 import { useTripQuiz } from '../useTripQuiz';
 
 const trip = {
   id: 'trip-1',
   date: '20991231',
-  type: 'year-end',
+  type: 'AYO',
   name: '연말 나들이',
   displayDate: '2099.12.31',
   logo: {
@@ -17,7 +18,7 @@ const trip = {
     mimeType: 'image/png',
     size: 1024,
   },
-};
+} satisfies TripListItem;
 
 const { getTripQuiz, checkTripQuizAnswer } = vi.hoisted(() => ({
   getTripQuiz: vi.fn(),

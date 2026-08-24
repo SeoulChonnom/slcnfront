@@ -1,5 +1,7 @@
+import type { TripType } from '../types';
+
 export type TripRegisterWizardValues = {
-  type: string;
+  type: TripType | '';
   date: string;
   info2: string;
   logo: File | null;

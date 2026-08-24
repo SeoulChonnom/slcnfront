@@ -15,7 +15,7 @@ export function fileAssetKey(asset: FileAsset): string {
 export type TripListItemDto = {
   id: string;
   date: string;
-  type: string;
+  type: TripType;
   name: string;
   description?: string;
   logo: FileAsset;
@@ -24,7 +24,7 @@ export type TripListItemDto = {
 export type TripDetailDto = {
   id: string;
   date: string;
-  type: string;
+  type: TripType;
   name: string;
   logo: FileAsset;
   firstMap: FileAsset;
@@ -53,7 +53,7 @@ export type QuizResultRdo = {
 export type TripListItem = {
   id: string;
   date: string;
-  type: string;
+  type: TripType;
   name: string;
   description?: string;
   displayDate: string;
@@ -63,7 +63,7 @@ export type TripListItem = {
 export type TripDetail = {
   id: string;
   date: string;
-  type: string;
+  type: TripType;
   name: string;
   logo: FileAsset;
   firstMap: FileAsset;
@@ -94,6 +94,33 @@ export type OptionCdo = {
   isCorrect?: boolean;
 };
 
+const tripTypes = ['AYO', 'RYU'] as const;
+
+export type TripType = (typeof tripTypes)[number];
+
+export function isTripType(value: string): value is TripType {
+  return tripTypes.some((tripType) => tripType === value);
+}
+
+type FileBoxTargetType = 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE' | 'TRIP';
+type FileBoxRole = 'COVER' | 'GALLERY' | 'LOGO' | 'FIRST_MAP' | 'SECOND_MAP';
+type TripFileBoxRole = 'LOGO' | 'FIRST_MAP' | 'SECOND_MAP';
+
+export type FileBoxItemCdo = {
+  fileAssetId?: string;
+  targetType?: FileBoxTargetType;
+  targetId?: string;
+  role?: FileBoxRole;
+  caption?: string;
+  sortOrder?: number;
+};
+
+export type TripFileBoxItemCdo = FileBoxItemCdo & {
+  fileAssetId: string;
+  targetType: 'TRIP';
+  role: TripFileBoxRole;
+};
+
 type QuizCdo = {
   title: string;
   answerTitle: string;
@@ -105,11 +132,9 @@ type QuizCdo = {
 
 export type TripCdo = {
   date: string;
-  type: string;
+  type: TripType;
   name: string;
-  logoFileId: string;
-  firstMapFileId: string;
-  secondMapFileId?: string;
+  files: TripFileBoxItemCdo[];
   nextButtonText?: string;
   previousButtonText?: string;
   driveUrl: string;

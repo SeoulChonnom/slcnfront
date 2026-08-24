@@ -1,3 +1,4 @@
+import { isTripType } from '../types';
 import type { TripRegisterWizardValues } from './trip-form-data';
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
@@ -60,7 +61,7 @@ export function validateTripRegisterStep(
   const errors: TripValidationErrors = {};
 
   if (step === 1) {
-    if (!values.type) {
+    if (!isTripType(values.type)) {
       errors.type = '유형을 선택해 주세요.';
     }
 

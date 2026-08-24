@@ -93,7 +93,7 @@ describe('TripListPage', () => {
         {
           id: 'trip-1',
           date: '20991231',
-          type: 'year-end',
+          type: 'AYO',
           name: '연말 나들이',
           displayDate: '2099.12.31',
           logo: { type: 'logo', filename: 'logo.png' },

@@ -37,7 +37,7 @@ describe('trip-api', () => {
             {
               id: 'trip-1',
               date: '2099-12-31',
-              type: 'year-end',
+              type: 'AYO',
               name: '연말 나들이',
               logo: logoAsset,
             },
@@ -55,7 +55,7 @@ describe('trip-api', () => {
           JSON.stringify({
             id: 'trip-1',
             date: '2099-12-31',
-            type: 'year-end',
+            type: 'AYO',
             name: '연말 나들이',
             logo: logoAsset,
             firstMap: firstMapAsset,
@@ -109,7 +109,7 @@ describe('trip-api', () => {
           JSON.stringify({
             id: 'trip-1',
             date: '2099-12-31',
-            type: 'year-end',
+            type: 'AYO',
             name: '연말 나들이',
             logo: logoAsset,
             firstMap: firstMapAsset,
@@ -156,11 +156,13 @@ describe('trip-api', () => {
     );
     const registeredTrip = await tripApi.registerTrip({
       date: '2099-12-31',
-      type: 'year-end',
+      type: 'AYO',
       name: '연말 나들이',
-      logoFileId: 'logo-1',
-      firstMapFileId: 'map-1',
-      secondMapFileId: 'map-2',
+      files: [
+        { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+        { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+        { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+      ],
       nextButtonText: '다음',
       previousButtonText: '이전',
       driveUrl: 'https://drive.google.com/x',
@@ -184,7 +186,7 @@ describe('trip-api', () => {
     );
 
     expect(tripList[0]?.logo).toEqual(logoAsset);
-    expect(tripList[0]?.type).toBe('year-end');
+    expect(tripList[0]?.type).toBe('AYO');
     expect(tripDetail.firstMap).toEqual(firstMapAsset);
     expect(tripQuiz.options).toEqual([
       { id: 'option-1', text: '보기1' },
@@ -228,11 +230,13 @@ describe('trip-api', () => {
     expect(registerInit?.body).toBe(
       JSON.stringify({
         date: '2099-12-31',
-        type: 'year-end',
+        type: 'AYO',
         name: '연말 나들이',
-        logoFileId: 'logo-1',
-        firstMapFileId: 'map-1',
-        secondMapFileId: 'map-2',
+        files: [
+          { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+          { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+          { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+        ],
         nextButtonText: '다음',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
@@ -422,11 +426,13 @@ describe('trip-api', () => {
     await expect(
       tripApi.registerTrip({
         date: '2099-12-31',
-        type: 'year-end',
+        type: 'AYO',
         name: '연말 나들이',
-        logoFileId: 'logo-1',
-        firstMapFileId: 'map-1',
-        secondMapFileId: 'map-2',
+        files: [
+          { fileAssetId: 'logo-1', targetType: 'TRIP', role: 'LOGO' },
+          { fileAssetId: 'map-1', targetType: 'TRIP', role: 'FIRST_MAP' },
+          { fileAssetId: 'map-2', targetType: 'TRIP', role: 'SECOND_MAP' },
+        ],
         nextButtonText: '다음',
         previousButtonText: '이전',
         driveUrl: 'https://drive.google.com/x',
