@@ -13,6 +13,10 @@
   ],
   "tags": [
     {
+      "name": "클라이언트 인증 API",
+      "description": "서비스 간 토큰 발급"
+    },
+    {
       "name": "일정 정보 API",
       "description": "일정 정보 조회"
     },
@@ -32,7 +36,9 @@
   "paths": {
     "/users/me": {
       "get": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "내 프로필 조회",
         "description": "현재 로그인한 사용자의 프로필을 조회합니다.",
         "operationId": "getCurrentUser",
@@ -55,7 +61,9 @@
         ]
       },
       "put": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "내 프로필 수정",
         "description": "비밀번호 확인 후 이름, 비밀번호, 프로필 이미지를 수정합니다. 비밀번호 변경 시 현재 기기의 refresh 세션만 재발급됩니다.",
         "operationId": "updateCurrentUser",
@@ -90,7 +98,9 @@
     },
     "/travels/{travelId}": {
       "get": {
-        "tags": ["travel-resource"],
+        "tags": [
+          "travel-resource"
+        ],
         "operationId": "getTravel",
         "parameters": [
           {
@@ -116,7 +126,9 @@
         }
       },
       "put": {
-        "tags": ["travel-resource"],
+        "tags": [
+          "travel-resource"
+        ],
         "operationId": "modifyTravel",
         "parameters": [
           {
@@ -152,7 +164,9 @@
         }
       },
       "delete": {
-        "tags": ["travel-resource"],
+        "tags": [
+          "travel-resource"
+        ],
         "operationId": "deleteTravel",
         "parameters": [
           {
@@ -173,7 +187,9 @@
     },
     "/schedule": {
       "get": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "일정 범위 조회",
         "description": "보이는 범위와 겹치는 일정 조회 API",
         "operationId": "getSchedulesForYearAndMonth",
@@ -209,7 +225,9 @@
         ]
       },
       "put": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "일정 수정",
         "description": "일정 수정 API",
         "operationId": "modifySchedule",
@@ -242,7 +260,9 @@
         ]
       },
       "post": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "일정 등록",
         "description": "일정 등록 API",
         "operationId": "registerSchedule",
@@ -277,7 +297,9 @@
     },
     "/schedule/{scheduleId}/hide": {
       "put": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "일정 삭제(숨김)",
         "description": "일정 목록 삭제 API",
         "operationId": "hideSchedule",
@@ -305,7 +327,9 @@
     },
     "/calendars": {
       "get": {
-        "tags": ["캘린더 정보 API"],
+        "tags": [
+          "캘린더 정보 API"
+        ],
         "summary": "캘린더 목록 조회",
         "description": "표시 가능한 캘린더 목록 조회 API",
         "operationId": "getCalendars",
@@ -331,7 +355,9 @@
         ]
       },
       "put": {
-        "tags": ["캘린더 정보 API"],
+        "tags": [
+          "캘린더 정보 API"
+        ],
         "summary": "캘린더 수정",
         "description": "캘린더 수정 API",
         "operationId": "modifyCalendar",
@@ -364,7 +390,9 @@
         ]
       },
       "post": {
-        "tags": ["캘린더 정보 API"],
+        "tags": [
+          "캘린더 정보 API"
+        ],
         "summary": "캘린더 등록",
         "description": "캘린더 등록 API",
         "operationId": "registerCalendar",
@@ -399,7 +427,9 @@
     },
     "/users/token": {
       "post": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "토큰 갱신",
         "description": "RefreshToken 갱신",
         "operationId": "reissueToken",
@@ -437,7 +467,9 @@
     },
     "/users/register": {
       "post": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "회원 가입",
         "description": "회원 가입 API",
         "operationId": "registerUser",
@@ -472,7 +504,9 @@
     },
     "/users/me/password/verify": {
       "post": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "프로필 수정 비밀번호 확인",
         "description": "프로필 수정 전에 현재 비밀번호를 확인합니다.",
         "operationId": "verifyCurrentUserPassword",
@@ -500,7 +534,9 @@
     },
     "/users/logout": {
       "post": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "로그아웃",
         "description": "현재 세션 로그아웃",
         "operationId": "logoutUser",
@@ -523,7 +559,9 @@
     },
     "/users/login": {
       "post": {
-        "tags": ["회원 관리 API"],
+        "tags": [
+          "회원 관리 API"
+        ],
         "summary": "로그인",
         "description": "로그인 API",
         "operationId": "loginUser",
@@ -553,7 +591,9 @@
     },
     "/trips": {
       "get": {
-        "tags": ["나들이 정보 API"],
+        "tags": [
+          "나들이 정보 API"
+        ],
         "summary": "전체 나들이 조회",
         "description": "메인페이지 리스트 생성용 API",
         "operationId": "getAllTrips",
@@ -579,7 +619,9 @@
         ]
       },
       "post": {
-        "tags": ["나들이 정보 API"],
+        "tags": [
+          "나들이 정보 API"
+        ],
         "summary": "나들이 추가",
         "description": "나들이 추가용 API",
         "operationId": "createTrip",
@@ -614,7 +656,9 @@
     },
     "/travels": {
       "get": {
-        "tags": ["travel-resource"],
+        "tags": [
+          "travel-resource"
+        ],
         "operationId": "getTravels",
         "responses": {
           "200": {
@@ -633,7 +677,9 @@
         }
       },
       "post": {
-        "tags": ["travel-resource"],
+        "tags": [
+          "travel-resource"
+        ],
         "operationId": "registerTravel",
         "requestBody": {
           "content": {
@@ -659,9 +705,43 @@
         }
       }
     },
+    "/clients/token": {
+      "post": {
+        "tags": [
+          "클라이언트 인증 API"
+        ],
+        "summary": "클라이언트 토큰 발급",
+        "description": "client_id와 client_secret으로 access token을 발급합니다.",
+        "operationId": "issueClientToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientTokenCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientTokenRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/assets/files": {
       "post": {
-        "tags": ["file-resource"],
+        "tags": [
+          "file-resource"
+        ],
         "summary": "다중 파일 업로드 API",
         "description": "여러 이미지 파일을 업로드하고 FileAsset ID 목록을 반환합니다.",
         "operationId": "uploadFiles",
@@ -689,7 +769,9 @@
                     }
                   }
                 },
-                "required": ["files"]
+                "required": [
+                  "files"
+                ]
               }
             }
           }
@@ -718,7 +800,9 @@
     },
     "/assets/file": {
       "get": {
-        "tags": ["file-resource"],
+        "tags": [
+          "file-resource"
+        ],
         "summary": "파일 조회 API",
         "description": "파일 경로를 통해 파일을 조회합니다.",
         "operationId": "getFile",
@@ -760,7 +844,9 @@
         ]
       },
       "post": {
-        "tags": ["file-resource"],
+        "tags": [
+          "file-resource"
+        ],
         "summary": "파일 업로드 API",
         "description": "파일을 업로드합니다.",
         "operationId": "uploadFile",
@@ -785,7 +871,9 @@
                     "format": "binary"
                   }
                 },
-                "required": ["file"]
+                "required": [
+                  "file"
+                ]
               }
             }
           }
@@ -811,7 +899,9 @@
     },
     "/calendars/{calendarId}/hide": {
       "patch": {
-        "tags": ["캘린더 정보 API"],
+        "tags": [
+          "캘린더 정보 API"
+        ],
         "summary": "캘린더 삭제(숨김)",
         "description": "캘린더 목록 삭제 API",
         "operationId": "hideCalendar",
@@ -839,7 +929,9 @@
     },
     "/trips/{tripId}": {
       "get": {
-        "tags": ["나들이 정보 API"],
+        "tags": [
+          "나들이 정보 API"
+        ],
         "summary": "나들이 상세정보 조회",
         "description": "나들이 상세페이지용 API",
         "operationId": "getTripById",
@@ -874,7 +966,9 @@
     },
     "/trips/quiz/{tripId}": {
       "get": {
-        "tags": ["나들이 정보 API"],
+        "tags": [
+          "나들이 정보 API"
+        ],
         "summary": "나들이 추가",
         "description": "나들이 퀴즈 정보 API",
         "operationId": "getTripQuiz",
@@ -909,7 +1003,9 @@
     },
     "/trips/quiz/check": {
       "get": {
-        "tags": ["나들이 정보 API"],
+        "tags": [
+          "나들이 정보 API"
+        ],
         "summary": "나들이 추가",
         "description": "나들이 퀴즈 검증 API",
         "operationId": "checkTripQuizAnswer",
@@ -952,7 +1048,9 @@
     },
     "/schedule/now": {
       "get": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "이번달 일정 조회",
         "description": "달력페이지 진입시 이번달 일정 조회 API",
         "operationId": "getSchedulesForNow",
@@ -980,7 +1078,9 @@
     },
     "/assets/files/{fileId}": {
       "get": {
-        "tags": ["file-resource"],
+        "tags": [
+          "file-resource"
+        ],
         "summary": "파일 ID 조회 API",
         "description": "FileAsset ID를 통해 파일을 조회합니다.",
         "operationId": "getFileById",
@@ -1016,7 +1116,9 @@
     },
     "/schedule/{scheduleId}": {
       "delete": {
-        "tags": ["일정 정보 API"],
+        "tags": [
+          "일정 정보 API"
+        ],
         "summary": "일정 완전 삭제",
         "description": "일정 데이터 삭제 API",
         "operationId": "deleteSchedule",
@@ -1044,7 +1146,9 @@
     },
     "/calendars/{calendarId}": {
       "delete": {
-        "tags": ["캘린더 정보 API"],
+        "tags": [
+          "캘린더 정보 API"
+        ],
         "summary": "캘린더 완전 삭제",
         "description": "캘린더 데이터 삭제 API",
         "operationId": "deleteCalendar",
@@ -1095,7 +1199,12 @@
           },
           "type": {
             "type": "string",
-            "enum": ["logo", "map", "travel", "profile"]
+            "enum": [
+              "logo",
+              "map",
+              "travel",
+              "profile"
+            ]
           },
           "originalFilename": {
             "type": "string"
@@ -1140,14 +1249,25 @@
           },
           "targetType": {
             "type": "string",
-            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+            "enum": [
+              "TRAVEL",
+              "TRAVEL_DAY",
+              "TRAVEL_PLACE",
+              "TRIP"
+            ]
           },
           "targetId": {
             "type": "string"
           },
           "role": {
             "type": "string",
-            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
+            "enum": [
+              "COVER",
+              "GALLERY",
+              "LOGO",
+              "FIRST_MAP",
+              "SECOND_MAP"
+            ]
           },
           "caption": {
             "type": "string"
@@ -1291,14 +1411,25 @@
           },
           "targetType": {
             "type": "string",
-            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+            "enum": [
+              "TRAVEL",
+              "TRAVEL_DAY",
+              "TRAVEL_PLACE",
+              "TRIP"
+            ]
           },
           "targetId": {
             "type": "string"
           },
           "role": {
             "type": "string",
-            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
+            "enum": [
+              "COVER",
+              "GALLERY",
+              "LOGO",
+              "FIRST_MAP",
+              "SECOND_MAP"
+            ]
           },
           "caption": {
             "type": "string"
@@ -1657,7 +1788,11 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["USER", "ADMIN"]
+              "enum": [
+                "USER",
+                "ADMIN",
+                "CLIENT"
+              ]
             }
           }
         }
@@ -1684,7 +1819,9 @@
             "minLength": 1
           }
         },
-        "required": ["password"]
+        "required": [
+          "password"
+        ]
       },
       "UserLoginCdo": {
         "type": "object",
@@ -1705,14 +1842,25 @@
           },
           "targetType": {
             "type": "string",
-            "enum": ["TRAVEL", "TRAVEL_DAY", "TRAVEL_PLACE", "TRIP"]
+            "enum": [
+              "TRAVEL",
+              "TRAVEL_DAY",
+              "TRAVEL_PLACE",
+              "TRIP"
+            ]
           },
           "targetId": {
             "type": "string"
           },
           "role": {
             "type": "string",
-            "enum": ["COVER", "GALLERY", "LOGO", "FIRST_MAP", "SECOND_MAP"]
+            "enum": [
+              "COVER",
+              "GALLERY",
+              "LOGO",
+              "FIRST_MAP",
+              "SECOND_MAP"
+            ]
           },
           "caption": {
             "type": "string"
@@ -1734,7 +1882,9 @@
             "type": "boolean"
           }
         },
-        "required": ["text"]
+        "required": [
+          "text"
+        ]
       },
       "QuizCdo": {
         "type": "object",
@@ -1786,8 +1936,10 @@
           },
           "type": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^(ryu|ayo)$"
+            "enum": [
+              "AYO",
+              "RYU"
+            ]
           },
           "name": {
             "type": "string",
@@ -1813,7 +1965,14 @@
             }
           }
         },
-        "required": ["date", "driveUrl", "files", "name", "quiz", "type"]
+        "required": [
+          "date",
+          "driveUrl",
+          "files",
+          "name",
+          "quiz",
+          "type"
+        ]
       },
       "TripDetailRdo": {
         "type": "object",
@@ -1825,7 +1984,11 @@
             "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "AYO",
+              "RYU"
+            ]
           },
           "name": {
             "type": "string"
@@ -1928,6 +2091,25 @@
           }
         }
       },
+      "ClientTokenCdo": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientTokenRdo": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          }
+        }
+      },
       "CalendarCdo": {
         "type": "object",
         "properties": {
@@ -1989,7 +2171,11 @@
             "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "AYO",
+              "RYU"
+            ]
           },
           "name": {
             "type": "string"
