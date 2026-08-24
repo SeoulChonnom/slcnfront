@@ -1,5 +1,5 @@
-export { renderWithAppProviders } from './render-with-app-providers';
+export { renderWithAppProviders } from '@/test/helpers/render-with-app-providers';
 export {
   renderWithMinimalProviders,
   renderWithMinimalProviders as renderWithProviders,
-} from './render-with-minimal-providers';
+} from '@/test/helpers/render-with-minimal-providers';

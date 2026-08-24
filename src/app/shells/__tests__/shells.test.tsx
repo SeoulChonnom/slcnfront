@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { DetailMobileShell } from '../DetailMobileShell';
-import { MainDesktopShell } from '../MainDesktopShell';
-import { MainMobileShell } from '../MainMobileShell';
-import { PublicShell } from '../PublicShell';
+import { DetailMobileShell } from '@/app/shells/DetailMobileShell';
+import { MainDesktopShell } from '@/app/shells/MainDesktopShell';
+import { MainMobileShell } from '@/app/shells/MainMobileShell';
+import { PublicShell } from '@/app/shells/PublicShell';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('shell components', () => {
   it('renders the desktop shell with header and footer', () => {

@@ -1,13 +1,13 @@
 import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import { useCallback } from 'react';
-import { mapEventApiToSchedulePayload } from '../../mappers/fullcalendar-event-mappers';
+import { mapEventApiToSchedulePayload } from '@/domains/calendar/mappers/fullcalendar-event-mappers';
 import type {
   CalendarMeta,
   ScheduleEvent,
   ScheduleMutationPayload,
-} from '../../types';
-import { buildQuickCreateSelection } from '../../utils/calendar-controller-helpers';
+} from '@/domains/calendar/types';
+import { buildQuickCreateSelection } from '@/domains/calendar/utils/calendar-controller-helpers';
 
 type UseCalendarEventInteractionsOptions = {
   schedules: ScheduleEvent[];

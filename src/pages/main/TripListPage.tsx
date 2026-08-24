@@ -1,4 +1,4 @@
-import { TripListSection } from '../../domains/trip/components/TripListSection';
+import { TripListSection } from '@/domains/trip/components/TripListSection';
 
 export function TripListPage() {
   return <TripListSection device='main' />;

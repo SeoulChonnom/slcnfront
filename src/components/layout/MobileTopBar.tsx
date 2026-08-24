@@ -1,7 +1,7 @@
 import type { MouseEventHandler, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../assets/img/SLCN.webp';
-import { cn } from '../../lib/utils/cn';
+import logo from '@/assets/img/SLCN.webp';
+import { cn } from '@/lib/utils/cn';
 
 type MobileTopBarProps = {
   title?: string;

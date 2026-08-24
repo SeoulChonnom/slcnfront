@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { ShoeDetailSection } from '../ShoeDetailSection';
+import { ShoeDetailSection } from '@/domains/shoes/components/ShoeDetailSection';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('ShoeDetailSection', () => {
   it('renders a valid shoe detail immediately', () => {

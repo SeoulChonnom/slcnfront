@@ -1,10 +1,17 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import {
+  parseTripDetailResponse,
+  parseTripListResponse,
+  parseTripQuizCheckResponse,
+  parseTripQuizResponse,
+  type TripDetailDto,
+  type TripListItemDto,
+} from '@/domains/trip/api/trip-schemas';
 import {
   mapTripDetailDto,
   mapTripListItemDto,
   mapTripQuizCheckDto,
   mapTripQuizDto,
-} from '../mappers/trip-mappers';
+} from '@/domains/trip/mappers/trip-mappers';
 import type {
   QuizRdo,
   QuizResultRdo,
@@ -13,15 +20,8 @@ import type {
   TripListItem,
   TripQuiz,
   TripQuizFeedback,
-} from '../types';
-import {
-  parseTripDetailResponse,
-  parseTripListResponse,
-  parseTripQuizCheckResponse,
-  parseTripQuizResponse,
-  type TripDetailDto,
-  type TripListItemDto,
-} from './trip-schemas';
+} from '@/domains/trip/types';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 

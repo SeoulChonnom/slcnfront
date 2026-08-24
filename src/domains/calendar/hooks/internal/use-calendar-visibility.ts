@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { CalendarMeta, ScheduleEvent } from '../../types';
+import type { CalendarMeta, ScheduleEvent } from '@/domains/calendar/types';
 import {
   getCreateDisabled,
   getDefaultEditableCalendarId,
@@ -7,7 +7,7 @@ import {
   getVisibleCalendars,
   getVisibleSchedules,
   mapSchedulesToCalendarEvents,
-} from '../../utils/calendar-controller-helpers';
+} from '@/domains/calendar/utils/calendar-controller-helpers';
 
 type UseCalendarVisibilityOptions = {
   calendars: CalendarMeta[];

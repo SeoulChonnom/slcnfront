@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { scheduleApi } from '../../calendar/api/schedule-api';
-import { calendarScheduleQueryKeys } from '../../calendar/query-keys';
-import { useTravelList } from '../../travel/hooks/useTravelList';
-import { useTripList } from '../../trip/hooks/useTripList';
-import type { HomeTimelineEntry } from '../types';
-import { toIsoDate, toSortKey } from '../utils/home-dates';
+import { scheduleApi } from '@/domains/calendar/api/schedule-api';
+import { calendarScheduleQueryKeys } from '@/domains/calendar/query-keys';
+import type { HomeTimelineEntry } from '@/domains/home/types';
+import { toIsoDate, toSortKey } from '@/domains/home/utils/home-dates';
+import { useTravelList } from '@/domains/travel/hooks/useTravelList';
+import { useTripList } from '@/domains/trip/hooks/useTripList';
 
 /**
  * How much of each side of "today" the home surface shows before handing off to

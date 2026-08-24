@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useRestoreSession } from '../../domains/auth/hooks/useRestoreSession';
+import { useRestoreSession } from '@/domains/auth/hooks/useRestoreSession';
 import {
   selectShouldAttemptSessionRestore,
   useAuthStore,
-} from '../../domains/auth/store/auth-store';
+} from '@/domains/auth/store/auth-store';
 
 export function SessionRestoreBootstrap() {
   const shouldAttemptRestore = useAuthStore(selectShouldAttemptSessionRestore);

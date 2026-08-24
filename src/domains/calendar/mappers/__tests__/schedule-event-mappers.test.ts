@@ -3,7 +3,7 @@ import {
   createDraftFromRange,
   mapDraftToSchedulePayload,
   mapScheduleToCalendarEventInput,
-} from '../schedule-event-mappers';
+} from '@/domains/calendar/mappers/schedule-event-mappers';
 
 describe('schedule-event-mappers', () => {
   it('maps all-day schedules to exclusive fullcalendar end dates', () => {

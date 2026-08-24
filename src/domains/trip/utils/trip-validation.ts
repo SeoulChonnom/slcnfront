@@ -1,5 +1,5 @@
-import { isTripType } from '../types';
-import type { TripRegisterWizardValues } from './trip-form-data';
+import { isTripType } from '@/domains/trip/types';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 const IMAGE_MIME_TYPES = [

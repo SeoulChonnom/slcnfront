@@ -1,5 +1,5 @@
-import { Card } from '../../../components/ui/Card';
-import type { ShoeReview } from '../types';
+import { Card } from '@/components/ui/Card';
+import type { ShoeReview } from '@/domains/shoes/types';
 
 type ShoeReviewCardProps = {
   review: ShoeReview;

@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { buildDeviceTripListPath } from '../../../lib/routing/route-builders';
-import { useTripRegisterForm } from '../hooks/useTripRegisterForm';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
-import { TripRegisterStepBasic } from './TripRegisterStepBasic';
-import { TripRegisterStepMaps } from './TripRegisterStepMaps';
-import { TripRegisterStepQuiz } from './TripRegisterStepQuiz';
+import type { DeviceType } from '@/app/router/route-constants';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { TripRegisterStepBasic } from '@/domains/trip/components/TripRegisterStepBasic';
+import { TripRegisterStepMaps } from '@/domains/trip/components/TripRegisterStepMaps';
+import { TripRegisterStepQuiz } from '@/domains/trip/components/TripRegisterStepQuiz';
+import { useTripRegisterForm } from '@/domains/trip/hooks/useTripRegisterForm';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import { buildDeviceTripListPath } from '@/lib/routing/route-builders';
 
 type TripRegisterWizardProps = {
   device: DeviceType;

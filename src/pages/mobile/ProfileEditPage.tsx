@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
-import { ProfileEditForm } from '../../domains/profile/components/ProfileEditForm';
-import { ProfileEditNavigationBlocker } from '../../domains/profile/components/ProfileEditNavigationBlocker';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileEditForm } from '@/domains/profile/components/ProfileEditForm';
+import { ProfileEditNavigationBlocker } from '@/domains/profile/components/ProfileEditNavigationBlocker';
 import {
   hasProfileEditAccess,
   revokeProfileEditAccess,
-} from '../../domains/profile/utils/profile-verification';
-import { buildDeviceProfileVerifyPath } from '../../lib/routing/route-builders';
+} from '@/domains/profile/utils/profile-verification';
+import { buildDeviceProfileVerifyPath } from '@/lib/routing/route-builders';
 
 export function ProfileEditPage() {
   const username = useAuthStore((state) => state.userInfo?.userName ?? '');

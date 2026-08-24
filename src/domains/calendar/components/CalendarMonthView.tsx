@@ -7,7 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {
   type EventResizeDoneArg,
 } from '@fullcalendar/interaction';
-import { CalendarTimelineView } from './CalendarTimelineView';
+import { CalendarTimelineView } from '@/domains/calendar/components/CalendarTimelineView';
 
 type CalendarMonthViewProps = {
   currentDate: string;

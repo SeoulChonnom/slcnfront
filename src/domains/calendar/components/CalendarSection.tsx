@@ -1,29 +1,29 @@
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { EmptyState } from '../../../components/ui/EmptyState';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import { useCalendarMutations } from '../hooks/useCalendarMutations';
+import type { DeviceType } from '@/app/router/route-constants';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { CalendarAgendaSections } from '@/domains/calendar/components/CalendarAgendaSections';
+import { CalendarEventModal } from '@/domains/calendar/components/CalendarEventModal';
+import {
+  type CalendarManageDraft,
+  CalendarManageModal,
+} from '@/domains/calendar/components/CalendarManageModal';
+import { CalendarMonthView } from '@/domains/calendar/components/CalendarMonthView';
+import { CalendarToolbar } from '@/domains/calendar/components/CalendarToolbar';
+import { CalendarWeekAgendaView } from '@/domains/calendar/components/CalendarWeekAgendaView';
+import { CalendarWeekView } from '@/domains/calendar/components/CalendarWeekView';
+import { useCalendarMutations } from '@/domains/calendar/hooks/useCalendarMutations';
 import {
   type CalendarSectionState,
   useCalendarSectionController,
-} from '../hooks/useCalendarSectionController';
+} from '@/domains/calendar/hooks/useCalendarSectionController';
 import type {
   CalendarCreatePayload,
   CalendarMeta,
   CalendarViewMode,
-} from '../types';
-import { CalendarAgendaSections } from './CalendarAgendaSections';
-import { CalendarEventModal } from './CalendarEventModal';
-import {
-  type CalendarManageDraft,
-  CalendarManageModal,
-} from './CalendarManageModal';
-import { CalendarMonthView } from './CalendarMonthView';
-import { CalendarToolbar } from './CalendarToolbar';
-import { CalendarWeekAgendaView } from './CalendarWeekAgendaView';
-import { CalendarWeekView } from './CalendarWeekView';
+} from '@/domains/calendar/types';
 
 type CalendarManagerState = {
   isOpen: boolean;

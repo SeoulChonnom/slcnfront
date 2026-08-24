@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { calendarApi } from '../api/calendar-api';
-import { scheduleApi } from '../api/schedule-api';
-import { calendarQueryKeys } from '../query-keys';
-import type { CalendarMeta, ScheduleEvent } from '../types';
+import { calendarApi } from '@/domains/calendar/api/calendar-api';
+import { scheduleApi } from '@/domains/calendar/api/schedule-api';
+import { calendarQueryKeys } from '@/domains/calendar/query-keys';
+import type { CalendarMeta, ScheduleEvent } from '@/domains/calendar/types';
 import {
   type CalendarRange,
   doesScheduleOverlapRange,
-} from '../utils/calendar-date';
+} from '@/domains/calendar/utils/calendar-date';
 
 type UseCalendarRangeDataOptions = {
   dateKey: string;

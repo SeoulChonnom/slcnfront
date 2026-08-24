@@ -1,8 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithMinimalProviders } from '../../../../test/helpers/render';
-import type { TravelDetail } from '../../types';
-import { TravelRegisterSection } from '../TravelRegisterSection';
+import { TravelRegisterSection } from '@/domains/travel/components/TravelRegisterSection';
+import type { TravelDetail } from '@/domains/travel/types';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 // ── Travel API mock ───────────────────────────────────────────────────────────
 
@@ -12,7 +12,7 @@ const { getTravelDetail, createTravel, updateTravel } = vi.hoisted(() => ({
   updateTravel: vi.fn(),
 }));
 
-vi.mock('../../api/travel-api', () => ({
+vi.mock('@/domains/travel/api/travel-api', () => ({
   travelApi: {
     getTravelDetail,
     createTravel,

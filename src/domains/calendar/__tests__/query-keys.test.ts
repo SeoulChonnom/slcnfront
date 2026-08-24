@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { calendarQueryKeys, calendarScheduleQueryKeys } from '../query-keys';
+import {
+  calendarQueryKeys,
+  calendarScheduleQueryKeys,
+} from '@/domains/calendar/query-keys';
 
 describe('calendar query-keys', () => {
   it('creates stable calendar and schedule keys', () => {

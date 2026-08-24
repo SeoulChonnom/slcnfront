@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { getShoesCatalog } from '../../data/shoes-data';
-import { ShoeCard } from '../ShoeCard';
+import { ShoeCard } from '@/domains/shoes/components/ShoeCard';
+import { getShoesCatalog } from '@/domains/shoes/data/shoes-data';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('ShoeCard', () => {
   it('renders shoe info and links to the device detail route', () => {

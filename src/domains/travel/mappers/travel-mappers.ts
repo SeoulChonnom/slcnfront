@@ -5,7 +5,7 @@ import type {
   TravelPlaceRdoDto,
   TravelRdoDto,
   TravelReviewRdoDto,
-} from '../api/travel-schemas';
+} from '@/domains/travel/api/travel-schemas';
 import type {
   TravelDay,
   TravelDetail,
@@ -14,7 +14,7 @@ import type {
   TravelPlace,
   TravelReview,
   TravelTag,
-} from '../types';
+} from '@/domains/travel/types';
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 

@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { profileQueryKeys } from '../../../lib/api/query-keys';
-import { authApi } from '../../auth/api/auth-api';
-import { useAuthStore } from '../../auth/store/auth-store';
-import { profileApi } from '../api/profile-api';
+import { authApi } from '@/domains/auth/api/auth-api';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { profileApi } from '@/domains/profile/api/profile-api';
 import type {
   UpdateProfileInput,
   UpdateProfilePayload,
   UserProfile,
-} from '../types';
-import { revokeProfileEditAccess } from '../utils/profile-verification';
+} from '@/domains/profile/types';
+import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { profileQueryKeys } from '@/lib/api/query-keys';
 
 function hasNewPassword(newPassword: string | undefined) {
   return newPassword !== undefined && newPassword.length > 0;

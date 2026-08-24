@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../../../components/ui/Button';
-import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
-import { Modal } from '../../../components/ui/Modal';
-import { TextField } from '../../../components/ui/TextField';
-import type { CalendarCreatePayload, CalendarMeta } from '../types';
+import { Button } from '@/components/ui/Button';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { Modal } from '@/components/ui/Modal';
+import { TextField } from '@/components/ui/TextField';
+import type {
+  CalendarCreatePayload,
+  CalendarMeta,
+} from '@/domains/calendar/types';
 
 export type CalendarManageDraft = CalendarCreatePayload;
 

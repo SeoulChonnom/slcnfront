@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { buildDeviceNotFoundPath } from '../../lib/routing/route-builders';
-import { DeviceRedirect } from './DeviceRedirect';
-import { renderMainRoutes } from './main-routes';
-import { renderMobileRoutes } from './mobile-routes';
+import { DeviceRedirect } from '@/app/router/DeviceRedirect';
+import { renderMainRoutes } from '@/app/router/main-routes';
+import { renderMobileRoutes } from '@/app/router/mobile-routes';
+import { buildDeviceNotFoundPath } from '@/lib/routing/route-builders';
 
 export function AppRouter() {
   return (

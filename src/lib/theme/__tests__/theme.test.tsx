@@ -1,9 +1,9 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ThemeChoice } from '../../../components/ui/ThemeChoice';
-import { ThemeProvider } from '../ThemeProvider';
-import { THEME_STORAGE_KEY } from '../theme';
+import { ThemeChoice } from '@/components/ui/ThemeChoice';
+import { ThemeProvider } from '@/lib/theme/ThemeProvider';
+import { THEME_STORAGE_KEY } from '@/lib/theme/theme';
 
 type MediaListener = () => void;
 

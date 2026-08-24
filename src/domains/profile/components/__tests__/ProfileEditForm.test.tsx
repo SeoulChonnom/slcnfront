@@ -1,9 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { useAuthStore } from '../../../auth/store/auth-store';
-import type { UserProfile } from '../../types';
-import { ProfileEditForm } from '../ProfileEditForm';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileEditForm } from '@/domains/profile/components/ProfileEditForm';
+import type { UserProfile } from '@/domains/profile/types';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const {
   downloadProfileImage,
@@ -19,7 +19,7 @@ const {
   uploadProfileImage: vi.fn(),
 }));
 
-vi.mock('../../api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: {
     downloadProfileImage,
     getProfile,
@@ -28,7 +28,7 @@ vi.mock('../../api/profile-api', () => ({
   },
 }));
 
-vi.mock('../../../auth/api/auth-api', () => ({
+vi.mock('@/domains/auth/api/auth-api', () => ({
   authApi: {
     restoreSession,
   },

@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import type { FileAsset } from '../../types';
-import { TripDetailSection } from '../TripDetailSection';
+import { TripDetailSection } from '@/domains/trip/components/TripDetailSection';
+import type { FileAsset } from '@/domains/trip/types';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const { useTripAssetUrlMock } = vi.hoisted(() => ({
   useTripAssetUrlMock: vi.fn((ref: FileAsset | null | undefined) => ({
@@ -11,7 +11,7 @@ const { useTripAssetUrlMock } = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock('../../hooks/useTripAssetUrl', () => ({
+vi.mock('@/domains/trip/hooks/useTripAssetUrl', () => ({
   useTripAssetUrl: useTripAssetUrlMock,
 }));
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../api-client';
-import type { AppError } from '../errors';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 describe('createApiClient', () => {
   it('handles json requests and injects auth headers', async () => {

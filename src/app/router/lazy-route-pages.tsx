@@ -1,7 +1,7 @@
 import { type ComponentType, lazy, type ReactElement, Suspense } from 'react';
-import { RouteLoadingFallback } from '../../pages/shared/RouteLoadingFallback';
-import type { DeviceType } from './route-constants';
-import type { RoutePageKey } from './route-manifest';
+import type { DeviceType } from '@/app/router/route-constants';
+import type { RoutePageKey } from '@/app/router/route-manifest';
+import { RouteLoadingFallback } from '@/pages/shared/RouteLoadingFallback';
 
 type PageModule = {
   default: ComponentType;
@@ -12,125 +12,125 @@ type PageLoader = () => Promise<PageModule>;
 const PAGE_LOADERS = {
   main: {
     home: () =>
-      import('../../pages/main/HomePage').then((module) => ({
+      import('@/pages/main/HomePage').then((module) => ({
         default: module.HomePage,
       })),
     tripList: () =>
-      import('../../pages/main/TripListPage').then((module) => ({
+      import('@/pages/main/TripListPage').then((module) => ({
         default: module.TripListPage,
       })),
     tripRegister: () =>
-      import('../../pages/main/TripRegisterPage').then((module) => ({
+      import('@/pages/main/TripRegisterPage').then((module) => ({
         default: module.TripRegisterPage,
       })),
     tripDetail: () =>
-      import('../../pages/main/TripDetailPage').then((module) => ({
+      import('@/pages/main/TripDetailPage').then((module) => ({
         default: module.TripDetailPage,
       })),
     travelList: () =>
-      import('../../pages/main/TravelListPage').then((module) => ({
+      import('@/pages/main/TravelListPage').then((module) => ({
         default: module.TravelListPage,
       })),
     travelRegister: () =>
-      import('../../pages/main/TravelRegisterPage').then((module) => ({
+      import('@/pages/main/TravelRegisterPage').then((module) => ({
         default: module.TravelRegisterPage,
       })),
     travelDetail: () =>
-      import('../../pages/main/TravelDetailPage').then((module) => ({
+      import('@/pages/main/TravelDetailPage').then((module) => ({
         default: module.TravelDetailPage,
       })),
     travelEdit: () =>
-      import('../../pages/main/TravelEditPage').then((module) => ({
+      import('@/pages/main/TravelEditPage').then((module) => ({
         default: module.TravelEditPage,
       })),
     calendarMonth: () =>
-      import('../../pages/main/CalendarMonthPage').then((module) => ({
+      import('@/pages/main/CalendarMonthPage').then((module) => ({
         default: module.CalendarMonthPage,
       })),
     calendarWeek: () =>
-      import('../../pages/main/CalendarWeekPage').then((module) => ({
+      import('@/pages/main/CalendarWeekPage').then((module) => ({
         default: module.CalendarWeekPage,
       })),
     shoesCatalog: () =>
-      import('../../pages/main/ShoesCatalogPage').then((module) => ({
+      import('@/pages/main/ShoesCatalogPage').then((module) => ({
         default: module.ShoesCatalogPage,
       })),
     profile: () =>
-      import('../../pages/main/ProfilePage').then((module) => ({
+      import('@/pages/main/ProfilePage').then((module) => ({
         default: module.ProfilePage,
       })),
     profileVerify: () =>
-      import('../../pages/main/ProfilePage').then((module) => ({
+      import('@/pages/main/ProfilePage').then((module) => ({
         default: module.ProfilePage,
       })),
     profileEdit: () =>
-      import('../../pages/main/ProfilePage').then((module) => ({
+      import('@/pages/main/ProfilePage').then((module) => ({
         default: module.ProfilePage,
       })),
     shoeDetail: () =>
-      import('../../pages/main/ShoeDetailPage').then((module) => ({
+      import('@/pages/main/ShoeDetailPage').then((module) => ({
         default: module.ShoeDetailPage,
       })),
   },
   mobile: {
     home: () =>
-      import('../../pages/mobile/HomePage').then((module) => ({
+      import('@/pages/mobile/HomePage').then((module) => ({
         default: module.HomePage,
       })),
     tripList: () =>
-      import('../../pages/mobile/TripListPage').then((module) => ({
+      import('@/pages/mobile/TripListPage').then((module) => ({
         default: module.TripListPage,
       })),
     tripRegister: () =>
-      import('../../pages/mobile/TripRegisterPage').then((module) => ({
+      import('@/pages/mobile/TripRegisterPage').then((module) => ({
         default: module.TripRegisterPage,
       })),
     tripDetail: () =>
-      import('../../pages/mobile/TripDetailPage').then((module) => ({
+      import('@/pages/mobile/TripDetailPage').then((module) => ({
         default: module.TripDetailPage,
       })),
     travelList: () =>
-      import('../../pages/mobile/TravelListPage').then((module) => ({
+      import('@/pages/mobile/TravelListPage').then((module) => ({
         default: module.TravelListPage,
       })),
     travelRegister: () =>
-      import('../../pages/mobile/TravelRegisterPage').then((module) => ({
+      import('@/pages/mobile/TravelRegisterPage').then((module) => ({
         default: module.TravelRegisterPage,
       })),
     travelDetail: () =>
-      import('../../pages/mobile/TravelDetailPage').then((module) => ({
+      import('@/pages/mobile/TravelDetailPage').then((module) => ({
         default: module.TravelDetailPage,
       })),
     travelEdit: () =>
-      import('../../pages/mobile/TravelEditPage').then((module) => ({
+      import('@/pages/mobile/TravelEditPage').then((module) => ({
         default: module.TravelEditPage,
       })),
     calendarMonth: () =>
-      import('../../pages/mobile/CalendarMonthPage').then((module) => ({
+      import('@/pages/mobile/CalendarMonthPage').then((module) => ({
         default: module.CalendarMonthPage,
       })),
     calendarWeek: () =>
-      import('../../pages/mobile/CalendarWeekPage').then((module) => ({
+      import('@/pages/mobile/CalendarWeekPage').then((module) => ({
         default: module.CalendarWeekPage,
       })),
     shoesCatalog: () =>
-      import('../../pages/mobile/ShoesCatalogPage').then((module) => ({
+      import('@/pages/mobile/ShoesCatalogPage').then((module) => ({
         default: module.ShoesCatalogPage,
       })),
     profile: () =>
-      import('../../pages/mobile/ProfilePage').then((module) => ({
+      import('@/pages/mobile/ProfilePage').then((module) => ({
         default: module.ProfilePage,
       })),
     profileVerify: () =>
-      import('../../pages/mobile/ProfileVerifyPage').then((module) => ({
+      import('@/pages/mobile/ProfileVerifyPage').then((module) => ({
         default: module.ProfileVerifyPage,
       })),
     profileEdit: () =>
-      import('../../pages/mobile/ProfileEditPage').then((module) => ({
+      import('@/pages/mobile/ProfileEditPage').then((module) => ({
         default: module.ProfileEditPage,
       })),
     shoeDetail: () =>
-      import('../../pages/mobile/ShoeDetailPage').then((module) => ({
+      import('@/pages/mobile/ShoeDetailPage').then((module) => ({
         default: module.ShoeDetailPage,
       })),
   },

@@ -1,19 +1,19 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import {
+  parseTravelDetailResponse,
+  parseTravelListResponse,
+  type TravelDetailRdoDto,
+} from '@/domains/travel/api/travel-schemas';
 import {
   mapTravelDetailDto,
   mapTravelListItemDto,
-} from '../mappers/travel-mappers';
+} from '@/domains/travel/mappers/travel-mappers';
 import type {
   TravelCdo,
   TravelDetail,
   TravelListItem,
   TravelUdo,
-} from '../types';
-import {
-  parseTravelDetailResponse,
-  parseTravelListResponse,
-  type TravelDetailRdoDto,
-} from './travel-schemas';
+} from '@/domains/travel/types';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,

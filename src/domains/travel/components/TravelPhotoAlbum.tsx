@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react';
-import { useTravelAssetUrls } from '../hooks/useTravelAssetUrls';
-import type { TravelDay, TravelPhoto, TravelPlace } from '../types';
+import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
+import type {
+  TravelDay,
+  TravelPhoto,
+  TravelPlace,
+} from '@/domains/travel/types';
 
 type TravelPhotoAlbumProps = {
   photos: TravelPhoto[];

@@ -1,4 +1,4 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get'>;
 

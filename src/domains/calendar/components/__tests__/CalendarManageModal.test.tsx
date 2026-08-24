@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { CalendarManageModal } from '../CalendarManageModal';
+import { CalendarManageModal } from '@/domains/calendar/components/CalendarManageModal';
 
 const calendars = [
   {

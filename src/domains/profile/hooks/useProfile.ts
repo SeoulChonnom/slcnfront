@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { profileQueryKeys } from '../../../lib/api/query-keys';
-import { useAuthStore } from '../../auth/store/auth-store';
-import { profileApi } from '../api/profile-api';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { profileApi } from '@/domains/profile/api/profile-api';
+import { profileQueryKeys } from '@/lib/api/query-keys';
 
 export function useProfile() {
   const username = useAuthStore((state) => state.userInfo?.userName ?? null);

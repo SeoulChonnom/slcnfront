@@ -1,18 +1,18 @@
 import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
-import type { DeviceType } from '../../../app/router/route-constants';
-import type { CalendarEventDraft } from '../mappers/schedule-event-mappers';
+import type { DeviceType } from '@/app/router/route-constants';
+import { useCalendarEditor } from '@/domains/calendar/hooks/internal/use-calendar-editor';
+import { useCalendarEventInteractions } from '@/domains/calendar/hooks/internal/use-calendar-event-interactions';
+import { useCalendarNavigation } from '@/domains/calendar/hooks/internal/use-calendar-navigation';
+import { useCalendarVisibility } from '@/domains/calendar/hooks/internal/use-calendar-visibility';
+import { useCalendarEventMutations } from '@/domains/calendar/hooks/useCalendarEventMutations';
+import type { CalendarEventDraft } from '@/domains/calendar/mappers/schedule-event-mappers';
 import type {
   CalendarEventInput,
   CalendarMeta,
   CalendarViewMode,
   ScheduleEvent,
-} from '../types';
-import { useCalendarEditor } from './internal/use-calendar-editor';
-import { useCalendarEventInteractions } from './internal/use-calendar-event-interactions';
-import { useCalendarNavigation } from './internal/use-calendar-navigation';
-import { useCalendarVisibility } from './internal/use-calendar-visibility';
-import { useCalendarEventMutations } from './useCalendarEventMutations';
+} from '@/domains/calendar/types';
 
 export type CalendarSectionState = {
   label: string;

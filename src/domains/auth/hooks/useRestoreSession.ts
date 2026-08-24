@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { authQueryKeys } from '../../../lib/api/query-keys';
-import { revokeProfileEditAccess } from '../../profile/utils/profile-verification';
-import { authApi } from '../api/auth-api';
-import { useAuthStore } from '../store/auth-store';
+import { authApi } from '@/domains/auth/api/auth-api';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { authQueryKeys } from '@/lib/api/query-keys';
 
 export function useRestoreSession() {
   const setSession = useAuthStore((state) => state.setSession);

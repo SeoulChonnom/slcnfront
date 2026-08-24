@@ -1,24 +1,24 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import type { DeviceType } from '../../app/router/route-constants';
-import logo from '../../assets/img/SLCN.webp';
-import { useLogout } from '../../domains/auth/hooks/useLogout';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
-import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';
-import { ProfileEditForm } from '../../domains/profile/components/ProfileEditForm';
-import { ProfileIdentityVerification } from '../../domains/profile/components/ProfileIdentityVerification';
-import { useProfile } from '../../domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '../../domains/profile/hooks/useProfileImageUrl';
-import { revokeProfileEditAccess } from '../../domains/profile/utils/profile-verification';
+import type { DeviceType } from '@/app/router/route-constants';
+import logo from '@/assets/img/SLCN.webp';
+import { getDesktopNavigationItems } from '@/components/layout/navigation-items';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { Modal } from '@/components/ui/Modal';
+import { ThemeChoice } from '@/components/ui/ThemeChoice';
+import { useLogout } from '@/domains/auth/hooks/useLogout';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
+import { ProfileEditForm } from '@/domains/profile/components/ProfileEditForm';
+import { ProfileIdentityVerification } from '@/domains/profile/components/ProfileIdentityVerification';
+import { useProfile } from '@/domains/profile/hooks/useProfile';
+import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
+import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
 import {
   buildDeviceLoginPath,
   buildDeviceRootPath,
-} from '../../lib/routing/route-builders';
-import { cn } from '../../lib/utils/cn';
-import { ConfirmDialog } from '../ui/ConfirmDialog';
-import { Modal } from '../ui/Modal';
-import { ThemeChoice } from '../ui/ThemeChoice';
-import { getDesktopNavigationItems } from './navigation-items';
+} from '@/lib/routing/route-builders';
+import { cn } from '@/lib/utils/cn';
 
 type DesktopHeaderProps = {
   className?: string;

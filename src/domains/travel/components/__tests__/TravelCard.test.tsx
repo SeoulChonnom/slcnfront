@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { TravelCard } from '../TravelCard';
+import { TravelCard } from '@/domains/travel/components/TravelCard';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const travel = {
   id: 'travel-1',

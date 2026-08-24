@@ -1,12 +1,12 @@
 import type { ChangeEvent, FormEvent } from 'react';
 import { useId } from 'react';
-import { Button } from '../../../components/ui/Button';
-import { TextField } from '../../../components/ui/TextField';
+import { Button } from '@/components/ui/Button';
+import { TextField } from '@/components/ui/TextField';
+import { TravelDayEditor } from '@/domains/travel/components/TravelDayEditor';
 import {
   computeNightsDays,
   type UseTravelRegisterFormReturn,
-} from '../hooks/useTravelRegisterForm';
-import { TravelDayEditor } from './TravelDayEditor';
+} from '@/domains/travel/hooks/useTravelRegisterForm';
 
 type TravelRegisterFormProps = {
   form: UseTravelRegisterFormReturn;

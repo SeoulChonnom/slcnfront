@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
+import type { DeviceType } from '@/app/router/route-constants';
+import { TravelDayList } from '@/domains/travel/components/TravelDayList';
+import { TravelPhotoAlbum } from '@/domains/travel/components/TravelPhotoAlbum';
+import { TravelReviewSection } from '@/domains/travel/components/TravelReviewSection';
+import { TravelTagSection } from '@/domains/travel/components/TravelTagSection';
+import { useTravelAssetUrl } from '@/domains/travel/hooks/useTravelAssetUrl';
+import type { TravelDetail } from '@/domains/travel/types';
 import {
   buildDeviceTravelEditPath,
   buildDeviceTravelListPath,
-} from '../../../lib/routing/route-builders';
-import { useTravelAssetUrl } from '../hooks/useTravelAssetUrl';
-import type { TravelDetail } from '../types';
-import { TravelDayList } from './TravelDayList';
-import { TravelPhotoAlbum } from './TravelPhotoAlbum';
-import { TravelReviewSection } from './TravelReviewSection';
-import { TravelTagSection } from './TravelTagSection';
+} from '@/lib/routing/route-builders';
 
 type TravelDetailSectionProps = {
   device: DeviceType;

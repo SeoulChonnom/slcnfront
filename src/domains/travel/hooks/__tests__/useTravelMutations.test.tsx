@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { useDeleteTravel } from '../useTravelMutations';
+import { useDeleteTravel } from '@/domains/travel/hooks/useTravelMutations';
 
 const { deleteTravel } = vi.hoisted(() => ({
   deleteTravel: vi.fn(),
 }));
 
-vi.mock('../../api/travel-api', () => ({
+vi.mock('@/domains/travel/api/travel-api', () => ({
   travelApi: {
     deleteTravel,
   },

@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { PlaceCategory } from '../types';
+import type { PlaceCategory } from '@/domains/travel/types';
 
 type CategoryIconProps = {
   category: PlaceCategory;

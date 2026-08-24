@@ -1,7 +1,7 @@
-import type { DeviceType } from '../../app/router/route-constants';
-import { LinkButton } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { buildDeviceRootPath } from '../../lib/routing/route-builders';
+import type { DeviceType } from '@/app/router/route-constants';
+import { LinkButton } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { buildDeviceRootPath } from '@/lib/routing/route-builders';
 
 type NotFoundPageProps = {
   device: DeviceType;

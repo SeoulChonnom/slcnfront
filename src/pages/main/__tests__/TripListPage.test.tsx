@@ -1,16 +1,16 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useAuthStore } from '../../../domains/auth/store/auth-store';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { TripListPage } from '../TripListPage';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { TripListPage } from '@/pages/main/TripListPage';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const useTripListMock = vi.fn();
 
-vi.mock('../../../domains/trip/hooks/useTripList', () => ({
+vi.mock('@/domains/trip/hooks/useTripList', () => ({
   useTripList: () => useTripListMock(),
 }));
 
-vi.mock('../../../domains/trip/hooks/useTripAssetUrls', () => ({
+vi.mock('@/domains/trip/hooks/useTripAssetUrls', () => ({
   useTripAssetUrls: () => ({
     'logo/logo.png': 'blob:logo',
   }),

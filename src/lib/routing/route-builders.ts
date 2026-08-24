@@ -1,7 +1,4 @@
-import {
-  DEVICE_PREFIX,
-  type DeviceType,
-} from '../../app/router/route-constants';
+import { DEVICE_PREFIX, type DeviceType } from '@/app/router/route-constants';
 
 function encodeSegment(value: string) {
   return encodeURIComponent(value);

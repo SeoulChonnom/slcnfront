@@ -1,7 +1,7 @@
 import type { EventApi, EventInput } from '@fullcalendar/core';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CalendarWeekAgendaView } from '../CalendarWeekAgendaView';
+import { CalendarWeekAgendaView } from '@/domains/calendar/components/CalendarWeekAgendaView';
 
 const currentDate = '2026-06-18';
 

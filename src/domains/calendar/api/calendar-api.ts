@@ -1,15 +1,15 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import {
+  type CalendarMetaDto,
+  parseCalendarListResponse,
+  parseCalendarResponse,
+} from '@/domains/calendar/api/calendar-schemas';
 import {
   type CalendarCreatePayload,
   type CalendarMeta,
   type CalendarUpdatePayload,
   mapCalendarMetaDto,
-} from '../types';
-import {
-  type CalendarMetaDto,
-  parseCalendarListResponse,
-  parseCalendarResponse,
-} from './calendar-schemas';
+} from '@/domains/calendar/types';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,

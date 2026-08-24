@@ -4,7 +4,7 @@ import type {
   CalendarMeta,
   ScheduleEvent,
   ScheduleMutationPayload,
-} from '../types';
+} from '@/domains/calendar/types';
 import {
   API_DATE_FORMAT,
   coerceDateValue,
@@ -12,7 +12,7 @@ import {
   formatDraftDateTime,
   toExclusiveAllDayEnd,
   toInclusiveAllDayEnd,
-} from '../utils/calendar-date';
+} from '@/domains/calendar/utils/calendar-date';
 
 export type CalendarEventDraft = {
   calendarId: string;

@@ -1,20 +1,27 @@
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
+import type { DeviceType } from '@/app/router/route-constants';
+import { TravelRegisterForm } from '@/domains/travel/components/TravelRegisterForm';
+import { useTravelDetail } from '@/domains/travel/hooks/useTravelDetail';
 import {
-  buildDeviceTravelDetailPath,
-  buildDeviceTravelListPath,
-} from '../../../lib/routing/route-builders';
-import { useTravelDetail } from '../hooks/useTravelDetail';
-import { useCreateTravel, useUpdateTravel } from '../hooks/useTravelMutations';
+  useCreateTravel,
+  useUpdateTravel,
+} from '@/domains/travel/hooks/useTravelMutations';
 import {
   type DayFormRow,
   type PlaceFormRow,
   type TravelRegisterFormValues,
   useTravelRegisterForm,
-} from '../hooks/useTravelRegisterForm';
-import type { TravelDayUdo, TravelDetail, TravelPlaceUdo } from '../types';
-import { TravelRegisterForm } from './TravelRegisterForm';
+} from '@/domains/travel/hooks/useTravelRegisterForm';
+import type {
+  TravelDayUdo,
+  TravelDetail,
+  TravelPlaceUdo,
+} from '@/domains/travel/types';
+import {
+  buildDeviceTravelDetailPath,
+  buildDeviceTravelListPath,
+} from '@/lib/routing/route-builders';
 
 /**
  * Assemble the nested `travelDays` payload (with each day's `places` and

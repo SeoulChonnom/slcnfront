@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { tripQueryKeys } from '../../../lib/api/query-keys';
-import { tripApi } from '../api/trip-api';
-import { tripFilesApi } from '../api/trip-files-api';
-import { buildTripRegisterPayload } from '../mappers/trip-mappers';
+import { tripApi } from '@/domains/trip/api/trip-api';
+import { tripFilesApi } from '@/domains/trip/api/trip-files-api';
+import { buildTripRegisterPayload } from '@/domains/trip/mappers/trip-mappers';
 import {
   createInitialTripRegisterValues,
   type TripRegisterWizardValues,
-} from '../utils/trip-form-data';
+} from '@/domains/trip/utils/trip-form-data';
 import {
   type TripRegisterStep,
   type TripValidationErrors,
   validateTripRegisterStep,
-} from '../utils/trip-validation';
+} from '@/domains/trip/utils/trip-validation';
+import { tripQueryKeys } from '@/lib/api/query-keys';
 
 type UseTripRegisterFormOptions = {
   onSubmit?: (values: TripRegisterWizardValues) => Promise<void> | void;

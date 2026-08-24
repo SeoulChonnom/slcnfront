@@ -3,7 +3,7 @@ import {
   AUTH_USER_INFO_STORAGE_KEY,
   resetAuthStore,
   useAuthStore,
-} from '../auth-store';
+} from '@/domains/auth/store/auth-store';
 
 describe('auth-store', () => {
   beforeEach(() => {

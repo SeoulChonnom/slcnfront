@@ -1,19 +1,19 @@
 import {
-  type ApiRequestOptions,
-  apiClient,
-  type createApiClient,
-} from '../../../lib/api/api-client';
-import type {
-  ProfileFileAsset,
-  UpdateProfilePayload,
-  UserProfile,
-} from '../types';
-import {
   type ProfileFileAssetDto,
   parseProfileFileAssetResponse,
   parseUserProfileResponse,
   type UserProfileDto,
-} from './profile-schemas';
+} from '@/domains/profile/api/profile-schemas';
+import type {
+  ProfileFileAsset,
+  UpdateProfilePayload,
+  UserProfile,
+} from '@/domains/profile/types';
+import {
+  type ApiRequestOptions,
+  apiClient,
+  type createApiClient,
+} from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,

@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import type { DeviceType } from '../../app/router/route-constants';
-import { cn } from '../../lib/utils/cn';
+import type { DeviceType } from '@/app/router/route-constants';
 import {
   getMobileNavigationItems,
   type NavigationIconName,
-} from './navigation-items';
+} from '@/components/layout/navigation-items';
+import { cn } from '@/lib/utils/cn';
 
 type MobileBottomNavProps = {
   className?: string;

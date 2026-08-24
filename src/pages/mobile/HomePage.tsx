@@ -1,4 +1,4 @@
-import { HomeHubPage } from '../shared/HomeHubPage';
+import { HomeHubPage } from '@/pages/shared/HomeHubPage';
 
 export function HomePage() {
   return <HomeHubPage device='mobile' />;

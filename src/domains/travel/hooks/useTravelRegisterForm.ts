@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { PlaceCategory } from '../types';
+import type { PlaceCategory } from '@/domains/travel/types';
 
 // ── Local form types ───────────────────────────────────────────────────────────
 

@@ -14,7 +14,7 @@ import {
   subscribeToSystemTheme,
   type ThemePreference,
   writeStoredPreference,
-} from './theme';
+} from '@/lib/theme/theme';
 
 export type ThemeContextValue = {
   preference: ThemePreference;

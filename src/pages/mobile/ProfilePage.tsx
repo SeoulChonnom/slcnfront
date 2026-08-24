@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { ThemeChoice } from '../../components/ui/ThemeChoice';
-import { useLogout } from '../../domains/auth/hooks/useLogout';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
-import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';
-import { useProfile } from '../../domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '../../domains/profile/hooks/useProfileImageUrl';
-import { revokeProfileEditAccess } from '../../domains/profile/utils/profile-verification';
+import { ThemeChoice } from '@/components/ui/ThemeChoice';
+import { useLogout } from '@/domains/auth/hooks/useLogout';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
+import { useProfile } from '@/domains/profile/hooks/useProfile';
+import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
+import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
 import {
   buildDeviceLoginPath,
   buildDeviceProfileVerifyPath,
-} from '../../lib/routing/route-builders';
+} from '@/lib/routing/route-builders';
 
 function ProfileMenuIcon() {
   return (

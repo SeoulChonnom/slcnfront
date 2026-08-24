@@ -1,4 +1,4 @@
-import { createAppQueryClient } from '../../app/providers/create-app-query-client';
+import { createAppQueryClient } from '@/app/providers/create-app-query-client';
 
 export function createTestQueryClient() {
   const client = createAppQueryClient();

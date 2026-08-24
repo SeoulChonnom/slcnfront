@@ -1,5 +1,5 @@
-import { Button } from '../../../components/ui/Button';
-import type { TripListItem } from '../types';
+import { Button } from '@/components/ui/Button';
+import type { TripListItem } from '@/domains/trip/types';
 
 type TripCardProps = {
   trip: TripListItem;

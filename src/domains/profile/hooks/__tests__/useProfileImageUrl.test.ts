@@ -1,13 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { ProfileFileAsset } from '../../types';
-import { useProfileImageUrl } from '../useProfileImageUrl';
+import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
+import type { ProfileFileAsset } from '@/domains/profile/types';
 
 const { downloadProfileImage } = vi.hoisted(() => ({
   downloadProfileImage: vi.fn(),
 }));
 
-vi.mock('../../api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: {
     downloadProfileImage,
   },

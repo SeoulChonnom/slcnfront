@@ -1,4 +1,4 @@
-import { cn } from '../../lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';

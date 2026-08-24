@@ -1,10 +1,10 @@
 @import "tailwindcss";
-@import "./tokens.css";
-@import "./utilities.css";
-@import "./components-common.css";
-@import "./components-pc.css";
-@import "./components-mobile.css";
-@import "./profile.css";
+@import "@/styles/tokens.css";
+@import "@/styles/utilities.css";
+@import "@/styles/components-common.css";
+@import "@/styles/components-pc.css";
+@import "@/styles/components-mobile.css";
+@import "@/styles/profile.css";
 
 :root {
   color: var(--color-ink);

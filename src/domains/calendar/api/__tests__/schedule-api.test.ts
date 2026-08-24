@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import { createScheduleApi } from '../schedule-api';
+import { createScheduleApi } from '@/domains/calendar/api/schedule-api';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 describe('schedule-api', () => {
   it('calls range, current, create, update, hide and delete endpoints correctly', async () => {

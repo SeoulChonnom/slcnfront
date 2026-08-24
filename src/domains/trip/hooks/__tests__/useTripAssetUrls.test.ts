@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { tripFilesApi } from '../../api/trip-files-api';
-import type { FileAsset } from '../../types';
-import { useTripAssetUrls } from '../useTripAssetUrls';
+import { tripFilesApi } from '@/domains/trip/api/trip-files-api';
+import { useTripAssetUrls } from '@/domains/trip/hooks/useTripAssetUrls';
+import type { FileAsset } from '@/domains/trip/types';
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {
@@ -17,7 +17,7 @@ function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   };
 }
 
-vi.mock('../../api/trip-files-api', () => ({
+vi.mock('@/domains/trip/api/trip-files-api', () => ({
   tripFilesApi: {
     downloadTripFile: vi.fn(async (ref: FileAsset) => {
       return new File([ref.filename], `${ref.filename}.png`, {

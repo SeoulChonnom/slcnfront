@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import type { TripListItem } from '../../types';
-import { TripCard } from '../TripCard';
+import { TripCard } from '@/domains/trip/components/TripCard';
+import type { TripListItem } from '@/domains/trip/types';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const trip = {
   id: 'trip-1',

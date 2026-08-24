@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { AppError } from '../../../../lib/api/errors';
-import type { FileAsset } from '../../types';
 import {
   parseTripDetailResponse,
   parseTripQuizCheckResponse,
   parseTripQuizResponse,
-} from '../trip-schemas';
+} from '@/domains/trip/api/trip-schemas';
+import type { FileAsset } from '@/domains/trip/types';
+import { AppError } from '@/lib/api/errors';
 
 const firstMapAsset: FileAsset = {
   fileId: 'map-1',

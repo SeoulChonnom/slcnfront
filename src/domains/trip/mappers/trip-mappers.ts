@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { isTripType } from '../types';
 import type {
   OptionCdo,
   QuizRdo,
@@ -11,8 +10,9 @@ import type {
   TripListItemDto,
   TripQuiz,
   TripRegisterAssetIds,
-} from '../types';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
+} from '@/domains/trip/types';
+import { isTripType } from '@/domains/trip/types';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
 
 export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
   return {

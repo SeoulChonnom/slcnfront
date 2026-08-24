@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react';
-import { tripApi } from '../api/trip-api';
-import type { TripListItem, TripQuiz, TripQuizFeedback } from '../types';
+import { tripApi } from '@/domains/trip/api/trip-api';
+import type {
+  TripListItem,
+  TripQuiz,
+  TripQuizFeedback,
+} from '@/domains/trip/types';
 
 function shuffleQuizOptions(quiz: TripQuiz): TripQuiz {
   const options = [...quiz.options];

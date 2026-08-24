@@ -1,6 +1,6 @@
 import type { DragEvent, InputHTMLAttributes } from 'react';
 import { useId } from 'react';
-import { cn } from '../../lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 
 type FileDropzoneProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,

@@ -5,7 +5,7 @@ import {
   formatNightsDays,
   mapTravelDetailDto,
   mapTravelListItemDto,
-} from '../travel-mappers';
+} from '@/domains/travel/mappers/travel-mappers';
 
 describe('travel-mappers', () => {
   describe('formatDisplayDate', () => {

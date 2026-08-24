@@ -2,9 +2,9 @@ import { type RenderOptions, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { PropsWithChildren, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { QueryProvider } from '../../app/providers/QueryProvider';
-import { ThemeProvider } from '../../lib/theme/ThemeProvider';
-import { createTestQueryClient } from './query-client';
+import { QueryProvider } from '@/app/providers/QueryProvider';
+import { ThemeProvider } from '@/lib/theme/ThemeProvider';
+import { createTestQueryClient } from '@/test/helpers/query-client';
 
 type ExtendedRenderOptions = Omit<RenderOptions, 'wrapper'> & {
   route?: string;

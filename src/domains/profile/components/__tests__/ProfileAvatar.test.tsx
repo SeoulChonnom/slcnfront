@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ProfileAvatar } from '../ProfileAvatar';
+import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
 
 describe('ProfileAvatar', () => {
   it('shows the supplied profile image with meaningful alternative text', () => {

@@ -1,11 +1,11 @@
-import type { DeviceType } from '../../app/router/route-constants';
+import type { DeviceType } from '@/app/router/route-constants';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceRootPath,
   buildDeviceShoesCatalogPath,
   buildDeviceTravelListPath,
   buildDeviceTripListPath,
-} from '../../lib/routing/route-builders';
+} from '@/lib/routing/route-builders';
 
 export type NavigationIconName =
   | 'home'

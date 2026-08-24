@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import { createTravelFilesApi } from '../travel-files-api';
+import { createTravelFilesApi } from '@/domains/travel/api/travel-files-api';
+import { createApiClient } from '@/lib/api/api-client';
 
 describe('travel-files-api', () => {
   it('downloadTravelFile calls GET /assets/files/{fileId} with blob response type', async () => {

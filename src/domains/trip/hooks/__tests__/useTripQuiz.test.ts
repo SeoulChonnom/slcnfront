@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import type { TripListItem } from '../../types';
-import { useTripQuiz } from '../useTripQuiz';
+import { useTripQuiz } from '@/domains/trip/hooks/useTripQuiz';
+import type { TripListItem } from '@/domains/trip/types';
 
 const trip = {
   id: 'trip-1',
@@ -25,7 +25,7 @@ const { getTripQuiz, checkTripQuizAnswer } = vi.hoisted(() => ({
   checkTripQuizAnswer: vi.fn(),
 }));
 
-vi.mock('../../api/trip-api', () => ({
+vi.mock('@/domains/trip/api/trip-api', () => ({
   tripApi: {
     getTripQuiz,
     checkTripQuizAnswer,

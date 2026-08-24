@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { useShoeDetail } from '../useShoeDetail';
+import { useShoeDetail } from '@/domains/shoes/hooks/useShoeDetail';
 
 describe('useShoeDetail', () => {
   it('returns detail data for a valid slug pair', () => {

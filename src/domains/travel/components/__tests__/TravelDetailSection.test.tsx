@@ -1,12 +1,12 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderWithMinimalProviders } from '../../../../test/helpers/render';
-import type { TravelDetail } from '../../types';
-import { TravelDetailSection } from '../TravelDetailSection';
+import { TravelDetailSection } from '@/domains/travel/components/TravelDetailSection';
+import type { TravelDetail } from '@/domains/travel/types';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 // ── Asset download mock (avoids real network calls for cover/place/album photos) ──
 
-vi.mock('../../api/travel-files-api', () => ({
+vi.mock('@/domains/travel/api/travel-files-api', () => ({
   travelFilesApi: {
     downloadTravelFile: vi.fn(async (fileId: string) => {
       return new File([fileId], `${fileId}.png`, { type: 'image/png' });

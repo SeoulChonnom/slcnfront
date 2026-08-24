@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import type { DeviceType } from '../../app/router/route-constants';
-import { HomeTimelineRow } from '../../domains/home/components/HomeTimelineRow';
-import { useHomeTimeline } from '../../domains/home/hooks/useHomeTimeline';
-import { useTravelAssetUrls } from '../../domains/travel/hooks/useTravelAssetUrls';
-import { useTripAssetUrls } from '../../domains/trip/hooks/useTripAssetUrls';
-import { fileAssetKey } from '../../domains/trip/types';
+import type { DeviceType } from '@/app/router/route-constants';
+import { HomeTimelineRow } from '@/domains/home/components/HomeTimelineRow';
+import { useHomeTimeline } from '@/domains/home/hooks/useHomeTimeline';
+import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
+import { useTripAssetUrls } from '@/domains/trip/hooks/useTripAssetUrls';
+import { fileAssetKey } from '@/domains/trip/types';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceTripRegisterPath,
-} from '../../lib/routing/route-builders';
-import { cn } from '../../lib/utils/cn';
+} from '@/lib/routing/route-builders';
+import { cn } from '@/lib/utils/cn';
 
 type HomeHubPageProps = {
   device: DeviceType;

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { parseOrThrow } from '../../../lib/api/errors';
-import type { AuthSuccess } from './auth-api';
+import type { AuthSuccess } from '@/domains/auth/api/auth-api';
+import { parseOrThrow } from '@/lib/api/errors';
 
 const userResponseSchema = z.object({
   accessToken: z.string(),

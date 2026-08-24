@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { DeviceType } from './route-constants';
+import type { DeviceType } from '@/app/router/route-constants';
 
 export type DeviceShellKey = 'main' | 'detail';
 

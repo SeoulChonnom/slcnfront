@@ -1,10 +1,13 @@
 import {
+  parseUserResponse,
+  type UserResponseDto,
+} from '@/domains/auth/api/auth-schemas';
+import type { LoginFormValues, Role, UserInfo } from '@/domains/auth/types';
+import {
   type ApiRequestOptions,
   apiClient,
   type createApiClient,
-} from '../../../lib/api/api-client';
-import type { LoginFormValues, Role, UserInfo } from '../types';
-import { parseUserResponse, type UserResponseDto } from './auth-schemas';
+} from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 

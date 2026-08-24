@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { TravelRegisterSection } from '../../domains/travel/components/TravelRegisterSection';
+import { TravelRegisterSection } from '@/domains/travel/components/TravelRegisterSection';
 
 export function TravelEditPage() {
   const params = useParams<{ id: string }>();

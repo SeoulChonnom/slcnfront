@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import type { ProfileFileAsset } from '../../types';
-import { createProfileApi } from '../profile-api';
+import { createProfileApi } from '@/domains/profile/api/profile-api';
+import type { ProfileFileAsset } from '@/domains/profile/types';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 const profileImage: ProfileFileAsset = {
   fileId: 'profile-1',

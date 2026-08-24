@@ -1,5 +1,5 @@
-import { LinkButton } from './Button';
-import { Card } from './Card';
+import { LinkButton } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 
 type EmptyStateProps = {
   title: string;

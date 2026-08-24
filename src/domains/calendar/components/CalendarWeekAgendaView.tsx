@@ -1,8 +1,8 @@
 import type { EventApi, EventInput } from '@fullcalendar/core';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { getTodayDateKey } from '../utils/calendar-date';
-import { CalendarAgendaSections } from './CalendarAgendaSections';
+import { CalendarAgendaSections } from '@/domains/calendar/components/CalendarAgendaSections';
+import { getTodayDateKey } from '@/domains/calendar/utils/calendar-date';
 
 type CalendarWeekAgendaViewProps = {
   currentDate: string;

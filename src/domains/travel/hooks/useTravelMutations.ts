@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { travelQueryKeys } from '../../../lib/api/query-keys';
-import { travelApi } from '../api/travel-api';
-import type { TravelCdo, TravelUdo } from '../types';
+import { travelApi } from '@/domains/travel/api/travel-api';
+import type { TravelCdo, TravelUdo } from '@/domains/travel/types';
+import { travelQueryKeys } from '@/lib/api/query-keys';
 
 // ── Travel CRUD mutations ─────────────────────────────────────────────────────
 

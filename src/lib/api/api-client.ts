@@ -1,6 +1,6 @@
-import { getAccessToken } from '../../domains/auth/store/auth-store';
-import { getAppEnv } from '../env/env';
-import { AppError } from './errors';
+import { getAccessToken } from '@/domains/auth/store/auth-store';
+import { AppError } from '@/lib/api/errors';
+import { getAppEnv } from '@/lib/env/env';
 
 type Primitive = string | number | boolean;
 type QueryValue = Primitive | null | undefined;

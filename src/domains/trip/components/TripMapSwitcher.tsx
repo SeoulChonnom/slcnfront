@@ -1,4 +1,4 @@
-import { SegmentedControl } from '../../../components/ui/SegmentedControl';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
 
 type TripMapSwitcherProps = {
   activeMap: 'map1' | 'map2';

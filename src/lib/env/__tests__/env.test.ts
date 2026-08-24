@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseAppEnv } from '../env';
+import { parseAppEnv } from '@/lib/env/env';
 
 describe('parseAppEnv', () => {
   it('parses the required app env values', () => {

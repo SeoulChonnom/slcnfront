@@ -1,9 +1,9 @@
-import { FileDropzone } from '../../../components/ui/FileDropzone';
-import { RadioGroup } from '../../../components/ui/RadioGroup';
-import { TextField } from '../../../components/ui/TextField';
-import { isTripType } from '../types';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
-import type { TripValidationErrors } from '../utils/trip-validation';
+import { FileDropzone } from '@/components/ui/FileDropzone';
+import { RadioGroup } from '@/components/ui/RadioGroup';
+import { TextField } from '@/components/ui/TextField';
+import { isTripType } from '@/domains/trip/types';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import type { TripValidationErrors } from '@/domains/trip/utils/trip-validation';
 
 type TripRegisterBasicFieldKey = 'type' | 'date' | 'info2' | 'logo';
 

@@ -1,5 +1,5 @@
-import type { TravelDay } from '../types';
-import { TravelPlaceItem } from './TravelPlaceItem';
+import { TravelPlaceItem } from '@/domains/travel/components/TravelPlaceItem';
+import type { TravelDay } from '@/domains/travel/types';
 
 type TravelDayListProps = {
   days: TravelDay[];

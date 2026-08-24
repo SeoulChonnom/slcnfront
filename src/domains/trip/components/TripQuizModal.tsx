@@ -1,6 +1,6 @@
-import { Button } from '../../../components/ui/Button';
-import { Modal } from '../../../components/ui/Modal';
-import type { TripQuiz, TripQuizFeedback } from '../types';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import type { TripQuiz, TripQuizFeedback } from '@/domains/trip/types';
 
 type TripQuizModalProps = {
   tripName?: string;

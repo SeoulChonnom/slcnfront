@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useAssetObjectUrls } from '../../../lib/hooks/useAssetObjectUrls';
-import { profileApi } from '../api/profile-api';
-import type { ProfileFileAsset } from '../types';
+import { profileApi } from '@/domains/profile/api/profile-api';
+import type { ProfileFileAsset } from '@/domains/profile/types';
+import { useAssetObjectUrls } from '@/lib/hooks/useAssetObjectUrls';
 
 const profileImageOptions = {
   getKey: (asset: ProfileFileAsset) => asset.fileId,

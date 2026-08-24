@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { revokeProfileEditAccess } from '../../profile/utils/profile-verification';
-import { authApi } from '../api/auth-api';
-import { useAuthStore } from '../store/auth-store';
+import { authApi } from '@/domains/auth/api/auth-api';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
 
 export function useLogout() {
   const queryClient = useQueryClient();

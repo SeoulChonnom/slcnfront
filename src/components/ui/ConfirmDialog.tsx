@@ -1,6 +1,6 @@
-import { Button } from './Button';
-import type { ButtonVariant } from './button-class-name';
-import { Modal } from './Modal';
+import { Button } from '@/components/ui/Button';
+import type { ButtonVariant } from '@/components/ui/button-class-name';
+import { Modal } from '@/components/ui/Modal';
 
 type ConfirmDialogProps = {
   isOpen: boolean;

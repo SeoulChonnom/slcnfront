@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { LiquidGlassFilter } from '../components/LiquidGlassFilter';
-import { AppProviders } from './providers/AppProviders';
-import { AppRouter } from './router/AppRouter';
+import { AppProviders } from '@/app/providers/AppProviders';
+import { AppRouter } from '@/app/router/AppRouter';
+import { LiquidGlassFilter } from '@/components/LiquidGlassFilter';
 
 const browserRouter = createBrowserRouter([
   {

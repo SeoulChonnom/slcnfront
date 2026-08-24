@@ -1,7 +1,7 @@
 import { useId } from 'react';
-import { THEME_PREFERENCES, type ThemePreference } from '../../lib/theme/theme';
-import { useTheme } from '../../lib/theme/useTheme';
-import { cn } from '../../lib/utils/cn';
+import { THEME_PREFERENCES, type ThemePreference } from '@/lib/theme/theme';
+import { useTheme } from '@/lib/theme/useTheme';
+import { cn } from '@/lib/utils/cn';
 
 const LABELS: Record<ThemePreference, string> = {
   system: '시스템',

@@ -8,7 +8,7 @@ import {
   getVisibleCalendars,
   getVisibleSchedules,
   mapSchedulesToCalendarEvents,
-} from '../calendar-controller-helpers';
+} from '@/domains/calendar/utils/calendar-controller-helpers';
 
 const calendars = [
   {

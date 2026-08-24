@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { TripRegisterWizardValues } from '../trip-form-data';
-import { createInitialTripRegisterValues } from '../trip-form-data';
-import { validateTripRegisterStep } from '../trip-validation';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import { createInitialTripRegisterValues } from '@/domains/trip/utils/trip-form-data';
+import { validateTripRegisterStep } from '@/domains/trip/utils/trip-validation';
 
 describe('trip-validation', () => {
   it('returns typed keys for each step', () => {

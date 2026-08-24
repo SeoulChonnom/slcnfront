@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import { useTripAssetUrl } from '../hooks/useTripAssetUrl';
-import type { TripDetail } from '../types';
-import { TripMapSwitcher } from './TripMapSwitcher';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { TripMapSwitcher } from '@/domains/trip/components/TripMapSwitcher';
+import { useTripAssetUrl } from '@/domains/trip/hooks/useTripAssetUrl';
+import type { TripDetail } from '@/domains/trip/types';
 
 type TripDetailSectionProps = {
   tripDetail: TripDetail;

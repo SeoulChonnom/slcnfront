@@ -1,17 +1,17 @@
 import { startTransition, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import type { DeviceType } from '../../../../app/router/route-constants';
-import {
-  buildDeviceCalendarMonthPath,
-  buildDeviceCalendarWeekPath,
-} from '../../../../lib/routing/route-builders';
-import type { CalendarViewMode } from '../../types';
+import type { DeviceType } from '@/app/router/route-constants';
+import type { CalendarViewMode } from '@/domains/calendar/types';
 import {
   getTodayDateKey,
   normalizeCalendarDateKey,
   shiftMonth,
   shiftWeek,
-} from '../../utils/calendar-date';
+} from '@/domains/calendar/utils/calendar-date';
+import {
+  buildDeviceCalendarMonthPath,
+  buildDeviceCalendarWeekPath,
+} from '@/lib/routing/route-builders';
 
 type UseCalendarNavigationOptions = {
   device: DeviceType;

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Button } from '../../../components/ui/Button';
-import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
-import { Modal } from '../../../components/ui/Modal';
-import { TextareaField, TextField } from '../../../components/ui/TextField';
-import type { CalendarEditorModel } from '../hooks/useCalendarSectionController';
+import { Button } from '@/components/ui/Button';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { Modal } from '@/components/ui/Modal';
+import { TextareaField, TextField } from '@/components/ui/TextField';
+import type { CalendarEditorModel } from '@/domains/calendar/hooks/useCalendarSectionController';
 
 type CalendarEventModalProps = {
   editor: CalendarEditorModel;

@@ -1,25 +1,22 @@
 import { screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
-import { renderWithMinimalProviders } from '../../../test/helpers/render';
-import { AppRouter } from '../AppRouter';
+import { AppRouter } from '@/app/router/AppRouter';
+import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
-vi.mock('../../../pages/mobile/CalendarMonthPage', () => ({
+vi.mock('@/pages/mobile/CalendarMonthPage', () => ({
   CalendarMonthPage: () => <div>모바일 월간 캘린더</div>,
 }));
 
-vi.mock('../../../pages/mobile/CalendarWeekPage', () => ({
+vi.mock('@/pages/mobile/CalendarWeekPage', () => ({
   CalendarWeekPage: () => <div>모바일 주간 캘린더</div>,
 }));
 
-vi.mock('../../../pages/main/CalendarMonthPage', () => ({
+vi.mock('@/pages/main/CalendarMonthPage', () => ({
   CalendarMonthPage: () => <div>데스크톱 월간 캘린더</div>,
 }));
 
-vi.mock('../../../pages/main/CalendarWeekPage', () => ({
+vi.mock('@/pages/main/CalendarWeekPage', () => ({
   CalendarWeekPage: () => <div>데스크톱 주간 캘린더</div>,
 }));
 

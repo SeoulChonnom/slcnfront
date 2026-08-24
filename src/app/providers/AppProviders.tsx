@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react';
-import { ThemeProvider } from '../../lib/theme/ThemeProvider';
-import { AuthBootstrap } from './AuthBootstrap';
-import { QueryProvider } from './QueryProvider';
-import { SessionRestoreBootstrap } from './SessionRestoreBootstrap';
+import { AuthBootstrap } from '@/app/providers/AuthBootstrap';
+import { QueryProvider } from '@/app/providers/QueryProvider';
+import { SessionRestoreBootstrap } from '@/app/providers/SessionRestoreBootstrap';
+import { ThemeProvider } from '@/lib/theme/ThemeProvider';
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (

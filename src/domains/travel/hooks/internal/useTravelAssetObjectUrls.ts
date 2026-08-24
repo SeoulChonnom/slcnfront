@@ -1,8 +1,8 @@
+import { travelFilesApi } from '@/domains/travel/api/travel-files-api';
 import {
   type AssetObjectUrlsOptions,
   useAssetObjectUrls,
-} from '../../../../lib/hooks/useAssetObjectUrls';
-import { travelFilesApi } from '../../api/travel-files-api';
+} from '@/lib/hooks/useAssetObjectUrls';
 
 const travelAssetOptions: AssetObjectUrlsOptions<string> = {
   getKey: (id) => id,

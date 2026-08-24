@@ -1,4 +1,4 @@
-import { useTravelAssetObjectUrls } from './internal/useTravelAssetObjectUrls';
+import { useTravelAssetObjectUrls } from '@/domains/travel/hooks/internal/useTravelAssetObjectUrls';
 
 export function useTravelAssetUrl(fileId: string | null | undefined) {
   const { objectUrls, isLoading } = useTravelAssetObjectUrls([fileId]);

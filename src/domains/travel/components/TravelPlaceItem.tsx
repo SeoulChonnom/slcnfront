@@ -1,6 +1,6 @@
-import { useTravelAssetUrls } from '../hooks/useTravelAssetUrls';
-import { CATEGORY_LABELS, type TravelPlace } from '../types';
-import { CategoryIcon } from './CategoryIcon';
+import { CategoryIcon } from '@/domains/travel/components/CategoryIcon';
+import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
+import { CATEGORY_LABELS, type TravelPlace } from '@/domains/travel/types';
 
 type TravelPlaceItemProps = {
   place: TravelPlace;

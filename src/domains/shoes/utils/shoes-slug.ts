@@ -1,5 +1,5 @@
-import { RESERVED_SHOE_BRAND_SEGMENTS } from '../../../app/router/route-constants';
-import type { ShoeBrand, ShoeItem } from '../types';
+import { RESERVED_SHOE_BRAND_SEGMENTS } from '@/app/router/route-constants';
+import type { ShoeBrand, ShoeItem } from '@/domains/shoes/types';
 
 export function isReservedShoeBrandSlug(brandSlug: string) {
   return RESERVED_SHOE_BRAND_SEGMENTS.includes(brandSlug);

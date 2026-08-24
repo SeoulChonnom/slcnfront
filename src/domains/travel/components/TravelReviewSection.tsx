@@ -1,4 +1,4 @@
-import type { TravelReview } from '../types';
+import type { TravelReview } from '@/domains/travel/types';
 
 type TravelReviewSectionProps = {
   review: TravelReview | null;

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAuthStore } from '../../domains/auth/store/auth-store';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
 
 export function AuthBootstrap() {
   const hydrated = useAuthStore((state) => state.hydrated);

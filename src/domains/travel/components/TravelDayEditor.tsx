@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
-import type { DayFormRow } from '../hooks/useTravelRegisterForm';
-import { formatDisplayDate } from '../mappers/travel-mappers';
-import { CATEGORY_LABELS, type PlaceCategory } from '../types';
+import type { DayFormRow } from '@/domains/travel/hooks/useTravelRegisterForm';
+import { formatDisplayDate } from '@/domains/travel/mappers/travel-mappers';
+import { CATEGORY_LABELS, type PlaceCategory } from '@/domains/travel/types';
 
 type TravelDayEditorProps = {
   day: DayFormRow;

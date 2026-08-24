@@ -1,7 +1,7 @@
 import type { EventApi, EventInput } from '@fullcalendar/core';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CalendarAgendaSections } from '../CalendarAgendaSections';
+import { CalendarAgendaSections } from '@/domains/calendar/components/CalendarAgendaSections';
 
 // Whole-month range for June 2026: [2026-06-01, 2026-07-01).
 const rangeStart = '2026-06-01';

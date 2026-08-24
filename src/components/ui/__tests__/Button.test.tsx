@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { Button } from '../Button';
+import { Button } from '@/components/ui/Button';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('Button', () => {
   it('renders variants and handles click', async () => {

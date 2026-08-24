@@ -2,24 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { screen } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
+import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
 import {
   renderWithAppProviders,
   renderWithMinimalProviders,
   renderWithProviders,
-} from '../render';
+} from '@/test/helpers/render';
 
 const { restoreSession } = vi.hoisted(() => ({
   restoreSession: vi.fn(),
 }));
 
-vi.mock('../../../domains/auth/api/auth-api', async () => {
+vi.mock('@/domains/auth/api/auth-api', async () => {
   const actual = await vi.importActual<
-    typeof import('../../../domains/auth/api/auth-api')
-  >('../../../domains/auth/api/auth-api');
+    typeof import('@/domains/auth/api/auth-api')
+  >('@/domains/auth/api/auth-api');
 
   return {
     ...actual,

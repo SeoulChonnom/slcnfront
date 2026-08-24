@@ -1,7 +1,7 @@
 import type { EventApi, EventInput } from '@fullcalendar/core';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useRef } from 'react';
-import { getTodayDateKey } from '../utils/calendar-date';
+import { getTodayDateKey } from '@/domains/calendar/utils/calendar-date';
 
 type CalendarAgendaSectionsProps = {
   events: EventInput[];

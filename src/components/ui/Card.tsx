@@ -1,5 +1,5 @@
 import type { HTMLAttributes, PropsWithChildren } from 'react';
-import { cn } from '../../lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 
 type CardProps = PropsWithChildren<
   HTMLAttributes<HTMLDivElement> & {

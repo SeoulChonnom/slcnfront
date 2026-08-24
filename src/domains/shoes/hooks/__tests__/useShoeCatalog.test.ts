@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { useShoeCatalog } from '../useShoeCatalog';
+import { useShoeCatalog } from '@/domains/shoes/hooks/useShoeCatalog';
 
 describe('useShoeCatalog', () => {
   it('returns the normalized catalog immediately', () => {

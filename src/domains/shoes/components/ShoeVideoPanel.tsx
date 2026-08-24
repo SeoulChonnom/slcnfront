@@ -1,7 +1,7 @@
-import { getButtonClassName } from '../../../components/ui/button-class-name';
-import { Card } from '../../../components/ui/Card';
-import { cn } from '../../../lib/utils/cn';
-import type { ShoeItem } from '../types';
+import { getButtonClassName } from '@/components/ui/button-class-name';
+import { Card } from '@/components/ui/Card';
+import type { ShoeItem } from '@/domains/shoes/types';
+import { cn } from '@/lib/utils/cn';
 
 type ShoeVideoPanelProps = {
   shoe: ShoeItem;

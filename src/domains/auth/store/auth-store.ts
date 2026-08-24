@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AuthSession, UserInfo } from '../types';
+import type { AuthSession, UserInfo } from '@/domains/auth/types';
 
 export const AUTH_USER_INFO_STORAGE_KEY = 'slcn.auth.user-info';
 const AUTH_RESTORE_STATES = ['idle', 'pending', 'success', 'error'] as const;

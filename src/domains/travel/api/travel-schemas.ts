@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseOrThrow } from '../../../lib/api/errors';
+import { parseOrThrow } from '@/lib/api/errors';
 
 // ── Shared ────────────────────────────────────────────────────────────────────
 

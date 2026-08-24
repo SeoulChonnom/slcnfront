@@ -6,13 +6,13 @@ import {
   createEmptyCalendarEventDraft,
   mapDraftToSchedulePayload,
   validateCalendarEventDraft,
-} from '../../mappers/schedule-event-mappers';
+} from '@/domains/calendar/mappers/schedule-event-mappers';
 import type {
   CalendarMeta,
   ScheduleEvent,
   ScheduleMutationPayload,
-} from '../../types';
-import { getMutationErrorMessage } from '../../utils/calendar-controller-helpers';
+} from '@/domains/calendar/types';
+import { getMutationErrorMessage } from '@/domains/calendar/utils/calendar-controller-helpers';
 
 type CalendarEditorState = {
   isOpen: boolean;

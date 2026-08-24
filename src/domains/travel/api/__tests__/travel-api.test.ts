@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import { createTravelApi } from '../travel-api';
+import { createTravelApi } from '@/domains/travel/api/travel-api';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 // ── Shared fixtures ───────────────────────────────────────────────────────────
 

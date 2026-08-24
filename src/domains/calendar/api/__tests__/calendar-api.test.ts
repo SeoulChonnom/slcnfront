@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import { createCalendarApi } from '../calendar-api';
+import { createCalendarApi } from '@/domains/calendar/api/calendar-api';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 describe('calendar-api', () => {
   it('loads and sorts calendars', async () => {

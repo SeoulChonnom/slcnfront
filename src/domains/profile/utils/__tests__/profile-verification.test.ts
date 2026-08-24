@@ -2,7 +2,7 @@ import {
   grantProfileEditAccess,
   hasProfileEditAccess,
   revokeProfileEditAccess,
-} from '../profile-verification';
+} from '@/domains/profile/utils/profile-verification';
 
 describe('profile edit verification grant', () => {
   beforeEach(() => {

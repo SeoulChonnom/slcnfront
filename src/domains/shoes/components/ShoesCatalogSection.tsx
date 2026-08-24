@@ -1,8 +1,8 @@
-import type { DeviceType } from '../../../app/router/route-constants';
-import { Card } from '../../../components/ui/Card';
-import { EmptyState } from '../../../components/ui/EmptyState';
-import { useShoeCatalog } from '../hooks/useShoeCatalog';
-import { ShoeBrandSection } from './ShoeBrandSection';
+import type { DeviceType } from '@/app/router/route-constants';
+import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ShoeBrandSection } from '@/domains/shoes/components/ShoeBrandSection';
+import { useShoeCatalog } from '@/domains/shoes/hooks/useShoeCatalog';
 
 type ShoesCatalogSectionProps = {
   device: DeviceType;

@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import type { FileAsset } from '../../types';
-import { createTripApi } from '../trip-api';
-import { createTripFilesApi } from '../trip-files-api';
+import { createTripApi } from '@/domains/trip/api/trip-api';
+import { createTripFilesApi } from '@/domains/trip/api/trip-files-api';
+import type { FileAsset } from '@/domains/trip/types';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {

@@ -1,12 +1,12 @@
 import type { PropsWithChildren } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { MobileBottomNav } from '../../components/layout/MobileBottomNav';
-import { MobileTopBar } from '../../components/layout/MobileTopBar';
-import { ProfileAvatar } from '../../domains/profile/components/ProfileAvatar';
-import { useProfile } from '../../domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '../../domains/profile/hooks/useProfileImageUrl';
-import { buildDeviceProfilePath } from '../../lib/routing/route-builders';
-import { cn } from '../../lib/utils/cn';
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
+import { MobileTopBar } from '@/components/layout/MobileTopBar';
+import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
+import { useProfile } from '@/domains/profile/hooks/useProfile';
+import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
+import { buildDeviceProfilePath } from '@/lib/routing/route-builders';
+import { cn } from '@/lib/utils/cn';
 
 type MainMobileShellProps = PropsWithChildren<{
   className?: string;

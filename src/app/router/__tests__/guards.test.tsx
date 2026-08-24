@@ -1,11 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
-import { renderWithMinimalProviders } from '../../../test/helpers/render';
-import { RequireAuth } from '../guards';
+import { RequireAuth } from '@/app/router/guards';
+import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 function LocationProbe() {
   const location = useLocation();

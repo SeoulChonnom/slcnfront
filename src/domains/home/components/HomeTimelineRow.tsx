@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import {
-  buildDeviceCalendarMonthPath,
-  buildDeviceTravelDetailPath,
-  buildDeviceTripDetailPath,
-} from '../../../lib/routing/route-builders';
-import type { HomeTimelineEntry } from '../types';
+import type { DeviceType } from '@/app/router/route-constants';
+import type { HomeTimelineEntry } from '@/domains/home/types';
 import {
   formatRailDay,
   formatRailWeekday,
   formatRailYear,
   formatScheduleTime,
-} from '../utils/home-dates';
+} from '@/domains/home/utils/home-dates';
+import {
+  buildDeviceCalendarMonthPath,
+  buildDeviceTravelDetailPath,
+  buildDeviceTripDetailPath,
+} from '@/lib/routing/route-builders';
 
 type HomeTimelineRowProps = {
   entry: HomeTimelineEntry;

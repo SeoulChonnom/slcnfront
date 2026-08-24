@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { Footer } from '../../../components/layout/Footer';
-import type { HomeTimelineEntry } from '../../../domains/home/types';
-import { HomePage as MainHomePage } from '../../../pages/main/HomePage';
-import { HomePage as MobileHomePage } from '../../../pages/mobile/HomePage';
-import { renderWithMinimalProviders } from '../../helpers/render';
+import { Footer } from '@/components/layout/Footer';
+import type { HomeTimelineEntry } from '@/domains/home/types';
+import { HomePage as MainHomePage } from '@/pages/main/HomePage';
+import { HomePage as MobileHomePage } from '@/pages/mobile/HomePage';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 const upcoming: HomeTimelineEntry[] = [
   {
@@ -75,7 +75,7 @@ const past: HomeTimelineEntry[] = [
   },
 ];
 
-vi.mock('../../../domains/home/hooks/useHomeTimeline', () => ({
+vi.mock('@/domains/home/hooks/useHomeTimeline', () => ({
   useHomeTimeline: () => ({
     upcoming,
     past,
@@ -84,11 +84,11 @@ vi.mock('../../../domains/home/hooks/useHomeTimeline', () => ({
   }),
 }));
 
-vi.mock('../../../domains/trip/hooks/useTripAssetUrls', () => ({
+vi.mock('@/domains/trip/hooks/useTripAssetUrls', () => ({
   useTripAssetUrls: () => ({ 'logo-1': 'blob:logo' }),
 }));
 
-vi.mock('../../../domains/travel/hooks/useTravelAssetUrls', () => ({
+vi.mock('@/domains/travel/hooks/useTravelAssetUrls', () => ({
   useTravelAssetUrls: () => ({ 'cover-1': 'blob:cover' }),
 }));
 

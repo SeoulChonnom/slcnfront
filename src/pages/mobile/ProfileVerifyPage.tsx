@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { ProfileIdentityVerification } from '../../domains/profile/components/ProfileIdentityVerification';
-import { buildDeviceProfileEditPath } from '../../lib/routing/route-builders';
+import { ProfileIdentityVerification } from '@/domains/profile/components/ProfileIdentityVerification';
+import { buildDeviceProfileEditPath } from '@/lib/routing/route-builders';
 
 export function ProfileVerifyPage() {
   const navigate = useNavigate();

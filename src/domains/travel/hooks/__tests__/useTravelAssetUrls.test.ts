@@ -1,9 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { travelFilesApi } from '../../api/travel-files-api';
-import { useTravelAssetUrls } from '../useTravelAssetUrls';
+import { travelFilesApi } from '@/domains/travel/api/travel-files-api';
+import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
 
-vi.mock('../../api/travel-files-api', () => ({
+vi.mock('@/domains/travel/api/travel-files-api', () => ({
   travelFilesApi: {
     downloadTravelFile: vi.fn(async (fileId: string) => {
       return new File([fileId], `${fileId}.png`, { type: 'image/png' });

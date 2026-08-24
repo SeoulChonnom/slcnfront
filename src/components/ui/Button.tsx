@@ -4,7 +4,7 @@ import {
   type ButtonSize,
   type ButtonVariant,
   getButtonClassName,
-} from './button-class-name';
+} from '@/components/ui/button-class-name';
 
 type SharedButtonProps = {
   variant?: ButtonVariant;

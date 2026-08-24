@@ -4,7 +4,7 @@ import {
   scheduleQueryKeys,
   shoesQueryKeys,
   tripQueryKeys,
-} from '../query-keys';
+} from '@/lib/api/query-keys';
 
 describe('query-keys', () => {
   it('creates stable auth and trip keys', () => {

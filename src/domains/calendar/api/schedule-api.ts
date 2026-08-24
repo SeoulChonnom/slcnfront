@@ -1,15 +1,15 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
+import {
+  parseScheduleListResponse,
+  parseScheduleResponse,
+  type ScheduleEventDto,
+} from '@/domains/calendar/api/calendar-schemas';
 import {
   mapScheduleEventDto,
   type ScheduleEvent,
   type ScheduleMutationPayload,
   type ScheduleRangeQuery,
-} from '../types';
-import {
-  parseScheduleListResponse,
-  parseScheduleResponse,
-  type ScheduleEventDto,
-} from './calendar-schemas';
+} from '@/domains/calendar/types';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,

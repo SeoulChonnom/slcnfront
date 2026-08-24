@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { AppError } from '../../../../lib/api/errors';
 import {
   parseTravelDetailResponse,
   parseTravelListResponse,
@@ -8,7 +7,8 @@ import {
   travelDetailRdoSchema,
   travelRdoSchema,
   travelUdoSchema,
-} from '../travel-schemas';
+} from '@/domains/travel/api/travel-schemas';
+import { AppError } from '@/lib/api/errors';
 
 const validFileBoxItem = {
   id: 'fbox-1',

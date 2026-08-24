@@ -1,5 +1,5 @@
-import { apiClient, type createApiClient } from '../../../lib/api/api-client';
-import type { FileAsset } from '../types';
+import type { FileAsset } from '@/domains/trip/types';
+import { apiClient, type createApiClient } from '@/lib/api/api-client';
 
 type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'get' | 'post'>;
 

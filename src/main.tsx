@@ -4,11 +4,11 @@ import 'pretendard/dist/web/static/Pretendard-Regular.css';
 import 'pretendard/dist/web/static/Pretendard-SemiBold.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AppRoot } from './app/AppRoot';
-import './styles/globals.css';
-import './styles/travel-list.css';
-import './styles/travel-detail.css';
-import './styles/travel-register.css';
+import { AppRoot } from '@/app/AppRoot';
+import '@/styles/globals.css';
+import '@/styles/travel-list.css';
+import '@/styles/travel-detail.css';
+import '@/styles/travel-register.css';
 
 const container = document.getElementById('root');
 

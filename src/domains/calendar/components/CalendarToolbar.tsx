@@ -1,10 +1,10 @@
-import { Button } from '../../../components/ui/Button';
-import { SegmentedControl } from '../../../components/ui/SegmentedControl';
-import { cn } from '../../../lib/utils/cn';
+import { Button } from '@/components/ui/Button';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import type {
   CalendarFiltersModel,
   CalendarNavigationModel,
-} from '../hooks/useCalendarSectionController';
+} from '@/domains/calendar/hooks/useCalendarSectionController';
+import { cn } from '@/lib/utils/cn';
 
 type CalendarToolbarProps = {
   navigation: CalendarNavigationModel;

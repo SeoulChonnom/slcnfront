@@ -1,4 +1,4 @@
-import type { TripType } from '../types';
+import type { TripType } from '@/domains/trip/types';
 
 export type TripRegisterWizardValues = {
   type: TripType | '';

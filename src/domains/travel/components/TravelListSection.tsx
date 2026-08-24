@@ -1,12 +1,12 @@
-import type { DeviceType } from '../../../app/router/route-constants';
-import { LinkButton } from '../../../components/ui/Button';
-import { EmptyState } from '../../../components/ui/EmptyState';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import { buildDeviceTravelRegisterPath } from '../../../lib/routing/route-builders';
-import { useTravelAssetUrls } from '../hooks/useTravelAssetUrls';
-import { useTravelList } from '../hooks/useTravelList';
-import { TravelCard } from './TravelCard';
+import type { DeviceType } from '@/app/router/route-constants';
+import { LinkButton } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { TravelCard } from '@/domains/travel/components/TravelCard';
+import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
+import { useTravelList } from '@/domains/travel/hooks/useTravelList';
+import { buildDeviceTravelRegisterPath } from '@/lib/routing/route-builders';
 
 const travelCardSkeletonKeys = [
   'travel-card-skeleton-1',

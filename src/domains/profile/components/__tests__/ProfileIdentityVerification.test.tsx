@@ -1,14 +1,14 @@
 import { act, screen, waitFor } from '@testing-library/react';
 import { beforeEach, vi } from 'vitest';
-import { AppError } from '../../../../lib/api/errors';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { useAuthStore } from '../../../auth/store/auth-store';
-import { hasProfileEditAccess } from '../../utils/profile-verification';
-import { ProfileIdentityVerification } from '../ProfileIdentityVerification';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileIdentityVerification } from '@/domains/profile/components/ProfileIdentityVerification';
+import { hasProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { AppError } from '@/lib/api/errors';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const { verifyPassword } = vi.hoisted(() => ({ verifyPassword: vi.fn() }));
 
-vi.mock('../../api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: { verifyPassword },
 }));
 

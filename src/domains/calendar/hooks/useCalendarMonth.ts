@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
-import { calendarScheduleQueryKeys } from '../query-keys';
-import { formatMonthLabel, getMonthRange } from '../utils/calendar-date';
-import { useCalendarRangeData } from './useCalendarRangeData';
+import { useCalendarRangeData } from '@/domains/calendar/hooks/useCalendarRangeData';
+import { calendarScheduleQueryKeys } from '@/domains/calendar/query-keys';
+import {
+  formatMonthLabel,
+  getMonthRange,
+} from '@/domains/calendar/utils/calendar-date';
 
 export function useCalendarMonth(dateKey: string) {
   const anchor = dayjs(dateKey);

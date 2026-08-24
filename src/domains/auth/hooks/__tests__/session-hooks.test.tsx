@@ -2,15 +2,15 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createTestQueryClient } from '../../../../test/helpers/query-client';
+import { useLogin } from '@/domains/auth/hooks/useLogin';
+import { useLogout } from '@/domains/auth/hooks/useLogout';
+import { useRestoreSession } from '@/domains/auth/hooks/useRestoreSession';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
 import {
   grantProfileEditAccess,
   hasProfileEditAccess,
-} from '../../../profile/utils/profile-verification';
-import { useAuthStore } from '../../store/auth-store';
-import { useLogin } from '../useLogin';
-import { useLogout } from '../useLogout';
-import { useRestoreSession } from '../useRestoreSession';
+} from '@/domains/profile/utils/profile-verification';
+import { createTestQueryClient } from '@/test/helpers/query-client';
 
 const { login, logout, restoreSession } = vi.hoisted(() => ({
   login: vi.fn(),
@@ -18,7 +18,7 @@ const { login, logout, restoreSession } = vi.hoisted(() => ({
   restoreSession: vi.fn(),
 }));
 
-vi.mock('../../api/auth-api', () => ({
+vi.mock('@/domains/auth/api/auth-api', () => ({
   authApi: {
     login,
     logout,

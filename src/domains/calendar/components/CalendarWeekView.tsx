@@ -7,7 +7,7 @@ import interactionPlugin, {
   type EventResizeDoneArg,
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { CalendarTimelineView } from './CalendarTimelineView';
+import { CalendarTimelineView } from '@/domains/calendar/components/CalendarTimelineView';
 
 type CalendarWeekViewProps = {
   currentDate: string;

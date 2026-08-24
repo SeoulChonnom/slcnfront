@@ -1,4 +1,4 @@
-import { createInitialTripRegisterValues } from '../trip-form-data';
+import { createInitialTripRegisterValues } from '@/domains/trip/utils/trip-form-data';
 
 describe('trip-form-data', () => {
   it('creates the default wizard values', () => {

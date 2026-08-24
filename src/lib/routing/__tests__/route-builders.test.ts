@@ -6,7 +6,7 @@ import {
   buildDeviceRootPath,
   buildDeviceShoeDetailPath,
   buildDeviceTripDetailPath,
-} from '../route-builders';
+} from '@/lib/routing/route-builders';
 
 describe('route builders', () => {
   it('builds main device urls', () => {

@@ -1,4 +1,4 @@
-import { getShoesCatalog } from '../data/shoes-data';
+import { getShoesCatalog } from '@/domains/shoes/data/shoes-data';
 
 export function useShoeCatalog() {
   return getShoesCatalog();

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { tripQueryKeys } from '../../../lib/api/query-keys';
-import { tripApi } from '../api/trip-api';
+import { tripApi } from '@/domains/trip/api/trip-api';
+import { tripQueryKeys } from '@/lib/api/query-keys';
 
 export function useTripDetail(id: string | undefined) {
   return useQuery({

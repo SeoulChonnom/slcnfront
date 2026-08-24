@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { TripQuiz } from '../../types';
-import { TripQuizModal } from '../TripQuizModal';
+import { TripQuizModal } from '@/domains/trip/components/TripQuizModal';
+import type { TripQuiz } from '@/domains/trip/types';
 
 const quiz: TripQuiz = {
   title: '정답은?',

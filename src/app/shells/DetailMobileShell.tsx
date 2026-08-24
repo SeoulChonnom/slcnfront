@@ -1,11 +1,11 @@
 import type { PropsWithChildren } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { MobileTopBar } from '../../components/layout/MobileTopBar';
+import { MobileTopBar } from '@/components/layout/MobileTopBar';
 import {
   buildDeviceProfilePath,
   buildDeviceRootPath,
-} from '../../lib/routing/route-builders';
-import { cn } from '../../lib/utils/cn';
+} from '@/lib/routing/route-builders';
+import { cn } from '@/lib/utils/cn';
 
 type DetailMobileShellProps = PropsWithChildren<{
   className?: string;

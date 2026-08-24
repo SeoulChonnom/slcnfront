@@ -1,5 +1,5 @@
-import { getShoesCatalog } from '../data/shoes-data';
-import { getShoeDetailBySlug } from '../utils/shoes-slug';
+import { getShoesCatalog } from '@/domains/shoes/data/shoes-data';
+import { getShoeDetailBySlug } from '@/domains/shoes/utils/shoes-slug';
 
 export function useShoeDetail(
   brandSlug: string | undefined,

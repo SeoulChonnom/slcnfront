@@ -1,7 +1,7 @@
-import { RadioGroup } from '../../../components/ui/RadioGroup';
-import { TextField } from '../../../components/ui/TextField';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
-import type { TripValidationErrors } from '../utils/trip-validation';
+import { RadioGroup } from '@/components/ui/RadioGroup';
+import { TextField } from '@/components/ui/TextField';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import type { TripValidationErrors } from '@/domains/trip/utils/trip-validation';
 
 const quizOptionFieldKeys = [
   'quiz-option-1',

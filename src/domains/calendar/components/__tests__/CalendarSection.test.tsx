@@ -8,7 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CalendarSection } from '../CalendarSection';
+import { CalendarSection } from '@/domains/calendar/components/CalendarSection';
 
 const {
   createSchedule,
@@ -26,7 +26,7 @@ const {
   removeCalendar: vi.fn(),
 }));
 
-vi.mock('../../hooks/useCalendarEventMutations', () => ({
+vi.mock('@/domains/calendar/hooks/useCalendarEventMutations', () => ({
   useCalendarEventMutations: () => ({
     createSchedule,
     updateSchedule,
@@ -35,7 +35,7 @@ vi.mock('../../hooks/useCalendarEventMutations', () => ({
   }),
 }));
 
-vi.mock('../../hooks/useCalendarMutations', () => ({
+vi.mock('@/domains/calendar/hooks/useCalendarMutations', () => ({
   useCalendarMutations: () => ({
     createCalendar,
     updateCalendar,
@@ -44,7 +44,7 @@ vi.mock('../../hooks/useCalendarMutations', () => ({
   }),
 }));
 
-vi.mock('../CalendarMonthView', () => ({
+vi.mock('@/domains/calendar/components/CalendarMonthView', () => ({
   CalendarMonthView: ({
     events,
     selectable,
@@ -98,7 +98,7 @@ vi.mock('../CalendarMonthView', () => ({
   ),
 }));
 
-vi.mock('../CalendarWeekView', () => ({
+vi.mock('@/domains/calendar/components/CalendarWeekView', () => ({
   CalendarWeekView: () => <div data-testid='calendar-week-view' />,
 }));
 

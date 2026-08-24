@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router-dom';
-import { DesktopHeader } from '../../components/layout/DesktopHeader';
-import { Footer } from '../../components/layout/Footer';
-import { cn } from '../../lib/utils/cn';
+import { DesktopHeader } from '@/components/layout/DesktopHeader';
+import { Footer } from '@/components/layout/Footer';
+import { cn } from '@/lib/utils/cn';
 
 type MainDesktopShellProps = PropsWithChildren<{
   className?: string;

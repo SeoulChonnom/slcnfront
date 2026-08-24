@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   resolveExternalRedirectTarget,
   resolvePostAuthRedirectTarget,
-} from '../redirect-target';
+} from '@/domains/auth/utils/redirect-target';
 
 describe('resolvePostAuthRedirectTarget', () => {
   it('keeps same-device redirect targets', () => {

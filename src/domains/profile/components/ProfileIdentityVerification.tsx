@@ -1,8 +1,8 @@
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
-import { AppError } from '../../../lib/api/errors';
-import { useAuthStore } from '../../auth/store/auth-store';
-import { useVerifyProfilePassword } from '../hooks/useVerifyProfilePassword';
-import { grantProfileEditAccess } from '../utils/profile-verification';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { useVerifyProfilePassword } from '@/domains/profile/hooks/useVerifyProfilePassword';
+import { grantProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { AppError } from '@/lib/api/errors';
 
 type ProfileIdentityVerificationProps = {
   device: 'desktop' | 'mobile';

@@ -1,15 +1,15 @@
-import { LoginPage } from '../../pages/shared/LoginPage';
-import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { DetailMobileShell } from '../shells/DetailMobileShell';
-import { MainMobileShell } from '../shells/MainMobileShell';
-import { PublicShell } from '../shells/PublicShell';
-import { renderDeviceRoutes } from './render-device-routes';
-import { MOBILE_ROUTE_PATTERNS } from './route-constants';
+import { renderDeviceRoutes } from '@/app/router/render-device-routes';
+import { MOBILE_ROUTE_PATTERNS } from '@/app/router/route-constants';
 import {
   BASE_PROTECTED_ROUTES,
   createDeviceRouteConfig,
   withShell,
-} from './route-manifest';
+} from '@/app/router/route-manifest';
+import { DetailMobileShell } from '@/app/shells/DetailMobileShell';
+import { MainMobileShell } from '@/app/shells/MainMobileShell';
+import { PublicShell } from '@/app/shells/PublicShell';
+import { LoginPage } from '@/pages/shared/LoginPage';
+import { NotFoundPage } from '@/pages/shared/NotFoundPage';
 
 const mobileRouteConfig = createDeviceRouteConfig('mobile', {
   loginPath: MOBILE_ROUTE_PATTERNS.login,

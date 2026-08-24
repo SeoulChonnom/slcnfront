@@ -1,14 +1,14 @@
 import { Fragment, type ReactElement, type ReactNode } from 'react';
 import { Navigate, Route } from 'react-router-dom';
-import { RequireAuth } from './guards';
-import { renderLazyRoutePage } from './lazy-route-pages';
-import type { DeviceType } from './route-constants';
+import { RequireAuth } from '@/app/router/guards';
+import { renderLazyRoutePage } from '@/app/router/lazy-route-pages';
+import type { DeviceType } from '@/app/router/route-constants';
 import {
   type DeviceRouteConfig,
   type DeviceShellKey,
   filterRoutesByShell,
   getRouteDefinitionKey,
-} from './route-manifest';
+} from '@/app/router/route-manifest';
 
 type ShellDefinition = {
   key: DeviceShellKey;

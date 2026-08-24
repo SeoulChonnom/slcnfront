@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createApiClient } from '../../../../lib/api/api-client';
-import type { AppError } from '../../../../lib/api/errors';
-import { createAuthApi, toLoginRequest } from '../auth-api';
+import { createAuthApi, toLoginRequest } from '@/domains/auth/api/auth-api';
+import { createApiClient } from '@/lib/api/api-client';
+import type { AppError } from '@/lib/api/errors';
 
 describe('auth-api', () => {
   it('maps login form fields to the backend request shape', () => {

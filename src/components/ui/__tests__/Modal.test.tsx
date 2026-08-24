@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { Modal } from '../Modal';
+import { Modal } from '@/components/ui/Modal';
 
 describe('Modal', () => {
   it('does not render the dialog when closed', () => {

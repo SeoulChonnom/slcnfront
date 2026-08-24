@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { CalendarToolbar } from '../CalendarToolbar';
+import { CalendarToolbar } from '@/domains/calendar/components/CalendarToolbar';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('CalendarToolbar', () => {
   it('renders navigation, view toggle and create action', async () => {

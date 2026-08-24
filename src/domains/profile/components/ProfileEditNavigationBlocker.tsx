@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { UNSAFE_DataRouterContext, useBlocker } from 'react-router-dom';
-import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 
 const UNSAVED_PROFILE_CHANGES_TITLE = '저장하지 않은 변경 사항이 있어요';
 const UNSAVED_PROFILE_CHANGES_DESCRIPTION =

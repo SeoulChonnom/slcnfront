@@ -1,10 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import {
-  selectAuthPhase,
-  useAuthStore,
-} from '../../domains/auth/store/auth-store';
-import { buildDeviceLoginPath } from '../../lib/routing/route-builders';
-import { DEVICE_PREFIX } from './route-constants';
+import { DEVICE_PREFIX } from '@/app/router/route-constants';
+import { selectAuthPhase, useAuthStore } from '@/domains/auth/store/auth-store';
+import { buildDeviceLoginPath } from '@/lib/routing/route-builders';
 
 function resolveLoginPath(pathname: string) {
   return pathname.startsWith(DEVICE_PREFIX.mobile)

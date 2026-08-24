@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { ShoeDetailPage } from '../ShoeDetailPage';
+import { ShoeDetailPage } from '@/pages/main/ShoeDetailPage';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('ShoeDetailPage', () => {
   it('renders the video panel when the shoe has video data', async () => {

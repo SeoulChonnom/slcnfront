@@ -1,8 +1,8 @@
-import { Button } from '../../../components/ui/Button';
-import { FileDropzone } from '../../../components/ui/FileDropzone';
-import { TextField } from '../../../components/ui/TextField';
-import type { TripRegisterWizardValues } from '../utils/trip-form-data';
-import type { TripValidationErrors } from '../utils/trip-validation';
+import { Button } from '@/components/ui/Button';
+import { FileDropzone } from '@/components/ui/FileDropzone';
+import { TextField } from '@/components/ui/TextField';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import type { TripValidationErrors } from '@/domains/trip/utils/trip-validation';
 
 type TripRegisterMapsFieldKey =
   | 'map1'

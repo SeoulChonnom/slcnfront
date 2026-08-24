@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getShoesCatalog } from '../shoes-data';
+import { getShoesCatalog } from '@/domains/shoes/data/shoes-data';
 
 describe('shoes-data', () => {
   it('exports the shoes catalog in the final domain shape', () => {

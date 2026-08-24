@@ -1,17 +1,17 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithMinimalProviders } from '../../../test/helpers/render';
-import { CalendarMonthPage } from '../CalendarMonthPage';
+import { CalendarMonthPage } from '@/pages/main/CalendarMonthPage';
+import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 const { useCalendarMonth } = vi.hoisted(() => ({
   useCalendarMonth: vi.fn(),
 }));
 
-vi.mock('../../../domains/calendar/hooks/useCalendarMonth', () => ({
+vi.mock('@/domains/calendar/hooks/useCalendarMonth', () => ({
   useCalendarMonth,
 }));
 
-vi.mock('../../../domains/calendar/components/CalendarSection', () => ({
+vi.mock('@/domains/calendar/components/CalendarSection', () => ({
   CalendarSection: ({ state }: { state: { label: string } }) => (
     <div>{state.label}</div>
   ),

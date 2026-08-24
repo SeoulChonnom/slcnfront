@@ -2,21 +2,21 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { createTestQueryClient } from '../../../../test/helpers/query-client';
-import { useCalendarMonth } from '../useCalendarMonth';
+import { useCalendarMonth } from '@/domains/calendar/hooks/useCalendarMonth';
+import { createTestQueryClient } from '@/test/helpers/query-client';
 
 const { getCalendars, getSchedulesInRange } = vi.hoisted(() => ({
   getCalendars: vi.fn(),
   getSchedulesInRange: vi.fn(),
 }));
 
-vi.mock('../../api/calendar-api', () => ({
+vi.mock('@/domains/calendar/api/calendar-api', () => ({
   calendarApi: {
     getCalendars,
   },
 }));
 
-vi.mock('../../api/schedule-api', () => ({
+vi.mock('@/domains/calendar/api/schedule-api', () => ({
   scheduleApi: {
     getSchedulesInRange,
   },

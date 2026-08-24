@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TravelTag } from '../types';
+import type { TravelTag } from '@/domains/travel/types';
 
 type TravelTagSectionProps = {
   tags: TravelTag[];

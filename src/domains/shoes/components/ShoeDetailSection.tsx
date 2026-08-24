@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { LinkButton } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { buildDeviceShoesCatalogPath } from '../../../lib/routing/route-builders';
-import { useShoeDetail } from '../hooks/useShoeDetail';
-import { getShoeReviewKey } from '../utils/shoes-slug';
-import { ShoeDetailHero } from './ShoeDetailHero';
-import { ShoeReviewCard } from './ShoeReviewCard';
-import { ShoeVideoPanel } from './ShoeVideoPanel';
+import type { DeviceType } from '@/app/router/route-constants';
+import { LinkButton } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { ShoeDetailHero } from '@/domains/shoes/components/ShoeDetailHero';
+import { ShoeReviewCard } from '@/domains/shoes/components/ShoeReviewCard';
+import { ShoeVideoPanel } from '@/domains/shoes/components/ShoeVideoPanel';
+import { useShoeDetail } from '@/domains/shoes/hooks/useShoeDetail';
+import { getShoeReviewKey } from '@/domains/shoes/utils/shoes-slug';
+import { buildDeviceShoesCatalogPath } from '@/lib/routing/route-builders';
 
 type ShoeDetailSectionProps = {
   device: DeviceType;

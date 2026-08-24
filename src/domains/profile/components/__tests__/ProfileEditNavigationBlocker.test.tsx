@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, Link, RouterProvider } from 'react-router-dom';
-import { ProfileEditNavigationBlocker } from '../ProfileEditNavigationBlocker';
+import { ProfileEditNavigationBlocker } from '@/domains/profile/components/ProfileEditNavigationBlocker';
 
 function DirtyEditor() {
   return (

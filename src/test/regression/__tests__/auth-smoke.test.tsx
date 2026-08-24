@@ -1,21 +1,18 @@
 import { screen, waitFor } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppRouter } from '../../../app/router/AppRouter';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
-import { renderWithAppProviders } from '../../helpers/render';
+import { AppRouter } from '@/app/router/AppRouter';
+import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
+import { renderWithAppProviders } from '@/test/helpers/render';
 
 const { restoreSession } = vi.hoisted(() => ({
   restoreSession: vi.fn(),
 }));
 
-vi.mock('../../../domains/auth/api/auth-api', async () => {
+vi.mock('@/domains/auth/api/auth-api', async () => {
   const actual = await vi.importActual<
-    typeof import('../../../domains/auth/api/auth-api')
-  >('../../../domains/auth/api/auth-api');
+    typeof import('@/domains/auth/api/auth-api')
+  >('@/domains/auth/api/auth-api');
 
   return {
     ...actual,

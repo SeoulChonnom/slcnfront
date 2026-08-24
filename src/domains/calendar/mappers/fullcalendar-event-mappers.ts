@@ -1,11 +1,11 @@
 import type { EventApi } from '@fullcalendar/core';
 import dayjs from 'dayjs';
-import type { ScheduleMutationPayload } from '../types';
+import type { ScheduleMutationPayload } from '@/domains/calendar/types';
 import {
   API_DATE_FORMAT,
   API_DATE_TIME_FORMAT,
   toInclusiveAllDayEnd,
-} from '../utils/calendar-date';
+} from '@/domains/calendar/utils/calendar-date';
 
 export function mapEventApiToSchedulePayload(
   event: EventApi

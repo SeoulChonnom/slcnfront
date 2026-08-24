@@ -1,5 +1,9 @@
-import { mapScheduleToCalendarEventInput } from '../mappers/schedule-event-mappers';
-import type { CalendarEventInput, CalendarMeta, ScheduleEvent } from '../types';
+import { mapScheduleToCalendarEventInput } from '@/domains/calendar/mappers/schedule-event-mappers';
+import type {
+  CalendarEventInput,
+  CalendarMeta,
+  ScheduleEvent,
+} from '@/domains/calendar/types';
 
 export function getMutationErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error && error.message.trim()) {

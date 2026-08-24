@@ -1,6 +1,6 @@
-import type { ScheduleEvent } from '../calendar/types';
-import type { TravelListItem } from '../travel/types';
-import type { TripListItem } from '../trip/types';
+import type { ScheduleEvent } from '@/domains/calendar/types';
+import type { TravelListItem } from '@/domains/travel/types';
+import type { TripListItem } from '@/domains/trip/types';
 
 /**
  * The home surface merges three sources into one chronological spine.

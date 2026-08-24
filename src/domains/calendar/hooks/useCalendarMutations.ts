@@ -1,7 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { calendarApi } from '../api/calendar-api';
-import { calendarQueryKeys, calendarScheduleQueryKeys } from '../query-keys';
-import type { CalendarCreatePayload, CalendarUpdatePayload } from '../types';
+import { calendarApi } from '@/domains/calendar/api/calendar-api';
+import {
+  calendarQueryKeys,
+  calendarScheduleQueryKeys,
+} from '@/domains/calendar/query-keys';
+import type {
+  CalendarCreatePayload,
+  CalendarUpdatePayload,
+} from '@/domains/calendar/types';
 
 export function useCalendarMutations() {
   const queryClient = useQueryClient();

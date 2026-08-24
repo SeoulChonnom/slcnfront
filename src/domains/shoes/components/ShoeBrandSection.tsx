@@ -1,6 +1,6 @@
-import type { DeviceType } from '../../../app/router/route-constants';
-import type { ShoeBrand } from '../types';
-import { ShoeCard } from './ShoeCard';
+import type { DeviceType } from '@/app/router/route-constants';
+import { ShoeCard } from '@/domains/shoes/components/ShoeCard';
+import type { ShoeBrand } from '@/domains/shoes/types';
 
 type ShoeBrandSectionProps = {
   device: DeviceType;

@@ -1,21 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { LinkButton } from '../../../components/ui/Button';
-import { EmptyState } from '../../../components/ui/EmptyState';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { Skeleton } from '../../../components/ui/Skeleton';
+import type { DeviceType } from '@/app/router/route-constants';
+import { LinkButton } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { TripCard } from '@/domains/trip/components/TripCard';
+import { TripQuizModal } from '@/domains/trip/components/TripQuizModal';
+import { useTripAssetUrls } from '@/domains/trip/hooks/useTripAssetUrls';
+import { useTripList } from '@/domains/trip/hooks/useTripList';
+import { useTripQuiz } from '@/domains/trip/hooks/useTripQuiz';
+import { fileAssetKey } from '@/domains/trip/types';
 import {
   buildDeviceTripDetailPath,
   buildDeviceTripRegisterPath,
-} from '../../../lib/routing/route-builders';
-import { useAuthStore } from '../../auth/store/auth-store';
-import { useTripAssetUrls } from '../hooks/useTripAssetUrls';
-import { useTripList } from '../hooks/useTripList';
-import { useTripQuiz } from '../hooks/useTripQuiz';
-import { fileAssetKey } from '../types';
-import { TripCard } from './TripCard';
-import { TripQuizModal } from './TripQuizModal';
+} from '@/lib/routing/route-builders';
 
 const tripCardSkeletonKeys = [
   'trip-card-skeleton-1',

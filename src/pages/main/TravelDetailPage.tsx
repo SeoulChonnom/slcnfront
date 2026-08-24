@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { ErrorState } from '../../components/ui/ErrorState';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { TravelDetailSection } from '../../domains/travel/components/TravelDetailSection';
-import { useTravelDetail } from '../../domains/travel/hooks/useTravelDetail';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { TravelDetailSection } from '@/domains/travel/components/TravelDetailSection';
+import { useTravelDetail } from '@/domains/travel/hooks/useTravelDetail';
 
 export function TravelDetailPage() {
   const params = useParams<{ id: string }>();

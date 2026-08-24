@@ -1,6 +1,6 @@
-import type { DeviceType } from '../../../app/router/route-constants';
-import { EXTERNAL_APP_PREFIXES } from '../../../app/router/route-constants';
-import { buildDeviceRootPath } from '../../../lib/routing/route-builders';
+import type { DeviceType } from '@/app/router/route-constants';
+import { EXTERNAL_APP_PREFIXES } from '@/app/router/route-constants';
+import { buildDeviceRootPath } from '@/lib/routing/route-builders';
 
 function getDevicePrefix(device: DeviceType) {
   return device === 'mobile' ? '/mobile' : '/main';

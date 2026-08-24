@@ -1,14 +1,14 @@
-import { LoginPage } from '../../pages/shared/LoginPage';
-import { NotFoundPage } from '../../pages/shared/NotFoundPage';
-import { MainDesktopShell } from '../shells/MainDesktopShell';
-import { PublicShell } from '../shells/PublicShell';
-import { renderDeviceRoutes } from './render-device-routes';
-import { MAIN_ROUTE_PATTERNS } from './route-constants';
+import { renderDeviceRoutes } from '@/app/router/render-device-routes';
+import { MAIN_ROUTE_PATTERNS } from '@/app/router/route-constants';
 import {
   BASE_PROTECTED_ROUTES,
   createDeviceRouteConfig,
   withShell,
-} from './route-manifest';
+} from '@/app/router/route-manifest';
+import { MainDesktopShell } from '@/app/shells/MainDesktopShell';
+import { PublicShell } from '@/app/shells/PublicShell';
+import { LoginPage } from '@/pages/shared/LoginPage';
+import { NotFoundPage } from '@/pages/shared/NotFoundPage';
 
 const mainRouteConfig = createDeviceRouteConfig('main', {
   loginPath: MAIN_ROUTE_PATTERNS.login,

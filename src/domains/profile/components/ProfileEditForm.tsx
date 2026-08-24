@@ -6,16 +6,16 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useAuthStore } from '../../auth/store/auth-store';
-import { useProfile } from '../hooks/useProfile';
-import { useProfileImageUrl } from '../hooks/useProfileImageUrl';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
+import { useProfile } from '@/domains/profile/hooks/useProfile';
+import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
 import {
   ProfileImageUploadError,
   ProfileUpdateSessionRefreshError,
   ProfileUpdateWithUploadedImageError,
   useUpdateProfile,
-} from '../hooks/useUpdateProfile';
-import { ProfileAvatar } from './ProfileAvatar';
+} from '@/domains/profile/hooks/useUpdateProfile';
 
 type ProfileEditFormProps = {
   device: 'desktop' | 'mobile';

@@ -1,13 +1,10 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, vi } from 'vitest';
-import {
-  resetAuthStore,
-  useAuthStore,
-} from '../../../domains/auth/store/auth-store';
-import '../../../styles/profile.css';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { DesktopHeader } from '../DesktopHeader';
+import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
+import '@/styles/profile.css';
+import { DesktopHeader } from '@/components/layout/DesktopHeader';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const { getProfile, logout, verifyPassword } = vi.hoisted(() => ({
   getProfile: vi.fn(),
@@ -15,11 +12,11 @@ const { getProfile, logout, verifyPassword } = vi.hoisted(() => ({
   verifyPassword: vi.fn(),
 }));
 
-vi.mock('../../../domains/profile/api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: { getProfile, verifyPassword },
 }));
 
-vi.mock('../../../domains/auth/api/auth-api', () => ({
+vi.mock('@/domains/auth/api/auth-api', () => ({
   authApi: { logout },
 }));
 

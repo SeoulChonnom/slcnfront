@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { TextField } from '../TextField';
+import { TextField } from '@/components/ui/TextField';
+import { renderWithProviders } from '@/test/helpers/render';
 
 describe('TextField', () => {
   it('connects the label to the input and exposes required state', () => {

@@ -1,20 +1,20 @@
-import asicsBrandImage from '../../../assets/img/shoes/Asics.png';
-import asicsJog100Image from '../../../assets/img/shoes/AsicsJog100.webp';
-import asicsJogReviewImage from '../../../assets/img/shoes/AsicsJogReview.webp';
-import asicsJogReviewImage2 from '../../../assets/img/shoes/AsicsJogReview2.webp';
-import nbBrandImage from '../../../assets/img/shoes/NB.png';
-import nb530Image from '../../../assets/img/shoes/NB530.webp';
-import nb574Image from '../../../assets/img/shoes/NB574.webp';
-import nb574ReviewImage from '../../../assets/img/shoes/NB574Review.webp';
-import nikeBrandImage from '../../../assets/img/shoes/Nike.webp';
-import nikeP6000Image from '../../../assets/img/shoes/NikeP6000.webp';
-import nikeV2KImage from '../../../assets/img/shoes/NikeV2K.webp';
-import nikeZoomVomeroImage from '../../../assets/img/shoes/NikeZoomBomero5.webp';
-import mjV2KVideo from '../../../assets/video/mjV2K.mp4';
-import mjV2KPoster from '../../../assets/video/mjV2K.poster.webp';
-import mjZB5Video from '../../../assets/video/mjZB5.mp4';
-import mjZB5Poster from '../../../assets/video/mjZB5.poster.webp';
-import type { ShoeBrand } from '../types';
+import asicsBrandImage from '@/assets/img/shoes/Asics.png';
+import asicsJog100Image from '@/assets/img/shoes/AsicsJog100.webp';
+import asicsJogReviewImage from '@/assets/img/shoes/AsicsJogReview.webp';
+import asicsJogReviewImage2 from '@/assets/img/shoes/AsicsJogReview2.webp';
+import nbBrandImage from '@/assets/img/shoes/NB.png';
+import nb530Image from '@/assets/img/shoes/NB530.webp';
+import nb574Image from '@/assets/img/shoes/NB574.webp';
+import nb574ReviewImage from '@/assets/img/shoes/NB574Review.webp';
+import nikeBrandImage from '@/assets/img/shoes/Nike.webp';
+import nikeP6000Image from '@/assets/img/shoes/NikeP6000.webp';
+import nikeV2KImage from '@/assets/img/shoes/NikeV2K.webp';
+import nikeZoomVomeroImage from '@/assets/img/shoes/NikeZoomBomero5.webp';
+import mjV2KVideo from '@/assets/video/mjV2K.mp4';
+import mjV2KPoster from '@/assets/video/mjV2K.poster.webp';
+import mjZB5Video from '@/assets/video/mjZB5.mp4';
+import mjZB5Poster from '@/assets/video/mjZB5.poster.webp';
+import type { ShoeBrand } from '@/domains/shoes/types';
 
 const globalShoes: ShoeBrand[] = [
   {

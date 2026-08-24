@@ -1,12 +1,12 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, vi } from 'vitest';
-import { useAuthStore } from '../../../domains/auth/store/auth-store';
-import { grantProfileEditAccess } from '../../../domains/profile/utils/profile-verification';
-import { renderWithProviders } from '../../../test/helpers/render';
-import { ProfileEditPage } from '../ProfileEditPage';
-import { ProfilePage } from '../ProfilePage';
-import { ProfileVerifyPage } from '../ProfileVerifyPage';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { grantProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { ProfileEditPage } from '@/pages/mobile/ProfileEditPage';
+import { ProfilePage } from '@/pages/mobile/ProfilePage';
+import { ProfileVerifyPage } from '@/pages/mobile/ProfileVerifyPage';
+import { renderWithProviders } from '@/test/helpers/render';
 
 const { getProfile, logout, verifyPassword } = vi.hoisted(() => ({
   getProfile: vi.fn(),
@@ -14,11 +14,11 @@ const { getProfile, logout, verifyPassword } = vi.hoisted(() => ({
   verifyPassword: vi.fn(),
 }));
 
-vi.mock('../../../domains/profile/api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: { getProfile, verifyPassword },
 }));
 
-vi.mock('../../../domains/auth/api/auth-api', () => ({
+vi.mock('@/domains/auth/api/auth-api', () => ({
   authApi: { logout },
 }));
 

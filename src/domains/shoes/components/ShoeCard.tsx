@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { Card } from '../../../components/ui/Card';
-import { buildDeviceShoeDetailPath } from '../../../lib/routing/route-builders';
-import type { ShoeBrand, ShoeItem } from '../types';
+import type { DeviceType } from '@/app/router/route-constants';
+import { Card } from '@/components/ui/Card';
+import type { ShoeBrand, ShoeItem } from '@/domains/shoes/types';
+import { buildDeviceShoeDetailPath } from '@/lib/routing/route-builders';
 
 type ShoeCardProps = {
   device: DeviceType;

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   computeNightsDays,
   useTravelRegisterForm,
-} from '../useTravelRegisterForm';
+} from '@/domains/travel/hooks/useTravelRegisterForm';
 
 // ── computeNightsDays (exported pure helper) ──────────────────────────────────
 

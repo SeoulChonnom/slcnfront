@@ -1,10 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderWithProviders } from '../../../../test/helpers/render';
-import { tripApi } from '../../api/trip-api';
-import { tripFilesApi } from '../../api/trip-files-api';
-import type { FileAsset } from '../../types';
-import { TripRegisterWizard } from '../TripRegisterWizard';
+import { tripApi } from '@/domains/trip/api/trip-api';
+import { tripFilesApi } from '@/domains/trip/api/trip-files-api';
+import { TripRegisterWizard } from '@/domains/trip/components/TripRegisterWizard';
+import type { FileAsset } from '@/domains/trip/types';
+import { renderWithProviders } from '@/test/helpers/render';
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {
@@ -28,13 +28,13 @@ const logoAsset = fileAsset({
 const firstMapAsset = fileAsset({ fileId: 'map-1', filename: 'map1.png' });
 const secondMapAsset = fileAsset({ fileId: 'map-2', filename: 'map2.png' });
 
-vi.mock('../../api/trip-files-api', () => ({
+vi.mock('@/domains/trip/api/trip-files-api', () => ({
   tripFilesApi: {
     uploadTripFile: vi.fn(),
   },
 }));
 
-vi.mock('../../api/trip-api', () => ({
+vi.mock('@/domains/trip/api/trip-api', () => ({
   tripApi: {
     registerTrip: vi.fn(),
   },

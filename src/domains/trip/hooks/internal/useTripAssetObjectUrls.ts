@@ -1,9 +1,9 @@
+import { tripFilesApi } from '@/domains/trip/api/trip-files-api';
+import { type FileAsset, fileAssetKey } from '@/domains/trip/types';
 import {
   type AssetObjectUrlsOptions,
   useAssetObjectUrls,
-} from '../../../../lib/hooks/useAssetObjectUrls';
-import { tripFilesApi } from '../../api/trip-files-api';
-import { type FileAsset, fileAssetKey } from '../../types';
+} from '@/lib/hooks/useAssetObjectUrls';
 
 const tripAssetOptions: AssetObjectUrlsOptions<FileAsset> = {
   getKey: fileAssetKey,

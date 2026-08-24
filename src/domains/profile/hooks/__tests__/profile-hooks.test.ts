@@ -2,22 +2,22 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { profileQueryKeys } from '../../../../lib/api/query-keys';
-import { createTestQueryClient } from '../../../../test/helpers/query-client';
-import { useAuthStore } from '../../../auth/store/auth-store';
-import type { UserProfile } from '../../types';
-import {
-  grantProfileEditAccess,
-  hasProfileEditAccess,
-} from '../../utils/profile-verification';
-import { useProfile } from '../useProfile';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import { useProfile } from '@/domains/profile/hooks/useProfile';
 import {
   type ProfileImageUploadError,
   type ProfileUpdateSessionRefreshError,
   type ProfileUpdateWithUploadedImageError,
   useUpdateProfile,
-} from '../useUpdateProfile';
-import { useVerifyProfilePassword } from '../useVerifyProfilePassword';
+} from '@/domains/profile/hooks/useUpdateProfile';
+import { useVerifyProfilePassword } from '@/domains/profile/hooks/useVerifyProfilePassword';
+import type { UserProfile } from '@/domains/profile/types';
+import {
+  grantProfileEditAccess,
+  hasProfileEditAccess,
+} from '@/domains/profile/utils/profile-verification';
+import { profileQueryKeys } from '@/lib/api/query-keys';
+import { createTestQueryClient } from '@/test/helpers/query-client';
 
 const {
   downloadProfileImage,
@@ -35,7 +35,7 @@ const {
   verifyPassword: vi.fn(),
 }));
 
-vi.mock('../../api/profile-api', () => ({
+vi.mock('@/domains/profile/api/profile-api', () => ({
   profileApi: {
     downloadProfileImage,
     getProfile,
@@ -45,7 +45,7 @@ vi.mock('../../api/profile-api', () => ({
   },
 }));
 
-vi.mock('../../../auth/api/auth-api', () => ({
+vi.mock('@/domains/auth/api/auth-api', () => ({
   authApi: {
     restoreSession,
   },

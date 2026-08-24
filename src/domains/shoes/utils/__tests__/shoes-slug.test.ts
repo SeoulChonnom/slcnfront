@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { getShoesCatalog } from '../../data/shoes-data';
+import { getShoesCatalog } from '@/domains/shoes/data/shoes-data';
 import {
   findBrandBySlug,
   findShoeBySlug,
   getShoeDetailBySlug,
   isReservedShoeBrandSlug,
-} from '../shoes-slug';
+} from '@/domains/shoes/utils/shoes-slug';
 
 describe('shoes-slug', () => {
   it('matches valid brand and shoe slugs', () => {

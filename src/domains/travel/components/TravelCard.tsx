@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import type { DeviceType } from '../../../app/router/route-constants';
-import { buildDeviceTravelDetailPath } from '../../../lib/routing/route-builders';
-import type { TravelListItem } from '../types';
+import type { DeviceType } from '@/app/router/route-constants';
+import type { TravelListItem } from '@/domains/travel/types';
+import { buildDeviceTravelDetailPath } from '@/lib/routing/route-builders';
 
 type TravelCardProps = {
   travel: TravelListItem;

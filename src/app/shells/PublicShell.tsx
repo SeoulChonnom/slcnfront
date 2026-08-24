@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router-dom';
-import { cn } from '../../lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 
 type PublicShellProps = PropsWithChildren<{
   className?: string;

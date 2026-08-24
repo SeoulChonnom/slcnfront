@@ -2,9 +2,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createTestQueryClient } from '../../../../test/helpers/query-client';
-import { calendarScheduleQueryKeys } from '../../query-keys';
-import { useCalendarEventMutations } from '../useCalendarEventMutations';
+import { useCalendarEventMutations } from '@/domains/calendar/hooks/useCalendarEventMutations';
+import { calendarScheduleQueryKeys } from '@/domains/calendar/query-keys';
+import { createTestQueryClient } from '@/test/helpers/query-client';
 
 const { createSchedule, updateSchedule, deleteSchedule } = vi.hoisted(() => ({
   createSchedule: vi.fn(),
@@ -12,7 +12,7 @@ const { createSchedule, updateSchedule, deleteSchedule } = vi.hoisted(() => ({
   deleteSchedule: vi.fn(),
 }));
 
-vi.mock('../../api/schedule-api', () => ({
+vi.mock('@/domains/calendar/api/schedule-api', () => ({
   scheduleApi: {
     createSchedule,
     updateSchedule,

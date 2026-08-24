@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import type { FileAsset, FileBoxItemCdo, TripFileBoxItemCdo } from '../../types';
 import {
   buildTripRegisterPayload,
   mapTripDetailDto,
   mapTripListItemDto,
-} from '../trip-mappers';
-import type { TripRegisterWizardValues } from '../../utils/trip-form-data';
+} from '@/domains/trip/mappers/trip-mappers';
+import type {
+  FileAsset,
+  FileBoxItemCdo,
+  TripFileBoxItemCdo,
+} from '@/domains/trip/types';
+import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {
