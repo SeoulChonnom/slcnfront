@@ -50,18 +50,28 @@ describe('DesktopHeader', () => {
     resetAuthStore();
   });
 
-  it('renders the primary navigation items', () => {
+  it('renders the SLCN brand on desktop routes', () => {
     renderWithProviders(<DesktopHeader />, {
-      route: '/calendar',
+      route: '/main/calendar',
     });
 
     expect(
       screen.getByRole('link', { name: /SLCN 홈으로 이동/i })
     ).toBeTruthy();
-    expect(screen.getByText('서울 촌놈', { exact: true })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '나들이 기록' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '서울 촌놈 달력' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: '신발 추천' })).toBeTruthy();
+    expect(screen.getByText('SLCN', { exact: true })).toBeTruthy();
+  });
+
+  it('uses the home navigation copy on a non-home desktop route', () => {
+    renderWithProviders(<DesktopHeader />, {
+      route: '/main/calendar',
+    });
+
+    const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((link) => link.textContent)
+    ).toEqual(['홈', '여행', '나들이', '달력']);
   });
 
   it('renders the approved home navigation in order with Home active', () => {

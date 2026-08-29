@@ -23,17 +23,6 @@ export type NavigationItem = {
   end?: boolean;
 };
 
-export function getDesktopNavigationItems(
-  device: DeviceType
-): NavigationItem[] {
-  return [
-    { label: '나들이 기록', to: buildDeviceTripListPath(device) },
-    { label: '여행 기록', to: buildDeviceTravelListPath(device) },
-    { label: '서울 촌놈 달력', to: buildDeviceCalendarMonthPath(device) },
-    { label: '신발 추천', to: buildDeviceShoesCatalogPath(device) },
-  ];
-}
-
 export function getDesktopHomeNavigationItems(
   device: DeviceType
 ): NavigationItem[] {
