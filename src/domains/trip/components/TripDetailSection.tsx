@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/ErrorState';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { TripMapSwitcher } from '@/domains/trip/components/TripMapSwitcher';
-import { useTripAssetUrl } from '@/domains/trip/hooks/useTripAssetUrl';
 import type { TripDetail } from '@/domains/trip/types';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 
 type TripDetailSectionProps = {
   tripDetail: TripDetail;
@@ -13,11 +12,15 @@ type TripDetailSectionProps = {
 
 export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
   const [activeMap, setActiveMap] = useState<'map1' | 'map2'>('map1');
-  const map1Asset = useTripAssetUrl(tripDetail.firstMap);
-  const map2Asset = useTripAssetUrl(tripDetail.secondMap);
+  // The map is the point of this screen, so a failed load has to surface as an
+  // error rather than a blank frame. The browser owns the request now, so the
+  // only signal is the img's own error event.
+  const [failedMapUrl, setFailedMapUrl] = useState<string | null>(null);
   const hasSecondMap = Boolean(tripDetail.secondMap);
-  const activeMapUrl =
-    activeMap === 'map1' ? map1Asset.objectUrl : map2Asset.objectUrl;
+  const activeMapAsset =
+    activeMap === 'map1' ? tripDetail.firstMap : tripDetail.secondMap;
+  const activeMapUrl = buildOptionalAssetImageUrl(activeMapAsset?.fileId);
+  const isMapAvailable = activeMapUrl !== null && activeMapUrl !== failedMapUrl;
 
   return (
     <section className='slcn-trip-detail-section'>
@@ -33,14 +36,14 @@ export function TripDetailSection({ tripDetail }: TripDetailSectionProps) {
       ) : null}
 
       <Card className='slcn-trip-detail-section__map-card'>
-        {activeMapUrl ? (
+        {isMapAvailable ? (
           <img
             src={activeMapUrl}
             alt='나들이 지도'
             className='slcn-trip-detail-section__map-image'
+            fetchPriority='high'
+            onError={() => setFailedMapUrl(activeMapUrl)}
           />
-        ) : map1Asset.isPending || map2Asset.isPending ? (
-          <Skeleton className='slcn-trip-detail-section__map-skeleton' />
         ) : (
           <ErrorState
             title='지도를 불러오지 못했어요.'

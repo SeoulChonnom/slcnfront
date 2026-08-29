@@ -9,13 +9,13 @@ import {
 import { useAuthStore } from '@/domains/auth/store/auth-store';
 import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
 import { useProfile } from '@/domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
 import {
   ProfileImageUploadError,
   ProfileUpdateSessionRefreshError,
   ProfileUpdateWithUploadedImageError,
   useUpdateProfile,
 } from '@/domains/profile/hooks/useUpdateProfile';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 
 type ProfileEditFormProps = {
   device: 'desktop' | 'mobile';
@@ -52,8 +52,10 @@ export function ProfileEditForm({
   const profile = useProfile();
   const authName = useAuthStore((state) => state.userInfo?.name ?? '');
   const currentName = profile.data?.name ?? authName;
-  const { profileImageUrl, isLoading: isProfileImageLoading } =
-    useProfileImageUrl(profile.data?.profileImage ?? null);
+  const profileImageUrl = buildOptionalAssetImageUrl(
+    profile.data?.profileImage?.fileId,
+    'home-thumb'
+  );
   const updateMutation = useUpdateProfile();
   const [name, setName] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -262,7 +264,7 @@ export function ProfileEditForm({
           <ProfileAvatar
             imageUrl={previewUrl ?? profileImageUrl}
             alt={(previewUrl ?? profileImageUrl) ? '현재 프로필 이미지' : ''}
-            loading={isProfileImageLoading || isImageUploading}
+            loading={isImageUploading}
             className={
               imageUploadFailed ? 'slcn-profile-avatar--error' : undefined
             }

@@ -1,19 +1,7 @@
-import { screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { fireEvent, screen } from '@testing-library/react';
 import { TripDetailSection } from '@/domains/trip/components/TripDetailSection';
 import type { FileAsset } from '@/domains/trip/types';
 import { renderWithProviders } from '@/test/helpers/render';
-
-const { useTripAssetUrlMock } = vi.hoisted(() => ({
-  useTripAssetUrlMock: vi.fn((ref: FileAsset | null | undefined) => ({
-    objectUrl: ref ? `blob:${ref.filename}` : null,
-    isPending: false,
-  })),
-}));
-
-vi.mock('@/domains/trip/hooks/useTripAssetUrl', () => ({
-  useTripAssetUrl: useTripAssetUrlMock,
-}));
 
 function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
   return {
@@ -79,7 +67,7 @@ describe('TripDetailSection', () => {
 
     expect(
       screen.getByRole('img', { name: '나들이 지도' }).getAttribute('src')
-    ).toBe('blob:map2.png');
+    ).toBe('http://localhost:8080/api/assets/files/map-2');
     expect(openSpy).toHaveBeenCalledWith(
       'https://drive.google.com/x',
       '_blank',
@@ -87,46 +75,33 @@ describe('TripDetailSection', () => {
     );
   });
 
-  it('reports a failure when the map file cannot be loaded', () => {
-    useTripAssetUrlMock.mockImplementation(() => ({
-      objectUrl: null,
-      isPending: false,
-    }));
+  it('reports a failure when the map image cannot be loaded', () => {
+    renderWithProviders(
+      <TripDetailSection
+        tripDetail={{
+          id: 'trip-1',
+          date: '20991231',
+          type: 'AYO',
+          name: '연말 나들이',
+          logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
+          firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
+          secondMap: null,
+          nextButtonText: '',
+          previousButtonText: '',
+          driveUrl: 'https://drive.google.com/x',
+        }}
+      />
+    );
 
-    try {
-      renderWithProviders(
-        <TripDetailSection
-          tripDetail={{
-            id: 'trip-1',
-            date: '20991231',
-            type: 'AYO',
-            name: '연말 나들이',
-            logo: fileAsset({ fileId: 'logo-1', filename: 'logo.png' }),
-            firstMap: fileAsset({ fileId: 'map-1', filename: 'map1.png' }),
-            secondMap: null,
-            nextButtonText: '',
-            previousButtonText: '',
-            driveUrl: 'https://drive.google.com/x',
-          }}
-        />
-      );
+    fireEvent.error(screen.getByRole('img', { name: '나들이 지도' }));
 
-      expect(
-        screen.getByRole('heading', {
-          level: 2,
-          name: '지도를 불러오지 못했어요.',
-        })
-      ).toBeTruthy();
-      expect(screen.getByText('파일 경로를 다시 확인해 주세요.')).toBeTruthy();
-      expect(screen.queryByRole('img', { name: '나들이 지도' })).toBeNull();
-    } finally {
-      useTripAssetUrlMock.mockReset();
-      useTripAssetUrlMock.mockImplementation(
-        (ref: FileAsset | null | undefined) => ({
-          objectUrl: ref ? `blob:${ref.filename}` : null,
-          isPending: false,
-        })
-      );
-    }
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: '지도를 불러오지 못했어요.',
+      })
+    ).toBeTruthy();
+    expect(screen.getByText('파일 경로를 다시 확인해 주세요.')).toBeTruthy();
+    expect(screen.queryByRole('img', { name: '나들이 지도' })).toBeNull();
   });
 });

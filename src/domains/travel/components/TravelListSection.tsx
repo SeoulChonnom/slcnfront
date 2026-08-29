@@ -4,9 +4,8 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { TravelCard } from '@/domains/travel/components/TravelCard';
-import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
 import { useTravelList } from '@/domains/travel/hooks/useTravelList';
-import { useVisibleAssetKeys } from '@/lib/hooks/useVisibleAssetKeys';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import { buildDeviceTravelRegisterPath } from '@/lib/routing/route-builders';
 
 const travelCardSkeletonKeys = [
@@ -20,13 +19,6 @@ type TravelListSectionProps = {
 
 export function TravelListSection({ device }: TravelListSectionProps) {
   const { data, isPending, isError, refetch } = useTravelList();
-  const { visibleKeys, observe } = useVisibleAssetKeys();
-  const coverObjectUrls = useTravelAssetUrls(
-    data
-      ?.map((travel) => travel.coverPhotoId)
-      .filter((id) => id && visibleKeys.has(id)) ?? [],
-    'home-feature'
-  );
 
   return (
     <section className='slcn-travel-list-section'>
@@ -83,12 +75,10 @@ export function TravelListSection({ device }: TravelListSectionProps) {
               travel={travel}
               device={device}
               isRepresentative={index === 0 || travel.coverPhotoId !== null}
-              coverRef={observe(travel.coverPhotoId)}
-              coverObjectUrl={
-                travel.coverPhotoId
-                  ? (coverObjectUrls[travel.coverPhotoId] ?? null)
-                  : null
-              }
+              coverUrl={buildOptionalAssetImageUrl(
+                travel.coverPhotoId,
+                'home-feature'
+              )}
             />
           ))}
         </div>

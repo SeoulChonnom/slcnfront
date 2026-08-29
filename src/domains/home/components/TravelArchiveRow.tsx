@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import type { TravelListItem } from '@/domains/travel/types';
@@ -7,17 +6,15 @@ import { buildDeviceTravelDetailPath } from '@/lib/routing/route-builders';
 type TravelArchiveRowProps = {
   travel: TravelListItem;
   device: DeviceType;
-  coverObjectUrl?: string | null;
-  coverRef?: Ref<HTMLSpanElement>;
+  coverUrl?: string | null;
 };
 
 export function TravelArchiveRow({
   travel,
   device,
-  coverObjectUrl = null,
-  coverRef,
+  coverUrl = null,
 }: TravelArchiveRowProps) {
-  const hasCover = Boolean(travel.coverPhotoId);
+  const hasCover = Boolean(coverUrl);
   return (
     <li className='slcn-home-archive__row'>
       <Link
@@ -44,11 +41,9 @@ export function TravelArchiveRow({
             </span>
           ) : null}
         </span>
-        {hasCover ? (
-          <span className='slcn-home-archive__thumb' ref={coverRef}>
-            {coverObjectUrl ? (
-              <img src={coverObjectUrl} alt='' decoding='async' />
-            ) : null}
+        {coverUrl ? (
+          <span className='slcn-home-archive__thumb'>
+            <img src={coverUrl} alt='' loading='lazy' decoding='async' />
           </span>
         ) : null}
       </Link>

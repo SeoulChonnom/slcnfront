@@ -126,7 +126,6 @@ describe('trip-api', () => {
           }
         )
       )
-      .mockResolvedValueOnce(new Response('file-content', { status: 200 }))
       .mockResolvedValueOnce(
         new Response(JSON.stringify(logoAsset), {
           status: 200,
@@ -175,7 +174,6 @@ describe('trip-api', () => {
         options: [{ text: '보기1', isCorrect: true }],
       },
     });
-    const fileBlob = await tripFilesApi.downloadTripFile(logoAsset);
     const uploadedLogo = await tripFilesApi.uploadTripFile(
       'logo',
       new File(['logo'], 'logo.png', { type: 'image/png' })
@@ -198,7 +196,6 @@ describe('trip-api', () => {
       description: '설명',
     });
     expect(registeredTrip.driveUrl).toBe('https://drive.google.com/x');
-    expect(await fileBlob.text()).toBe('file-content');
     expect(fetchFn.mock.calls[0]?.[0]).toBe('http://localhost:8080/api/trips');
     expect(fetchFn.mock.calls[1]?.[0]).toBe(
       'http://localhost:8080/api/trips/trip-1'
@@ -211,18 +208,15 @@ describe('trip-api', () => {
     );
     expect(fetchFn.mock.calls[4]?.[0]).toBe('http://localhost:8080/api/trips');
     expect(fetchFn.mock.calls[5]?.[0]).toBe(
-      'http://localhost:8080/api/assets/files/logo-1'
-    );
-    expect(fetchFn.mock.calls[6]?.[0]).toBe(
       'http://localhost:8080/api/assets/file?type=logo'
     );
-    expect(fetchFn.mock.calls[7]?.[0]).toBe(
+    expect(fetchFn.mock.calls[6]?.[0]).toBe(
       'http://localhost:8080/api/assets/file?type=map'
     );
 
     const registerInit = fetchFn.mock.calls[4]?.[1];
-    const uploadLogoInit = fetchFn.mock.calls[6]?.[1];
-    const uploadMapInit = fetchFn.mock.calls[7]?.[1];
+    const uploadLogoInit = fetchFn.mock.calls[5]?.[1];
+    const uploadMapInit = fetchFn.mock.calls[6]?.[1];
 
     expect(new Headers(registerInit?.headers).get('content-type')).toBe(
       'application/json'

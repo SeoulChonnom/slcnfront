@@ -3,19 +3,20 @@ import type { TripListItem } from '@/domains/trip/types';
 
 type TripCardProps = {
   trip: TripListItem;
-  logoObjectUrl?: string | null;
+  logoUrl?: string | null;
   onOpenQuiz: (trip: TripListItem) => void;
 };
 
-export function TripCard({ trip, logoObjectUrl, onOpenQuiz }: TripCardProps) {
+export function TripCard({ trip, logoUrl, onOpenQuiz }: TripCardProps) {
   return (
     <div className='slcn-trip-card'>
       <div className='slcn-trip-card__thumb slcn-stripe'>
-        {logoObjectUrl ? (
+        {logoUrl ? (
           <img
-            src={logoObjectUrl}
+            src={logoUrl}
             alt={`${trip.name} 로고`}
             className='slcn-trip-card__thumb-img'
+            loading='lazy'
             decoding='async'
           />
         ) : (

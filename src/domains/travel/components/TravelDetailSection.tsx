@@ -4,8 +4,8 @@ import { TravelDayList } from '@/domains/travel/components/TravelDayList';
 import { TravelPhotoAlbum } from '@/domains/travel/components/TravelPhotoAlbum';
 import { TravelReviewSection } from '@/domains/travel/components/TravelReviewSection';
 import { TravelTagSection } from '@/domains/travel/components/TravelTagSection';
-import { useTravelAssetUrl } from '@/domains/travel/hooks/useTravelAssetUrl';
 import type { TravelDetail } from '@/domains/travel/types';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceTravelEditPath,
   buildDeviceTravelListPath,
@@ -22,7 +22,7 @@ export function TravelDetailSection({
 }: TravelDetailSectionProps) {
   const navigate = useNavigate();
 
-  const { objectUrl: heroCoverUrl } = useTravelAssetUrl(travel.coverPhotoId);
+  const heroCoverUrl = buildOptionalAssetImageUrl(travel.coverPhotoId);
 
   return (
     <section className='slcn-travel-detail' data-device={device}>
@@ -69,6 +69,7 @@ export function TravelDetailSection({
               src={heroCoverUrl}
               alt={travel.title}
               className='slcn-travel-cover-img'
+              fetchPriority='high'
               decoding='async'
             />
           ) : (

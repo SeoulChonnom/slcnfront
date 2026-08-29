@@ -4,8 +4,8 @@ import { useLogout } from '@/domains/auth/hooks/useLogout';
 import { useAuthStore } from '@/domains/auth/store/auth-store';
 import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
 import { useProfile } from '@/domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
 import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceLoginPath,
   buildDeviceProfileVerifyPath,
@@ -25,8 +25,10 @@ export function ProfilePage() {
   const profile = useProfile();
   const fallbackName = useAuthStore((state) => state.userInfo?.name ?? '');
   const logoutMutation = useLogout();
-  const { profileImageUrl, isLoading: isProfileImageLoading } =
-    useProfileImageUrl(profile.data?.profileImage ?? null);
+  const profileImageUrl = buildOptionalAssetImageUrl(
+    profile.data?.profileImage?.fileId,
+    'home-thumb'
+  );
   const displayName = profile.data?.name ?? fallbackName;
 
   async function handleLogout() {
@@ -46,7 +48,7 @@ export function ProfilePage() {
       <section className='slcn-mobile-profile-card'>
         <ProfileAvatar
           imageUrl={profileImageUrl}
-          loading={profile.isLoading || isProfileImageLoading}
+          loading={profile.isLoading}
           alt={profileImageUrl ? `${displayName} 프로필` : ''}
           size={60}
         />

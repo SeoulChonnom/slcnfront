@@ -6,13 +6,13 @@ import { buildDeviceTravelDetailPath } from '@/lib/routing/route-builders';
 type MemoryChronicleFeatureProps = {
   travel: TravelListItem;
   device: DeviceType;
-  coverObjectUrl?: string | null;
+  coverUrl?: string | null;
 };
 
 export function MemoryChronicleFeature({
   travel,
   device,
-  coverObjectUrl = null,
+  coverUrl = null,
 }: MemoryChronicleFeatureProps) {
   return (
     <article className='slcn-home__recent-memory'>
@@ -22,9 +22,9 @@ export function MemoryChronicleFeature({
         aria-label={`${travel.title} 여행 상세 보기`}
       >
         <div className='slcn-home__recent-media'>
-          {coverObjectUrl ? (
+          {coverUrl ? (
             <img
-              src={coverObjectUrl}
+              src={coverUrl}
               alt={`${travel.title} 여행 사진`}
               className='slcn-home__recent-image'
               decoding='async'

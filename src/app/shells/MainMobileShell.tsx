@@ -4,7 +4,7 @@ import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { MobileTopBar } from '@/components/layout/MobileTopBar';
 import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
 import { useProfile } from '@/domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import { buildDeviceProfilePath } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
 
@@ -47,8 +47,10 @@ function getMainMobileTitle(pathname: string) {
 export function MainMobileShell({ children, className }: MainMobileShellProps) {
   const { pathname } = useLocation();
   const profile = useProfile();
-  const { profileImageUrl, isLoading: isProfileImageLoading } =
-    useProfileImageUrl(profile.data?.profileImage ?? null);
+  const profileImageUrl = buildOptionalAssetImageUrl(
+    profile.data?.profileImage?.fileId,
+    'home-thumb'
+  );
 
   return (
     <div className={cn('slcn-shell-mobile', className)}>
@@ -62,7 +64,7 @@ export function MainMobileShell({ children, className }: MainMobileShellProps) {
           >
             <ProfileAvatar
               imageUrl={profileImageUrl}
-              loading={profile.isLoading || isProfileImageLoading}
+              loading={profile.isLoading}
               alt=''
             />
           </Link>

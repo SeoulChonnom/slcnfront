@@ -8,10 +8,10 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { useAuthStore } from '@/domains/auth/store/auth-store';
 import { TripCard } from '@/domains/trip/components/TripCard';
 import { TripQuizModal } from '@/domains/trip/components/TripQuizModal';
-import { useTripAssetUrls } from '@/domains/trip/hooks/useTripAssetUrls';
 import { useTripList } from '@/domains/trip/hooks/useTripList';
 import { useTripQuiz } from '@/domains/trip/hooks/useTripQuiz';
 import { fileAssetKey } from '@/domains/trip/types';
+import { buildAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceTripDetailPath,
   buildDeviceTripRegisterPath,
@@ -32,10 +32,6 @@ export function TripListSection({ device }: TripListSectionProps) {
   const { data, isPending, isError, refetch } = useTripList();
   const quiz = useTripQuiz();
   const [query, setQuery] = useState('');
-  const logoObjectUrls = useTripAssetUrls(
-    data?.map((trip) => trip.logo) ?? [],
-    'home-thumb'
-  );
   const isAdmin = useAuthStore((state) =>
     state.userInfo?.roleList.includes('admin')
   );
@@ -168,7 +164,10 @@ export function TripListSection({ device }: TripListSectionProps) {
             <TripCard
               key={trip.id || trip.date}
               trip={trip}
-              logoObjectUrl={logoObjectUrls[fileAssetKey(trip.logo)] ?? null}
+              logoUrl={buildAssetImageUrl(
+                fileAssetKey(trip.logo),
+                'home-thumb'
+              )}
               onOpenQuiz={(nextTrip) => {
                 void quiz.openQuiz(nextTrip);
               }}

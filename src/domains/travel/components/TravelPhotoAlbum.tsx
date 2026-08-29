@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
 import type {
   TravelDay,
   TravelPhoto,
   TravelPlace,
 } from '@/domains/travel/types';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 
 type TravelPhotoAlbumProps = {
   photos: TravelPhoto[];
@@ -27,17 +27,11 @@ type PhotoGroup = {
   photos: TravelPhoto[];
 };
 
-function PhotoGrid({
-  photos,
-  objectUrls,
-}: {
-  photos: TravelPhoto[];
-  objectUrls: Record<string, string>;
-}) {
+function PhotoGrid({ photos }: { photos: TravelPhoto[] }) {
   return (
     <ul className='slcn-travel-album__grid'>
       {photos.map((photo) => {
-        const url = objectUrls[photo.photoFileId];
+        const url = buildOptionalAssetImageUrl(photo.photoFileId, 'home-thumb');
         return (
           <li
             key={photo.id}
@@ -49,6 +43,7 @@ function PhotoGrid({
                 src={url}
                 alt={photo.caption ?? '여행 사진'}
                 className='slcn-travel-thumb-img'
+                loading='lazy'
                 decoding='async'
               />
             ) : null}
@@ -66,10 +61,6 @@ export function TravelPhotoAlbum({
   onAddPhoto,
 }: TravelPhotoAlbumProps) {
   const [filter, setFilter] = useState<AlbumFilter>('all');
-  const photoObjectUrls = useTravelAssetUrls(
-    photos.map((p) => p.photoFileId),
-    'home-thumb'
-  );
 
   const byDayGroups = useMemo<PhotoGroup[]>(() => {
     const groups = days.map((day) => ({
@@ -137,13 +128,13 @@ export function TravelPhotoAlbum({
           아직 사진이 없어요. 사진 추가로 첫 장을 올려 보세요.
         </p>
       ) : filter === 'all' ? (
-        <PhotoGrid photos={photos} objectUrls={photoObjectUrls} />
+        <PhotoGrid photos={photos} />
       ) : (
         <div className='slcn-travel-album__groups'>
           {(filter === 'byDay' ? byDayGroups : byPlaceGroups).map((group) => (
             <section key={group.key} className='slcn-travel-album__group'>
               <h3 className='slcn-travel-album__group-title'>{group.label}</h3>
-              <PhotoGrid photos={group.photos} objectUrls={photoObjectUrls} />
+              <PhotoGrid photos={group.photos} />
             </section>
           ))}
         </div>

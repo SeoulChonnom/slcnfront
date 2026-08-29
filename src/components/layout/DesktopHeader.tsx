@@ -15,8 +15,8 @@ import { ProfileAvatar } from '@/domains/profile/components/ProfileAvatar';
 import { ProfileEditForm } from '@/domains/profile/components/ProfileEditForm';
 import { ProfileIdentityVerification } from '@/domains/profile/components/ProfileIdentityVerification';
 import { useProfile } from '@/domains/profile/hooks/useProfile';
-import { useProfileImageUrl } from '@/domains/profile/hooks/useProfileImageUrl';
 import { revokeProfileEditAccess } from '@/domains/profile/utils/profile-verification';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceLoginPath,
   buildDeviceRootPath,
@@ -60,8 +60,10 @@ export function DesktopHeader({
     : getDesktopNavigationItems(device);
   const fallbackUser = useAuthStore((state) => state.userInfo);
   const profile = useProfile();
-  const { profileImageUrl, isLoading: isProfileImageLoading } =
-    useProfileImageUrl(profile.data?.profileImage ?? null);
+  const profileImageUrl = buildOptionalAssetImageUrl(
+    profile.data?.profileImage?.fileId,
+    'home-thumb'
+  );
   const logoutMutation = useLogout();
   const profileControlRef = useRef<HTMLDivElement>(null);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
@@ -193,7 +195,7 @@ export function DesktopHeader({
             >
               <ProfileAvatar
                 imageUrl={profileImageUrl}
-                loading={profile.isLoading || isProfileImageLoading}
+                loading={profile.isLoading}
                 alt={profileImageUrl ? `${displayName} 프로필` : ''}
               />
             </button>
@@ -238,7 +240,7 @@ export function DesktopHeader({
                   <div className='slcn-profile-popover__identity'>
                     <ProfileAvatar
                       imageUrl={profileImageUrl}
-                      loading={profile.isLoading || isProfileImageLoading}
+                      loading={profile.isLoading}
                       alt=''
                       size={52}
                     />

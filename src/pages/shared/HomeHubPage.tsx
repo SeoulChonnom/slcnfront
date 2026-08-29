@@ -8,9 +8,7 @@ import { useHomeTimeline } from '@/domains/home/hooks/useHomeTimeline';
 import { filterTravelRecords } from '@/domains/home/retrieval';
 import type { HomeSourceState } from '@/domains/home/types';
 import { formatScheduleTime } from '@/domains/home/utils/home-dates';
-import { useTravelAssetUrl } from '@/domains/travel/hooks/useTravelAssetUrl';
-import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
-import { useVisibleAssetKeys } from '@/lib/hooks/useVisibleAssetKeys';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceShoesCatalogPath,
@@ -24,9 +22,6 @@ type HomeHubPageProps = {
 };
 
 const DDAY_START = new Date('2024-11-10T00:00:00+09:00');
-
-/** Archive rows past this point render without a cover, so we do not fetch one. */
-const ARCHIVE_COVER_LIMIT = 12;
 
 function getDdayCount() {
   return Math.floor((Date.now() - DDAY_START.getTime()) / 86_400_000) + 1;
@@ -92,20 +87,10 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     () => filteredTravels.filter((travel) => travel.id !== newestTravel?.id),
     [filteredTravels, newestTravel]
   );
-  const { visibleKeys, observe } = useVisibleAssetKeys();
-  const archiveAssetIds = useMemo(
-    () =>
-      archiveTravels
-        .slice(0, ARCHIVE_COVER_LIMIT)
-        .map((t) => t.coverPhotoId)
-        .filter((id) => id && visibleKeys.has(id)),
-    [archiveTravels, visibleKeys]
-  );
-  const { objectUrl: featureCoverUrl } = useTravelAssetUrl(
+  const featureCoverUrl = buildOptionalAssetImageUrl(
     newestTravel?.coverPhotoId,
     'home-feature'
   );
-  const travelCoverUrls = useTravelAssetUrls(archiveAssetIds, 'home-thumb');
   const isFullError = model.isError;
   const isTravelLoading = travelSource.status === 'loading';
   const hasArchiveFilter = Boolean(query.trim() || selectedYear);
@@ -155,7 +140,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             <MemoryChronicleFeature
               travel={newestTravel}
               device={device}
-              coverObjectUrl={featureCoverUrl}
+              coverUrl={featureCoverUrl}
             />
           ) : (
             <section className='slcn-home__empty-travels'>
@@ -227,12 +212,10 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                     key={travel.id}
                     travel={travel}
                     device={device}
-                    coverRef={observe(travel.coverPhotoId)}
-                    coverObjectUrl={
-                      travel.coverPhotoId
-                        ? (travelCoverUrls[travel.coverPhotoId] ?? null)
-                        : null
-                    }
+                    coverUrl={buildOptionalAssetImageUrl(
+                      travel.coverPhotoId,
+                      'home-thumb'
+                    )}
                   />
                 ))}
               </ol>

@@ -40,8 +40,7 @@ describe('profile-api', () => {
           name: '새 이름',
           profileImage,
         })
-      )
-      .mockResolvedValueOnce(new Response('profile-image', { status: 200 }));
+      );
     const profileApi = createProfileApi(
       createApiClient({
         fetchFn,
@@ -61,7 +60,6 @@ describe('profile-api', () => {
       newPassword: 'new-password',
       profileImageFileId: uploadedImage.fileId,
     });
-    const imageBlob = await profileApi.downloadProfileImage(profileImage);
 
     expect(profile).toEqual({
       username: 'string',
@@ -69,13 +67,11 @@ describe('profile-api', () => {
       profileImage,
     });
     expect(updatedProfile.name).toBe('새 이름');
-    expect(await imageBlob.text()).toBe('profile-image');
     expect(fetchFn.mock.calls.map(([url]) => url)).toEqual([
       'http://localhost:8080/api/users/me',
       'http://localhost:8080/api/users/me/password/verify',
       'http://localhost:8080/api/assets/file?type=profile',
       'http://localhost:8080/api/users/me',
-      'http://localhost:8080/api/assets/files/profile-1',
     ]);
 
     for (const [, init] of fetchFn.mock.calls) {
@@ -106,7 +102,6 @@ describe('profile-api', () => {
         profileImageFileId: 'profile-1',
       }),
     });
-    expect(fetchFn.mock.calls[4]?.[1]).toMatchObject({ method: 'GET' });
   });
 
   it('preserves empty strings in update requests for backend no-change semantics', async () => {

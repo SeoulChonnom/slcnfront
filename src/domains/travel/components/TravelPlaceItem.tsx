@@ -1,6 +1,6 @@
 import { CategoryIcon } from '@/domains/travel/components/CategoryIcon';
-import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
 import { CATEGORY_LABELS, type TravelPlace } from '@/domains/travel/types';
+import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 
 type TravelPlaceItemProps = {
   place: TravelPlace;
@@ -8,10 +8,6 @@ type TravelPlaceItemProps = {
 
 export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
   const memo = place.description ?? place.memo;
-  const photoObjectUrls = useTravelAssetUrls(
-    place.photos.map((p) => p.photoFileId),
-    'home-thumb'
-  );
 
   return (
     <li className='slcn-travel-place'>
@@ -29,7 +25,10 @@ export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
         {place.photos.length > 0 ? (
           <ul className='slcn-travel-place__photos'>
             {place.photos.map((photo) => {
-              const url = photoObjectUrls[photo.photoFileId];
+              const url = buildOptionalAssetImageUrl(
+                photo.photoFileId,
+                'home-thumb'
+              );
               return (
                 <li
                   key={photo.id}
@@ -41,6 +40,7 @@ export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
                       src={url}
                       alt={photo.caption ?? '장소 사진'}
                       className='slcn-travel-thumb-img'
+                      loading='lazy'
                       decoding='async'
                     />
                   ) : null}

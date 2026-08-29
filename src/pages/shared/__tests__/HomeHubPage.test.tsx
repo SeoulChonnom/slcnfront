@@ -5,44 +5,12 @@ import type { TravelListItem } from '@/domains/travel/types';
 import { HomeHubPage } from '@/pages/shared/HomeHubPage';
 import { renderWithMinimalProviders } from '@/test/helpers/render';
 
-type AssetRequest = {
-  ids: Array<string | null | undefined>;
-  variant: string | undefined;
-};
-
-const { requestedArchiveCovers, requestedFeatureCovers, useHomeTimelineMock } =
-  vi.hoisted(() => ({
-    requestedArchiveCovers: [] as AssetRequest[],
-    requestedFeatureCovers: [] as AssetRequest[],
-    useHomeTimelineMock: vi.fn(),
-  }));
+const { useHomeTimelineMock } = vi.hoisted(() => ({
+  useHomeTimelineMock: vi.fn(),
+}));
 
 vi.mock('@/domains/home/hooks/useHomeTimeline', () => ({
   useHomeTimeline: useHomeTimelineMock,
-}));
-
-vi.mock('@/domains/travel/hooks/useTravelAssetUrls', () => ({
-  useTravelAssetUrls: (
-    ids: Array<string | null | undefined>,
-    variant?: string
-  ) => {
-    requestedArchiveCovers.push({ ids: [...ids], variant });
-    return Object.fromEntries(
-      ids
-        .filter((id): id is string => Boolean(id))
-        .map((id) => [id, `blob:${id}`])
-    );
-  },
-}));
-
-vi.mock('@/domains/travel/hooks/useTravelAssetUrl', () => ({
-  useTravelAssetUrl: (fileId: string | null | undefined, variant?: string) => {
-    requestedFeatureCovers.push({ ids: [fileId], variant });
-    return {
-      objectUrl: fileId ? `blob:${fileId}` : null,
-      isPending: false,
-    };
-  },
 }));
 
 const travels: TravelListItem[] = [
@@ -197,8 +165,7 @@ function renderHome(
 }
 
 beforeEach(() => {
-  requestedArchiveCovers.length = 0;
-  requestedFeatureCovers.length = 0;
+  useHomeTimelineMock.mockReset();
 });
 
 describe('HomeHubPage Memory Chronicle', () => {
@@ -235,7 +202,7 @@ describe('HomeHubPage Memory Chronicle', () => {
     ).toBe('/main/map');
   });
 
-  it('requests the feature cover as home-feature and archive covers as home-thumb', () => {
+  it('serves the feature cover at home-feature and archive covers at home-thumb', () => {
     const archiveTravels = Array.from({ length: 12 }, (_, index) => ({
       ...travels[1],
       id: `travel-archive-${index}`,
@@ -257,16 +224,23 @@ describe('HomeHubPage Memory Chronicle', () => {
       })
     );
 
-    expect(requestedFeatureCovers.at(-1)).toEqual({
-      ids: ['cover-sokcho'],
-      variant: 'home-feature',
-    });
+    const feature = within(screen.getByRole('article')).getByRole('img');
+    expect(feature.getAttribute('src')).toBe(
+      'http://localhost:8080/api/assets/files/cover-sokcho?variant=home-feature'
+    );
+    // Above the fold: must not be deferred.
+    expect(feature.getAttribute('loading')).toBeNull();
+    expect(feature.getAttribute('fetchpriority')).toBe('high');
 
-    const archive = requestedArchiveCovers.at(-1);
-    expect(archive?.variant).toBe('home-thumb');
-    expect(archive?.ids).toHaveLength(12);
-    expect(archive?.ids).not.toContain('cover-sokcho');
-    expect(new Set(archive?.ids).size).toBe(archive?.ids.length);
+    const archive = screen.getByRole('list', { name: '여행 기록' });
+    // alt='' makes these presentational, so query the elements directly.
+    const thumbs = [...archive.querySelectorAll('img')];
+    expect(thumbs).toHaveLength(12);
+    for (const thumb of thumbs) {
+      expect(thumb.getAttribute('src')).toContain('variant=home-thumb');
+      // The browser, not the app, decides when to fetch these.
+      expect(thumb.getAttribute('loading')).toBe('lazy');
+    }
   });
 
   it('links the nearest schedule to the calendar without mixing it into travel rows', () => {
