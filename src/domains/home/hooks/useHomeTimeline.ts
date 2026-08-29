@@ -2,28 +2,59 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { scheduleApi } from '@/domains/calendar/api/schedule-api';
 import { calendarScheduleQueryKeys } from '@/domains/calendar/query-keys';
-import type { HomeTimelineEntry } from '@/domains/home/types';
-import { toIsoDate, toSortKey } from '@/domains/home/utils/home-dates';
+import {
+  getNearestSchedules,
+  getTravelYears,
+  sortTravelsNewestFirst,
+} from '@/domains/home/retrieval';
+import type { HomeRetrievalModel, HomeSourceState } from '@/domains/home/types';
 import { useTravelList } from '@/domains/travel/hooks/useTravelList';
 import { useTripList } from '@/domains/trip/hooks/useTripList';
 
-/**
- * How much of each side of "today" the home surface shows before handing off to
- * the full list pages. Kept small on purpose: every record with an image costs
- * one authenticated blob request.
- */
 const UPCOMING_LIMIT = 3;
-const PAST_LIMIT = 8;
 
-function todaySortKey() {
-  const now = new Date();
-  const month = `${now.getMonth() + 1}`.padStart(2, '0');
-  const day = `${now.getDate()}`.padStart(2, '0');
-
-  return `${now.getFullYear()}${month}${day}`;
+function isQueryLoading(query: { isLoading?: boolean; isPending?: boolean }) {
+  return Boolean(query.isLoading || query.isPending);
 }
 
-export function useHomeTimeline() {
+function sourceStatus({
+  isLoading,
+  isError,
+}: {
+  isLoading: boolean;
+  isError: boolean;
+}) {
+  if (isLoading) return 'loading' as const;
+  if (isError) return 'error' as const;
+  return 'ready' as const;
+}
+
+function createSourceState<T>(
+  query: {
+    data?: T[];
+    isLoading?: boolean;
+    isPending?: boolean;
+    isError: boolean;
+    error?: unknown;
+    refetch: () => unknown;
+  },
+  data: T[]
+): HomeSourceState<T> {
+  const isLoading = isQueryLoading(query);
+
+  return {
+    data,
+    status: sourceStatus({ isLoading, isError: query.isError }),
+    isLoading,
+    isError: query.isError,
+    error: query.error ?? null,
+    retry: () => {
+      void query.refetch();
+    },
+  };
+}
+
+export function useHomeTimeline(): HomeRetrievalModel {
   const trips = useTripList();
   const travels = useTravelList();
   const schedules = useQuery({
@@ -31,83 +62,49 @@ export function useHomeTimeline() {
     queryFn: () => scheduleApi.getCurrentSchedules(),
   });
 
-  const upcoming = useMemo<HomeTimelineEntry[]>(() => {
-    const today = todaySortKey();
+  const travelData = travels.data ?? [];
+  const scheduleData = schedules.data ?? [];
+  const dayOutData = trips.data ?? [];
+  const nearestSchedules = useMemo(
+    () => getNearestSchedules(scheduleData, new Date(), UPCOMING_LIMIT),
+    [scheduleData]
+  );
+  const sortedTravels = useMemo(
+    () => sortTravelsNewestFirst(travelData),
+    [travelData]
+  );
+  const years = useMemo(() => getTravelYears(travelData), [travelData]);
+  const sources = useMemo(
+    () => ({
+      travels: createSourceState(travels, travelData),
+      schedules: createSourceState(schedules, scheduleData),
+      dayOuts: createSourceState(trips, dayOutData),
+    }),
+    [travelData, scheduleData, dayOutData, travels, schedules, trips]
+  );
+  const sourceStates = [sources.travels, sources.schedules, sources.dayOuts];
+  const failedSources = sourceStates.filter((source) => source.isError).length;
 
-    return (schedules.data ?? [])
-      .flatMap((schedule) => {
-        const isoDate = toIsoDate(schedule.start);
-        const sortKey = toSortKey(schedule.start);
+  function retry() {
+    sources.travels.retry();
+    sources.schedules.retry();
+    sources.dayOuts.retry();
+  }
 
-        if (!isoDate || sortKey.slice(0, 8) < today) {
-          return [];
-        }
-
-        return [
-          {
-            kind: 'schedule' as const,
-            id: schedule.id,
-            sortKey,
-            isoDate,
-            schedule,
-          },
-        ];
-      })
-      .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
-      .slice(0, UPCOMING_LIMIT);
-  }, [schedules.data]);
-
-  const past = useMemo<HomeTimelineEntry[]>(() => {
-    const tripEntries = (trips.data ?? []).flatMap((trip) => {
-      const isoDate = toIsoDate(trip.date);
-
-      if (!isoDate) {
-        return [];
-      }
-
-      return [
-        {
-          kind: 'trip' as const,
-          id: trip.id,
-          sortKey: toSortKey(trip.date),
-          isoDate,
-          trip,
-        },
-      ];
-    });
-
-    const travelEntries = (travels.data ?? []).flatMap((travel) => {
-      const isoDate = toIsoDate(travel.startDate);
-
-      if (!isoDate) {
-        return [];
-      }
-
-      return [
-        {
-          kind: 'travel' as const,
-          id: travel.travelId,
-          sortKey: toSortKey(travel.startDate),
-          isoDate,
-          travel,
-        },
-      ];
-    });
-
-    return [...tripEntries, ...travelEntries]
-      .sort((a, b) => b.sortKey.localeCompare(a.sortKey))
-      .slice(0, PAST_LIMIT);
-  }, [trips.data, travels.data]);
+  function retrySource(source: 'travels' | 'schedules' | 'dayOuts') {
+    sources[source].retry();
+  }
 
   return {
-    upcoming,
-    past,
-    isLoading: trips.isLoading || travels.isLoading || schedules.isLoading,
-    isError: trips.isError && travels.isError && schedules.isError,
-    retry: () => {
-      void trips.refetch();
-      void travels.refetch();
-      void schedules.refetch();
-    },
+    travels: sortedTravels,
+    nearestSchedules,
+    dayOuts: dayOutData,
+    years,
+    sources,
+    isPartialFailure: failedSources > 0 && failedSources < sourceStates.length,
+    isError: failedSources === sourceStates.length,
+    isLoading: sourceStates.some((source) => source.isLoading),
+    retry,
+    retrySource,
   };
 }

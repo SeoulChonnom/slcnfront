@@ -34,6 +34,17 @@ export function getDesktopNavigationItems(
   ];
 }
 
+export function getDesktopHomeNavigationItems(
+  device: DeviceType
+): NavigationItem[] {
+  return [
+    { label: '홈', to: buildDeviceRootPath(device), end: true },
+    { label: '여행', to: buildDeviceTravelListPath(device) },
+    { label: '나들이', to: buildDeviceTripListPath(device) },
+    { label: '달력', to: buildDeviceCalendarMonthPath(device) },
+  ];
+}
+
 export function getMobileNavigationItems(device: DeviceType): NavigationItem[] {
   return [
     { label: '홈', icon: 'home', to: buildDeviceRootPath(device), end: true },

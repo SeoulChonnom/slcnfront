@@ -2,7 +2,10 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import logo from '@/assets/img/SLCN.webp';
-import { getDesktopNavigationItems } from '@/components/layout/navigation-items';
+import {
+  getDesktopHomeNavigationItems,
+  getDesktopNavigationItems,
+} from '@/components/layout/navigation-items';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { ThemeChoice } from '@/components/ui/ThemeChoice';
@@ -48,10 +51,13 @@ export function DesktopHeader({
   className,
   device = 'main',
 }: DesktopHeaderProps) {
-  const navigationItems = getDesktopNavigationItems(device);
   const popoverId = useId();
   const navigate = useNavigate();
   const location = useLocation();
+  const isHomeSurface = location.pathname === buildDeviceRootPath(device);
+  const navigationItems = isHomeSurface
+    ? getDesktopHomeNavigationItems(device)
+    : getDesktopNavigationItems(device);
   const fallbackUser = useAuthStore((state) => state.userInfo);
   const profile = useProfile();
   const { profileImageUrl, isLoading: isProfileImageLoading } =

@@ -86,6 +86,10 @@
   list-style: none;
 }
 
+.slcn-mobile-bottom-nav--home .slcn-mobile-bottom-nav__list {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .slcn-mobile-bottom-nav__link {
   display: flex;
   flex-direction: column;
@@ -469,19 +473,97 @@ grouped by day) ---- */
   padding: 1.5rem;
 }
 
-/* ---- Home timeline (mobile) ---- */
+/* ---- Memory Chronicle home (mobile) ---- */
 .slcn-home--mobile {
-  --home-rail: 2.75rem;
-
-  gap: var(--space-8);
+  gap: var(--space-4);
 }
 
 .slcn-home--mobile .slcn-home__title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
 }
 
-.slcn-home--mobile .slcn-home-row__title--travel {
-  font-size: 1.3125rem;
+.slcn-home--mobile .slcn-home__recent-link {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.slcn-home--mobile .slcn-home__recent-media {
+  aspect-ratio: 2 / 1;
+}
+
+.slcn-home--mobile .slcn-home__recent-copy {
+  padding-bottom: 0;
+}
+
+.slcn-home--mobile .slcn-home__recent-title {
+  font-size: 1.75rem;
+}
+
+.slcn-home--mobile .slcn-home__recent-review {
+  max-width: 36ch;
+  margin-top: var(--space-2);
+  font-size: 0.9375rem;
+}
+
+.slcn-home--mobile .slcn-home__recent-action {
+  margin-top: var(--space-2);
+}
+
+.slcn-home--mobile .slcn-home__retrieval {
+  padding-top: var(--space-3);
+}
+
+.slcn-home--mobile .slcn-home__retrieval-heading {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.slcn-home--mobile .slcn-home__search {
+  min-width: 0;
+}
+
+.slcn-home--mobile .slcn-home__years {
+  margin-top: var(--space-2);
+}
+
+.slcn-home--mobile .slcn-home-archive {
+  margin-top: var(--space-2);
+}
+
+.slcn-home--mobile .slcn-home-archive__link {
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  min-height: 4.25rem;
+}
+
+.slcn-home--mobile .slcn-home-archive__title {
+  font-size: 0.9375rem;
+}
+
+.slcn-home--mobile .slcn-home-archive__review {
+  display: block;
+}
+
+.slcn-home--mobile .slcn-home-archive__thumb {
+  width: 4.5rem;
+}
+
+.slcn-home--mobile .slcn-home__secondary {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.slcn-home--mobile .slcn-home__secondary-heading a {
+  font-size: 0.75rem;
+}
+
+.slcn-home--mobile .slcn-home__more {
+  gap: var(--space-2) var(--space-4);
+}
+
+.slcn-home--mobile .slcn-home__more-links {
+  gap: var(--space-3);
 }
 
 /* Trip register step indicator: keep all 3 pills on one row at mobile widths. */

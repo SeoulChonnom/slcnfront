@@ -1,13 +1,19 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
-import { HomeTimelineRow } from '@/domains/home/components/HomeTimelineRow';
+import type { ScheduleEvent } from '@/domains/calendar/types';
+import { MemoryChronicleFeature } from '@/domains/home/components/MemoryChronicleFeature';
+import { TravelArchiveRow } from '@/domains/home/components/TravelArchiveRow';
 import { useHomeTimeline } from '@/domains/home/hooks/useHomeTimeline';
+import { filterTravelRecords } from '@/domains/home/retrieval';
+import type { HomeSourceState } from '@/domains/home/types';
+import { formatScheduleTime } from '@/domains/home/utils/home-dates';
 import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
-import { useTripAssetUrls } from '@/domains/trip/hooks/useTripAssetUrls';
-import { fileAssetKey } from '@/domains/trip/types';
 import {
   buildDeviceCalendarMonthPath,
-  buildDeviceTripRegisterPath,
+  buildDeviceShoesCatalogPath,
+  buildDeviceTravelRegisterPath,
+  buildDeviceTripListPath,
 } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
 
@@ -15,149 +21,364 @@ type HomeHubPageProps = {
   device: DeviceType;
 };
 
-const FILM_URL = 'http://naver.me/52RjLNuT';
 const DDAY_START = new Date('2024-11-10T00:00:00+09:00');
 
 function getDdayCount() {
   return Math.floor((Date.now() - DDAY_START.getTime()) / 86_400_000) + 1;
 }
 
-function OutboundIcon() {
+function SourceFailure({
+  children,
+  source,
+}: {
+  children: string;
+  source: HomeSourceState<unknown>;
+}) {
   return (
-    <svg
-      width='14'
-      height='14'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      aria-hidden='true'
+    <p className='slcn-home__source-error' role='alert'>
+      <span>{children}</span>{' '}
+      <button type='button' onClick={source.retry}>
+        다시 시도
+      </button>
+    </p>
+  );
+}
+
+function ScheduleLink({
+  device,
+  schedule,
+}: {
+  device: DeviceType;
+  schedule: ScheduleEvent;
+}) {
+  const time = formatScheduleTime(schedule.start, schedule.allDay);
+
+  return (
+    <Link
+      to={buildDeviceCalendarMonthPath(device)}
+      className='slcn-home__schedule-link'
+      aria-label={`${schedule.title} 일정 보기`}
     >
-      <path d='M7 17L17 7M9 7h8v8' />
-    </svg>
+      <time className='slcn-home__schedule-time' dateTime={schedule.start}>
+        {time ?? '일정'}
+      </time>
+      <span className='slcn-home__schedule-copy'>
+        <strong>{schedule.title}</strong>
+        {schedule.location ? <span>{schedule.location}</span> : null}
+      </span>
+    </Link>
   );
 }
 
 export function HomeHubPage({ device }: HomeHubPageProps) {
-  const { upcoming, past, isLoading, isError, retry } = useHomeTimeline();
+  const model = useHomeTimeline();
+  const [query, setQuery] = useState('');
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(device !== 'mobile');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const ddayDays = getDdayCount();
-
-  const tripLogoUrls = useTripAssetUrls(
-    past.flatMap((entry) => (entry.kind === 'trip' ? [entry.trip.logo] : []))
+  const travelSource = model.sources.travels;
+  const scheduleSource = model.sources.schedules;
+  const dayOutSource = model.sources.dayOuts;
+  const newestTravel = model.travels[0] ?? null;
+  const filteredTravels = useMemo(
+    () => filterTravelRecords(model.travels, { year: selectedYear, query }),
+    [model.travels, query, selectedYear]
   );
-  const travelCoverUrls = useTravelAssetUrls(
-    past.flatMap((entry) =>
-      entry.kind === 'travel' ? [entry.travel.coverPhotoId] : []
-    )
+  const archiveTravels = useMemo(
+    () => filteredTravels.filter((travel) => travel.id !== newestTravel?.id),
+    [filteredTravels, newestTravel]
   );
+  const assetIds = useMemo(
+    () => [
+      newestTravel?.coverPhotoId ?? null,
+      ...archiveTravels.slice(0, 12).map((travel) => travel.coverPhotoId),
+    ],
+    [archiveTravels, newestTravel]
+  );
+  const travelCoverUrls = useTravelAssetUrls(assetIds);
+  const isFullError = model.isError;
+  const isTravelLoading = travelSource.status === 'loading';
+  const hasArchiveFilter = Boolean(query.trim() || selectedYear);
 
-  function imageUrlFor(entry: (typeof past)[number]) {
-    if (entry.kind === 'trip') {
-      return tripLogoUrls[fileAssetKey(entry.trip.logo)] ?? null;
+  useEffect(() => {
+    if (device === 'mobile' && isSearchOpen) {
+      searchInputRef.current?.focus();
     }
-
-    if (entry.kind === 'travel' && entry.travel.coverPhotoId) {
-      return travelCoverUrls[entry.travel.coverPhotoId] ?? null;
-    }
-
-    return null;
-  }
+  }, [device, isSearchOpen]);
 
   return (
     <section className={cn('slcn-home', `slcn-home--${device}`)}>
       <header className='slcn-home__intro'>
-        <h1 className='slcn-home__title'>서울 촌놈 나들이 기록</h1>
-        <p className='slcn-home__dday'>
-          만난 지 <strong className='slcn-num'>{ddayDays}</strong>일째
-        </p>
+        <div>
+          <h1 className='slcn-home__title'>지난 여행</h1>
+          <p className='slcn-home__dday'>
+            만난 지 <strong className='slcn-num'>{ddayDays}</strong>일째
+          </p>
+        </div>
       </header>
 
-      <div className='slcn-home__timeline'>
-        {upcoming.length > 0 ? (
-          <ol className='slcn-home__group'>
-            {upcoming.map((entry) => (
-              <HomeTimelineRow key={entry.id} entry={entry} device={device} />
-            ))}
-          </ol>
-        ) : (
-          <p className='slcn-home__nudge'>
-            이번 달은 아직 계획한 나들이가 없어요.{' '}
-            <Link
-              to={buildDeviceCalendarMonthPath(device)}
-              className='slcn-home__nudge-action'
-            >
-              달력에서 계획하기
-            </Link>
-          </p>
-        )}
-
-        <div className='slcn-home__today'>
-          <span className='slcn-home__today-label'>오늘</span>
-        </div>
-
-        {isLoading ? (
-          <ol className='slcn-home__group' aria-label='기록을 불러오는 중'>
-            {[0, 1, 2].map((index) => (
-              <li key={index} className='slcn-home-row slcn-home-row--skeleton'>
-                <span className='slcn-home-row__skeleton-rail' />
-                <span className='slcn-home-row__skeleton-line' />
-              </li>
-            ))}
-          </ol>
-        ) : null}
-
-        {!isLoading && isError ? (
-          <p className='slcn-home__nudge'>
-            기록을 불러오지 못했어요.{' '}
-            <button
-              type='button'
-              onClick={retry}
-              className='slcn-home__nudge-action'
-            >
-              다시 시도
-            </button>
-          </p>
-        ) : null}
-
-        {!isLoading && !isError && past.length > 0 ? (
-          <ol className='slcn-home__group'>
-            {past.map((entry) => (
-              <HomeTimelineRow
-                key={`${entry.kind}-${entry.id}`}
-                entry={entry}
-                device={device}
-                imageUrl={imageUrlFor(entry)}
-              />
-            ))}
-          </ol>
-        ) : null}
-
-        {!isLoading && !isError && past.length === 0 ? (
-          <p className='slcn-home__nudge'>
-            아직 남긴 기록이 없어요.{' '}
-            <Link
-              to={buildDeviceTripRegisterPath(device)}
-              className='slcn-home__nudge-action'
-            >
-              첫 나들이 기록하기
-            </Link>
-          </p>
-        ) : null}
-      </div>
-
-      {device === 'mobile' ? (
-        <a
-          href={FILM_URL}
-          target='_blank'
-          rel='noreferrer'
-          className='slcn-home__outbound'
-        >
-          Choi&apos;s Film Art
-          <OutboundIcon />
-        </a>
+      {isFullError ? (
+        <section className='slcn-home__full-error' role='alert'>
+          <h2>여행 기록을 불러오지 못했어요.</h2>
+          <p>잠시 후 다시 시도해 주세요.</p>
+          <button type='button' onClick={model.retry}>
+            다시 시도
+          </button>
+        </section>
       ) : null}
+
+      {!isFullError && isTravelLoading ? (
+        <div
+          className='slcn-home__loading'
+          role='status'
+          aria-label='여행 기록을 불러오는 중'
+        >
+          <span aria-hidden='true' />
+          <span aria-hidden='true' />
+          <span aria-hidden='true' />
+        </div>
+      ) : null}
+
+      {!isFullError && !isTravelLoading && travelSource.isError ? (
+        <SourceFailure source={travelSource}>
+          여행 기록을 불러오지 못했어요.
+        </SourceFailure>
+      ) : null}
+
+      {!isFullError && !isTravelLoading && !travelSource.isError ? (
+        <>
+          {newestTravel ? (
+            <MemoryChronicleFeature
+              travel={newestTravel}
+              device={device}
+              coverObjectUrl={
+                newestTravel.coverPhotoId
+                  ? (travelCoverUrls[newestTravel.coverPhotoId] ?? null)
+                  : null
+              }
+            />
+          ) : (
+            <section className='slcn-home__empty-travels'>
+              <h2>아직 남긴 여행이 없어요.</h2>
+              <p>같이 다녀온 여행을 기록해 두면 다시 꺼내 볼 수 있어요.</p>
+              <Link to={buildDeviceTravelRegisterPath(device)}>
+                첫 여행 기록하기
+              </Link>
+            </section>
+          )}
+
+          <div className='slcn-home__retrieval'>
+            <div className='slcn-home__retrieval-heading'>
+              <h2>여행 기록 찾기</h2>
+              {device === 'mobile' ? (
+                <>
+                  <button
+                    type='button'
+                    className='slcn-home__search-toggle'
+                    aria-expanded={isSearchOpen}
+                    aria-controls='home-travel-search'
+                    onClick={() => setIsSearchOpen((open) => !open)}
+                  >
+                    {isSearchOpen ? '여행 검색 닫기' : '여행 검색 열기'}
+                  </button>
+                  {isSearchOpen ? (
+                    <label
+                      className='slcn-home__search'
+                      id='home-travel-search'
+                    >
+                      <span>여행 기록 검색</span>
+                      <input
+                        ref={searchInputRef}
+                        type='search'
+                        value={query}
+                        aria-label='여행 기록 검색'
+                        placeholder='제목 · 지역 · 한 줄 기록'
+                        onChange={(event) => setQuery(event.target.value)}
+                      />
+                      {query ? (
+                        <button
+                          type='button'
+                          className='slcn-home__search-clear'
+                          aria-label='검색 초기화'
+                          onClick={() => setQuery('')}
+                        >
+                          초기화
+                        </button>
+                      ) : null}
+                    </label>
+                  ) : null}
+                </>
+              ) : (
+                <label className='slcn-home__search' id='home-travel-search'>
+                  <span>여행 기록 검색</span>
+                  <input
+                    ref={searchInputRef}
+                    type='search'
+                    value={query}
+                    aria-label='여행 기록 검색'
+                    placeholder='제목 · 지역 · 한 줄 기록'
+                    onChange={(event) => setQuery(event.target.value)}
+                  />
+                  {query ? (
+                    <button
+                      type='button'
+                      className='slcn-home__search-clear'
+                      aria-label='검색 초기화'
+                      onClick={() => setQuery('')}
+                    >
+                      초기화
+                    </button>
+                  ) : null}
+                </label>
+              )}
+            </div>
+
+            <nav className='slcn-home__years' aria-label='여행 연도'>
+              <button
+                type='button'
+                aria-pressed={selectedYear === null}
+                className={cn(
+                  'slcn-home__year',
+                  selectedYear === null && 'slcn-home__year--active'
+                )}
+                onClick={() => setSelectedYear(null)}
+              >
+                전체
+              </button>
+              {model.years.map((year) => (
+                <button
+                  key={year}
+                  type='button'
+                  aria-pressed={selectedYear === year}
+                  className={cn(
+                    'slcn-home__year',
+                    selectedYear === year && 'slcn-home__year--active'
+                  )}
+                  onClick={() => setSelectedYear(year)}
+                >
+                  {year}년
+                </button>
+              ))}
+            </nav>
+
+            {archiveTravels.length > 0 ? (
+              <ol className='slcn-home-archive' aria-label='여행 기록'>
+                {archiveTravels.map((travel) => (
+                  <TravelArchiveRow
+                    key={travel.id}
+                    travel={travel}
+                    device={device}
+                    coverObjectUrl={
+                      travel.coverPhotoId
+                        ? (travelCoverUrls[travel.coverPhotoId] ?? null)
+                        : null
+                    }
+                  />
+                ))}
+              </ol>
+            ) : hasArchiveFilter ? (
+              <div className='slcn-home__zero-result'>
+                {filteredTravels.length > 0 ? (
+                  <p>가장 최근 여행이 검색 결과예요.</p>
+                ) : (
+                  <p>검색 결과가 없어요</p>
+                )}
+                {filteredTravels.length === 0 ? (
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setQuery('');
+                      setSelectedYear(null);
+                    }}
+                  >
+                    검색 초기화
+                  </button>
+                ) : null}
+              </div>
+            ) : newestTravel ? (
+              <div className='slcn-home__zero-result'>
+                <p>더 오래된 여행은 아직 없어요.</p>
+              </div>
+            ) : null}
+          </div>
+        </>
+      ) : null}
+
+      {!isFullError ? (
+        <div className='slcn-home__secondary'>
+          <section
+            className='slcn-home__schedule'
+            aria-labelledby='home-next-schedule'
+          >
+            <div className='slcn-home__secondary-heading'>
+              <h2 id='home-next-schedule'>다음 일정</h2>
+              <Link to={buildDeviceCalendarMonthPath(device)}>달력 보기</Link>
+            </div>
+            {scheduleSource.status === 'loading' ? (
+              <p className='slcn-home__secondary-empty' role='status'>
+                일정을 불러오는 중
+              </p>
+            ) : scheduleSource.isError ? (
+              <SourceFailure source={scheduleSource}>
+                일정 정보를 불러오지 못했어요.
+              </SourceFailure>
+            ) : model.nearestSchedules.length > 0 ? (
+              <ol className='slcn-home__schedule-list'>
+                {model.nearestSchedules.map((schedule) => (
+                  <li key={schedule.id}>
+                    <ScheduleLink device={device} schedule={schedule} />
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className='slcn-home__secondary-empty'>
+                아직 예정된 일정이 없어요.{' '}
+                <Link to={buildDeviceCalendarMonthPath(device)}>
+                  달력에서 계획하기
+                </Link>
+              </p>
+            )}
+          </section>
+
+          <section
+            className='slcn-home__day-outs'
+            aria-labelledby='home-day-outs'
+          >
+            <div className='slcn-home__secondary-heading'>
+              <h2 id='home-day-outs'>나들이</h2>
+              <Link to={buildDeviceTripListPath(device)}>
+                나들이 기록으로 가기
+              </Link>
+            </div>
+            {dayOutSource.status === 'loading' ? (
+              <p className='slcn-home__secondary-empty' role='status'>
+                나들이 기록을 불러오는 중
+              </p>
+            ) : dayOutSource.isError ? (
+              <SourceFailure source={dayOutSource}>
+                나들이 기록을 불러오지 못했어요.
+              </SourceFailure>
+            ) : (
+              <p className='slcn-home__secondary-empty'>
+                {dayOutSource.data.length > 0
+                  ? `남긴 나들이 ${dayOutSource.data.length}개`
+                  : '아직 남긴 나들이가 없어요.'}
+              </p>
+            )}
+          </section>
+        </div>
+      ) : null}
+
+      <nav className='slcn-home__more' aria-label='더보기'>
+        <span className='slcn-home__more-label'>더보기</span>
+        <div className='slcn-home__more-links'>
+          <Link to={buildDeviceShoesCatalogPath(device)}>신발 기록</Link>
+          <a href='http://naver.me/52RjLNuT' target='_blank' rel='noreferrer'>
+            Choi&apos;s Film Art
+          </a>
+        </div>
+      </nav>
     </section>
   );
 }

@@ -21,6 +21,18 @@ describe('shell components', () => {
     expect(screen.getByText('© 2024 SLCN.')).toBeTruthy();
   });
 
+  it('hides the film footer link only on the desktop home route', () => {
+    renderWithProviders(<MainDesktopShell />, { route: '/main' });
+
+    expect(screen.queryByRole('link', { name: /Choi's Film Art/i })).toBeNull();
+  });
+
+  it('keeps the film footer link on non-home desktop routes', () => {
+    renderWithProviders(<MainDesktopShell />, { route: '/main/calendar' });
+
+    expect(screen.getByRole('link', { name: /Choi's Film Art/i })).toBeTruthy();
+  });
+
   it('renders the mobile shell with top bar and bottom navigation', () => {
     renderWithProviders(
       <MainMobileShell>

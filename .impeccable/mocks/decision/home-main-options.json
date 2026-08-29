@@ -1,0 +1,49 @@
+{
+  "title": "서울 촌놈 · 메인 화면 구조 선택",
+  "question": "과거 여행을 최신순으로 빠르게 훑되 검색과 사진 탐색도 놓치지 않는 구조를 선택해 주세요.",
+  "options": [
+    {
+      "id": "memory-chronicle",
+      "label": "기억의 연대기",
+      "kicker": "THE ROLL",
+      "lineage": "시간순 여행 기록과 편집면",
+      "thesis": "가장 최근 여행 한 편이 문을 열고, 아래의 촘촘한 연대기가 과거로 곧장 이어진다.",
+      "palette": ["#FFF8F8", "#1B1B1B", "#FE9FC8", "#FFFFFF"],
+      "materials": ["warm paper", "photographic print", "hairline rule"],
+      "viewport": "평평한 데스크톱 헤더 아래 최근 여행의 큰 사진과 회고가 먼저 보이고, 같은 화면 하단에서 연도 점프와 최신순 여행 목록이 시작된다.",
+      "case": "최신순 탐색을 기본으로 유지하면서 사진과 한 줄 회고가 첫 화면의 감정적 고점을 만든다.",
+      "risk": "최신 사진이 지나치게 커지면 빠른 조회가 다시 아래로 밀릴 수 있다.",
+      "comp": ".impeccable/mocks/decision/home-memory-chronicle.webp"
+    },
+    {
+      "id": "season-filmstrip",
+      "label": "계절 필름스트립",
+      "lineage": "계절별 사진 스트립과 월 인덱스",
+      "thesis": "여행 사진을 계절의 연속 장면으로 훑고, 날짜와 제목은 필름 가장자리처럼 정확히 붙는다.",
+      "palette": ["#FFF8F8", "#1B1B1B", "#FE9FC8", "#F8EEF1"],
+      "materials": ["contact strip", "matte photograph", "date notation"],
+      "viewport": "상단의 작은 검색과 연도·월 인덱스 아래, 최근 여행들이 높이가 다른 가로 사진 스트립으로 이어지고 나들이는 별도 보조 링크로 내려간다.",
+      "case": "사진 탐색의 즐거움이 가장 크며 최신순 읽기와 월 이동도 한 흐름 안에 남는다.",
+      "risk": "사진이 많은 기록과 없는 기록 사이의 시각적 격차를 세심하게 다뤄야 한다.",
+      "comp": ".impeccable/mocks/decision/home-season-filmstrip.webp"
+    },
+    {
+      "id": "travel-shelf",
+      "label": "여행 서가",
+      "lineage": "조밀한 인덱스와 선택 미리보기",
+      "thesis": "왼쪽의 최신순 여행 색인에서 고르면 오른쪽에 사진과 회고가 즉시 펼쳐지는 조회 도구다.",
+      "palette": ["#FFF8F8", "#1B1B1B", "#A34F6D", "#FFFFFF"],
+      "materials": ["archive index", "flat image field", "precise typography"],
+      "viewport": "데스크톱은 검색 가능한 조밀한 여행 목록과 선택된 여행의 큰 미리보기로 양분되고, 모바일은 목록에서 상세 미리보기로 자연스럽게 전환된다.",
+      "case": "많은 기록에서 제목·장소·연도로 찾는 속도가 가장 빠르고 사진 탐색도 선택 결과로 유지된다.",
+      "risk": "도구성이 강해지면 두 사람의 사적인 기억보다 아카이브 관리 화면처럼 느껴질 수 있다.",
+      "comp": ".impeccable/mocks/decision/home-travel-shelf.webp"
+    }
+  ],
+  "reroll": true,
+  "buildPath": {
+    "value": "comp",
+    "toggle": true
+  },
+  "steer": true
+}

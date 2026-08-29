@@ -1,9 +1,10 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import {
   getMobileNavigationItems,
   type NavigationIconName,
 } from '@/components/layout/navigation-items';
+import { buildDeviceRootPath } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
 
 type MobileBottomNavProps = {
@@ -100,12 +101,20 @@ export function MobileBottomNav({
   className,
   device = 'mobile',
 }: MobileBottomNavProps) {
-  const navigationItems = getMobileNavigationItems(device);
+  const location = useLocation();
+  const isHomeSurface = location.pathname === buildDeviceRootPath(device);
+  const navigationItems = getMobileNavigationItems(device).filter(
+    (item) => !(isHomeSurface && item.icon === 'shoes')
+  );
 
   return (
     <nav
       aria-label='모바일 하단 내비게이션'
-      className={cn('slcn-mobile-bottom-nav', className)}
+      className={cn(
+        'slcn-mobile-bottom-nav',
+        isHomeSurface && 'slcn-mobile-bottom-nav--home',
+        className
+      )}
     >
       <ul className='slcn-mobile-bottom-nav__list'>
         {navigationItems.map((item) => (

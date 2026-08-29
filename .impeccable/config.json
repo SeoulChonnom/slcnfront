@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font-size",
+        "value": "1.0625rem",
+        "files": [
+          "src/styles/components-common.css"
+        ],
+        "createdAt": "2026-08-24T21:08:34.120Z",
+        "reason": "Approved Memory Chronicle body copy uses the DESIGN.md 17px body step."
+      }
+    ]
+  }
+}

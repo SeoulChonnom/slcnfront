@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, vi } from 'vitest';
 import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
@@ -61,6 +61,22 @@ describe('DesktopHeader', () => {
     expect(screen.getByRole('link', { name: '나들이 기록' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '서울 촌놈 달력' })).toBeTruthy();
     expect(screen.getByRole('link', { name: '신발 추천' })).toBeTruthy();
+  });
+
+  it('renders the approved home navigation in order with Home active', () => {
+    renderWithProviders(<DesktopHeader />, {
+      route: '/main',
+    });
+
+    const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((link) => link.textContent)
+    ).toEqual(['홈', '여행', '나들이', '달력']);
+    expect(
+      within(nav).getByRole('link', { name: '홈' }).getAttribute('aria-current')
+    ).toBe('page');
   });
 
   it('opens the profile menu and closes it with Escape or an outside press', async () => {
