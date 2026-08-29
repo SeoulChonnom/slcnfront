@@ -153,9 +153,7 @@ export function DesktopHeader({
             aria-label='SLCN 홈으로 이동'
           >
             <img src={logo} alt='SLCN' className='slcn-desktop-header__logo' />
-            <span className='slcn-desktop-header__brand-name'>
-              SeoulChonnom
-            </span>
+            <span className='slcn-desktop-header__brand-name'>서울 촌놈</span>
           </Link>
 
           <nav aria-label='주요 메뉴'>
