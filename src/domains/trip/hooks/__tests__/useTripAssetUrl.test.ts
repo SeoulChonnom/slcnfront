@@ -51,7 +51,7 @@ describe('useTripAssetUrl', () => {
       expect(result.current.isPending).toBe(false);
     });
 
-    expect(downloadTripFile).toHaveBeenCalledWith(ref);
+    expect(downloadTripFile).toHaveBeenCalledWith(ref, 'original');
 
     unmount();
 

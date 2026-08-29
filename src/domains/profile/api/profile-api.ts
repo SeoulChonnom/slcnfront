@@ -14,6 +14,10 @@ import {
   apiClient,
   type createApiClient,
 } from '@/lib/api/api-client';
+import {
+  type ImageVariant,
+  toImageVariantQuery,
+} from '@/lib/api/image-variant';
 
 type ApiClientLike = Pick<
   ReturnType<typeof createApiClient>,
@@ -59,9 +63,13 @@ export function createProfileApi(client: ApiClientLike = apiClient) {
 
       return parseProfileFileAssetResponse(response);
     },
-    downloadProfileImage(asset: ProfileFileAsset): Promise<Blob> {
+    downloadProfileImage(
+      asset: ProfileFileAsset,
+      variant: ImageVariant = 'original'
+    ): Promise<Blob> {
       return client.get<Blob>({
         path: `/assets/files/${encodeURIComponent(asset.fileId)}`,
+        query: toImageVariantQuery(variant),
         responseType: 'blob',
       });
     },

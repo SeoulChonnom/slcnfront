@@ -36,8 +36,16 @@ describe('useTravelAssetUrls', () => {
     });
 
     expect(downloadTravelFile).toHaveBeenCalledTimes(2);
-    expect(downloadTravelFile).toHaveBeenNthCalledWith(1, 'photo-1');
-    expect(downloadTravelFile).toHaveBeenNthCalledWith(2, 'photo-2');
+    expect(downloadTravelFile).toHaveBeenNthCalledWith(
+      1,
+      'photo-1',
+      'original'
+    );
+    expect(downloadTravelFile).toHaveBeenNthCalledWith(
+      2,
+      'photo-2',
+      'original'
+    );
 
     unmount();
 
@@ -97,6 +105,6 @@ describe('useTravelAssetUrls', () => {
     });
 
     expect(downloadTravelFile).toHaveBeenCalledTimes(1);
-    expect(downloadTravelFile).toHaveBeenCalledWith('photo-1');
+    expect(downloadTravelFile).toHaveBeenCalledWith('photo-1', 'original');
   });
 });

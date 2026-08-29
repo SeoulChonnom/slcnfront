@@ -9,7 +9,8 @@ type TravelPlaceItemProps = {
 export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
   const memo = place.description ?? place.memo;
   const photoObjectUrls = useTravelAssetUrls(
-    place.photos.map((p) => p.photoFileId)
+    place.photos.map((p) => p.photoFileId),
+    'home-thumb'
   );
 
   return (

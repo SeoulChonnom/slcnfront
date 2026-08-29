@@ -32,7 +32,10 @@ export function TripListSection({ device }: TripListSectionProps) {
   const { data, isPending, isError, refetch } = useTripList();
   const quiz = useTripQuiz();
   const [query, setQuery] = useState('');
-  const logoObjectUrls = useTripAssetUrls(data?.map((trip) => trip.logo) ?? []);
+  const logoObjectUrls = useTripAssetUrls(
+    data?.map((trip) => trip.logo) ?? [],
+    'home-thumb'
+  );
   const isAdmin = useAuthStore((state) =>
     state.userInfo?.roleList.includes('admin')
   );

@@ -20,7 +20,8 @@ type TravelListSectionProps = {
 export function TravelListSection({ device }: TravelListSectionProps) {
   const { data, isPending, isError, refetch } = useTravelList();
   const coverObjectUrls = useTravelAssetUrls(
-    data?.map((travel) => travel.coverPhotoId) ?? []
+    data?.map((travel) => travel.coverPhotoId) ?? [],
+    'home-feature'
   );
 
   return (

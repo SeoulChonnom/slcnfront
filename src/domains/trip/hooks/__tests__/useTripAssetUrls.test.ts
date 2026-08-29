@@ -58,8 +58,8 @@ describe('useTripAssetUrls', () => {
     });
 
     expect(downloadTripFile).toHaveBeenCalledTimes(2);
-    expect(downloadTripFile).toHaveBeenNthCalledWith(1, logoRef);
-    expect(downloadTripFile).toHaveBeenNthCalledWith(2, map1Ref);
+    expect(downloadTripFile).toHaveBeenNthCalledWith(1, logoRef, 'original');
+    expect(downloadTripFile).toHaveBeenNthCalledWith(2, map1Ref, 'original');
 
     unmount();
 

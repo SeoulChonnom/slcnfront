@@ -5,23 +5,43 @@ import type { TravelListItem } from '@/domains/travel/types';
 import { HomeHubPage } from '@/pages/shared/HomeHubPage';
 import { renderWithMinimalProviders } from '@/test/helpers/render';
 
-const { requestedTravelAssetIds, useHomeTimelineMock } = vi.hoisted(() => ({
-  requestedTravelAssetIds: [] as Array<Array<string | null | undefined>>,
-  useHomeTimelineMock: vi.fn(),
-}));
+type AssetRequest = {
+  ids: Array<string | null | undefined>;
+  variant: string | undefined;
+};
+
+const { requestedArchiveCovers, requestedFeatureCovers, useHomeTimelineMock } =
+  vi.hoisted(() => ({
+    requestedArchiveCovers: [] as AssetRequest[],
+    requestedFeatureCovers: [] as AssetRequest[],
+    useHomeTimelineMock: vi.fn(),
+  }));
 
 vi.mock('@/domains/home/hooks/useHomeTimeline', () => ({
   useHomeTimeline: useHomeTimelineMock,
 }));
 
 vi.mock('@/domains/travel/hooks/useTravelAssetUrls', () => ({
-  useTravelAssetUrls: (ids: Array<string | null | undefined>) => {
-    requestedTravelAssetIds.push([...ids]);
+  useTravelAssetUrls: (
+    ids: Array<string | null | undefined>,
+    variant?: string
+  ) => {
+    requestedArchiveCovers.push({ ids: [...ids], variant });
     return Object.fromEntries(
       ids
         .filter((id): id is string => Boolean(id))
         .map((id) => [id, `blob:${id}`])
     );
+  },
+}));
+
+vi.mock('@/domains/travel/hooks/useTravelAssetUrl', () => ({
+  useTravelAssetUrl: (fileId: string | null | undefined, variant?: string) => {
+    requestedFeatureCovers.push({ ids: [fileId], variant });
+    return {
+      objectUrl: fileId ? `blob:${fileId}` : null,
+      isPending: false,
+    };
   },
 }));
 
@@ -177,7 +197,8 @@ function renderHome(
 }
 
 beforeEach(() => {
-  requestedTravelAssetIds.length = 0;
+  requestedArchiveCovers.length = 0;
+  requestedFeatureCovers.length = 0;
 });
 
 describe('HomeHubPage Memory Chronicle', () => {
@@ -214,7 +235,7 @@ describe('HomeHubPage Memory Chronicle', () => {
     ).toBe('/main/map');
   });
 
-  it('requests the feature cover plus at most twelve unique archive covers', () => {
+  it('requests the feature cover as home-feature and archive covers as home-thumb', () => {
     const archiveTravels = Array.from({ length: 12 }, (_, index) => ({
       ...travels[1],
       id: `travel-archive-${index}`,
@@ -236,10 +257,16 @@ describe('HomeHubPage Memory Chronicle', () => {
       })
     );
 
-    const requested = requestedTravelAssetIds.at(-1) ?? [];
-    expect(requested[0]).toBe('cover-sokcho');
-    expect(requested).toHaveLength(13);
-    expect(new Set(requested).size).toBe(requested.length);
+    expect(requestedFeatureCovers.at(-1)).toEqual({
+      ids: ['cover-sokcho'],
+      variant: 'home-feature',
+    });
+
+    const archive = requestedArchiveCovers.at(-1);
+    expect(archive?.variant).toBe('home-thumb');
+    expect(archive?.ids).toHaveLength(12);
+    expect(archive?.ids).not.toContain('cover-sokcho');
+    expect(new Set(archive?.ids).size).toBe(archive?.ids.length);
   });
 
   it('links the nearest schedule to the calendar without mixing it into travel rows', () => {

@@ -66,7 +66,10 @@ export function TravelPhotoAlbum({
   onAddPhoto,
 }: TravelPhotoAlbumProps) {
   const [filter, setFilter] = useState<AlbumFilter>('all');
-  const photoObjectUrls = useTravelAssetUrls(photos.map((p) => p.photoFileId));
+  const photoObjectUrls = useTravelAssetUrls(
+    photos.map((p) => p.photoFileId),
+    'home-thumb'
+  );
 
   const byDayGroups = useMemo<PhotoGroup[]>(() => {
     const groups = days.map((day) => ({

@@ -1,6 +1,6 @@
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -33,7 +33,7 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     css: true,
     mockReset: true,
-    exclude: ['**/node_modules/**', '**/e2e/**'],
+    exclude: ['**/node_modules/**', '**/e2e/**', '**/.worktrees/**'],
   },
   server: {
     proxy: {

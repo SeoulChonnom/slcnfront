@@ -44,7 +44,10 @@ describe('useProfileImageUrl', () => {
       expect(result.current.profileImageUrl).toBe('blob:profile-image');
     });
 
-    expect(downloadProfileImage).toHaveBeenCalledWith(profileImage);
+    expect(downloadProfileImage).toHaveBeenCalledWith(
+      profileImage,
+      'home-thumb'
+    );
     expect(createObjectURL).toHaveBeenCalledWith(imageBlob);
 
     unmount();
