@@ -10,6 +10,7 @@ import type { HomeSourceState } from '@/domains/home/types';
 import { formatScheduleTime } from '@/domains/home/utils/home-dates';
 import { useTravelAssetUrl } from '@/domains/travel/hooks/useTravelAssetUrl';
 import { useTravelAssetUrls } from '@/domains/travel/hooks/useTravelAssetUrls';
+import { useVisibleAssetKeys } from '@/lib/hooks/useVisibleAssetKeys';
 import {
   buildDeviceCalendarMonthPath,
   buildDeviceShoesCatalogPath,
@@ -91,10 +92,14 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
     () => filteredTravels.filter((travel) => travel.id !== newestTravel?.id),
     [filteredTravels, newestTravel]
   );
+  const { visibleKeys, observe } = useVisibleAssetKeys();
   const archiveAssetIds = useMemo(
     () =>
-      archiveTravels.slice(0, ARCHIVE_COVER_LIMIT).map((t) => t.coverPhotoId),
-    [archiveTravels]
+      archiveTravels
+        .slice(0, ARCHIVE_COVER_LIMIT)
+        .map((t) => t.coverPhotoId)
+        .filter((id) => id && visibleKeys.has(id)),
+    [archiveTravels, visibleKeys]
   );
   const { objectUrl: featureCoverUrl } = useTravelAssetUrl(
     newestTravel?.coverPhotoId,
@@ -222,6 +227,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
                     key={travel.id}
                     travel={travel}
                     device={device}
+                    coverRef={observe(travel.coverPhotoId)}
                     coverObjectUrl={
                       travel.coverPhotoId
                         ? (travelCoverUrls[travel.coverPhotoId] ?? null)

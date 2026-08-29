@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import type { TravelListItem } from '@/domains/travel/types';
@@ -8,6 +9,7 @@ type TravelCardProps = {
   device: DeviceType;
   isRepresentative?: boolean;
   coverObjectUrl?: string | null;
+  coverRef?: Ref<HTMLDivElement>;
 };
 
 export function TravelCard({
@@ -15,6 +17,7 @@ export function TravelCard({
   device,
   isRepresentative = false,
   coverObjectUrl = null,
+  coverRef,
 }: TravelCardProps) {
   return (
     <Link
@@ -23,7 +26,7 @@ export function TravelCard({
       aria-label={`${travel.title} 여행 보기`}
     >
       {/* Image area */}
-      <div className='slcn-travel-card__image-wrap slcn-stripe'>
+      <div className='slcn-travel-card__image-wrap slcn-stripe' ref={coverRef}>
         {coverObjectUrl ? (
           <img
             src={coverObjectUrl}

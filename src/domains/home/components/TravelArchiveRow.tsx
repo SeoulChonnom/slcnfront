@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import type { TravelListItem } from '@/domains/travel/types';
@@ -7,19 +8,22 @@ type TravelArchiveRowProps = {
   travel: TravelListItem;
   device: DeviceType;
   coverObjectUrl?: string | null;
+  coverRef?: Ref<HTMLSpanElement>;
 };
 
 export function TravelArchiveRow({
   travel,
   device,
   coverObjectUrl = null,
+  coverRef,
 }: TravelArchiveRowProps) {
+  const hasCover = Boolean(travel.coverPhotoId);
   return (
     <li className='slcn-home-archive__row'>
       <Link
         to={buildDeviceTravelDetailPath(device, travel.travelId)}
         className={`slcn-home-archive__link${
-          coverObjectUrl ? '' : ' slcn-home-archive__link--no-cover'
+          hasCover ? '' : ' slcn-home-archive__link--no-cover'
         }`}
         aria-label={`${travel.title} 여행 보기`}
       >
@@ -40,9 +44,11 @@ export function TravelArchiveRow({
             </span>
           ) : null}
         </span>
-        {coverObjectUrl ? (
-          <span className='slcn-home-archive__thumb'>
-            <img src={coverObjectUrl} alt='' loading='lazy' decoding='async' />
+        {hasCover ? (
+          <span className='slcn-home-archive__thumb' ref={coverRef}>
+            {coverObjectUrl ? (
+              <img src={coverObjectUrl} alt='' decoding='async' />
+            ) : null}
           </span>
         ) : null}
       </Link>

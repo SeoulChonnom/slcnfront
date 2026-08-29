@@ -23,8 +23,8 @@ const travel: TravelListItem = {
 };
 
 describe('TravelArchiveRow', () => {
-  it('uses a no-cover modifier and removes the thumbnail column when cover is absent', () => {
-    const { unmount } = renderWithMinimalProviders(
+  it('renders the cover thumbnail once its object url is ready', () => {
+    renderWithMinimalProviders(
       <TravelArchiveRow
         travel={travel}
         device='main'
@@ -32,29 +32,43 @@ describe('TravelArchiveRow', () => {
       />
     );
 
-    const coveredLink = screen.getByRole('link', {
-      name: '제주도 여행 여행 보기',
-    });
-    expect(
-      coveredLink.classList.contains('slcn-home-archive__link--no-cover')
-    ).toBe(false);
-    const coveredImage = coveredLink.querySelector('img');
-    expect(coveredImage).not.toBeNull();
-    expect(coveredImage?.getAttribute('alt')).toBe('');
-    expect(coveredImage?.getAttribute('loading')).toBe('lazy');
+    const link = screen.getByRole('link', { name: '제주도 여행 여행 보기' });
+    expect(link.classList.contains('slcn-home-archive__link--no-cover')).toBe(
+      false
+    );
+    const image = link.querySelector('img');
+    expect(image).not.toBeNull();
+    expect(image?.getAttribute('alt')).toBe('');
+  });
 
-    unmount();
+  it('reserves the thumbnail column while the cover is still loading', () => {
+    // The box has to exist before the blob does: it is what the viewport
+    // observer watches, and it keeps the row from reflowing on arrival.
     renderWithMinimalProviders(
       <TravelArchiveRow travel={travel} device='main' />
     );
 
-    const noCoverLink = screen.getByRole('link', {
-      name: '제주도 여행 여행 보기',
-    });
-    expect(
-      noCoverLink.classList.contains('slcn-home-archive__link--no-cover')
-    ).toBe(true);
-    expect(noCoverLink.querySelector('img')).toBeNull();
-    expect(noCoverLink.querySelector('.slcn-home-archive__thumb')).toBeNull();
+    const link = screen.getByRole('link', { name: '제주도 여행 여행 보기' });
+    expect(link.classList.contains('slcn-home-archive__link--no-cover')).toBe(
+      false
+    );
+    expect(link.querySelector('.slcn-home-archive__thumb')).not.toBeNull();
+    expect(link.querySelector('img')).toBeNull();
+  });
+
+  it('uses a no-cover modifier and drops the column when the travel has no cover', () => {
+    renderWithMinimalProviders(
+      <TravelArchiveRow
+        travel={{ ...travel, coverPhotoId: null }}
+        device='main'
+      />
+    );
+
+    const link = screen.getByRole('link', { name: '제주도 여행 여행 보기' });
+    expect(link.classList.contains('slcn-home-archive__link--no-cover')).toBe(
+      true
+    );
+    expect(link.querySelector('img')).toBeNull();
+    expect(link.querySelector('.slcn-home-archive__thumb')).toBeNull();
   });
 });
