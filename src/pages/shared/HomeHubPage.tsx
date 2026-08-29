@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import type { ScheduleEvent } from '@/domains/calendar/types';
@@ -74,8 +74,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
   const model = useHomeTimeline();
   const [query, setQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(device !== 'mobile');
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const ddayDays = getDdayCount();
   const travelSource = model.sources.travels;
   const scheduleSource = model.sources.schedules;
@@ -100,12 +98,6 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
   const isFullError = model.isError;
   const isTravelLoading = travelSource.status === 'loading';
   const hasArchiveFilter = Boolean(query.trim() || selectedYear);
-
-  useEffect(() => {
-    if (device === 'mobile' && isSearchOpen) {
-      searchInputRef.current?.focus();
-    }
-  }, [device, isSearchOpen]);
 
   return (
     <section className={cn('slcn-home', `slcn-home--${device}`)}>
@@ -171,67 +163,26 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
           <div className='slcn-home__retrieval'>
             <div className='slcn-home__retrieval-heading'>
               <h2>여행 기록 찾기</h2>
-              {device === 'mobile' ? (
-                <>
+              <label className='slcn-home__search' id='home-travel-search'>
+                <span>여행 기록 검색</span>
+                <input
+                  type='search'
+                  value={query}
+                  aria-label='여행 기록 검색'
+                  placeholder='제목 · 지역 · 한 줄 기록'
+                  onChange={(event) => setQuery(event.target.value)}
+                />
+                {query ? (
                   <button
                     type='button'
-                    className='slcn-home__search-toggle'
-                    aria-expanded={isSearchOpen}
-                    aria-controls='home-travel-search'
-                    onClick={() => setIsSearchOpen((open) => !open)}
+                    className='slcn-home__search-clear'
+                    aria-label='검색 초기화'
+                    onClick={() => setQuery('')}
                   >
-                    {isSearchOpen ? '여행 검색 닫기' : '여행 검색 열기'}
+                    초기화
                   </button>
-                  {isSearchOpen ? (
-                    <label
-                      className='slcn-home__search'
-                      id='home-travel-search'
-                    >
-                      <span>여행 기록 검색</span>
-                      <input
-                        ref={searchInputRef}
-                        type='search'
-                        value={query}
-                        aria-label='여행 기록 검색'
-                        placeholder='제목 · 지역 · 한 줄 기록'
-                        onChange={(event) => setQuery(event.target.value)}
-                      />
-                      {query ? (
-                        <button
-                          type='button'
-                          className='slcn-home__search-clear'
-                          aria-label='검색 초기화'
-                          onClick={() => setQuery('')}
-                        >
-                          초기화
-                        </button>
-                      ) : null}
-                    </label>
-                  ) : null}
-                </>
-              ) : (
-                <label className='slcn-home__search' id='home-travel-search'>
-                  <span>여행 기록 검색</span>
-                  <input
-                    ref={searchInputRef}
-                    type='search'
-                    value={query}
-                    aria-label='여행 기록 검색'
-                    placeholder='제목 · 지역 · 한 줄 기록'
-                    onChange={(event) => setQuery(event.target.value)}
-                  />
-                  {query ? (
-                    <button
-                      type='button'
-                      className='slcn-home__search-clear'
-                      aria-label='검색 초기화'
-                      onClick={() => setQuery('')}
-                    >
-                      초기화
-                    </button>
-                  ) : null}
-                </label>
-              )}
+                ) : null}
+              </label>
             </div>
 
             <nav className='slcn-home__years' aria-label='여행 연도'>

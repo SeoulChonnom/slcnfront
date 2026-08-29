@@ -275,21 +275,26 @@ describe('HomeHubPage Memory Chronicle', () => {
     ).toBe('true');
   });
 
-  it('keeps mobile search collapsed until opened and focuses the revealed input', async () => {
+  it('keeps mobile search directly available for filtering and clearing', async () => {
     const { user } = renderHome(createModel(), 'mobile');
 
-    const toggle = screen.getByRole('button', { name: '여행 검색 열기' });
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(
-      screen.queryByRole('searchbox', { name: '여행 기록 검색' })
-    ).toBeNull();
+    const search = screen.getByRole('searchbox', { name: '여행 기록 검색' });
+    expect(search).toBeTruthy();
+    expect(screen.queryByRole('button', { name: '여행 검색 열기' })).toBeNull();
+    expect(screen.queryByRole('button', { name: '여행 검색 닫기' })).toBeNull();
     expect(screen.getByRole('button', { name: '전체' })).toBeTruthy();
 
-    await user.click(toggle);
+    await user.type(search, '비 오는');
+    expect(screen.getByText('부산, 비 오는 주말')).toBeTruthy();
+    expect(
+      within(screen.getByRole('list', { name: '여행 기록' })).queryByText(
+        '속초 2박 3일'
+      )
+    ).toBeNull();
 
-    expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    const search = screen.getByRole('searchbox', { name: '여행 기록 검색' });
-    expect(document.activeElement).toBe(search);
+    await user.click(screen.getByRole('button', { name: '검색 초기화' }));
+    expect((search as HTMLInputElement).value).toBe('');
+    expect(screen.getByText('제주 겨울')).toBeTruthy();
   });
 
   it('announces when a search matches only the always-visible hero travel', async () => {

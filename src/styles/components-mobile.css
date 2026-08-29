@@ -90,6 +90,18 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Home keeps the floating pill, but its navigation surface should recede
+   behind the memory archive. Use one quiet elevation cue instead of pairing
+   a bright rim with layered highlights and a broad ambient shadow. */
+.slcn-mobile-bottom-nav--home {
+  border: 0;
+  background: color-mix(in srgb, var(--color-canvas-pure) 90%, transparent);
+  backdrop-filter: blur(8px) saturate(1.25);
+  -webkit-backdrop-filter: blur(8px) saturate(1.25);
+  padding-block: 0.625rem;
+  box-shadow: var(--shadow-floating);
+}
+
 .slcn-mobile-bottom-nav__link {
   display: flex;
   flex-direction: column;
@@ -475,7 +487,8 @@ grouped by day) ---- */
 
 /* ---- Memory Chronicle home (mobile) ---- */
 .slcn-home--mobile {
-  gap: var(--space-4);
+  gap: var(--space-3);
+  padding-bottom: calc(4.25rem + 1rem + env(safe-area-inset-bottom));
 }
 
 .slcn-home--mobile .slcn-home__title {
@@ -489,7 +502,7 @@ grouped by day) ---- */
 }
 
 .slcn-home--mobile .slcn-home__recent-media {
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 5 / 2;
 }
 
 .slcn-home--mobile .slcn-home__recent-copy {
@@ -502,21 +515,21 @@ grouped by day) ---- */
 
 .slcn-home--mobile .slcn-home__recent-review {
   max-width: 36ch;
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
   font-size: 0.9375rem;
 }
 
 .slcn-home--mobile .slcn-home__recent-action {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .slcn-home--mobile .slcn-home__retrieval {
-  padding-top: var(--space-3);
+  padding-top: var(--space-2);
 }
 
 .slcn-home--mobile .slcn-home__retrieval-heading {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .slcn-home--mobile .slcn-home__search {
@@ -524,11 +537,11 @@ grouped by day) ---- */
 }
 
 .slcn-home--mobile .slcn-home__years {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .slcn-home--mobile .slcn-home-archive {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .slcn-home--mobile .slcn-home-archive__link {
