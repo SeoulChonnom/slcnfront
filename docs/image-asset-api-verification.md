@@ -518,3 +518,73 @@ curl -s -D - -o /dev/null -H "X-AUTH-TOKEN: $T" \
 ### 10.5 알려진 미해결
 
 - **`src/domains/profile/hooks/__tests__/profile-hooks.test.ts` 의 "uploads a selected image before updating and caches the returned profile" 는 flaky다.** 전체 스위트에서 약 2/3 확률로 실패하고 단독 실행 시에는 통과한다. **이번 작업 이전부터 그렇다** — 변경분을 stash 하고 baseline을 3회 돌려 동일한 실패를 재현해 확인했다. 이번 범위 밖이라 손대지 않았다.
+
+
+## 11. Stage 3 완료 — 쿠키 인증 전환 (2026-08-30)
+
+백엔드가 `GET /assets/files/{fileId}` 에 세션 쿠키 인증을 추가하면서 §7.4의 전제 조건이 해소됐다. 프론트를 `<img src>` 직접 방식으로 전환했다 (`d72424e`).
+
+### 11.1 백엔드 계약 재확인
+
+| 요청 | 결과 |
+| --- | --- |
+| 쿠키만 (원본 / `home-thumb` / `home-feature`) | 200 — 각각 `image/jpeg` 2,583,030 B / `image/webp` 42,730 B / `image/webp` 227,270 B |
+| 인증 없음 | **401** (여전히 보호됨) |
+| `X-AUTH-TOKEN` | 200 — **하위 호환 유지** |
+| `If-None-Match` 일치 | 304 |
+| `Origin` 없는 요청(`<img>`와 동일) | 200 |
+| `GET .../download` 를 쿠키로 | **401** — 저장 경로는 여전히 헤더 인증 |
+
+캐시 헤더는 그대로다: `Cache-Control: max-age=86400, private`, `ETag: "{fileId}-{variant}"`.
+
+### 11.2 §8의 미검증 항목 하나가 해소됐다
+
+축소본이 없는 자산의 폴백을 **실제 자산으로 확인**했다. 사용자가 추가한 431×225 PNG는 `variants: ["home-thumb"]` 로 `home-feature` 가 없다.
+
+| 요청 | 응답 |
+| --- | --- |
+| (파라미터 없음) | `image/png` 12,755 B |
+| `?variant=home-feature` (없는 축소본) | **`image/png` 12,755 B — 원본 폴백, 오류 없음** |
+| `?variant=home-thumb` (있는 축소본) | `image/webp` 3,948 B |
+
+문서가 기술한 대로다. 표지가 사라지는 일은 없다.
+
+### 11.3 A/B 실측
+
+데이터셋이 바뀌어(사용자가 여행 3건 추가, 총 16건) 이전 수치와 직접 비교할 수 없으므로, **같은 16건 데이터셋에서 직전 커밋(IntersectionObserver + Blob)과 현재를 각각 측정**했다.
+
+홈 데스크톱 1440:
+
+| 지표 | 이전 (관찰자 + Blob) | 현재 (쿠키 + `<img>`) |
+| --- | --- | --- |
+| 첫 화면 GET | 6건 / 157,248 B | 16건 / 586,768 B |
+| 전체 GET | 13건 / 458,089 B | 16건 / 586,768 B |
+| **표지가 끝내 비는 자리** | **3건** | **0건** |
+| CORS preflight | 16건 | **0건** |
+| `X-AUTH-TOKEN` 쓰는 이미지 요청 | 16건 | **0건** |
+| 재방문 전송량 | 0 B | 0 B |
+| 검색 축소·복원 재요청 | 0건 | 0건 |
+| 깨진 이미지 | 0건 | 0건 |
+
+전송 바이트가 늘어난 것은 **이전 버전이 12장 상한(`ARCHIVE_COVER_LIMIT`) 때문에 3장을 아예 로드하지 않았기 때문**이다. 이미지 1장당 바이트는 약 36 KB로 동일하다. 네이티브 lazy 로딩으로 바뀌면서 상한이 불필요해져 제거했고, 그 결과 빈 자리가 사라졌다.
+
+**첫 화면 요청 수는 6건 → 16건으로 늘었다.** Chrome의 lazy 임계 거리가 관찰자에 쓰던 `rootMargin: 300px` 보다 훨씬 관대해서, 짧은 아카이브 행 16개가 전부 임계 안에 들어온다. 이는 브라우저가 의도적으로 선택한 동작(팝인 방지)이며, 더 줄이려면 **아카이브 행 자체를 덜 그리는 것(페이지네이션)** 이 답이지 JS 관찰자로 되돌아갈 일은 아니다. 여행 목록(14건 즉시 + 2건 스크롤 시)에서는 네이티브 lazy가 실제로 지연시키는 것을 확인했다.
+
+### 11.4 삭제된 코드
+
+`40 files changed, 147 insertions(+), 1490 deletions(-)`
+
+제거 대상: `useAssetObjectUrls`, `useVisibleAssetKeys`, 여행·나들이 자산 훅 3쌍, 보존 캐시, `travelFilesApi`, `downloadTripFile`, `downloadProfileImage` 및 각 테스트.
+
+`TripDetailSection` 의 지도 로드 실패 상태는 `<img onError>` 로 유지했다. 브라우저가 요청을 소유하게 되어 거부할 프로미스가 없으므로, 실패 신호는 img의 error 이벤트뿐이다.
+
+### 11.5 남은 백엔드 요청 항목
+
+§7.5 중 아래는 여전히 유효하다.
+
+- **데스크톱 2× 용 대형 축소본** — 대표 표지가 677 CSS px(DPR2에서 1354px 필요)인데 `home-feature` 는 960px다. 이제 `srcset` 을 쓸 수 있으므로 320/640/960/1440 사다리가 있으면 브라우저가 직접 고른다
+- **구 자산 축소본 일괄 생성** — 폴백은 안전하나 그 자산에서는 용량 이득이 없다
+- **`Cache-Control: immutable`** — `{fileId}-{variant}` 는 내용이 불변인데 24시간 뒤 보이는 이미지마다 304 왕복이 발생한다
+- **`?width=abc` → 500** 을 400으로
+- **`docs/api_spec.json` 갱신** — `variant`/`/download`/신규 필드/쿠키 인증이 모두 빠져 있다
+- **이미지 응답의 불필요한 `Vary`** — `Vary: Access-Control-Request-*` 는 CORS 모드가 아닌 `<img>` 요청에 의미가 없고 캐시 항목만 가른다
