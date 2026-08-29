@@ -74,7 +74,7 @@ describe('useTravelAssetUrls', () => {
     expect(result.current['broken-1']).toBeUndefined();
   });
 
-  it('replaces prior object urls when the id set changes', async () => {
+  it('serves a new id set without re-downloading the previous one', async () => {
     const { result, rerender } = renderHook(
       ({ ids }) => useTravelAssetUrls(ids),
       { initialProps: { ids: ['photo-1'] as Array<string | null | undefined> } }
@@ -90,7 +90,8 @@ describe('useTravelAssetUrls', () => {
       expect(result.current['photo-2']).toBe('blob:photo-2.png');
     });
 
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:photo-1.png');
+    // photo-1 is retained rather than revoked, so returning to it is free.
+    expect(URL.revokeObjectURL).not.toHaveBeenCalledWith('blob:photo-1.png');
   });
 
   it('skips null and undefined ids', async () => {

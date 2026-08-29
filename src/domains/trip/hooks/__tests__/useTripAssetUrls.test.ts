@@ -95,7 +95,7 @@ describe('useTripAssetUrls', () => {
     expect(result.current['broken-1']).toBeUndefined();
   });
 
-  it('replaces prior object urls when the ref set changes', async () => {
+  it('serves a new ref set without re-downloading the previous one', async () => {
     const logoRef = fileAsset({
       fileId: 'logo-1',
       type: 'logo',
@@ -124,6 +124,7 @@ describe('useTripAssetUrls', () => {
       expect(result.current['map-1']).toBe('blob:map1.png.png');
     });
 
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:logo.png.png');
+    // The logo is retained rather than revoked, so returning to it is free.
+    expect(URL.revokeObjectURL).not.toHaveBeenCalledWith('blob:logo.png.png');
   });
 });
