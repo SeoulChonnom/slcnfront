@@ -3003,6 +3003,11 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   color: inherit;
 }
 
+/* A missing cover is a complete text record, not an empty thumbnail slot. */
+.slcn-home-archive__link--no-cover {
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+}
+
 .slcn-home-archive__date {
   color: var(--color-body-muted);
   font-size: 0.875rem;

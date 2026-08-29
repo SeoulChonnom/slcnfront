@@ -18,7 +18,9 @@ export function TravelArchiveRow({
     <li className='slcn-home-archive__row'>
       <Link
         to={buildDeviceTravelDetailPath(device, travel.travelId)}
-        className='slcn-home-archive__link'
+        className={`slcn-home-archive__link${
+          coverObjectUrl ? '' : ' slcn-home-archive__link--no-cover'
+        }`}
         aria-label={`${travel.title} 여행 보기`}
       >
         <time
