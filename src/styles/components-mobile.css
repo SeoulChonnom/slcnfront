@@ -550,6 +550,10 @@ grouped by day) ---- */
   min-height: 4.25rem;
 }
 
+.slcn-home--mobile .slcn-home-archive__link--no-cover {
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+}
+
 .slcn-home--mobile .slcn-home-archive__title {
   font-size: 0.9375rem;
 }

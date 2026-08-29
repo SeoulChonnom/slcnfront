@@ -2887,23 +2887,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   font-size: 0.75rem;
 }
 
-.slcn-home__search-toggle {
-  min-width: 10rem;
-  min-height: 2.75rem;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  background: transparent;
-  color: var(--color-accent-muted);
-  font-size: 0.875rem;
-  font-weight: var(--weight-strong);
-  text-align: left;
-}
-
-.slcn-home__search-toggle:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 3px;
-}
-
 .slcn-home__search input {
   width: 100%;
   min-height: 2.75rem;
