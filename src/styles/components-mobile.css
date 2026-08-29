@@ -529,11 +529,25 @@ grouped by day) ---- */
 
 .slcn-home--mobile .slcn-home__retrieval-heading {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
   gap: var(--space-3);
 }
 
 .slcn-home--mobile .slcn-home__search {
   min-width: 0;
+}
+
+.slcn-home--mobile .slcn-home__search > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .slcn-home--mobile .slcn-home__years {
