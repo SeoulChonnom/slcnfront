@@ -14,7 +14,7 @@ describe('trip-form-data', () => {
       button2: '',
       drive: '',
       quizTitle: '',
-      quizOptions: ['', '', '', ''],
+      quizOptions: ['', '', ''],
       quizAnswer: '',
       quizAnswerTitle: '',
       quizAnswerText: '',

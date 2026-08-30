@@ -83,7 +83,7 @@ describe('trip-mappers', () => {
         button2: '2차 경로',
         drive: 'https://drive.google.com/x',
         quizTitle: '정답은?',
-        quizOptions: ['보기1', '보기2', '', '보기4'],
+        quizOptions: ['보기1', '보기2', '보기3'],
         quizAnswer: '2',
         quizAnswerTitle: '정답',
         quizAnswerText: '맞았습니다.',
@@ -118,7 +118,7 @@ describe('trip-mappers', () => {
         options: [
           { text: '보기1', isCorrect: false },
           { text: '보기2', isCorrect: true },
-          { text: '보기4', isCorrect: false },
+          { text: '보기3', isCorrect: false },
         ],
       },
     });
@@ -145,7 +145,7 @@ describe('trip-mappers', () => {
           button2: '',
           drive: 'https://drive.google.com/invalid-type',
           quizTitle: '정답은?',
-          quizOptions: ['보기1', '보기2', '', ''],
+          quizOptions: ['보기1', '보기2', '보기3'],
           quizAnswer: '1',
           quizAnswerTitle: '정답',
           quizAnswerText: '맞았습니다.',
@@ -160,7 +160,7 @@ describe('trip-mappers', () => {
     ).toThrowError('Trip type must be AYO or RYU.');
   });
 
-  it('preserves the selected answer when blank options appear earlier in the original slots', () => {
+  it('preserves every displayed option and the selected answer index', () => {
     const payload = buildTripRegisterPayload(
       {
         type: 'AYO',
@@ -174,7 +174,7 @@ describe('trip-mappers', () => {
         button2: '',
         drive: 'https://drive.google.com/summer',
         quizTitle: '정답은?',
-        quizOptions: ['보기1', '', '보기3', ''],
+        quizOptions: ['보기1', '보기2', '보기3', '보기4', '보기5', '보기6'],
         quizAnswer: '3',
         quizAnswerTitle: '정답',
         quizAnswerText: '맞았습니다.',
@@ -189,7 +189,11 @@ describe('trip-mappers', () => {
 
     expect(payload.quiz.options).toEqual([
       { text: '보기1', isCorrect: false },
+      { text: '보기2', isCorrect: false },
       { text: '보기3', isCorrect: true },
+      { text: '보기4', isCorrect: false },
+      { text: '보기5', isCorrect: false },
+      { text: '보기6', isCorrect: false },
     ]);
     expect(
       payload.quiz.options.filter((option) => option.isCorrect)
@@ -210,7 +214,7 @@ describe('trip-mappers', () => {
         button2: '   ',
         drive: 'https://drive.google.com/spring',
         quizTitle: '정답은?',
-        quizOptions: ['보기1', '  보기2  ', '', ''],
+        quizOptions: ['보기1', '  보기2  ', '보기3'],
         quizAnswer: '',
         quizAnswerTitle: '정답',
         quizAnswerText: '설명',
@@ -242,6 +246,7 @@ describe('trip-mappers', () => {
         options: [
           { text: '보기1', isCorrect: false },
           { text: '보기2', isCorrect: false },
+          { text: '보기3', isCorrect: false },
         ],
       },
     });
@@ -266,7 +271,7 @@ describe('trip-mappers', () => {
         button2: '이전',
         drive: 'https://drive.google.com/autumn',
         quizTitle: '정답은?',
-        quizOptions: ['보기1', '보기2', '', ''],
+        quizOptions: ['보기1', '보기2', '보기3'],
         quizAnswer: '1',
         quizAnswerTitle: '정답',
         quizAnswerText: '맞았습니다.',
@@ -309,7 +314,7 @@ describe('trip-mappers', () => {
         button2: '',
         drive: 'https://drive.google.com/winter',
         quizTitle: '정답은?',
-        quizOptions: ['보기1', '보기2', '', ''],
+        quizOptions: ['보기1', '보기2', '보기3'],
         quizAnswer: '2',
         quizAnswerTitle: '정답',
         quizAnswerText: '맞았습니다.',
@@ -334,5 +339,35 @@ describe('trip-mappers', () => {
     expect(payload).not.toHaveProperty('logoFileId');
     expect(payload).not.toHaveProperty('firstMapFileId');
     expect(payload).not.toHaveProperty('secondMapFileId');
+  });
+
+  it('rejects a payload that contains a blank displayed quiz option', () => {
+    expect(() =>
+      buildTripRegisterPayload(
+        {
+          type: 'AYO',
+          date: '2099-12-31',
+          info2: '빈 보기 나들이',
+          logo: new File(['logo'], 'logo.png', { type: 'image/png' }),
+          map1: new File(['map1'], 'map1.png', { type: 'image/png' }),
+          hasSecondMap: false,
+          map2: null,
+          button1: '',
+          button2: '',
+          drive: 'https://drive.google.com/blank-option',
+          quizTitle: '정답은?',
+          quizOptions: ['보기1', '보기2', ''],
+          quizAnswer: '1',
+          quizAnswerTitle: '정답',
+          quizAnswerText: '맞았습니다.',
+          quizErrorTitle: '오답',
+          quizErrorText: '다시 시도하세요.',
+        },
+        {
+          logoFileId: 'logo-1',
+          firstMapFileId: 'map-1',
+        }
+      )
+    ).toThrowError('Quiz options must contain 3 to 6 non-empty values.');
   });
 });

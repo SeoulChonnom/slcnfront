@@ -12,7 +12,11 @@ import type {
   TripRegisterAssetIds,
 } from '@/domains/trip/types';
 import { isTripType } from '@/domains/trip/types';
-import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import {
+  MAX_TRIP_QUIZ_OPTIONS,
+  MIN_TRIP_QUIZ_OPTIONS,
+  type TripRegisterWizardValues,
+} from '@/domains/trip/utils/trip-form-data';
 
 export function mapTripListItemDto(dto: TripListItemDto): TripListItem {
   return {
@@ -64,15 +68,21 @@ export function buildTripRegisterPayload(
 ): TripCdo {
   const selectedAnswerIndex =
     values.quizAnswer.trim() === '' ? null : Number(values.quizAnswer) - 1;
-  const filteredQuizOptions = values.quizOptions
-    .map((option, index) => ({
-      text: option.trim(),
-      originalIndex: index,
-    }))
-    .filter((option) => option.text !== '');
+  const quizOptions = values.quizOptions.map((option, index) => ({
+    text: option.trim(),
+    originalIndex: index,
+  }));
 
   if (!isTripType(values.type)) {
     throw new Error('Trip type must be AYO or RYU.');
+  }
+
+  if (
+    quizOptions.length < MIN_TRIP_QUIZ_OPTIONS ||
+    quizOptions.length > MAX_TRIP_QUIZ_OPTIONS ||
+    quizOptions.some((option) => option.text === '')
+  ) {
+    throw new Error('Quiz options must contain 3 to 6 non-empty values.');
   }
 
   return {
@@ -114,7 +124,7 @@ export function buildTripRegisterPayload(
       answerText: values.quizAnswerText.trim(),
       errorTitle: values.quizErrorTitle.trim(),
       errorText: values.quizErrorText.trim(),
-      options: filteredQuizOptions.map<OptionCdo>((option) => ({
+      options: quizOptions.map<OptionCdo>((option) => ({
         text: option.text,
         isCorrect:
           selectedAnswerIndex === null

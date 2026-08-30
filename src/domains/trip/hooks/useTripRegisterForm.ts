@@ -5,6 +5,8 @@ import { tripFilesApi } from '@/domains/trip/api/trip-files-api';
 import { buildTripRegisterPayload } from '@/domains/trip/mappers/trip-mappers';
 import {
   createInitialTripRegisterValues,
+  MAX_TRIP_QUIZ_OPTIONS,
+  MIN_TRIP_QUIZ_OPTIONS,
   type TripRegisterWizardValues,
 } from '@/domains/trip/utils/trip-form-data';
 import {
@@ -79,18 +81,69 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
 
   function updateQuizOption(index: number, value: string) {
     setValues((currentValues) => {
-      const nextQuizOptions = [...currentValues.quizOptions] as [
-        string,
-        string,
-        string,
-        string,
-      ];
+      if (index < 0 || index >= currentValues.quizOptions.length) {
+        return currentValues;
+      }
+
+      const nextQuizOptions = [...currentValues.quizOptions];
 
       nextQuizOptions[index] = value;
 
       return {
         ...currentValues,
         quizOptions: nextQuizOptions,
+      };
+    });
+  }
+
+  function addQuizOption() {
+    setValues((currentValues) => {
+      const lastOption =
+        currentValues.quizOptions[currentValues.quizOptions.length - 1];
+
+      if (
+        currentValues.quizOptions.length < MIN_TRIP_QUIZ_OPTIONS ||
+        currentValues.quizOptions.length >= MAX_TRIP_QUIZ_OPTIONS ||
+        (currentValues.quizOptions.length > MIN_TRIP_QUIZ_OPTIONS &&
+          (lastOption === undefined || lastOption.trim() === ''))
+      ) {
+        return currentValues;
+      }
+
+      return {
+        ...currentValues,
+        quizOptions: [...currentValues.quizOptions, ''],
+      };
+    });
+  }
+
+  function removeQuizOption(index: number) {
+    setValues((currentValues) => {
+      if (
+        index < MIN_TRIP_QUIZ_OPTIONS ||
+        index >= currentValues.quizOptions.length
+      ) {
+        return currentValues;
+      }
+
+      const nextQuizOptions = currentValues.quizOptions.filter(
+        (_, optionIndex) => optionIndex !== index
+      );
+      const selectedAnswerIndex = Number(currentValues.quizAnswer) - 1;
+      let nextQuizAnswer = currentValues.quizAnswer;
+
+      if (Number.isInteger(selectedAnswerIndex)) {
+        if (selectedAnswerIndex === index) {
+          nextQuizAnswer = '';
+        } else if (selectedAnswerIndex > index) {
+          nextQuizAnswer = String(selectedAnswerIndex);
+        }
+      }
+
+      return {
+        ...currentValues,
+        quizOptions: nextQuizOptions,
+        quizAnswer: nextQuizAnswer,
       };
     });
   }
@@ -146,6 +199,8 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
     submitError: mutation.error,
     updateField,
     updateQuizOption,
+    addQuizOption,
+    removeQuizOption,
     goNext,
     goPrev,
     submit,

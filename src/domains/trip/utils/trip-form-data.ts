@@ -1,5 +1,8 @@
 import type { TripType } from '@/domains/trip/types';
 
+export const MIN_TRIP_QUIZ_OPTIONS = 3;
+export const MAX_TRIP_QUIZ_OPTIONS = 6;
+
 export type TripRegisterWizardValues = {
   type: TripType | '';
   date: string;
@@ -12,7 +15,7 @@ export type TripRegisterWizardValues = {
   button2: string;
   drive: string;
   quizTitle: string;
-  quizOptions: [string, string, string, string];
+  quizOptions: string[];
   quizAnswer: string;
   quizAnswerTitle: string;
   quizAnswerText: string;
@@ -33,7 +36,7 @@ export function createInitialTripRegisterValues(): TripRegisterWizardValues {
     button2: '',
     drive: '',
     quizTitle: '',
-    quizOptions: ['', '', '', ''],
+    quizOptions: ['', '', ''],
     quizAnswer: '',
     quizAnswerTitle: '',
     quizAnswerText: '',

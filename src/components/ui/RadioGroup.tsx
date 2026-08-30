@@ -1,3 +1,4 @@
+import { type Ref, useId } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 type RadioOption = {
@@ -13,6 +14,9 @@ type RadioGroupProps = {
   options: RadioOption[];
   onChange?: (value: string) => void;
   className?: string;
+  ariaDescribedBy?: string;
+  ariaInvalid?: boolean;
+  firstInputRef?: Ref<HTMLInputElement>;
 };
 
 export function RadioGroup({
@@ -22,14 +26,27 @@ export function RadioGroup({
   options,
   onChange,
   className,
+  ariaDescribedBy,
+  ariaInvalid,
+  firstInputRef,
 }: RadioGroupProps) {
+  const labelId = useId();
+
   return (
     <div className='slcn-radio-group-field'>
       {label ? (
-        <span className='slcn-radio-group__field-label'>{label}</span>
+        <span id={labelId} className='slcn-radio-group__field-label'>
+          {label}
+        </span>
       ) : null}
-      <div className={cn('slcn-radio-group', className)} role='radiogroup'>
-        {options.map((option) => {
+      <div
+        className={cn('slcn-radio-group', className)}
+        role='radiogroup'
+        aria-labelledby={label ? labelId : undefined}
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid || undefined}
+      >
+        {options.map((option, index) => {
           const checked = option.value === value;
 
           return (
@@ -39,6 +56,7 @@ export function RadioGroup({
               data-checked={checked}
             >
               <input
+                ref={index === 0 ? firstInputRef : undefined}
                 type='radio'
                 className='mt-1'
                 name={name}

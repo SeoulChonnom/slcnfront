@@ -38,11 +38,11 @@ describe('trip-validation', () => {
     expect(errors.type).toBe('유형을 선택해 주세요.');
   });
 
-  it('accepts an original quiz slot number when that specific slot is filled', () => {
+  it('accepts a complete set of three quiz options', () => {
     const errors = validateTripRegisterStep(3, {
       ...createInitialTripRegisterValues(),
       quizTitle: '정답은?',
-      quizOptions: ['보기1', '', '보기3', ''],
+      quizOptions: ['보기1', '보기2', '보기3'],
       quizAnswer: '3',
       quizAnswerTitle: '정답',
       quizAnswerText: '맞았습니다.',
@@ -54,11 +54,11 @@ describe('trip-validation', () => {
     expect(errors.quizOptions).toBeUndefined();
   });
 
-  it('rejects a selected quiz slot when the original slot is blank', () => {
+  it('rejects any blank quiz option, including a newly added option', () => {
     const errors = validateTripRegisterStep(3, {
       ...createInitialTripRegisterValues(),
       quizTitle: '정답은?',
-      quizOptions: ['보기1', '', '보기3', ''],
+      quizOptions: ['보기1', '보기2', ''],
       quizAnswer: '2',
       quizAnswerTitle: '정답',
       quizAnswerText: '맞았습니다.',
@@ -66,8 +66,38 @@ describe('trip-validation', () => {
       quizErrorText: '다시 시도하세요.',
     });
 
-    expect(errors.quizAnswer).toBe(
-      '정답 번호가 입력한 보기 수를 초과했습니다.'
-    );
+    expect(errors.quizOptions).toBe('모든 보기를 입력해 주세요.');
+  });
+
+  it('accepts six filled quiz options', () => {
+    const errors = validateTripRegisterStep(3, {
+      ...createInitialTripRegisterValues(),
+      quizTitle: '정답은?',
+      quizOptions: ['보기1', '보기2', '보기3', '보기4', '보기5', '보기6'],
+      quizAnswer: '6',
+      quizAnswerTitle: '정답',
+      quizAnswerText: '맞았습니다.',
+      quizErrorTitle: '오답',
+      quizErrorText: '다시 시도하세요.',
+    });
+
+    expect(errors.quizOptions).toBeUndefined();
+    expect(errors.quizAnswer).toBeUndefined();
+  });
+
+  it('rejects a selected quiz slot when the selected option is blank', () => {
+    const errors = validateTripRegisterStep(3, {
+      ...createInitialTripRegisterValues(),
+      quizTitle: '정답은?',
+      quizOptions: ['보기1', '', '보기3'],
+      quizAnswer: '2',
+      quizAnswerTitle: '정답',
+      quizAnswerText: '맞았습니다.',
+      quizErrorTitle: '오답',
+      quizErrorText: '다시 시도하세요.',
+    });
+
+    expect(errors.quizOptions).toBe('모든 보기를 입력해 주세요.');
+    expect(errors.quizAnswer).toBeUndefined();
   });
 });

@@ -55,6 +55,8 @@ const TRIP_REGISTER_STEP_CONFIGS: readonly TripRegisterStepConfig[] = [
         errors={form.errors}
         onFieldChange={form.updateField}
         onQuizOptionChange={form.updateQuizOption}
+        onAddQuizOption={form.addQuizOption}
+        onRemoveQuizOption={form.removeQuizOption}
       />
     ),
   },

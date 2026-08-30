@@ -1,5 +1,9 @@
 import { isTripType } from '@/domains/trip/types';
-import type { TripRegisterWizardValues } from '@/domains/trip/utils/trip-form-data';
+import {
+  MAX_TRIP_QUIZ_OPTIONS,
+  MIN_TRIP_QUIZ_OPTIONS,
+  type TripRegisterWizardValues,
+} from '@/domains/trip/utils/trip-form-data';
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 const IMAGE_MIME_TYPES = [
@@ -129,12 +133,13 @@ export function validateTripRegisterStep(
       errors.quizErrorText = '오답 텍스트를 입력해 주세요.';
     }
 
-    const filledOptions = values.quizOptions.filter(
-      (option) => option.trim() !== ''
-    );
-
-    if (filledOptions.length < 2) {
-      errors.quizOptions = '보기는 최소 2개 이상 입력해 주세요.';
+    if (
+      values.quizOptions.length < MIN_TRIP_QUIZ_OPTIONS ||
+      values.quizOptions.length > MAX_TRIP_QUIZ_OPTIONS
+    ) {
+      errors.quizOptions = `보기는 ${MIN_TRIP_QUIZ_OPTIONS}개에서 ${MAX_TRIP_QUIZ_OPTIONS}개까지 입력해 주세요.`;
+    } else if (values.quizOptions.some((option) => option.trim() === '')) {
+      errors.quizOptions = '모든 보기를 입력해 주세요.';
     }
 
     if (!values.quizAnswer) {
@@ -148,8 +153,7 @@ export function validateTripRegisterStep(
       values.quizAnswer &&
       (!Number.isInteger(selectedAnswerIndex) ||
         selectedAnswerIndex < 0 ||
-        selectedOption === undefined ||
-        selectedOption.trim() === '')
+        selectedOption === undefined)
     ) {
       errors.quizAnswer = '정답 번호가 입력한 보기 수를 초과했습니다.';
     }

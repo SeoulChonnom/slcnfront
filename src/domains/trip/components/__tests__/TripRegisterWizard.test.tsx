@@ -46,7 +46,11 @@ const registerTripMock = vi.mocked(tripApi.registerTrip);
 async function completeTripRegistrationForm(
   user: ReturnType<typeof renderWithProviders>['user'],
   container: HTMLElement,
-  options: { includeSecondMap?: boolean; type?: '아영' | '일권' } = {}
+  options: {
+    includeSecondMap?: boolean;
+    type?: '아영' | '일권';
+    selectAnswer?: boolean;
+  } = {}
 ) {
   await user.click(screen.getByRole('radio', { name: options.type ?? '아영' }));
   await user.type(screen.getByLabelText('날짜'), '2099-12-31');
@@ -109,9 +113,12 @@ async function completeTripRegistrationForm(
   await user.click(screen.getByRole('button', { name: '다음' }));
 
   await user.type(screen.getByLabelText('퀴즈 제목'), '정답은?');
-  await user.type(screen.getByLabelText('정답1'), '보기1');
-  await user.type(screen.getByLabelText('정답2'), '보기2');
-  await user.click(screen.getByRole('radio', { name: '2번' }));
+  await user.type(screen.getByRole('textbox', { name: /^정답1/ }), '보기1');
+  await user.type(screen.getByRole('textbox', { name: /^정답2/ }), '보기2');
+  await user.type(screen.getByRole('textbox', { name: /^정답3/ }), '보기3');
+  if (options.selectAnswer !== false) {
+    await user.click(screen.getByRole('radio', { name: '2번' }));
+  }
   await user.type(screen.getByLabelText('정답 제목'), '정답');
   await user.type(screen.getByLabelText('정답 텍스트'), '맞았습니다.');
   await user.type(screen.getByLabelText('오답 제목'), '오답');
@@ -122,6 +129,256 @@ describe('TripRegisterWizard', () => {
   beforeEach(() => {
     uploadTripFileMock.mockReset();
     registerTripMock.mockReset();
+  });
+
+  it('renders exactly three required quiz options with matching answer choices', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+
+    expect(
+      screen.getAllByRole('textbox', { name: /^정답[1-3]$/ })
+    ).toHaveLength(3);
+    expect(screen.queryByRole('textbox', { name: '정답4' })).toBeNull();
+    expect(screen.getByRole('radio', { name: '1번' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: '2번' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: '3번' })).toBeTruthy();
+    expect(screen.queryByRole('radio', { name: '4번' })).toBeNull();
+
+    for (const optionNumber of [1, 2, 3]) {
+      const option = screen.getByRole('textbox', {
+        name: new RegExp(`^정답${optionNumber}`),
+      });
+
+      expect(option.hasAttribute('required')).toBe(true);
+      expect(option.getAttribute('name')).toBe(`quiz-option-${optionNumber}`);
+      expect(option.getAttribute('autocomplete')).toBe('off');
+      expect(option.getAttribute('aria-describedby')).toContain(
+        'quiz-options-hint'
+      );
+    }
+
+    expect(screen.getByRole('radiogroup', { name: '정답 선택' })).toBeTruthy();
+  });
+
+  it('requires each added option before allowing another and stops at six options', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    const addOptionButton = screen.getByRole('button', { name: '보기 추가' });
+
+    await user.click(addOptionButton);
+    expect(screen.getByRole('textbox', { name: /^정답4/ })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: '4번' })).toBeTruthy();
+    expect(addOptionButton.hasAttribute('disabled')).toBe(true);
+
+    await user.type(screen.getByRole('textbox', { name: /^정답4/ }), '보기4');
+    await user.click(addOptionButton);
+    await user.type(screen.getByRole('textbox', { name: /^정답5/ }), '보기5');
+    await user.click(addOptionButton);
+    await user.type(screen.getByRole('textbox', { name: /^정답6/ }), '보기6');
+
+    expect(
+      screen.getAllByRole('textbox', { name: /^정답[1-6]$/ })
+    ).toHaveLength(6);
+    expect(screen.getByRole('radio', { name: '6번' })).toBeTruthy();
+    expect(addOptionButton.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('blocks submission and shows validation when an added option is blank', async () => {
+    const onSubmit = vi.fn();
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={onSubmit} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    const optionsError = screen.getByRole('alert');
+    const addedOption = screen.getByRole('textbox', { name: /^정답4/ });
+
+    expect(optionsError.textContent).toBe('모든 보기를 입력해 주세요.');
+    expect(optionsError.getAttribute('id')).toBe('quiz-options-error');
+    expect(optionsError.getAttribute('aria-live')).toBe('assertive');
+    expect(
+      screen
+        .getByRole('radiogroup', { name: '정답 선택' })
+        .getAttribute('aria-describedby')
+    ).toContain('quiz-options-error');
+    for (const optionNumber of [1, 2, 3, 4]) {
+      expect(
+        screen
+          .getByRole('textbox', {
+            name: new RegExp(`^정답${optionNumber}`),
+          })
+          .getAttribute('aria-describedby')
+      ).toContain('quiz-options-error');
+    }
+    expect(document.activeElement).toBe(addedOption);
+  });
+
+  it('keeps typing in the focused invalid option after validation', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    const option4 = screen.getByRole('textbox', { name: /^정답4/ });
+    await user.type(option4, '임시');
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    await user.clear(option4);
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    expect(document.activeElement).toBe(option4);
+    await user.type(option4, '새로운답변');
+
+    expect((option4 as HTMLInputElement).value).toBe('새로운답변');
+    expect(
+      (screen.getByRole('textbox', { name: /^정답5/ }) as HTMLInputElement)
+        .value
+    ).toBe('');
+    expect(document.activeElement).toBe(option4);
+  });
+
+  it('announces missing answer selection and focuses the answer group', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container, {
+      selectAnswer: false,
+    });
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    const answerError = screen.getByRole('alert');
+    const answerGroup = screen.getByRole('radiogroup', {
+      name: '정답 선택',
+    });
+
+    expect(answerError.textContent).toBe('정답 번호를 선택해 주세요.');
+    expect(answerError.getAttribute('id')).toBe('quiz-answer-error');
+    expect(answerError.getAttribute('aria-live')).toBe('assertive');
+    expect(answerGroup.getAttribute('aria-describedby')).toContain(
+      'quiz-answer-error'
+    );
+    expect(document.activeElement).toBe(
+      screen.getByRole('radio', { name: '1번' })
+    );
+  });
+
+  it('only deletes added options and adjusts the selected answer after deletion', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    await user.type(screen.getByRole('textbox', { name: /^정답4/ }), '보기4');
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    await user.type(screen.getByRole('textbox', { name: /^정답5/ }), '보기5');
+    await user.click(screen.getByRole('radio', { name: '5번' }));
+
+    expect(screen.queryByRole('button', { name: '정답1 삭제' })).toBeNull();
+    expect(screen.getByRole('button', { name: '정답4 삭제' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: '정답5 삭제' })).toBeTruthy();
+
+    await user.click(screen.getByRole('button', { name: '정답4 삭제' }));
+
+    expect(screen.queryByRole('textbox', { name: /^정답5/ })).toBeNull();
+    expect(screen.queryByRole('radio', { name: '5번' })).toBeNull();
+    expect(
+      (screen.getByRole('radio', { name: '4번' }) as HTMLInputElement).checked
+    ).toBe(true);
+  });
+
+  it('clears a selected answer when its added option is deleted before submit', async () => {
+    const onSubmit = vi.fn();
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={onSubmit} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    await user.click(screen.getByRole('button', { name: '보기 추가' }));
+    await user.type(screen.getByRole('textbox', { name: /^정답4/ }), '보기4');
+    await user.click(screen.getByRole('radio', { name: '4번' }));
+    await user.click(screen.getByRole('button', { name: '정답4 삭제' }));
+
+    expect(
+      [1, 2, 3].some(
+        (number) =>
+          (
+            screen.getByRole('radio', {
+              name: `${number}번`,
+            }) as HTMLInputElement
+          ).checked
+      )
+    ).toBe(false);
+
+    await user.click(screen.getByRole('radio', { name: '2번' }));
+    await user.click(screen.getByRole('button', { name: '저장' }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({
+      quizOptions: ['보기1', '보기2', '보기3'],
+      quizAnswer: '2',
+    });
+  });
+
+  it('adjusts the selected answer when deleting an option from the six-option boundary', async () => {
+    const { user, container } = renderWithProviders(
+      <TripRegisterWizard device='main' onSubmit={vi.fn()} />,
+      {
+        route: '/main/map/register',
+      }
+    );
+
+    await completeTripRegistrationForm(user, container);
+    for (const optionNumber of [4, 5, 6]) {
+      await user.click(screen.getByRole('button', { name: '보기 추가' }));
+      await user.type(
+        screen.getByRole('textbox', {
+          name: new RegExp(`^정답${optionNumber}`),
+        }),
+        `보기${optionNumber}`
+      );
+    }
+    await user.click(screen.getByRole('radio', { name: '6번' }));
+    await user.click(screen.getByRole('button', { name: '정답5 삭제' }));
+
+    expect(screen.queryByRole('textbox', { name: /^정답6/ })).toBeNull();
+    expect(
+      (screen.getByRole('radio', { name: '5번' }) as HTMLInputElement).checked
+    ).toBe(true);
   });
 
   it('blocks step navigation until required fields are filled and submits on the last step', async () => {
@@ -238,6 +495,7 @@ describe('TripRegisterWizard', () => {
         options: [
           { text: '보기1', isCorrect: false },
           { text: '보기2', isCorrect: true },
+          { text: '보기3', isCorrect: false },
         ],
       },
     });

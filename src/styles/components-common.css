@@ -1775,6 +1775,54 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   font-size: 0.8125rem;
 }
 
+.slcn-trip-register-step__quiz-option {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.slcn-trip-register-step__quiz-option > .slcn-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.slcn-trip-register-step__quiz-option > .slcn-button {
+  flex: 0 0 auto;
+  min-height: 2.875rem;
+  margin-bottom: 0;
+  padding-inline: 0.75rem;
+  color: var(--color-body-muted);
+  font-size: 0.8125rem;
+}
+
+.slcn-trip-register-step__quiz-option
+  > .slcn-button[data-variant="ghost"]:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+  color: var(--color-ink);
+}
+
+.slcn-trip-register-step__quiz-options-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.slcn-trip-register-step__quiz-options-actions .slcn-trip-register-step__hint {
+  flex: 1 1 12rem;
+}
+
+.slcn-trip-register-step__quiz-options-actions > .slcn-button {
+  flex: 0 0 auto;
+}
+
+.slcn-trip-register-step__quiz-options-actions
+  > .slcn-button[data-variant="secondary"]:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-muted);
+}
+
 /* ---- Register: match prototype field/dropzone/radio styling ---- */
 .slcn-trip-register-wizard__title {
   margin: 0;
