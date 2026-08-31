@@ -99,6 +99,12 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  /* The wizard's step content is a single-column grid, so this field's own
+     automatic min-width (driven by the native <input type="date">'s
+     UA-intrinsic preferred size, which doesn't compress) can force that
+     shared column wider than the card at large text scale -- same
+     grid-item blowout as the pieces above. */
+  min-width: 0;
 }
 
 .slcn-field__label {
@@ -113,6 +119,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
   min-height: 3rem;
   padding: 0 0.875rem;
   border: 1px solid var(--color-hairline);
@@ -1274,6 +1281,17 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 1.5rem;
 }
 
+/* Wizard-only: cap the form column at DESIGN.md's narrow (760px) container
+   width instead of stretching to the shell's full width like the list/detail
+   siblings above -- a one-line text input should not read edge to edge on a
+   wide desktop viewport. Centering keeps the h1 aligned with the card since
+   both are constrained the same way. 760px is far wider than any mobile
+   viewport, so this is inert on mobile. */
+.slcn-trip-register-wizard {
+  max-width: 47.5rem;
+  margin-inline: auto;
+}
+
 /* ---- stripe background pattern ---- */
 .slcn-stripe {
   background-image: repeating-linear-gradient(
@@ -1519,6 +1537,19 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.75rem;
 }
 
+/* The card is a single-column grid, so this row's own automatic min-width
+   (its buttons' combined min-content) can force that shared column wider
+   than the card regardless of how much room is actually available -- same
+   grid-item blowout as the step indicator and radio options above.
+   flex-wrap lets the row (up to 3 buttons on the middle steps, incl. a
+   flex: none secondary 이전 button that won't shrink) drop to a second
+   line at large text scale instead of forcing an overflow; at normal scale
+   all buttons already fit on one line, so this is inert there. */
+.slcn-trip-register-wizard__actions {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
 /* Options stack: real answer text is a Korean sentence, not a keycap label. */
 .slcn-trip-quiz-modal__answers {
   display: flex;
@@ -1526,8 +1557,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: var(--space-2);
 }
 
+/* A flex-basis rather than a bare flex: 1 -- with wrap enabled, a basis
+   gives the primary action a width it would rather keep, so at large text
+   scale it drops to its own line instead of squeezing into a circle barely
+   wider than the word inside it. */
 .slcn-trip-register-wizard__actions .slcn-button {
-  flex: 1;
+  flex: 1 1 8em;
+  min-width: 0;
   min-height: 3.125rem;
 }
 
@@ -1580,9 +1616,15 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   text-wrap: pretty;
 }
 
+/* flex: none kept this pair rigid, so at large text scale the two ghost
+   buttons pushed the notice -- and the whole document -- past the viewport
+   (measured +117px at 320px/200%). Let the row shrink and wrap; at normal
+   scale both buttons still sit on one line, so this is inert there. */
 .slcn-trip-register-wizard__draft-actions {
   display: flex;
-  flex: none;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
   gap: var(--space-1);
 }
 
@@ -1591,6 +1633,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   color: var(--color-accent-muted);
   font-size: 0.8125rem;
   font-weight: var(--weight-strong);
+  /* Korean breaks per syllable by default, which split "이어서 쓰기" after
+     쓰 once the row started wrapping at large text scale. */
+  word-break: keep-all;
 }
 
 .slcn-trip-register-wizard__draft-actions .slcn-button:hover:not(:disabled) {
@@ -1752,6 +1797,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-register-wizard__card {
+  /* Establishes a query container for the step indicator's mobile
+     row/column switch (components-mobile.css) -- a container query can't
+     target its own element, so containment lives one level up here.
+     Inert on its own; only components-mobile.css's @container block reads
+     it. */
+  container-type: inline-size;
+  min-width: 0;
   padding: 1.625rem;
   border-radius: var(--radius-xl);
   border-color: var(--color-border);
@@ -1782,6 +1834,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   display: flex;
   gap: var(--slcn-step-gap);
   flex-wrap: wrap;
+  /* The card is display: grid, so this ol is a grid item -- grid items
+     default to min-width: auto (their content's min-content size) as a
+     floor, which can force the grid track (and this row) wider than the
+     card regardless of the flex rules below. min-width: 0 removes that
+     floor so the row actually respects the card's width. */
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1990,6 +2048,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__option {
+  /* The inline radio grid track is minmax(0, 1fr), but a grid item's own
+     automatic min-width still defaults to its min-content and can force the
+     track wider than that regardless -- min-width: 0 here is what actually
+     lets each option shrink at large text scale (same mechanism as the step
+     indicator's pills above). Scoped to the wizard so other RadioGroup
+     usages elsewhere keep their current sizing. */
+  min-width: 0;
   padding: 0.9375rem 1.125rem;
   border-width: 1.5px;
   border-color: var(--color-border-strong);
@@ -2045,8 +2110,15 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.75rem;
 }
 
+/* auto-fit rather than a hard 2 columns: a fixed pair with a 0 floor kept
+   shrinking under text scale until the label had zero width and the text
+   spilled outside the pill (measured at 200%). The 7em floor is the pill's
+   real min-content -- radio + gap + two Korean glyphs + padding -- and is
+   in em so it grows with the label it has to hold, so the pair collapses to
+   one column exactly when two no longer fit. min() keeps the track from
+   exceeding the container on very narrow viewports. */
 .slcn-radio-group--inline {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(7em, 100%), 1fr));
 }
 
 /* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
@@ -2264,6 +2336,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
    product and a filename is not evidence you picked the right capture. */
 .slcn-file-dropzone__file {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
@@ -2307,7 +2380,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  margin: -0.5rem -0.25rem -0.5rem 0;
+  /* Left margin adds breathing room from the file-size text without
+     shrinking the 44px tap target; the other sides stay pulled in so the
+     44px target doesn't visually inflate the row. */
+  margin: -0.5rem -0.25rem -0.5rem var(--space-1);
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);

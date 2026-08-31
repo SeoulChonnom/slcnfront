@@ -597,7 +597,13 @@ grouped by day) ---- */
   gap: var(--space-3);
 }
 
-/* Trip register step indicator: keep all 3 pills on one row at mobile widths. */
+/* Trip register step indicator: keep all 3 pills on one row at mobile widths
+   whenever they genuinely fit. flex-wrap stays nowrap here -- letting the
+   row wrap greedily produces an unpredictable 2+1 split, and pure CSS has
+   no way to tell which pill starts a new visual line (needed below to
+   suppress the sequence connector on that pill). min-width: 0 plus the
+   removed white-space: nowrap on the label let text wrap internally first,
+   so moderate text-scale growth is absorbed without ever leaving this row. */
 .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator {
   flex-wrap: nowrap;
   gap: 0.375rem;
@@ -605,11 +611,16 @@ grouped by day) ---- */
 
 .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator > li {
   flex: 1 1 0;
+  min-width: 0;
   justify-content: center;
   gap: 0.3125rem;
   padding: 0.5rem 0.5rem;
   font-size: 0.75rem;
-  white-space: nowrap;
+}
+
+.slcn-shell-detail-mobile .slcn-trip-register-wizard__step-label {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-num {
@@ -629,5 +640,34 @@ grouped by day) ---- */
   .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator > li {
     gap: 0.25rem;
     padding: 0.5rem 0.25rem;
+  }
+}
+
+/* Beyond roughly 150-200% text scale, even a wrapped label can't buy back
+   enough room for three pills on one row without clipping the fixed-size
+   step badge/padding. Past that point drop to one pill per row instead --
+   deterministic (unlike flex-wrap, which could split 2+1 depending on
+   content), so every pill unambiguously starts its own row and the
+   sequence connector (drawn for a same-row neighbour) can just be turned
+   off rather than guessed at. The query is in em, not px, so the threshold
+   scales with the simulated root font-size the same way the pills' own
+   rem-based padding/gap do -- container query length units resolve against
+   the *current* font-size, unlike media query units, which are pinned to
+   the root's initial value. */
+@container (max-width: 11em) {
+  .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .slcn-shell-detail-mobile .slcn-trip-register-wizard__step-indicator > li {
+    flex: 0 0 auto;
+  }
+
+  .slcn-shell-detail-mobile
+    .slcn-trip-register-wizard__step-indicator
+    > li
+    + li::before {
+    display: none;
   }
 }
