@@ -63,7 +63,7 @@
   gap: 0.25rem;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-pill);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -120,7 +120,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-dark-1);
   color: var(--color-on-dark);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
 }
 
@@ -160,18 +160,18 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
 }
 
 .slcn-travel-detail__dates {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
 
 .slcn-travel-detail__title {
   margin: 0;
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
   line-height: 1.2;
   color: var(--color-ink);
@@ -179,7 +179,7 @@
 
 .slcn-travel-detail__one-line {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   color: var(--color-ink-muted);
 }
 
@@ -200,7 +200,7 @@
 
 .slcn-travel-detail__section-title {
   margin: 0;
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -212,7 +212,7 @@
   border-radius: var(--radius-md);
   background: var(--color-canvas);
   color: var(--color-ink-muted);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   text-align: center;
 }
 
@@ -246,13 +246,13 @@
 }
 
 .slcn-travel-day__rail-num {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
 .slcn-travel-day__rail-date {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   line-height: 1.4;
   color: var(--color-ink-muted);
 }
@@ -266,14 +266,14 @@
 
 .slcn-travel-day__title {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
 .slcn-travel-day__memo {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   color: var(--color-ink-muted);
 }
 
@@ -288,7 +288,7 @@
 
 .slcn-travel-day__no-place {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
 
@@ -302,7 +302,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -349,7 +349,7 @@
 }
 
 .slcn-travel-place__name {
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -361,13 +361,13 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-muted);
   color: var(--color-ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
 }
 
 .slcn-travel-place__memo {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
 
@@ -410,7 +410,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-canvas-pure);
   color: var(--color-ink-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -430,7 +430,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -454,7 +454,7 @@
 
 .slcn-travel-album__group-title {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -485,7 +485,7 @@
   border-radius: var(--radius-md);
   background: var(--color-surface-soft);
   color: var(--color-ink);
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
 }
 
@@ -507,14 +507,14 @@
 
 .slcn-travel-review__card-label {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
 }
 
 .slcn-travel-review__card-text {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.6;
   color: var(--color-ink);
   white-space: pre-wrap;
@@ -544,7 +544,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-primary-focus);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
 }
 
@@ -558,7 +558,7 @@
   border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--color-canvas-pure) 60%, transparent);
   color: var(--color-ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   cursor: pointer;
 }
 
@@ -582,7 +582,7 @@
   border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-on-primary);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -598,7 +598,7 @@
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title {
-  font-size: 1.5rem;
+  font-size: var(--text-display-sm);
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title-block {

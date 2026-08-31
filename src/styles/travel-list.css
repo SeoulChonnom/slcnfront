@@ -18,7 +18,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 
 .slcn-travel-list-section__title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   color: var(--color-ink);
@@ -117,7 +117,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   z-index: 2;
   background: var(--color-cast-scrim);
   color: var(--color-on-dark);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   padding: 0.25rem 0.625rem;
   border-radius: var(--radius-pill);
@@ -133,7 +133,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   z-index: 2;
   background: var(--color-primary);
   color: var(--color-on-primary, #1b1b1b);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   padding: 0.25rem 0.625rem;
   border-radius: var(--radius-pill);
@@ -162,7 +162,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   display: inline-block;
   background: var(--color-surface-soft, #ffe8ef);
   color: var(--color-accent-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   padding: 0.1875rem 0.5625rem;
   border-radius: var(--radius-pill);
@@ -171,7 +171,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 }
 
 .slcn-travel-card__date-range {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-ink-muted);
   line-height: 1.5;
 }
@@ -179,7 +179,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 /* Title */
 .slcn-travel-card__title {
   margin: 0;
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   letter-spacing: -0.01em;
@@ -189,7 +189,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 /* One-line description */
 .slcn-travel-card__desc {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
   line-height: 1.55;
   display: -webkit-box;
@@ -210,7 +210,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   display: inline-block;
   background: var(--color-surface-soft, #ffe8ef);
   color: var(--color-accent-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   padding: 0.1875rem 0.5625rem;
   border-radius: var(--radius-pill);

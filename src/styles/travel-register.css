@@ -31,7 +31,7 @@ slcn-travel-day-editor
   padding: 0;
   border: none;
   background: transparent;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-body);
   color: var(--color-ink-muted);
   cursor: pointer;
@@ -44,7 +44,7 @@ slcn-travel-day-editor
 }
 
 .slcn-travel-register-section__title {
-  font-size: 1.5rem;
+  font-size: var(--text-display-sm);
   font-weight: var(--weight-strong);
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -53,14 +53,14 @@ slcn-travel-day-editor
 }
 
 .slcn-travel-register-section__subtitle {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
   margin: 0.25rem 0 0;
   line-height: 1.5;
 }
 
 .slcn-travel-register-section__submit-error {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-error);
   background: var(--color-error-surface);
@@ -159,14 +159,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .slcn-travel-register-form__duration-label {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   line-height: 1.4;
 }
 
 .slcn-travel-register-form__duration-helper {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   color: var(--color-ink-muted);
   line-height: 1.4;
 }
@@ -189,7 +189,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-full);
   background: var(--color-surface-pearl);
   color: var(--color-primary-focus);
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   line-height: 1;
   cursor: pointer;
@@ -209,7 +209,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .slcn-travel-register-form__duration-value {
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   min-width: 4.5rem;
@@ -232,21 +232,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .slcn-travel-register-form__section-title {
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   margin: 0;
 }
 
 .slcn-travel-register-form__section-sub {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-ink-muted);
   margin: 0;
   line-height: 1.5;
 }
 
 .slcn-travel-register-form__section-count {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
 }
@@ -288,13 +288,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .slcn-travel-register-form__dropzone-text {
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
 .slcn-travel-register-form__dropzone-hint {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   color: var(--color-ink-muted);
 }
 
@@ -305,7 +305,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* ── Days hint ────────────────────────────────────────────── */
 
 .slcn-travel-register-form__days-hint {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
   text-align: center;
   padding: 1.5rem;
@@ -342,7 +342,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-ink);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
 }
 
@@ -356,7 +356,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: none;
   background: transparent;
   color: var(--color-ink-muted);
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   line-height: 1;
   cursor: pointer;
   transition: color var(--duration-fast) ease;
@@ -412,13 +412,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-on-primary);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   letter-spacing: 0.02em;
 }
 
 .slcn-travel-day-editor__date {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-body);
   color: var(--color-ink-muted);
 }
@@ -444,7 +444,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-full);
   background: var(--color-surface-soft);
   color: var(--color-ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   display: flex;
   align-items: center;
@@ -470,7 +470,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-full);
   background: transparent;
   color: var(--color-ink-muted);
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -500,7 +500,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-pill);
   background: var(--color-surface-pearl);
   color: var(--color-ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   cursor: pointer;
   transition:
@@ -525,7 +525,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   cursor: pointer;
@@ -566,7 +566,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding: 0.375rem 0;
   border: none;
   background: transparent;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
   cursor: pointer;
@@ -602,6 +602,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .slcn-travel-register-section__title {
-    font-size: 1.3125rem;
+    font-size: var(--text-tagline);
   }
 }

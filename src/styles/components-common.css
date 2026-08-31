@@ -17,19 +17,19 @@
 .slcn-button[data-size="sm"] {
   min-height: 2.75rem;
   padding: 0 1.125rem;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
 }
 
 .slcn-button[data-size="md"] {
   min-height: 3rem;
   padding: 0 1.125rem;
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
 }
 
 .slcn-button[data-size="lg"] {
   min-height: 3.5rem;
   padding: 0 1.5rem;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
 }
 
 .slcn-button[data-full-width="true"] {
@@ -108,7 +108,7 @@
 }
 
 .slcn-field__label {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   line-height: 1.5;
   letter-spacing: normal;
@@ -142,7 +142,7 @@
   padding: 0.75rem 0;
   border: none;
   background: transparent;
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   font-weight: var(--weight-body);
   outline: none;
 }
@@ -153,7 +153,7 @@
 }
 
 .slcn-field__message {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   word-break: keep-all;
   text-wrap: pretty;
 }
@@ -450,14 +450,14 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: center;
   gap: 0.4rem;
   color: var(--color-ink);
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
   text-align: center;
 }
 
 .slcn-modal__description {
   margin-top: 0.75rem;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.7;
   text-align: center;
   color: var(--color-ink-muted);
@@ -481,7 +481,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .slcn-modal__title[data-variant="heading"] {
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   text-align: left;
 }
@@ -518,7 +518,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .slcn-calendar-toolbar__title {
   margin: 0;
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
   line-height: 1.05;
 }
@@ -588,7 +588,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .slcn-calendar-toolbar__legend-label {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -606,7 +606,7 @@ input[type="number"]::-webkit-inner-spin-button {
   border-radius: var(--radius-pill);
   background: var(--color-surface-soft);
   color: var(--color-ink);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
 }
 
@@ -774,7 +774,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-calendar-surface .fc-event-title,
 /* biome-ignore lint/style/noDescendingSpecificity: FullCalendar base styles follow override rules */
 .slcn-calendar-surface .fc-event-time {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   margin: 0 0.5rem;
 }
@@ -818,7 +818,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-full);
   background: var(--color-canvas-pure);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
   cursor: pointer;
@@ -850,7 +850,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   gap: 0.625rem;
   min-height: 2.75rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
@@ -871,7 +871,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-calendar-modal__error {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-error);
 }
@@ -906,7 +906,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: none;
   background: transparent;
   text-align: left;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   cursor: pointer;
@@ -971,7 +971,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px dashed var(--color-primary);
   border-radius: var(--radius-md);
   background: transparent;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-primary-focus);
   cursor: pointer;
@@ -1059,7 +1059,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   min-width: 0;
   border: none;
   background: transparent;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-body);
   color: var(--color-ink-muted);
   letter-spacing: 0.02em;
@@ -1075,7 +1075,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--color-canvas-pure) 86%, transparent);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
 }
 
@@ -1093,7 +1093,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   padding: var(--space-2) var(--space-3);
   border: none;
   background: transparent;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-body);
 }
 
@@ -1103,7 +1103,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-route-page__title {
   margin: 0;
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
 }
 
@@ -1190,7 +1190,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-login-page__welcome {
   margin: 0 0 1.625rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-body);
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1215,7 +1215,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-login-page .slcn-field__label {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
@@ -1256,7 +1256,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-ink-soft);
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   line-height: 1;
   transition:
     color 150ms ease,
@@ -1280,7 +1280,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.4375rem;
   margin: 0;
   color: var(--color-error);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-trip-list-section,
@@ -1315,7 +1315,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 /* ---- Trip list title + toolbar (search + register action) ---- */
 .slcn-trip-list-section__title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
@@ -1352,7 +1352,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   background: var(--color-canvas-pure);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-family: var(--font-body);
   outline: none;
   transition:
@@ -1392,14 +1392,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-list-section__no-result-title {
   margin: 0 0 0.375rem;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
 }
 
 .slcn-trip-list-section__no-result-desc {
   margin: 0;
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
 }
 
 /* ---- Trip card (horizontal) ---- */
@@ -1438,7 +1438,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: var(--color-cast-scrim);
   color: var(--color-on-dark);
   /* 11px is the readable floor for functional text (DESIGN.md section 10). */
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   padding: 0.1875rem 0.5rem;
   border-radius: var(--radius-pill);
@@ -1462,12 +1462,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-card__date {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-body-muted);
 }
 
 .slcn-trip-card__type-badge {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   color: var(--color-accent-muted);
   background: var(--color-surface-soft);
@@ -1477,13 +1477,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-card__title {
   margin: 0 0 0.25rem;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
 }
 
 .slcn-trip-card__desc {
   margin: 0 0 0.25rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-body-muted);
   line-height: 1.55;
   display: -webkit-box;
@@ -1504,7 +1504,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-detail-section__title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
@@ -1526,13 +1526,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-quiz-modal .slcn-modal__description {
   margin-top: 0.35rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-ink-muted);
 }
 
 .slcn-trip-quiz-modal__question {
   margin: 0 0 var(--space-4);
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -1580,7 +1580,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   flex: none;
   padding: 0 1.625rem;
   border-color: var(--color-border-strong);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
 }
 
@@ -1591,7 +1591,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   margin-inline-end: auto;
   padding: 0 var(--space-3);
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
 }
 
@@ -1619,7 +1619,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   flex: 1 1 14rem;
   margin: 0;
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   line-height: 1.5;
   word-break: keep-all;
   text-wrap: pretty;
@@ -1640,7 +1640,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard__draft-actions .slcn-button {
   padding: 0 var(--space-3);
   color: var(--color-accent-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   /* Korean breaks per syllable by default, which split "이어서 쓰기" after
      쓰 once the row started wrapping at large text scale. */
@@ -1662,7 +1662,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-step .slcn-button.slcn-trip-register-step__toggle-map {
   border-radius: var(--radius-md);
   border-color: var(--color-border-strong);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
 }
 
@@ -1673,7 +1673,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-radius: var(--radius-md);
   background: var(--color-canvas-pure);
   text-align: left;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-body);
   line-height: 1.45;
   color: var(--color-ink);
@@ -1727,14 +1727,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-quiz-modal__note-state {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink-muted);
 }
 
 .slcn-trip-quiz-modal__note-title {
   margin: 0;
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -1744,7 +1744,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-quiz-modal__note-copy {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   line-height: 1.6;
   color: var(--color-ink);
   white-space: pre-line;
@@ -1828,13 +1828,13 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-detail-section__drive-title {
   margin-top: 0.375rem;
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
 }
 
 .slcn-trip-detail-section__drive-copy {
   margin-top: 0.25rem;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
 
@@ -1864,7 +1864,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-pill);
   background: var(--color-canvas-pure);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-body-muted);
 }
@@ -1912,7 +1912,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-radius: var(--radius-pill);
   background: var(--color-border);
   color: var(--color-body-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   line-height: 1;
 }
@@ -1945,7 +1945,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-step__file-name {
   margin: 0;
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   word-break: keep-all;
   text-wrap: pretty;
 }
@@ -1967,7 +1967,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   margin-bottom: 0;
   padding-inline: 0.75rem;
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-trip-register-step__quiz-option
@@ -2001,95 +2001,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 /* ---- Register: match prototype field/dropzone/radio styling ---- */
 .slcn-trip-register-wizard__title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
-}
-
-.slcn-trip-register-wizard .slcn-field__label,
-.slcn-trip-register-wizard .slcn-file-dropzone__field-label,
-.slcn-trip-register-wizard .slcn-radio-group__field-label {
-  font-size: 0.8125rem;
-  font-weight: var(--weight-strong);
-  margin-bottom: -0.0625rem;
-}
-
-.slcn-trip-register-wizard .slcn-field__control {
-  /* A deliberate one step darker than the base control's --color-hairline,
-     carried over from the prototype this screen was fitted to. DESIGN.md's
-     text-input spec says hairline, so this is a known divergence rather
-     than an oversight. Height is left to the base rule, which already
-     matches that spec's 48px. */
-  border-color: var(--color-border-strong);
-}
-
-.slcn-trip-register-wizard .slcn-field__control:focus-within {
-  border-color: var(--color-brand-pink);
-}
-
-.slcn-trip-register-wizard .slcn-field__input {
-  font-size: 0.9375rem;
-  padding: 0.6875rem 0;
-}
-
-.slcn-trip-register-wizard .slcn-file-dropzone__label {
-  min-height: auto;
-  padding: 2.125rem;
-  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
-     and 2 alike, so the declared width was never actually rendered --
-     written as 1px so the source matches what paints. */
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  background-color: transparent;
-  background-image: repeating-linear-gradient(
-    135deg,
-    var(--color-surface-muted) 0,
-    var(--color-surface-muted) 10px,
-    var(--color-stripe-highlight) 10px,
-    var(--color-stripe-highlight) 20px
-  );
-}
-
-.slcn-trip-register-wizard .slcn-file-dropzone__icon {
-  color: var(--color-icon-soft);
-}
-
-.slcn-trip-register-wizard .slcn-file-dropzone__title {
-  font-weight: var(--weight-strong);
-  word-break: keep-all;
-}
-
-.slcn-trip-register-wizard .slcn-file-dropzone__hint {
-  color: var(--color-body-muted);
-}
-
-.slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__option {
-  /* The inline radio grid track is minmax(0, 1fr), but a grid item's own
-     automatic min-width still defaults to its min-content and can force the
-     track wider than that regardless -- min-width: 0 here is what actually
-     lets each option shrink at large text scale (same mechanism as the step
-     indicator's pills above). Scoped to the wizard so other RadioGroup
-     usages elsewhere keep their current sizing. */
-  min-width: 0;
-  padding: 0.9375rem 1.125rem;
-  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
-     and 2 alike, so the declared width was never actually rendered --
-     written as 1px so the source matches what paints. */
-  border-width: 1px;
-  border-color: var(--color-border-strong);
-  background: var(--color-canvas-pure);
-}
-
-.slcn-trip-register-wizard
-  .slcn-radio-group--inline
-  .slcn-radio-group__option[data-checked="true"] {
-  border-color: var(--color-brand-pink);
-  background: var(--color-canvas);
-}
-
-.slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__label {
-  font-size: 0.9375rem;
-  font-weight: var(--weight-strong);
 }
 
 .slcn-trip-register-step__error,
@@ -2097,7 +2011,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-file-dropzone__error {
   margin: 0;
   color: var(--color-error);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
 }
 
@@ -2117,9 +2031,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.5rem;
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__field-label {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -2140,7 +2053,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   grid-template-columns: repeat(auto-fit, minmax(min(7em, 100%), 1fr));
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__option {
   display: flex;
   align-items: flex-start;
@@ -2153,13 +2065,11 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   cursor: pointer;
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group--inline .slcn-radio-group__option {
   align-items: center;
   border-radius: var(--radius-md);
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__option[data-checked="true"] {
   background: var(--color-surface-soft);
   border-color: var(--color-primary);
@@ -2169,21 +2079,19 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   min-width: 0;
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group__label {
   display: block;
   font-weight: var(--weight-strong);
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-radio-group--inline .slcn-radio-group__label {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-radio-group__description {
   display: block;
   margin-top: 0.25rem;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
 
@@ -2225,7 +2133,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-segmented-control__button {
   padding: 0.5rem 1rem;
   border-radius: var(--radius-pill);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
 }
 
@@ -2257,7 +2165,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-empty-state__title,
 .slcn-error-state__title {
   margin-top: 0.5rem;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
 }
 
@@ -2291,14 +2199,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   width: 100%;
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__field-label {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__label {
   display: flex;
   flex-direction: column;
@@ -2326,21 +2232,18 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   text-align: center;
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__icon {
   color: var(--color-primary);
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__title {
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
 
-/* biome-ignore lint/style/noDescendingSpecificity: base style defined after wizard context override */
 .slcn-file-dropzone__hint {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-ink-muted);
 }
 
@@ -2415,7 +2318,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   min-width: 0;
   overflow: hidden;
   color: var(--color-ink);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2424,7 +2327,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-file-dropzone__file-size {
   flex: none;
   color: var(--color-body-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-variant-numeric: tabular-nums;
 }
 
@@ -2481,6 +2384,96 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   }
 }
 
+/* ---- Trip register: wizard-context overrides of the shared field,
+   dropzone and radio primitives. These live below every base rule they
+   override so the cascade reads top-down and no rule needs a
+   noDescendingSpecificity suppression to sit where it does. ---- */
+.slcn-trip-register-wizard .slcn-field__label,
+.slcn-trip-register-wizard .slcn-file-dropzone__field-label,
+.slcn-trip-register-wizard .slcn-radio-group__field-label {
+  font-size: var(--text-nav);
+  font-weight: var(--weight-strong);
+  margin-bottom: -0.0625rem;
+}
+
+.slcn-trip-register-wizard .slcn-field__control {
+  /* A deliberate one step darker than the base control's --color-hairline,
+     carried over from the prototype this screen was fitted to. DESIGN.md's
+     text-input spec says hairline, so this is a known divergence rather
+     than an oversight. Height is left to the base rule, which already
+     matches that spec's 48px. */
+  border-color: var(--color-border-strong);
+}
+
+.slcn-trip-register-wizard .slcn-field__control:focus-within {
+  border-color: var(--color-brand-pink);
+}
+
+.slcn-trip-register-wizard .slcn-field__input {
+  font-size: var(--text-body);
+  padding: 0.6875rem 0;
+}
+
+.slcn-trip-register-wizard .slcn-file-dropzone__label {
+  min-height: auto;
+  padding: 2.125rem;
+  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
+     and 2 alike, so the declared width was never actually rendered --
+     written as 1px so the source matches what paints. */
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-surface-muted) 0,
+    var(--color-surface-muted) 10px,
+    var(--color-stripe-highlight) 10px,
+    var(--color-stripe-highlight) 20px
+  );
+}
+
+.slcn-trip-register-wizard .slcn-file-dropzone__icon {
+  color: var(--color-icon-soft);
+}
+
+.slcn-trip-register-wizard .slcn-file-dropzone__title {
+  font-weight: var(--weight-strong);
+  word-break: keep-all;
+}
+
+.slcn-trip-register-wizard .slcn-file-dropzone__hint {
+  color: var(--color-body-muted);
+}
+
+.slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__option {
+  /* The inline radio grid track is minmax(0, 1fr), but a grid item's own
+     automatic min-width still defaults to its min-content and can force the
+     track wider than that regardless -- min-width: 0 here is what actually
+     lets each option shrink at large text scale (same mechanism as the step
+     indicator's pills above). Scoped to the wizard so other RadioGroup
+     usages elsewhere keep their current sizing. */
+  min-width: 0;
+  padding: 0.9375rem 1.125rem;
+  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
+     and 2 alike, so the declared width was never actually rendered --
+     written as 1px so the source matches what paints. */
+  border-width: 1px;
+  border-color: var(--color-border-strong);
+  background: var(--color-canvas-pure);
+}
+
+.slcn-trip-register-wizard
+  .slcn-radio-group--inline
+  .slcn-radio-group__option[data-checked="true"] {
+  border-color: var(--color-brand-pink);
+  background: var(--color-canvas);
+}
+
+.slcn-trip-register-wizard .slcn-radio-group--inline .slcn-radio-group__label {
+  font-size: var(--text-body);
+  font-weight: var(--weight-strong);
+}
+
 .slcn-shoes-catalog-page,
 .slcn-shoe-detail-page {
   display: grid;
@@ -2496,7 +2489,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-shoe-detail-hero__eyebrow,
 .slcn-shoe-video-panel__title {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -2504,7 +2497,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-shoes-catalog-page__title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: var(--text-display-md);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -2512,7 +2505,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-shoe-detail-page__fallback-title {
   margin-top: 0.625rem;
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -2521,7 +2514,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-shoe-video-panel__description,
 .slcn-shoe-detail-hero__desc {
   margin-top: 0.875rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-body-muted);
 }
@@ -2540,7 +2533,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-pill);
   background: var(--color-surface);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-body-muted);
   text-decoration: none;
@@ -2569,7 +2562,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-shoes-catalog-page__warning-text {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   line-height: 1.6;
   color: var(--color-body-muted);
 }
@@ -2613,7 +2606,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-shoes-brand-section__title {
   margin-top: 0.125rem;
-  font-size: 1.3125rem;
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -2621,14 +2614,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-shoes-brand-section__description {
   margin-top: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color: var(--color-body-muted);
 }
 
 .slcn-shoe-detail-page__reviews-title {
   margin-top: 0.25rem;
-  font-size: 1.5rem;
+  font-size: var(--text-display-sm);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
@@ -2687,7 +2680,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-card__brand {
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
@@ -2695,7 +2688,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-card__name {
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.35;
@@ -2703,7 +2696,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-card__desc {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   line-height: 1.5;
   color: var(--color-body-muted);
 }
@@ -2716,7 +2709,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-card__price {
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
 }
@@ -2725,7 +2718,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   letter-spacing: 0;
   text-transform: none;
@@ -2743,7 +2736,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-body-muted);
   text-decoration: none;
@@ -2761,7 +2754,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 0.8125rem 1.125rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-body-muted);
 }
 
@@ -2804,14 +2797,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-detail-hero__title {
-  font-size: 2.125rem;
+  font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
   line-height: 1.5;
 }
 
 .slcn-shoe-detail-hero__price {
-  font-size: 1.5rem;
+  font-size: var(--text-display-sm);
   font-weight: var(--weight-strong);
   color: var(--color-accent-muted);
 }
@@ -2827,7 +2820,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-shoe-detail-hero__fact {
   padding-left: 1.25rem;
   position: relative;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.55;
   color: var(--color-body);
 }
@@ -2894,7 +2887,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-shoe-review-card__caption {
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.6;
   color: var(--color-body-muted);
 }
@@ -2908,7 +2901,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   justify-content: center;
   min-height: 14rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   color: var(--color-ink-muted);
 }
 
@@ -2941,7 +2934,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   background: transparent;
   color: var(--color-body-muted);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-body);
   cursor: pointer;
   transition:
@@ -3101,7 +3094,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-home__dday {
   margin: var(--space-3) 0 0;
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
 }
 
@@ -3155,7 +3148,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-home__recent-no-cover span {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-home__recent-no-cover strong {
@@ -3176,7 +3169,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-home__recent-meta {
   margin: 0;
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
 }
 
@@ -3204,7 +3197,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   min-height: 2.75rem;
   margin-top: var(--space-5);
   color: var(--color-accent-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
@@ -3222,7 +3215,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-home__full-error h2 {
   margin: 0;
   color: var(--color-ink);
-  font-size: 1.5rem;
+  font-size: var(--text-display-sm);
   font-weight: var(--weight-strong);
   letter-spacing: -0.025em;
 }
@@ -3279,7 +3272,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: var(--space-2);
   min-width: min(21rem, 100%);
   color: var(--color-body-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
 }
 
 .slcn-home__search input {
@@ -3315,7 +3308,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border: 0;
   background: transparent;
   color: var(--color-accent-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-fine);
   font-weight: var(--weight-strong);
 }
 
@@ -3339,7 +3332,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   white-space: nowrap;
 }
@@ -3388,7 +3381,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-home-archive__date {
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.4;
 }
 
@@ -3412,7 +3405,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-home-archive__review {
   overflow: hidden;
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3472,14 +3465,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-home__secondary-heading h2 {
   margin: 0;
   color: var(--color-ink);
-  font-size: 1rem;
+  font-size: var(--text-body-lg);
   font-weight: var(--weight-strong);
 }
 
 .slcn-home__secondary-heading a {
   min-height: 2.75rem;
   color: var(--color-accent-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
   line-height: 2.75rem;
   text-decoration: underline;
@@ -3508,7 +3501,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-home__schedule-time {
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-home__schedule-copy {
@@ -3518,20 +3511,20 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-home__schedule-copy strong {
   color: var(--color-ink);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
 }
 
 .slcn-home__schedule-copy span {
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
 }
 
 .slcn-home__secondary-empty,
 .slcn-home__source-error {
   margin: var(--space-4) 0 0;
   color: var(--color-body-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   line-height: 1.6;
 }
 
@@ -3594,7 +3587,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-home__more-label {
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-strong);
 }
 
@@ -3609,7 +3602,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   align-items: center;
   min-height: 2.75rem;
   color: var(--color-body-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   text-decoration: underline;
   text-decoration-color: var(--color-border-strong);
   text-underline-offset: 0.25em;

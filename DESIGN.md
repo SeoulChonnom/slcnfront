@@ -166,9 +166,25 @@ typography:
 
   # 40px survives only as the upper endpoint of the hero's fluid clamp
   # (clamp(28px, 3.4vw, 40px)); no rule sets it as a fixed size.
+  #
+  # Each step below carries the CSS custom property that implements its
+  # size, defined in `src/styles/tokens.css`. Until 2026-08-31 this ramp
+  # existed only here, as prose: all 234 font-size declarations in the app
+  # were literals. 230 of them mapped onto these steps and now read the
+  # token. Tokens are one per distinct SIZE, so steps that differ only in
+  # weight share one -- body and body-strong are both --text-body and part
+  # on --weight-body / --weight-strong; caption, caption-strong and
+  # button-utility all share --text-caption.
+  #
+  # Four declarations remain literal because they sit off this ramp
+  # (17px x2, 20px x1, 11px x1), as do three fluid clamp() sizes on the
+  # home hub whose endpoints (56px, 44px) exceed display-xl. Those are
+  # known divergences, not oversights: either the ramp grows to admit them
+  # or they come back onto it.
   display-xl:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 40px
+    token: "--text-display-xl"
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: -0.02em
@@ -176,6 +192,7 @@ typography:
   display-lg:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 34px
+    token: "--text-display-lg"
     fontWeight: 600
     lineHeight: 1.18
     letterSpacing: -0.02em
@@ -183,6 +200,7 @@ typography:
   display-md:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 28px
+    token: "--text-display-md"
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: -0.02em
@@ -190,6 +208,7 @@ typography:
   display-sm:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 24px
+    token: "--text-display-sm"
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: -0.01em
@@ -197,6 +216,7 @@ typography:
   tagline:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 21px
+    token: "--text-tagline"
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: -0.01em
@@ -204,6 +224,7 @@ typography:
   lead:
     fontFamily: "{typography.font-stack-display}"
     fontSize: 18px
+    token: "--text-lead"
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: -0.01em
@@ -211,6 +232,7 @@ typography:
   body-lg:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 16px
+    token: "--text-body-lg"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: -0.01em
@@ -218,6 +240,7 @@ typography:
   body-strong:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 15px
+    token: "--text-body"
     fontWeight: 600
     lineHeight: 1.45
     letterSpacing: -0.01em
@@ -225,6 +248,7 @@ typography:
   body:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 15px
+    token: "--text-body"
     fontWeight: 400
     lineHeight: 1.47
     letterSpacing: -0.01em
@@ -232,6 +256,7 @@ typography:
   caption:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 14px
+    token: "--text-caption"
     fontWeight: 400
     lineHeight: 1.43
     letterSpacing: -0.01em
@@ -239,6 +264,7 @@ typography:
   caption-strong:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 14px
+    token: "--text-caption"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: -0.01em
@@ -246,6 +272,7 @@ typography:
   button-utility:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 14px
+    token: "--text-caption"
     fontWeight: 400
     lineHeight: 1.3
     letterSpacing: -0.01em
@@ -253,6 +280,7 @@ typography:
   fine-print:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 12px
+    token: "--text-fine"
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: -0.01em
@@ -260,6 +288,7 @@ typography:
   nav-link:
     fontFamily: "{typography.font-stack-body}"
     fontSize: 13px
+    token: "--text-nav"
     fontWeight: 400
     lineHeight: 1.0
     letterSpacing: -0.01em

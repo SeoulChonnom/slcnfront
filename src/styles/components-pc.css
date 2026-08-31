@@ -44,7 +44,7 @@
 }
 
 .slcn-desktop-header__brand-name {
-  font-size: 1.125rem;
+  font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   letter-spacing: -0.01em;
 }
@@ -59,7 +59,7 @@
 }
 
 .slcn-desktop-header__nav-link {
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-body-muted);
   background: transparent;
@@ -87,7 +87,7 @@
   align-items: center;
   justify-content: center;
   font-weight: var(--weight-strong);
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   color: var(--color-accent-muted);
 }
 
@@ -115,7 +115,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: var(--space-1) 0;
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   text-decoration: underline;
@@ -129,7 +129,7 @@
 }
 
 .slcn-footer__caption {
-  font-size: 0.8125rem;
+  font-size: var(--text-nav);
   font-weight: var(--weight-body);
   color: var(--color-body-muted);
 }

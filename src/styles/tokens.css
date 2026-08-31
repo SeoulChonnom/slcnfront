@@ -170,6 +170,32 @@
   --weight-body: 400;
   --weight-strong: 600;
 
+  /* Type sizes, one token per distinct step on the DESIGN.md section 4 ramp.
+     The ramp was documented there in prose but had no implementation: every
+     font-size in the app was a literal, 234 of them across seven
+     stylesheets. Named for the step's primary role, so steps that share a
+     size collapse to one token -- body and body-strong are both 15px and
+     differ only in --weight-*, as do caption, caption-strong and
+     button-utility at 14px.
+
+     Sizes are rem so they scale with the user's root font-size; the px
+     values below are what they resolve to at the 16px default and are the
+     numbers DESIGN.md quotes. --text-display-xl has no fixed-size consumer
+     today (it exists as the upper endpoint of the home hero's fluid clamp),
+     and is defined here so the ramp is complete rather than truncated at
+     its second step. */
+  --text-display-xl: 2.5rem; /* 40px */
+  --text-display-lg: 2.125rem; /* 34px */
+  --text-display-md: 1.75rem; /* 28px */
+  --text-display-sm: 1.5rem; /* 24px */
+  --text-tagline: 1.3125rem; /* 21px */
+  --text-lead: 1.125rem; /* 18px */
+  --text-body-lg: 1rem; /* 16px */
+  --text-body: 0.9375rem; /* 15px */
+  --text-caption: 0.875rem; /* 14px */
+  --text-nav: 0.8125rem; /* 13px */
+  --text-fine: 0.75rem; /* 12px */
+
   /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
