@@ -4,6 +4,7 @@ import { MobileTopBar } from '@/components/layout/MobileTopBar';
 import {
   buildDeviceProfilePath,
   buildDeviceRootPath,
+  buildDeviceTripListPath,
 } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
 
@@ -46,6 +47,12 @@ function getDetailMobileBackHref(pathname: string) {
     pathname.startsWith('/mobile/profile/edit')
   ) {
     return buildDeviceProfilePath('mobile');
+  }
+
+  /* Register is entered from the trip list and returns to it on save, so
+     the back arrow has to land there too rather than on the mobile home. */
+  if (pathname.startsWith('/mobile/map/register')) {
+    return buildDeviceTripListPath('mobile');
   }
 
   return buildDeviceRootPath('mobile');

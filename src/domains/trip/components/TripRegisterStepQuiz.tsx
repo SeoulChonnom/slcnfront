@@ -35,6 +35,7 @@ type TripRegisterQuizErrors = Pick<
 type TripRegisterStepQuizProps = {
   values: TripRegisterQuizValues;
   errors: TripRegisterQuizErrors;
+  errorToken: number;
   onFieldChange: <Key extends TripRegisterQuizFieldKey>(
     key: Key,
     value: TripRegisterWizardValues[Key]
@@ -47,6 +48,7 @@ type TripRegisterStepQuizProps = {
 export function TripRegisterStepQuiz({
   values,
   errors,
+  errorToken,
   onFieldChange,
   onQuizOptionChange,
   onAddQuizOption,
@@ -95,13 +97,14 @@ export function TripRegisterStepQuiz({
     if (errors.quizAnswer) {
       firstAnswerRef.current?.focus();
     }
-  }, [errors]);
+  }, [errorToken]);
 
   return (
     <div className='slcn-trip-register-step'>
       <TextField
         label='퀴즈 제목'
         placeholder='퀴즈 제목'
+        required
         value={values.quizTitle}
         error={errors.quizTitle}
         onChange={(event) => onFieldChange('quizTitle', event.target.value)}
@@ -109,8 +112,8 @@ export function TripRegisterStepQuiz({
       {values.quizOptions.map((option, index) => (
         <div className='slcn-trip-register-step__quiz-option' key={index}>
           <TextField
-            label={`정답${index + 1}`}
-            placeholder={`정답${index + 1}`}
+            label={`보기${index + 1}`}
+            placeholder={`보기${index + 1}`}
             value={option}
             required
             name={`quiz-option-${index + 1}`}
@@ -131,7 +134,7 @@ export function TripRegisterStepQuiz({
             <Button
               variant='ghost'
               size='sm'
-              aria-label={`정답${index + 1} 삭제`}
+              aria-label={`보기${index + 1} 삭제`}
               onClick={() => onRemoveQuizOption(index)}
             >
               삭제
@@ -166,6 +169,7 @@ export function TripRegisterStepQuiz({
       <RadioGroup
         name='quiz-answer'
         label='정답 선택'
+        required
         value={values.quizAnswer}
         ariaDescribedBy={quizAnswerDescribedBy || undefined}
         ariaInvalid={Boolean(errors.quizAnswer)}
@@ -189,6 +193,7 @@ export function TripRegisterStepQuiz({
       <TextField
         label='정답 제목'
         placeholder='정답 제목'
+        required
         value={values.quizAnswerTitle}
         error={errors.quizAnswerTitle}
         onChange={(event) =>
@@ -198,6 +203,7 @@ export function TripRegisterStepQuiz({
       <TextField
         label='정답 텍스트'
         placeholder='정답 텍스트'
+        required
         value={values.quizAnswerText}
         error={errors.quizAnswerText}
         onChange={(event) =>
@@ -207,6 +213,7 @@ export function TripRegisterStepQuiz({
       <TextField
         label='오답 제목'
         placeholder='오답 제목'
+        required
         value={values.quizErrorTitle}
         error={errors.quizErrorTitle}
         onChange={(event) =>
@@ -216,6 +223,7 @@ export function TripRegisterStepQuiz({
       <TextField
         label='오답 텍스트'
         placeholder='오답 텍스트'
+        required
         value={values.quizErrorText}
         error={errors.quizErrorText}
         onChange={(event) => onFieldChange('quizErrorText', event.target.value)}

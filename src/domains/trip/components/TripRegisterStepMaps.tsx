@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { FileDropzone } from '@/components/ui/FileDropzone';
 import { TextField } from '@/components/ui/TextField';
@@ -32,6 +33,7 @@ type TripRegisterMapsErrors = Pick<
 type TripRegisterStepMapsProps = {
   values: TripRegisterMapsValues;
   errors: TripRegisterMapsErrors;
+  errorToken: number;
   onFieldChange: <Key extends TripRegisterMapsFieldKey>(
     key: Key,
     value: TripRegisterWizardValues[Key]
@@ -41,23 +43,54 @@ type TripRegisterStepMapsProps = {
 export function TripRegisterStepMaps({
   values,
   errors,
+  errorToken,
   onFieldChange,
 }: TripRegisterStepMapsProps) {
+  const map1Ref = useRef<HTMLInputElement | null>(null);
+  const map2Ref = useRef<HTMLInputElement | null>(null);
+  const button1Ref = useRef<HTMLInputElement | null>(null);
+  const button2Ref = useRef<HTMLInputElement | null>(null);
+  const driveRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (errors.map1) {
+      map1Ref.current?.focus();
+      return;
+    }
+
+    if (values.hasSecondMap && errors.map2) {
+      map2Ref.current?.focus();
+      return;
+    }
+
+    if (values.hasSecondMap && errors.button1) {
+      button1Ref.current?.focus();
+      return;
+    }
+
+    if (values.hasSecondMap && errors.button2) {
+      button2Ref.current?.focus();
+      return;
+    }
+
+    if (errors.drive) {
+      driveRef.current?.focus();
+    }
+  }, [errorToken]);
+
   return (
     <div className='slcn-trip-register-step'>
       <FileDropzone
-        label='지도'
+        label='지도 1'
+        prompt='지도 1 파일을 끌어다 놓거나 선택하세요'
         accept='.jpg,.jpeg,.png,.gif,.svg'
-        onChange={(event) =>
-          onFieldChange('map1', event.target.files?.[0] ?? null)
-        }
+        required
+        error={errors.map1}
+        file={values.map1}
+        ref={map1Ref}
+        onFileSelect={(file) => onFieldChange('map1', file)}
+        onClear={() => onFieldChange('map1', null)}
       />
-      {values.map1 ? (
-        <p className='slcn-trip-register-step__file-name'>{values.map1.name}</p>
-      ) : null}
-      {errors.map1 ? (
-        <p className='slcn-trip-register-step__error'>{errors.map1}</p>
-      ) : null}
       <Button
         variant='secondary'
         fullWidth
@@ -78,31 +111,33 @@ export function TripRegisterStepMaps({
         <>
           <FileDropzone
             label='지도 2'
+            prompt='지도 2 파일을 끌어다 놓거나 선택하세요'
             accept='.jpg,.jpeg,.png,.gif,.svg'
-            onChange={(event) =>
-              onFieldChange('map2', event.target.files?.[0] ?? null)
-            }
+            required
+            error={errors.map2}
+            file={values.map2}
+            ref={map2Ref}
+            onFileSelect={(file) => onFieldChange('map2', file)}
+            onClear={() => onFieldChange('map2', null)}
           />
-          {values.map2 ? (
-            <p className='slcn-trip-register-step__file-name'>
-              {values.map2.name}
-            </p>
-          ) : null}
-          {errors.map2 ? (
-            <p className='slcn-trip-register-step__error'>{errors.map2}</p>
-          ) : null}
           <TextField
             label='버튼 1'
             placeholder='버튼 1'
+            required
+            hint='상세 화면에서 지도 1을 여는 탭 이름이 돼요.'
             value={values.button1}
             error={errors.button1}
+            ref={button1Ref}
             onChange={(event) => onFieldChange('button1', event.target.value)}
           />
           <TextField
             label='버튼 2'
             placeholder='버튼 2'
+            required
+            hint='상세 화면에서 지도 2를 여는 탭 이름이 돼요.'
             value={values.button2}
             error={errors.button2}
+            ref={button2Ref}
             onChange={(event) => onFieldChange('button2', event.target.value)}
           />
         </>
@@ -110,8 +145,10 @@ export function TripRegisterStepMaps({
       <TextField
         label='드라이브 링크'
         placeholder='드라이브 링크'
+        required
         value={values.drive}
         error={errors.drive}
+        ref={driveRef}
         onChange={(event) => onFieldChange('drive', event.target.value)}
       />
       <p className='slcn-trip-register-step__hint'>

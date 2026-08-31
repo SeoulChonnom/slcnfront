@@ -17,6 +17,8 @@ type RadioGroupProps = {
   ariaDescribedBy?: string;
   ariaInvalid?: boolean;
   firstInputRef?: Ref<HTMLInputElement>;
+  error?: string;
+  required?: boolean;
 };
 
 export function RadioGroup({
@@ -29,22 +31,29 @@ export function RadioGroup({
   ariaDescribedBy,
   ariaInvalid,
   firstInputRef,
+  error,
+  required,
 }: RadioGroupProps) {
   const labelId = useId();
+  const errorId = `${labelId}-error`;
+  const describedBy =
+    [error ? errorId : null, ariaDescribedBy].filter(Boolean).join(' ') ||
+    undefined;
 
   return (
     <div className='slcn-radio-group-field'>
       {label ? (
         <span id={labelId} className='slcn-radio-group__field-label'>
           {label}
+          {required ? <span aria-hidden='true'> *</span> : null}
         </span>
       ) : null}
       <div
         className={cn('slcn-radio-group', className)}
         role='radiogroup'
         aria-labelledby={label ? labelId : undefined}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={ariaInvalid || undefined}
+        aria-describedby={describedBy}
+        aria-invalid={error ? true : ariaInvalid || undefined}
       >
         {options.map((option, index) => {
           const checked = option.value === value;
@@ -76,6 +85,11 @@ export function RadioGroup({
           );
         })}
       </div>
+      {error ? (
+        <p id={errorId} className='slcn-radio-group__error' role='alert'>
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
