@@ -54,6 +54,7 @@ export function RadioGroup({
         aria-labelledby={label ? labelId : undefined}
         aria-describedby={describedBy}
         aria-invalid={error ? true : ariaInvalid || undefined}
+        aria-required={required ? true : undefined}
       >
         {options.map((option, index) => {
           const checked = option.value === value;
@@ -67,7 +68,6 @@ export function RadioGroup({
               <input
                 ref={index === 0 ? firstInputRef : undefined}
                 type='radio'
-                className='mt-1'
                 name={name}
                 checked={checked}
                 value={option.value}

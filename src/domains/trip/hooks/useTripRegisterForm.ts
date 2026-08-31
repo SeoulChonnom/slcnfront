@@ -267,13 +267,14 @@ export function useTripRegisterForm(options: UseTripRegisterFormOptions = {}) {
       map1: null,
       map2: null,
     }));
-    /* Files never survive serialization. If the draft had any, the user has
-       to re-pick them before the later steps mean anything, so land on step 1
-       rather than dropping them into the quiz with an empty logo behind it. */
+    /* Files never survive serialization, and reaching step 2 or 3 always
+       requires a logo file, so a restored draft always names at least one
+       missing file. Always land on step 1 so the user re-picks files before
+       the later steps mean anything, rather than dropping them into the quiz
+       with an empty logo behind it. */
     const draftFileNames = draft.fileNames ?? {};
-    const hasMissingFiles = Object.values(draftFileNames).some(Boolean);
 
-    setStep(hasMissingFiles ? 1 : draft.step);
+    setStep(1);
     setPersistedFileNames(draftFileNames);
     setRestoredDraft({ fileNames: draftFileNames });
     // Intentionally runs once on mount only.

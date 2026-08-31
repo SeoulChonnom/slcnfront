@@ -83,6 +83,7 @@ export function TripRegisterStepMaps({
       <FileDropzone
         label='지도 1'
         prompt='지도 1 파일을 끌어다 놓거나 선택하세요'
+        hint='PNG · JPG · GIF · SVG · 최대 10MB'
         accept='.jpg,.jpeg,.png,.gif,.svg'
         required
         error={errors.map1}
@@ -112,6 +113,7 @@ export function TripRegisterStepMaps({
           <FileDropzone
             label='지도 2'
             prompt='지도 2 파일을 끌어다 놓거나 선택하세요'
+            hint='PNG · JPG · GIF · SVG · 최대 10MB'
             accept='.jpg,.jpeg,.png,.gif,.svg'
             required
             error={errors.map2}

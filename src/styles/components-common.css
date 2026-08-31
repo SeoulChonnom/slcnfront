@@ -65,7 +65,7 @@
 
 .slcn-button[data-variant="danger"] {
   background: var(--color-error);
-  color: var(--color-canvas-pure);
+  color: var(--color-error-on);
   box-shadow: none;
 }
 
@@ -420,6 +420,15 @@ input[type="number"]::-webkit-inner-spin-button {
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-full);
   background: var(--color-canvas-pure);
+}
+
+/* The icon has no width/height of its own, so it defaults to the SVG spec's
+   300x150 intrinsic ratio scaled to fill the button almost edge to edge.
+   Sized to match the optical weight of .slcn-file-dropzone__clear svg, the
+   other icon-only clear/close control in this flow. */
+.slcn-modal__close svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .slcn-modal__headline {
@@ -2006,8 +2015,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 .slcn-trip-register-wizard .slcn-field__control {
+  /* A deliberate one step darker than the base control's --color-hairline,
+     carried over from the prototype this screen was fitted to. DESIGN.md's
+     text-input spec says hairline, so this is a known divergence rather
+     than an oversight. Height is left to the base rule, which already
+     matches that spec's 48px. */
   border-color: var(--color-border-strong);
-  min-height: 2.875rem;
 }
 
 .slcn-trip-register-wizard .slcn-field__control:focus-within {
@@ -2022,7 +2035,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-trip-register-wizard .slcn-file-dropzone__label {
   min-height: auto;
   padding: 2.125rem;
-  border: 1.5px dashed var(--color-border-strong);
+  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
+     and 2 alike, so the declared width was never actually rendered --
+     written as 1px so the source matches what paints. */
+  border: 1px dashed var(--color-border-strong);
   border-radius: var(--radius-lg);
   background-color: transparent;
   background-image: repeating-linear-gradient(
@@ -2056,7 +2072,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
      usages elsewhere keep their current sizing. */
   min-width: 0;
   padding: 0.9375rem 1.125rem;
-  border-width: 1.5px;
+  /* Chromium resolves 1.5px to a used value of 1px at deviceScaleFactor 1
+     and 2 alike, so the declared width was never actually rendered --
+     written as 1px so the source matches what paints. */
+  border-width: 1px;
   border-color: var(--color-border-strong);
   background: var(--color-canvas-pure);
 }
@@ -2166,6 +2185,30 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   margin-top: 0.25rem;
   font-size: 0.875rem;
   color: var(--color-ink-muted);
+}
+
+/* Matches the removed Tailwind `mt-1` utility that used to sit on the
+   native radio input directly (RadioGroup.tsx) -- same computed value,
+   just declared here instead of as a one-off class. */
+.slcn-radio-group__option input {
+  margin-top: 0.25rem;
+}
+
+/* The clickable control is the pill-shaped label (measured well over the
+   WCAG 2.4.11 minimum), but the default :focus-visible ring draws on the
+   20x20 native radio nested inside it -- a small fraction of the actual
+   target. Redraw the ring on the label and suppress the input's own ring,
+   but only where :has() is actually supported: an unsupported browser
+   would otherwise lose the small ring with nothing to replace it. */
+@supports selector(:has(*)) {
+  .slcn-radio-group__option:has(input:focus-visible) {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .slcn-radio-group__option input:focus-visible {
+    outline: none;
+  }
 }
 
 .slcn-segmented-control {
@@ -2330,6 +2373,18 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 
 .slcn-trip-register-wizard .slcn-file-dropzone__label[data-error="true"] {
   border-color: var(--color-error);
+}
+
+/* The focusable control is the native file input, but it is visually
+   clipped to 1px (see .slcn-file-dropzone__input) so the global
+   :focus-visible ring has nothing visible to draw around. Redraw it on the
+   visible drop target instead. Three classes in this selector outrank the
+   wizard's two-class override above without needing !important or another
+   noDescendingSpecificity suppression. */
+.slcn-file-dropzone:has(> .slcn-file-dropzone__input:focus-visible)
+.slcn-file-dropzone__label {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 /* The chosen file, shown rather than named: this is a photography-first

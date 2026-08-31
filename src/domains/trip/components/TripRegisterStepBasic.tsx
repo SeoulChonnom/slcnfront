@@ -101,7 +101,7 @@ export function TripRegisterStepBasic({
       <FileDropzone
         label='로고 이미지'
         prompt='로고 파일을 끌어다 놓거나 선택하세요'
-        hint='PNG · JPG · 최대 10MB'
+        hint='PNG · JPG · GIF · SVG · 최대 10MB'
         accept='.jpg,.jpeg,.png,.gif,.svg'
         required
         error={errors.logo}

@@ -186,40 +186,6 @@ describe('useTripRegisterForm', () => {
     expect(result.current.restoredDraft).toBeNull();
   });
 
-  it('keeps the saved step when the draft carried no files', () => {
-    sessionStorage.setItem(
-      DRAFT_STORAGE_KEY,
-      JSON.stringify({
-        version: 1,
-        step: 3,
-        values: {
-          type: 'AYO',
-          date: '2026-01-01',
-          info2: '이어서 작성 중인 나들이',
-          hasSecondMap: false,
-          button1: '',
-          button2: '',
-          drive: 'https://drive.example',
-          quizTitle: '정답은?',
-          quizOptions: ['', '', ''],
-          quizAnswer: '',
-          quizAnswerTitle: '',
-          quizAnswerText: '',
-          quizErrorTitle: '',
-          quizErrorText: '',
-        },
-        fileNames: {},
-      })
-    );
-
-    const { result } = renderHook(() => useTripRegisterForm(), {
-      wrapper: createWrapper(),
-    });
-
-    expect(result.current.step).toBe(3);
-    expect(result.current.values.quizTitle).toBe('정답은?');
-  });
-
   it('discardDraft empties both state and sessionStorage', () => {
     const { result } = renderHook(() => useTripRegisterForm(), {
       wrapper: createWrapper(),
