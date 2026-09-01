@@ -17,14 +17,6 @@ function getMainMobileTitle(pathname: string) {
     return '서울 촌놈 달력';
   }
 
-  if (pathname.startsWith('/mobile/travel/register')) {
-    return '새 여행';
-  }
-
-  if (pathname.startsWith('/mobile/travel/') && pathname.endsWith('/edit')) {
-    return '여행 수정';
-  }
-
   if (pathname.startsWith('/mobile/travel/')) {
     return '여행 상세';
   }

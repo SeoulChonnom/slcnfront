@@ -69,6 +69,44 @@ describe('shell components', () => {
     ).toBeNull();
   });
 
+  it('titles the travel register route, not the generic detail fallback', () => {
+    renderWithProviders(
+      <DetailMobileShell title='DETAIL'>
+        <p>register-content</p>
+      </DetailMobileShell>,
+      {
+        route: '/mobile/travel/register',
+      }
+    );
+
+    expect(screen.getByText('새 여행')).toBeTruthy();
+    expect(screen.queryByText('신발 상세')).toBeNull();
+    expect(
+      screen
+        .getByRole('link', { name: '이전 화면으로 이동' })
+        .getAttribute('href')
+    ).toBe('/mobile/travel');
+  });
+
+  it('titles the travel edit route and points its back arrow at the travel list', () => {
+    renderWithProviders(
+      <DetailMobileShell title='DETAIL'>
+        <p>edit-content</p>
+      </DetailMobileShell>,
+      {
+        route: '/mobile/travel/travel-1/edit',
+      }
+    );
+
+    expect(screen.getByText('여행 수정')).toBeTruthy();
+    expect(screen.queryByText('신발 상세')).toBeNull();
+    expect(
+      screen
+        .getByRole('link', { name: '이전 화면으로 이동' })
+        .getAttribute('href')
+    ).toBe('/mobile/travel');
+  });
+
   it('renders the public shell as a centered standalone surface', () => {
     renderWithProviders(
       <PublicShell>

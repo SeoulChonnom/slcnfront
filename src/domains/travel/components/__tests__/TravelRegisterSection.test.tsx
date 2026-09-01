@@ -525,6 +525,37 @@ describe('TravelRegisterSection', () => {
     });
   });
 
+  describe('device-aware header', () => {
+    it('renders its own visible h1 and back button on device="main"', () => {
+      renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      const heading = screen.getByRole('heading', { name: '새 여행 기록하기' });
+      expect(heading).toBeTruthy();
+      // A visually-hidden h1 is still technically "visible" to
+      // getByRole, so also check it isn't the visually-hidden variant.
+      expect(heading.className).not.toContain('slcn-visually-hidden');
+
+      expect(screen.getByRole('button', { name: '‹ 돌아가기' })).toBeTruthy();
+    });
+
+    it('keeps an accessible h1 but hides it and drops the back button on device="mobile"', () => {
+      renderWithMinimalProviders(
+        <TravelRegisterSection device='mobile' mode='register' />
+      );
+
+      // The mobile shell (DetailMobileShell) supplies the visible title and
+      // back arrow for this route, so the section must not draw its own --
+      // but a real h1 still has to exist for assistive tech.
+      const heading = screen.getByRole('heading', { name: '새 여행 기록하기' });
+      expect(heading).toBeTruthy();
+      expect(heading.className).toContain('slcn-visually-hidden');
+
+      expect(screen.queryByRole('button', { name: '‹ 돌아가기' })).toBeNull();
+    });
+  });
+
   describe('accessible names', () => {
     it('gives the tag, 장소명, and 메모 inputs a real accessible name', async () => {
       const { user } = renderWithMinimalProviders(

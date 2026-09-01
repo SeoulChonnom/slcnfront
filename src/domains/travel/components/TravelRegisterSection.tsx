@@ -295,27 +295,37 @@ export function TravelRegisterSection({
   // data instead of empty values.
   const formReady = !isEdit || Boolean(existingTravel);
 
+  const title = isEdit ? '여행 수정' : '새 여행 기록하기';
+  const subtitle = isEdit
+    ? '기본 정보를 수정하면 날짜별 기록 칸이 자동으로 조정돼요.'
+    : '기본 정보를 입력하면 날짜별 기록 칸이 자동으로 만들어져요.';
+
   return (
     <section className='slcn-travel-register-section'>
-      <div className='slcn-travel-register-section__header'>
-        <button
-          type='button'
-          className='slcn-travel-register-section__back-btn'
-          onClick={handleCancel}
-        >
-          ‹ 돌아가기
-        </button>
-        <div>
-          <h1 className='slcn-travel-register-section__title'>
-            {isEdit ? '여행 수정' : '새 여행 기록하기'}
-          </h1>
-          <p className='slcn-travel-register-section__subtitle'>
-            {isEdit
-              ? '기본 정보를 수정하면 날짜별 기록 칸이 자동으로 조정돼요.'
-              : '기본 정보를 입력하면 날짜별 기록 칸이 자동으로 만들어져요.'}
-          </p>
+      {device === 'main' ? (
+        <div className='slcn-travel-register-section__header'>
+          <button
+            type='button'
+            className='slcn-travel-register-section__back-btn'
+            onClick={handleCancel}
+          >
+            ‹ 돌아가기
+          </button>
+          <div>
+            <h1 className='slcn-travel-register-section__title'>{title}</h1>
+            <p className='slcn-travel-register-section__subtitle'>{subtitle}</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        // The mobile shell (DetailMobileShell) already renders the visible
+        // title and back arrow for this route, so repeating them here would
+        // show both. A visually-hidden h1 keeps the page's heading structure
+        // honest for assistive tech without drawing a second title on screen.
+        <div className='slcn-travel-register-section__header'>
+          <h1 className='slcn-visually-hidden'>{title}</h1>
+          <p className='slcn-travel-register-section__subtitle'>{subtitle}</p>
+        </div>
+      )}
 
       {isEdit && isLoading ? (
         <p className='slcn-travel-register-section__loading' aria-live='polite'>

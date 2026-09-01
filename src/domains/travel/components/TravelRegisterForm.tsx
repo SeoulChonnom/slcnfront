@@ -280,25 +280,27 @@ export function TravelRegisterForm({
 
       {/* ── Basic info card ─────────────────────────────────────────────── */}
       <div className='slcn-travel-register-form__card'>
-        <TextField
-          label='제목'
-          required
-          placeholder='예) 봄여행'
-          value={values.title}
-          error={errors.title}
-          ref={titleRef}
-          onChange={(e) => form.updateField('title', e.target.value)}
-        />
+        <div className='slcn-travel-register-form__name-row'>
+          <TextField
+            label='제목'
+            required
+            placeholder='예) 봄여행'
+            value={values.title}
+            error={errors.title}
+            ref={titleRef}
+            onChange={(e) => form.updateField('title', e.target.value)}
+          />
 
-        <TextField
-          label='지역'
-          required
-          placeholder='예) 경주'
-          value={values.region}
-          error={errors.region}
-          ref={regionRef}
-          onChange={(e) => form.updateField('region', e.target.value)}
-        />
+          <TextField
+            label='지역'
+            required
+            placeholder='예) 경주'
+            value={values.region}
+            error={errors.region}
+            ref={regionRef}
+            onChange={(e) => form.updateField('region', e.target.value)}
+          />
+        </div>
 
         <div className='slcn-travel-register-form__date-row'>
           <div className='slcn-field slcn-travel-register-form__date-field'>

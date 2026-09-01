@@ -385,7 +385,8 @@ input[type="number"]::-webkit-inner-spin-button {
   .slcn-calendar-toolbar__chip,
   .slcn-segmented-control__button,
   .slcn-shoes-catalog-page__brand-link,
-  .slcn-calendar-manage-modal__row-main {
+  .slcn-calendar-manage-modal__row-main,
+  .slcn-travel-register-form__duration-btn {
     position: relative;
   }
 
@@ -397,7 +398,8 @@ input[type="number"]::-webkit-inner-spin-button {
   .slcn-shoes-catalog-page__brand-link::after,
   .slcn-calendar-manage-modal__row-main::after,
   .slcn-toggle::after,
-  .slcn-modal__close::after {
+  .slcn-modal__close::after,
+  .slcn-travel-register-form__duration-btn::after {
     content: "";
     position: absolute;
     top: 50%;

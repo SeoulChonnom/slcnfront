@@ -4,6 +4,7 @@ import { MobileTopBar } from '@/components/layout/MobileTopBar';
 import {
   buildDeviceProfilePath,
   buildDeviceRootPath,
+  buildDeviceTravelListPath,
   buildDeviceTripListPath,
 } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
@@ -34,6 +35,14 @@ function getDetailMobileTitle(pathname: string) {
     return '나들이 경로';
   }
 
+  if (pathname.startsWith('/mobile/travel/register')) {
+    return '새 여행';
+  }
+
+  if (pathname.startsWith('/mobile/travel/') && pathname.endsWith('/edit')) {
+    return '여행 수정';
+  }
+
   if (pathname.startsWith('/mobile/')) {
     return '신발 상세';
   }
@@ -53,6 +62,17 @@ function getDetailMobileBackHref(pathname: string) {
      the back arrow has to land there too rather than on the mobile home. */
   if (pathname.startsWith('/mobile/map/register')) {
     return buildDeviceTripListPath('mobile');
+  }
+
+  /* Both travel register and travel edit cancel back to the travel list
+     (see TravelRegisterSection's own handleCancel, which does the same for
+     both modes), so the shell's back arrow matches that in-page behaviour
+     rather than sending edit back to the mobile home. */
+  if (
+    pathname.startsWith('/mobile/travel/register') ||
+    (pathname.startsWith('/mobile/travel/') && pathname.endsWith('/edit'))
+  ) {
+    return buildDeviceTravelListPath('mobile');
   }
 
   return buildDeviceRootPath('mobile');

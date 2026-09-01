@@ -26,6 +26,8 @@ const mobileRouteConfig = createDeviceRouteConfig('mobile', {
     {
       tripRegister: 'detail',
       tripDetail: 'detail',
+      travelRegister: 'detail',
+      travelEdit: 'detail',
       profile: 'detail',
       profileVerify: 'detail',
       profileEdit: 'detail',
