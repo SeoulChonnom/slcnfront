@@ -1,7 +1,7 @@
-import { screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TravelRegisterSection } from '@/domains/travel/components/TravelRegisterSection';
-import type { TravelDetail } from '@/domains/travel/types';
+import type { FileAsset, TravelDetail } from '@/domains/travel/types';
 import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 // ── Travel API mock ───────────────────────────────────────────────────────────
@@ -19,6 +19,64 @@ vi.mock('@/domains/travel/api/travel-api', () => ({
     updateTravel,
   },
 }));
+
+// ── Travel files API mock ─────────────────────────────────────────────────────
+
+const { uploadTravelFile, uploadTravelFiles } = vi.hoisted(() => ({
+  uploadTravelFile: vi.fn<(file: File) => Promise<FileAsset>>(),
+  uploadTravelFiles: vi.fn<(files: File[]) => Promise<FileAsset[]>>(),
+}));
+
+vi.mock('@/domains/travel/api/travel-files-api', () => ({
+  travelFilesApi: {
+    uploadTravelFile,
+    uploadTravelFiles,
+  },
+}));
+
+function fileAsset(overrides: Partial<FileAsset> = {}): FileAsset {
+  return {
+    fileId: 'file-1',
+    type: 'travel',
+    originalFilename: 'cover.png',
+    filename: 'cover.png',
+    path: '/files/cover.png',
+    mimeType: 'image/png',
+    size: 1024,
+    ...overrides,
+  };
+}
+
+/** Fills in the fields required to pass validate() in register mode. */
+async function fillRequiredFields(
+  user: ReturnType<typeof renderWithMinimalProviders>['user'],
+  container: HTMLElement
+) {
+  await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+
+  fireEvent.change(screen.getByLabelText(/^시작일/), {
+    target: { value: '2025-06-01' },
+  });
+  fireEvent.change(screen.getByLabelText(/^종료일/), {
+    target: { value: '2025-06-02' },
+  });
+
+  const dropzoneInputs = container.querySelectorAll<HTMLInputElement>(
+    '.slcn-file-dropzone__input'
+  );
+  const coverInput = dropzoneInputs[0];
+
+  if (!coverInput) {
+    throw new Error('cover photo input not found');
+  }
+
+  await user.upload(
+    coverInput,
+    new File(['cover'], 'cover.png', { type: 'image/png' })
+  );
+
+  return { coverInput };
+}
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -87,6 +145,15 @@ const mockTravelDetail: TravelDetail = {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('TravelRegisterSection', () => {
+  beforeEach(() => {
+    getTravelDetail.mockReset();
+    createTravel.mockReset();
+    updateTravel.mockReset();
+    uploadTravelFile.mockReset();
+    uploadTravelFiles.mockReset();
+    uploadTravelFiles.mockResolvedValue([]);
+  });
+
   describe('register mode', () => {
     it('renders the form immediately with an empty title field', () => {
       renderWithMinimalProviders(
@@ -164,6 +231,151 @@ describe('TravelRegisterSection', () => {
           )
         ).toBeTruthy();
       });
+    });
+  });
+
+  describe('photo upload wiring', () => {
+    it('uploads the cover photo and sends a files array containing a COVER item', async () => {
+      uploadTravelFile.mockResolvedValue(fileAsset({ fileId: 'cover-1' }));
+      createTravel.mockResolvedValue({
+        ...mockTravelDetail,
+        travelId: 'new-travel-id',
+      });
+
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await fillRequiredFields(user, container);
+
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      await waitFor(() => {
+        expect(createTravel).toHaveBeenCalledTimes(1);
+      });
+
+      expect(uploadTravelFile).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'cover.png' })
+      );
+
+      const payload = createTravel.mock.calls[0]?.[0];
+      expect(payload.files).toContainEqual(
+        expect.objectContaining({
+          fileAssetId: 'cover-1',
+          targetType: 'TRAVEL',
+          role: 'COVER',
+        })
+      );
+      // The old, no-longer-valid `photos` field must not be sent.
+      expect(payload.photos).toBeUndefined();
+    });
+
+    it('surfaces an error and never calls the create mutation when the upload fails', async () => {
+      uploadTravelFile.mockRejectedValue(new Error('업로드 서버 오류'));
+
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await fillRequiredFields(user, container);
+
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeTruthy();
+      });
+
+      expect(createTravel).not.toHaveBeenCalled();
+
+      // The user's input is preserved, not thrown away on failure.
+      expect(
+        (screen.getByRole('textbox', { name: /제목/ }) as HTMLInputElement)
+          .value
+      ).toBe('봄여행');
+    });
+  });
+
+  describe('keyboard accessibility', () => {
+    it('keeps both the cover and album dropzone inputs reachable by keyboard', () => {
+      const { container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      const dropzoneInputs = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      );
+
+      expect(dropzoneInputs.length).toBe(2);
+
+      for (const input of dropzoneInputs) {
+        expect(getComputedStyle(input).display).not.toBe('none');
+        expect(input.hasAttribute('hidden')).toBe(false);
+        expect(input.tabIndex).not.toBe(-1);
+
+        input.focus();
+        expect(document.activeElement).toBe(input);
+      }
+    });
+  });
+
+  describe('destructive date-change confirmation', () => {
+    it('asks for confirmation before dropping a day with content, and cancelling keeps it', async () => {
+      const { user } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+
+      fireEvent.change(screen.getByLabelText(/^시작일/), {
+        target: { value: '2025-06-01' },
+      });
+      fireEvent.change(screen.getByLabelText(/^종료일/), {
+        target: { value: '2025-06-02' },
+      });
+
+      // Write content into day 1's first place so it is at risk. Day cards
+      // start with no place rows, so add one first.
+      const day1Heading = screen.getByText('Day 1');
+      const day1Card = day1Heading.closest('.slcn-travel-day-editor');
+      if (!day1Card) throw new Error('day 1 card not found');
+      await user.click(
+        within(day1Card as HTMLElement).getByRole('button', {
+          name: '장소 추가',
+        })
+      );
+      const placeInput = within(day1Card as HTMLElement).getByPlaceholderText(
+        '장소명을 입력하세요'
+      );
+      await user.type(placeInput, '해운대');
+
+      // Move the start date forward so day 1 (2025-06-01) would be dropped.
+      fireEvent.change(screen.getByLabelText(/^시작일/), {
+        target: { value: '2025-06-02' },
+      });
+
+      const dialog = await screen.findByRole('dialog');
+      expect(within(dialog).getByText(/사라져요/)).toBeTruthy();
+
+      await user.click(
+        within(dialog).getByRole('button', { name: '계속 둘게요' })
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).toBeNull();
+      });
+
+      // Day 1 and its content are still there — the change was not applied.
+      expect(screen.getByText('Day 1')).toBeTruthy();
+      expect(
+        (
+          within(day1Card as HTMLElement).getByPlaceholderText(
+            '장소명을 입력하세요'
+          ) as HTMLInputElement
+        ).value
+      ).toBe('해운대');
+      expect((screen.getByLabelText(/^시작일/) as HTMLInputElement).value).toBe(
+        '2025-06-01'
+      );
     });
   });
 });

@@ -1,4 +1,3 @@
-import type { ChangeEvent } from 'react';
 import type { DayFormRow } from '@/domains/travel/hooks/useTravelRegisterForm';
 import { formatDisplayDate } from '@/domains/travel/mappers/travel-mappers';
 import { CATEGORY_LABELS, type PlaceCategory } from '@/domains/travel/types';
@@ -13,7 +12,6 @@ type TravelDayEditorProps = {
     field: 'name' | 'category' | 'memo',
     value: string
   ) => void;
-  onDayCoverPhoto: (dayLocalId: string, file: File | null) => void;
 };
 
 const PLACE_CATEGORIES = Object.entries(CATEGORY_LABELS) as [
@@ -26,13 +24,7 @@ export function TravelDayEditor({
   onAddPlace,
   onRemovePlace,
   onUpdatePlace,
-  onDayCoverPhoto,
 }: TravelDayEditorProps) {
-  function handleCoverPhotoChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0] ?? null;
-    onDayCoverPhoto(day.localId, file);
-  }
-
   return (
     <div className='slcn-travel-day-editor'>
       <div className='slcn-travel-day-editor__header'>
@@ -119,40 +111,6 @@ export function TravelDayEditor({
             </button>
           </div>
         ))}
-      </div>
-
-      <div className='slcn-travel-day-editor__day-photo'>
-        <label className='slcn-travel-day-editor__day-photo-label'>
-          <span
-            className='slcn-travel-day-editor__day-photo-icon'
-            aria-hidden='true'
-          >
-            <svg
-              aria-hidden='true'
-              width='16'
-              height='16'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            >
-              <rect x='3' y='3' width='18' height='18' rx='2' ry='2' />
-              <circle cx='8.5' cy='8.5' r='1.5' />
-              <polyline points='21 15 16 10 5 21' />
-            </svg>
-          </span>
-          {day.coverPhotoFile
-            ? day.coverPhotoFile.name
-            : '이 날의 대표 사진 추가'}
-          <input
-            type='file'
-            accept='.jpg,.jpeg,.png'
-            className='slcn-travel-day-editor__day-photo-input'
-            onChange={handleCoverPhotoChange}
-          />
-        </label>
       </div>
 
       <button

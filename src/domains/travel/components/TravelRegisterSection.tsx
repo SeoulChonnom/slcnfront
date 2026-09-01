@@ -1,6 +1,8 @@
 import type { FormEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
+import { travelFilesApi } from '@/domains/travel/api/travel-files-api';
 import { TravelRegisterForm } from '@/domains/travel/components/TravelRegisterForm';
 import { useTravelDetail } from '@/domains/travel/hooks/useTravelDetail';
 import {
@@ -13,9 +15,11 @@ import {
   type TravelRegisterFormValues,
   useTravelRegisterForm,
 } from '@/domains/travel/hooks/useTravelRegisterForm';
+import { buildTravelFileBoxItems } from '@/domains/travel/mappers/travel-payload';
 import type {
   TravelDayUdo,
   TravelDetail,
+  TravelFileBoxItemCdo,
   TravelPlaceUdo,
 } from '@/domains/travel/types';
 import {
@@ -23,11 +27,13 @@ import {
   buildDeviceTravelListPath,
 } from '@/lib/routing/route-builders';
 
-/**
- * Assemble the nested `travelDays` payload (with each day's `places` and
- * `photos`) from the local form state. Photo uploads are not wired yet, so
- * every `photos` array is sent empty rather than inventing `photoFileId`s.
- */
+type SubmitPhase = 'idle' | 'uploading' | 'saving';
+
+/** Assemble the nested `travelDays` payload (with each day's `places`) from
+ * the local form state. Day- and place-level photos are not part of the
+ * create/update payload: the server has no target row to attach a day/place
+ * photo to at create time, and `TravelDayUdo`/`TravelPlaceUdo` no longer
+ * carry a `photos` field. */
 function buildTravelDays(
   days: TravelRegisterFormValues['days']
 ): TravelDayUdo[] {
@@ -39,13 +45,11 @@ function buildTravelDays(
         category: place.category === '' ? 'ETC' : place.category,
         memo: place.memo.trim() || undefined,
         sortOrder: placeIndex,
-        photos: [],
       }));
 
     return {
       date: day.date,
       sortOrder: dayIndex,
-      photos: [],
       places,
     };
   });
@@ -88,6 +92,14 @@ function mapDetailToDefaultValues(
   };
 }
 
+function deriveUploadErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return `사진을 올리지 못했어요. ${error.message}`;
+  }
+
+  return '사진을 올리지 못했어요. 잠시 뒤 다시 시도해 주세요.';
+}
+
 // ── Inner form controller ─────────────────────────────────────────────────────
 
 type TravelRegisterFormControllerProps = {
@@ -106,14 +118,19 @@ function TravelRegisterFormController({
   const navigate = useNavigate();
   const isEdit = mode === 'edit';
 
-  const form = useTravelRegisterForm({ defaultValues: resolvedInitialValues });
+  const form = useTravelRegisterForm({
+    defaultValues: resolvedInitialValues,
+    mode,
+    persistDraft: mode === 'register',
+  });
+
+  const [submitPhase, setSubmitPhase] = useState<SubmitPhase>('idle');
+  const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(
+    null
+  );
 
   const createMutation = useCreateTravel();
   const updateMutation = useUpdateTravel(travelId ?? '');
-
-  const isPending = isEdit
-    ? updateMutation.isPending
-    : createMutation.isPending;
 
   function handleCancel() {
     navigate(buildDeviceTravelListPath(device));
@@ -124,68 +141,108 @@ function TravelRegisterFormController({
 
     if (!form.validate()) return;
 
+    setUploadErrorMessage(null);
+
     const { values } = form;
+    const hasNewCover = Boolean(values.coverPhotoFile);
+    const hasNewAlbumFiles = values.albumPhotoFiles.length > 0;
+
+    let files: TravelFileBoxItemCdo[] | undefined;
+
+    if (hasNewCover || hasNewAlbumFiles) {
+      setSubmitPhase('uploading');
+
+      try {
+        const [coverAsset, albumAssets] = await Promise.all([
+          values.coverPhotoFile
+            ? travelFilesApi.uploadTravelFile(values.coverPhotoFile)
+            : Promise.resolve(null),
+          travelFilesApi.uploadTravelFiles(values.albumPhotoFiles),
+        ]);
+
+        files = buildTravelFileBoxItems({
+          coverFileId: coverAsset?.fileId ?? null,
+          albumFileIds: albumAssets.map((asset) => asset.fileId),
+        });
+      } catch (error) {
+        setSubmitPhase('idle');
+        setUploadErrorMessage(deriveUploadErrorMessage(error));
+        return;
+      }
+    }
+    // In edit mode with no newly picked files, `files` stays undefined so
+    // the update payload omits the key entirely rather than sending an
+    // empty array that could clear the travel's existing cover/gallery.
+
+    setSubmitPhase('saving');
+
     const travelDays = buildTravelDays(values.days);
 
-    if (isEdit && travelId) {
-      await updateMutation.mutateAsync(
-        {
-          title: values.title,
-          region: values.region,
-          startDate: values.startDate,
-          endDate: values.endDate,
-          tags: values.tags,
-          confirmDeleteDays: true,
-          travelDays,
-          photos: [],
-          review: {},
-        },
-        {
-          onSuccess: () => {
-            navigate(buildDeviceTravelDetailPath(device, travelId));
+    try {
+      if (isEdit && travelId) {
+        await updateMutation.mutateAsync(
+          {
+            title: values.title,
+            region: values.region,
+            startDate: values.startDate,
+            endDate: values.endDate,
+            tags: values.tags,
+            confirmDeleteDays: true,
+            travelDays,
+            ...(files ? { files } : {}),
+            review: {},
           },
-        }
-      );
-    } else {
-      await createMutation.mutateAsync(
-        {
-          title: values.title,
-          region: values.region,
-          startDate: values.startDate,
-          endDate: values.endDate,
-          tags: values.tags,
-          travelDays,
-          photos: [],
-          review: {},
-        },
-        {
-          onSuccess: (newTravel) => {
-            navigate(buildDeviceTravelDetailPath(device, newTravel.travelId));
+          {
+            onSuccess: () => {
+              form.clearDraft();
+              navigate(buildDeviceTravelDetailPath(device, travelId));
+            },
+          }
+        );
+      } else {
+        await createMutation.mutateAsync(
+          {
+            title: values.title,
+            region: values.region,
+            startDate: values.startDate,
+            endDate: values.endDate,
+            tags: values.tags,
+            travelDays,
+            ...(files ? { files } : {}),
+            review: {},
           },
-        }
-      );
+          {
+            onSuccess: (newTravel) => {
+              form.clearDraft();
+              navigate(buildDeviceTravelDetailPath(device, newTravel.travelId));
+            },
+          }
+        );
+      }
+    } catch {
+      // Surfaced below via mutation.error; keep the user's input intact.
+    } finally {
+      setSubmitPhase('idle');
     }
   }
 
-  const submitError = isEdit ? updateMutation.error : createMutation.error;
+  const mutationError = isEdit ? updateMutation.error : createMutation.error;
+  const submitErrorMessage =
+    uploadErrorMessage ??
+    (mutationError
+      ? (mutationError.message ??
+        '저장 중 오류가 발생했어요. 다시 시도해 주세요.')
+      : null);
 
   return (
-    <>
-      {submitError ? (
-        <p className='slcn-travel-register-section__submit-error' role='alert'>
-          {submitError.message ??
-            '저장 중 오류가 발생했어요. 다시 시도해 주세요.'}
-        </p>
-      ) : null}
-
-      <TravelRegisterForm
-        form={form}
-        mode={mode}
-        isPending={isPending}
-        onSubmit={(e) => void handleSubmit(e)}
-        onCancel={handleCancel}
-      />
-    </>
+    <TravelRegisterForm
+      form={form}
+      mode={mode}
+      submitPhase={submitPhase}
+      submitError={submitErrorMessage}
+      onSubmit={(e) => void handleSubmit(e)}
+      onCancel={handleCancel}
+    />
   );
 }
 
