@@ -41,7 +41,7 @@ export function TravelDayList({ days, onAddPlace }: TravelDayListProps) {
               date carry the wayfinding — no tab bar needed. */}
           <div className='slcn-travel-day__rail'>
             <span className='slcn-travel-day__rail-num'>
-              Day {day.dayNumber}
+              {day.dayNumber}일차
             </span>
             <span className='slcn-travel-day__rail-date'>
               {formatRailDate(day.displayDate)} · {formatWeekdayLabel(day.date)}

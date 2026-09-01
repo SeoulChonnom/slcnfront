@@ -177,9 +177,9 @@ describe('TravelDetailSection', () => {
     expect(within(daysSection).getByText('도착과 해변 산책')).toBeTruthy();
     expect(within(daysSection).getByText('온종일 시장 구경')).toBeTruthy();
     expect(within(daysSection).getByText('귀가')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 1')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 2')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 3')).toBeTruthy();
+    expect(within(daysSection).getByText('1일차')).toBeTruthy();
+    expect(within(daysSection).getByText('2일차')).toBeTruthy();
+    expect(within(daysSection).getByText('3일차')).toBeTruthy();
     expect(within(daysSection).getByText('해운대 해변')).toBeTruthy();
 
     // Photo album section: every photo present (grid defaults to 'all')

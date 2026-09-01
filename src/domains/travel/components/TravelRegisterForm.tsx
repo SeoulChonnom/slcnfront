@@ -11,7 +11,10 @@ import {
   type UseTravelRegisterFormReturn,
 } from '@/domains/travel/hooks/useTravelRegisterForm';
 import { formatDisplayDate } from '@/domains/travel/mappers/travel-mappers';
-import { validateTravelFileSize } from '@/domains/travel/utils/travel-validation';
+import {
+  validateTravelFileSize,
+  validateTravelFileType,
+} from '@/domains/travel/utils/travel-validation';
 
 type TravelRegisterFormProps = {
   form: UseTravelRegisterFormReturn;
@@ -72,6 +75,13 @@ export function TravelRegisterForm({
   const nightsDays = computeNightsDays(values.startDate, values.endDate);
   const startDateId = useId();
   const endDateId = useId();
+  // Matches TextField's `${inputId}-error` convention so the same
+  // aria-describedby wiring pattern applies to these hand-rolled date
+  // fields too.
+  const startDateErrorId = errors.startDate
+    ? `${startDateId}-error`
+    : undefined;
+  const endDateErrorId = errors.endDate ? `${endDateId}-error` : undefined;
   const isPending = submitPhase !== 'idle';
 
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -86,12 +96,13 @@ export function TravelRegisterForm({
   const [pendingDateChange, setPendingDateChange] =
     useState<PendingDateChange | null>(null);
 
-  // Oversized-file feedback lives here, not in the hook's formal errors:
-  // an invalid pick never enters form state (see handleCoverFileSelect /
-  // handleAlbumFilesSelect below), so there is nothing for validate() to
-  // reject later — the dropzone just shows why the pick didn't take.
-  const [coverSizeError, setCoverSizeError] = useState<string | null>(null);
-  const [albumSizeError, setAlbumSizeError] = useState<string | null>(null);
+  // Oversized- or wrong-type-file feedback lives here, not in the hook's
+  // formal errors: an invalid pick never enters form state (see
+  // handleCoverFileSelect / handleAlbumFilesSelect below), so there is
+  // nothing for validate() to reject later — the dropzone just shows why
+  // the pick didn't take.
+  const [coverFileError, setCoverFileError] = useState<string | null>(null);
+  const [albumFileError, setAlbumFileError] = useState<string | null>(null);
 
   // A submit attempt (handleFormSubmit) sets this ref just before calling
   // form.validate() one level up. When that validate() call fails, `errors`
@@ -148,34 +159,50 @@ export function TravelRegisterForm({
     onSubmit(e);
   }
 
+  // FileDropzone routes both the drop path and the native picker's change
+  // event through this same onFileSelect callback (see FileDropzone.tsx),
+  // so validating here catches a dropped .txt file exactly as it catches
+  // one chosen through the dialog -- `accept` only constrains the picker
+  // UI, not a drop.
   function handleCoverFileSelect(file: File | null) {
     if (file) {
+      const typeError = validateTravelFileType(file);
+
+      if (typeError) {
+        setCoverFileError(typeError);
+        return;
+      }
+
       const sizeError = validateTravelFileSize(file);
 
       if (sizeError) {
-        setCoverSizeError(sizeError);
+        setCoverFileError(sizeError);
         return;
       }
     }
 
-    setCoverSizeError(null);
+    setCoverFileError(null);
     form.updateField('coverPhotoFile', file);
   }
 
   function handleCoverFileClear() {
-    setCoverSizeError(null);
+    setCoverFileError(null);
     form.updateField('coverPhotoFile', null);
   }
 
   function handleAlbumFilesSelect(files: File[]) {
-    const sizeErrors = files
-      .map((file) => validateTravelFileSize(file))
+    const fileErrors = files
+      .map(
+        (file) => validateTravelFileType(file) ?? validateTravelFileSize(file)
+      )
       .filter((message): message is string => message !== null);
     const validFiles = files.filter(
-      (file) => validateTravelFileSize(file) === null
+      (file) =>
+        validateTravelFileType(file) === null &&
+        validateTravelFileSize(file) === null
     );
 
-    setAlbumSizeError(sizeErrors[0] ?? null);
+    setAlbumFileError(fileErrors[0] ?? null);
     form.updateField('albumPhotoFiles', validFiles);
   }
 
@@ -320,6 +347,7 @@ export function TravelRegisterForm({
                 ref={startDateRef}
                 onChange={(e) => handleStartDateChange(e.target.value)}
                 aria-invalid={Boolean(errors.startDate)}
+                aria-describedby={startDateErrorId}
               />
               <span
                 className='slcn-travel-register-form__date-icon'
@@ -344,7 +372,11 @@ export function TravelRegisterForm({
               </span>
             </div>
             {errors.startDate ? (
-              <p className='slcn-field__message' data-kind='error'>
+              <p
+                id={startDateErrorId}
+                className='slcn-field__message'
+                data-kind='error'
+              >
                 {errors.startDate}
               </p>
             ) : null}
@@ -367,6 +399,7 @@ export function TravelRegisterForm({
                 ref={endDateRef}
                 onChange={(e) => handleEndDateChange(e.target.value)}
                 aria-invalid={Boolean(errors.endDate)}
+                aria-describedby={endDateErrorId}
               />
               <span
                 className='slcn-travel-register-form__date-icon'
@@ -391,7 +424,11 @@ export function TravelRegisterForm({
               </span>
             </div>
             {errors.endDate ? (
-              <p className='slcn-field__message' data-kind='error'>
+              <p
+                id={endDateErrorId}
+                className='slcn-field__message'
+                data-kind='error'
+              >
                 {errors.endDate}
               </p>
             ) : null}
@@ -461,7 +498,7 @@ export function TravelRegisterForm({
           accept='.jpg,.jpeg,.png'
           prompt='대표 사진을 끌어다 놓거나 선택하세요'
           file={values.coverPhotoFile}
-          error={coverSizeError ?? errors.coverPhotoFile}
+          error={coverFileError ?? errors.coverPhotoFile}
           ref={coverPhotoRef}
           onFileSelect={handleCoverFileSelect}
           onClear={handleCoverFileClear}
@@ -534,7 +571,7 @@ export function TravelRegisterForm({
           accept='.jpg,.jpeg,.png'
           hint='PNG · JPG · 여러 장 선택 가능'
           prompt='사진을 끌어다 놓거나 선택하세요'
-          error={albumSizeError ?? undefined}
+          error={albumFileError ?? undefined}
           files={values.albumPhotoFiles}
           onFilesSelect={handleAlbumFilesSelect}
         />

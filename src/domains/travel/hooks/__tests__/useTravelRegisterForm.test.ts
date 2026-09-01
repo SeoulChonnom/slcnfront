@@ -972,6 +972,50 @@ describe('useTravelRegisterForm', () => {
         '1일차에 메모만 적고 장소명을 비워 둔 곳이 있어요. 장소명을 입력해 주세요.'
       );
     });
+
+    it('clears errors.days once the nameless place gets a name, without a second submit', () => {
+      const { result } = renderHook(() =>
+        useTravelRegisterForm({
+          defaultValues: {
+            title: '여행',
+            region: '부산',
+            coverPhotoFile: makeImageFile('cover.jpg'),
+          },
+        })
+      );
+
+      act(() => {
+        result.current.updateStartDate('2024-06-08');
+      });
+      act(() => {
+        result.current.updateEndDate('2024-06-08');
+      });
+
+      const dayId = result.current.values.days[0].localId;
+      act(() => {
+        result.current.addPlace(dayId);
+      });
+      const placeId = result.current.values.days[0].places[0].localId;
+      act(() => {
+        result.current.updatePlace(dayId, placeId, 'memo', '노을이 예뻤어요');
+      });
+
+      act(() => {
+        result.current.validate();
+      });
+
+      expect(result.current.errors.days).toBeTruthy();
+
+      // Regression: updatePlace used to never call setErrors, unlike
+      // updateField, so this banner sat there verbatim (from the earlier
+      // validate() call) until the next submit re-validated the form. It
+      // should disappear as soon as the missing name is typed in.
+      act(() => {
+        result.current.updatePlace(dayId, placeId, 'name', '해운대');
+      });
+
+      expect(result.current.errors.days).toBeUndefined();
+    });
   });
 
   // ── draft persistence (sessionStorage) ──────────────────────────────────────

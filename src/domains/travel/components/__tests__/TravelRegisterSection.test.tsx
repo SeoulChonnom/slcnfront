@@ -412,6 +412,41 @@ describe('TravelRegisterSection', () => {
     });
   });
 
+  describe('date field accessibility', () => {
+    it('wires 시작일/종료일 errors to the inputs via aria-describedby after a failed submit', async () => {
+      const { user } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+      await user.type(screen.getByRole('textbox', { name: /지역/ }), '부산');
+
+      // 시작일/종료일 left empty on purpose.
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      const startDateInput = (await screen.findByLabelText(
+        /^시작일/
+      )) as HTMLInputElement;
+      const endDateInput = screen.getByLabelText(/^종료일/) as HTMLInputElement;
+      const startDateError = await screen.findByText('시작일을 선택해 주세요.');
+      const endDateError = await screen.findByText('종료일을 선택해 주세요.');
+
+      expect(startDateInput.getAttribute('aria-invalid')).toBe('true');
+      expect(endDateInput.getAttribute('aria-invalid')).toBe('true');
+
+      const startDescribedBy = startDateInput.getAttribute('aria-describedby');
+      const endDescribedBy = endDateInput.getAttribute('aria-describedby');
+
+      // Regression: these used to be null even though aria-invalid was set,
+      // so a screen-reader user tabbing to the field never heard why it was
+      // invalid (the error <p> had no id to point at).
+      expect(startDescribedBy).toBeTruthy();
+      expect(endDescribedBy).toBeTruthy();
+      expect(startDateError.id).toBe(startDescribedBy);
+      expect(endDateError.id).toBe(endDescribedBy);
+    });
+  });
+
   describe('cover/album file size validation', () => {
     function oversizedFile(name: string): File {
       const file = new File(['x'], name, { type: 'image/png' });
@@ -468,6 +503,68 @@ describe('TravelRegisterSection', () => {
       expect(
         await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
       ).toBeTruthy();
+    });
+  });
+
+  describe('cover/album file type validation', () => {
+    function textFile(name: string): File {
+      return new File(['not a photo'], name, { type: 'text/plain' });
+    }
+
+    it('rejects a .txt file dropped on the cover dropzone with a message and never selects it', async () => {
+      renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      const dropTarget = screen
+        .getByText('대표 사진을 끌어다 놓거나 선택하세요')
+        .closest('label') as HTMLLabelElement;
+
+      fireEvent.drop(dropTarget, {
+        dataTransfer: {
+          files: [textFile('notes.txt')],
+          items: [],
+          types: ['Files'],
+        },
+      });
+
+      expect(
+        await screen.findByText('jpg, jpeg, png 형식의 사진만 올릴 수 있어요.')
+      ).toBeTruthy();
+
+      // Rejected file never became the selected cover photo -- no filename
+      // rendered anywhere in the dropzone's chosen-file row.
+      expect(screen.queryByText('notes.txt')).toBeNull();
+    });
+
+    it('rejects a .txt file on the album input change event too (defence in depth on the change path)', () => {
+      const { container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      const albumInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[1];
+      if (!albumInput) throw new Error('album photo input not found');
+
+      // userEvent.upload() itself enforces the input's `accept` attribute
+      // (mirroring a real native picker's OS-level filter), so it can't
+      // reach this component's own onChange handler with a mismatched
+      // file. Firing the change event directly bypasses that simulated
+      // filter to prove the handler rejects the file on its own merits --
+      // the actual defence for anything that sets .files without going
+      // through a filtered native dialog (accept is advisory, not
+      // enforced by the DOM itself).
+      Object.defineProperty(albumInput, 'files', {
+        configurable: true,
+        value: [textFile('notes.txt')],
+      });
+      fireEvent.change(albumInput);
+
+      expect(
+        screen.getByText('jpg, jpeg, png 형식의 사진만 올릴 수 있어요.')
+      ).toBeTruthy();
+      expect(screen.queryByText('notes.txt')).toBeNull();
     });
   });
 

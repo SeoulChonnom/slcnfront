@@ -225,6 +225,16 @@ slcn-travel-day-editor
   position: relative;
 }
 
+/* The calendar icon floats over the input with no reserved space, so at
+   200% text zoom ("2026. 09. 12.") the value's last digits render right
+   under it. Give the input its own padding-right so the icon always sits
+   in dead space instead of on top of the value -- 1rem for the icon's own
+   footprint plus a small buffer, on top of .slcn-field__control's
+   0.875rem edge padding. */
+.slcn-travel-register-form__date-control .slcn-field__input {
+  padding-right: 1.5rem;
+}
+
 .slcn-travel-register-form__date-icon {
   position: absolute;
   right: 0.875rem;
@@ -393,7 +403,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .slcn-travel-register-form__section-count {
   font-size: var(--text-nav);
   font-weight: var(--weight-strong);
-  color: var(--color-primary-focus);
+  /* --color-primary-focus measures 2.23:1 on canvas / 2.34:1 on white here
+     and tokens.css forbids it as a text colour. --color-accent-muted is
+     the sanctioned accent-text token (5.14-5.39:1). Same fix as the
+     duration stepper button above. */
+  color: var(--color-accent-muted);
 }
 
 /* ── Days hint ────────────────────────────────────────────── */
@@ -564,8 +578,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 0.75rem;
 }
 
+/* flex-wrap (not a width breakpoint) is what makes this survive 200% text
+   zoom: zoom raises the root font-size without changing the viewport
+   width, so a px media query never fires, but place-num and place-remove's
+   rem-sized footprints still grow and squeeze the row. Wrapping reacts to
+   the actual squeeze instead of a viewport width that never crosses a
+   breakpoint. See .slcn-travel-day-editor__place-fields below for the
+   other half of the fix. */
 .slcn-travel-day-editor__place-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.625rem;
   align-items: flex-start;
 }
@@ -590,7 +612,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 0;
+  /* Was min-width: 0, which let this column shrink without a floor
+     whenever place-num/place-remove's fixed rem widths grew faster than
+     the space left for it -- exactly what 200% text zoom does. Measured
+     live: the name input's clientWidth dropped to 42px against an 83px
+     scrollWidth, silently truncating "불국사" to "불ㄱ" with no visual
+     sign anything was cut off. A real floor plus flex-wrap on the row
+     (above) lets this column drop to its own full-width line instead of
+     being crushed.
+
+     The floor is capped at 100% because a bare 10rem is 320px once the
+     root font-size doubles, which is wider than a 390px phone can hold
+     once the row's own padding is counted -- it traded the truncation for
+     3px of horizontal page overflow. min() keeps the floor while never
+     letting it exceed the space actually available. */
+  min-width: min(10rem, 100%);
 }
 
 .slcn-travel-day-editor__place-remove {
@@ -621,10 +657,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* ── Category chips ───────────────────────────────────────── */
 
+/* Column gap stays tight; the row gap has to clear the 44px tap box these
+   chips get in components-common.css. A 26px chip centred in a 44px box
+   overhangs 9px per side, so at the old 6px row gap two wrapped rows'
+   boxes overlapped by 12px and the lower row -- painting later -- stole
+   taps aimed just under the upper one. 18px puts the row pitch at 44px so
+   each row owns its full box. Horizontal overhang is at most 0.5px on a
+   43-53px chip, so the column gap is left alone. */
 .slcn-travel-day-editor__category-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.375rem;
+  column-gap: 0.375rem;
+  row-gap: 1.125rem;
 }
 
 .slcn-travel-day-editor__category-chip {
@@ -659,7 +703,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: transparent;
   font-size: var(--text-caption);
   font-weight: var(--weight-strong);
-  color: var(--color-primary-focus);
+  /* --color-primary-focus measures 2.23:1 on canvas / 2.34:1 on white here
+     and tokens.css forbids it as a text colour. --color-accent-muted is
+     the sanctioned accent-text token (5.14-5.39:1). Same fix as the
+     duration stepper button above -- this button matters more than most,
+     since it's the only route into entering a day's content. */
+  color: var(--color-accent-muted);
   cursor: pointer;
   transition: opacity var(--duration-fast) ease;
   width: fit-content;

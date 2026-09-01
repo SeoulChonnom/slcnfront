@@ -402,6 +402,20 @@ export function useTravelRegisterForm(
     null
   );
 
+  // errors.days flags any day holding a memo-only place. Unlike
+  // updateField, updatePlace never cleared it -- type the missing name
+  // back in and the "메모만 적고 장소명을 비워 둔" banner from the last
+  // failed submit sat there verbatim until the next submit re-validated
+  // it. An effect (rather than updatePlace reasoning about it directly)
+  // always sees the settled `values.days` after every render, including
+  // when several updatePlace calls land in the same batch.
+  useEffect(() => {
+    if (!errors.days) return;
+    if (findDaysWithNamelessPlaces(values.days).length > 0) return;
+
+    setErrors((prev) => ({ ...prev, days: undefined }));
+  }, [values.days, errors.days]);
+
   // Recover an abandoned draft once, on mount — but do not apply it. The
   // component shows a 이어서 쓰기 / 새로 쓰기 choice and calls resumeDraft()
   // or discardDraft() based on what the user picks.
@@ -592,6 +606,12 @@ export function useTravelRegisterForm(
     field: keyof Omit<PlaceFormRow, 'localId'>,
     value: string
   ) {
+    // Stays a plain functional update (like addPlace/removePlace) rather
+    // than computing nextDays from the `values` closure: two updatePlace
+    // calls fired in the same batch (e.g. setting name then memo back to
+    // back) must each see the other's result, and only the functional
+    // `prev` form guarantees that -- see the effect below for how
+    // errors.days gets cleared instead, since that needs the settled state.
     setValues((prev) => ({
       ...prev,
       days: prev.days.map((d) =>
