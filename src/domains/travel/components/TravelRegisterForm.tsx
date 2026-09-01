@@ -11,6 +11,7 @@ import {
   type UseTravelRegisterFormReturn,
 } from '@/domains/travel/hooks/useTravelRegisterForm';
 import { formatDisplayDate } from '@/domains/travel/mappers/travel-mappers';
+import { validateTravelFileSize } from '@/domains/travel/utils/travel-validation';
 
 type TravelRegisterFormProps = {
   form: UseTravelRegisterFormReturn;
@@ -74,14 +75,23 @@ export function TravelRegisterForm({
   const isPending = submitPhase !== 'idle';
 
   const titleRef = useRef<HTMLInputElement | null>(null);
+  const regionRef = useRef<HTMLInputElement | null>(null);
   const startDateRef = useRef<HTMLInputElement | null>(null);
   const endDateRef = useRef<HTMLInputElement | null>(null);
   const coverPhotoRef = useRef<HTMLInputElement | null>(null);
+  const daysErrorRef = useRef<HTMLParagraphElement | null>(null);
   const submitErrorRef = useRef<HTMLParagraphElement | null>(null);
   const submitAttemptedRef = useRef(false);
 
   const [pendingDateChange, setPendingDateChange] =
     useState<PendingDateChange | null>(null);
+
+  // Oversized-file feedback lives here, not in the hook's formal errors:
+  // an invalid pick never enters form state (see handleCoverFileSelect /
+  // handleAlbumFilesSelect below), so there is nothing for validate() to
+  // reject later — the dropzone just shows why the pick didn't take.
+  const [coverSizeError, setCoverSizeError] = useState<string | null>(null);
+  const [albumSizeError, setAlbumSizeError] = useState<string | null>(null);
 
   // A submit attempt (handleFormSubmit) sets this ref just before calling
   // form.validate() one level up. When that validate() call fails, `errors`
@@ -98,6 +108,11 @@ export function TravelRegisterForm({
       return;
     }
 
+    if (errors.region) {
+      regionRef.current?.focus();
+      return;
+    }
+
     if (errors.startDate) {
       startDateRef.current?.focus();
       return;
@@ -110,6 +125,11 @@ export function TravelRegisterForm({
 
     if (errors.coverPhotoFile) {
       coverPhotoRef.current?.focus();
+      return;
+    }
+
+    if (errors.days) {
+      daysErrorRef.current?.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors]);
@@ -126,6 +146,37 @@ export function TravelRegisterForm({
   function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     submitAttemptedRef.current = true;
     onSubmit(e);
+  }
+
+  function handleCoverFileSelect(file: File | null) {
+    if (file) {
+      const sizeError = validateTravelFileSize(file);
+
+      if (sizeError) {
+        setCoverSizeError(sizeError);
+        return;
+      }
+    }
+
+    setCoverSizeError(null);
+    form.updateField('coverPhotoFile', file);
+  }
+
+  function handleCoverFileClear() {
+    setCoverSizeError(null);
+    form.updateField('coverPhotoFile', null);
+  }
+
+  function handleAlbumFilesSelect(files: File[]) {
+    const sizeErrors = files
+      .map((file) => validateTravelFileSize(file))
+      .filter((message): message is string => message !== null);
+    const validFiles = files.filter(
+      (file) => validateTravelFileSize(file) === null
+    );
+
+    setAlbumSizeError(sizeErrors[0] ?? null);
+    form.updateField('albumPhotoFiles', validFiles);
   }
 
   function handleTagKeyDown(e: KeyboardEvent<HTMLInputElement>) {
@@ -206,7 +257,7 @@ export function TravelRegisterForm({
       {mode === 'register' && form.restoredDraft ? (
         <div className='slcn-travel-register-form__draft-notice' role='status'>
           <p className='slcn-travel-register-form__draft-text'>
-            작성하던 내용을 불러왔어요.
+            작성하던 내용이 남아 있어요.
             {missingDraftFiles.length > 0
               ? ` ${missingDraftFiles.join(' · ')} 파일은 다시 선택해 주세요.`
               : ''}
@@ -244,6 +295,8 @@ export function TravelRegisterForm({
           required
           placeholder='예) 경주'
           value={values.region}
+          error={errors.region}
+          ref={regionRef}
           onChange={(e) => form.updateField('region', e.target.value)}
         />
 
@@ -350,7 +403,7 @@ export function TravelRegisterForm({
               여행 기간
             </span>
             <span className='slcn-travel-register-form__duration-helper'>
-              늘리면 날짜 칸이 자동 생성, 줄이면 마지막 날 기록이 삭제돼요.
+              늘리면 하루가 늘고, 줄이면 마지막 날이 빠져요.
             </span>
           </div>
           <div className='slcn-travel-register-form__duration-stepper'>
@@ -368,13 +421,14 @@ export function TravelRegisterForm({
                 ? nightsDays.nights === 0
                   ? '당일치기'
                   : `${nightsDays.nights}박 ${nightsDays.days}일`
-                : '1박 2일'}
+                : '—'}
             </span>
             <button
               type='button'
               className='slcn-travel-register-form__duration-btn'
               aria-label='여행 기간 늘리기'
               onClick={form.incrementDuration}
+              disabled={!values.startDate}
             >
               +
             </button>
@@ -405,10 +459,10 @@ export function TravelRegisterForm({
           accept='.jpg,.jpeg,.png'
           prompt='대표 사진을 끌어다 놓거나 선택하세요'
           file={values.coverPhotoFile}
-          error={errors.coverPhotoFile}
+          error={coverSizeError ?? errors.coverPhotoFile}
           ref={coverPhotoRef}
-          onFileSelect={(file) => form.updateField('coverPhotoFile', file)}
-          onClear={() => form.updateField('coverPhotoFile', null)}
+          onFileSelect={handleCoverFileSelect}
+          onClear={handleCoverFileClear}
         />
       </div>
 
@@ -425,6 +479,17 @@ export function TravelRegisterForm({
         <p className='slcn-travel-register-form__section-sub'>
           날짜별로 방문한 장소와 기억을 기록해 주세요.
         </p>
+
+        {errors.days ? (
+          <p
+            ref={daysErrorRef}
+            tabIndex={-1}
+            className='slcn-travel-register-form__submit-error'
+            role='alert'
+          >
+            {errors.days}
+          </p>
+        ) : null}
 
         {values.days.length === 0 ? (
           <p className='slcn-travel-register-form__days-hint'>
@@ -467,8 +532,9 @@ export function TravelRegisterForm({
           accept='.jpg,.jpeg,.png'
           hint='PNG · JPG · 여러 장 선택 가능'
           prompt='사진을 끌어다 놓거나 선택하세요'
+          error={albumSizeError ?? undefined}
           files={values.albumPhotoFiles}
-          onFilesSelect={(files) => form.updateField('albumPhotoFiles', files)}
+          onFilesSelect={handleAlbumFilesSelect}
         />
       </div>
 
@@ -485,6 +551,7 @@ export function TravelRegisterForm({
                 type='text'
                 className='slcn-field__input'
                 placeholder='예) 봄여행'
+                aria-label='태그 추가'
                 value={form.tagInput}
                 onChange={(e) => form.setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
@@ -553,7 +620,7 @@ export function TravelRegisterForm({
             ? describeDaysAtRisk(pendingDateChange.daysAtRisk)
             : ''
         }
-        confirmLabel='바꾸기'
+        confirmLabel='그래도 바꾸기'
         onConfirm={handleConfirmPendingDateChange}
         onCancel={handleCancelPendingDateChange}
       />

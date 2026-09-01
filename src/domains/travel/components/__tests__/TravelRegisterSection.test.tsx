@@ -53,6 +53,7 @@ async function fillRequiredFields(
   container: HTMLElement
 ) {
   await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+  await user.type(screen.getByRole('textbox', { name: /지역/ }), '부산');
 
   fireEvent.change(screen.getByLabelText(/^시작일/), {
     target: { value: '2025-06-01' },
@@ -209,8 +210,8 @@ describe('TravelRegisterSection', () => {
       expect(screen.getByText('#부산여행')).toBeTruthy();
 
       // Both day cards are shown with their day number labels
-      expect(screen.getByText('Day 1')).toBeTruthy();
-      expect(screen.getByText('Day 2')).toBeTruthy();
+      expect(screen.getByText('1일차')).toBeTruthy();
+      expect(screen.getByText('2일차')).toBeTruthy();
 
       // The place name for day 1 is prefilled in the place input
       const placeInput = screen.getByDisplayValue('FE 확인용 장소');
@@ -335,7 +336,7 @@ describe('TravelRegisterSection', () => {
 
       // Write content into day 1's first place so it is at risk. Day cards
       // start with no place rows, so add one first.
-      const day1Heading = screen.getByText('Day 1');
+      const day1Heading = screen.getByText('1일차');
       const day1Card = day1Heading.closest('.slcn-travel-day-editor');
       if (!day1Card) throw new Error('day 1 card not found');
       await user.click(
@@ -343,9 +344,9 @@ describe('TravelRegisterSection', () => {
           name: '장소 추가',
         })
       );
-      const placeInput = within(day1Card as HTMLElement).getByPlaceholderText(
-        '장소명을 입력하세요'
-      );
+      const placeInput = within(day1Card as HTMLElement).getByRole('textbox', {
+        name: '장소명',
+      });
       await user.type(placeInput, '해운대');
 
       // Move the start date forward so day 1 (2025-06-01) would be dropped.
@@ -365,17 +366,197 @@ describe('TravelRegisterSection', () => {
       });
 
       // Day 1 and its content are still there — the change was not applied.
-      expect(screen.getByText('Day 1')).toBeTruthy();
+      expect(screen.getByText('1일차')).toBeTruthy();
       expect(
         (
-          within(day1Card as HTMLElement).getByPlaceholderText(
-            '장소명을 입력하세요'
-          ) as HTMLInputElement
+          within(day1Card as HTMLElement).getByRole('textbox', {
+            name: '장소명',
+          }) as HTMLInputElement
         ).value
       ).toBe('해운대');
       expect((screen.getByLabelText(/^시작일/) as HTMLInputElement).value).toBe(
         '2025-06-01'
       );
+    });
+  });
+
+  describe('지역 validation', () => {
+    it('blocks submit and shows an error when 지역 is left empty', async () => {
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+
+      fireEvent.change(screen.getByLabelText(/^시작일/), {
+        target: { value: '2025-06-01' },
+      });
+      fireEvent.change(screen.getByLabelText(/^종료일/), {
+        target: { value: '2025-06-02' },
+      });
+
+      const coverInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[0];
+      if (!coverInput) throw new Error('cover photo input not found');
+      await user.upload(
+        coverInput,
+        new File(['cover'], 'cover.png', { type: 'image/png' })
+      );
+
+      // 지역 is left empty on purpose.
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      expect(await screen.findByText('지역을 입력해 주세요.')).toBeTruthy();
+      expect(createTravel).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('cover/album file size validation', () => {
+    function oversizedFile(name: string): File {
+      const file = new File(['x'], name, { type: 'image/png' });
+      Object.defineProperty(file, 'size', { value: 11 * 1024 * 1024 });
+      return file;
+    }
+
+    it('rejects an oversized cover photo with an informal message and blocks submit', async () => {
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /제목/ }), '봄여행');
+      await user.type(screen.getByRole('textbox', { name: /지역/ }), '부산');
+      fireEvent.change(screen.getByLabelText(/^시작일/), {
+        target: { value: '2025-06-01' },
+      });
+      fireEvent.change(screen.getByLabelText(/^종료일/), {
+        target: { value: '2025-06-02' },
+      });
+
+      const coverInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[0];
+      if (!coverInput) throw new Error('cover photo input not found');
+      await user.upload(coverInput, oversizedFile('huge-cover.png'));
+
+      expect(
+        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+      ).toBeTruthy();
+
+      // The oversized file never entered form state, so the required
+      // cover-photo field is still empty and submit is blocked. The
+      // dropzone keeps showing the size message — it is still the most
+      // useful, actionable explanation for why nothing was accepted.
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      expect(createTravel).not.toHaveBeenCalled();
+      expect(screen.getByText('사진은 10MB까지 올릴 수 있어요.')).toBeTruthy();
+    });
+
+    it('rejects an oversized album photo with an informal message', async () => {
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      const albumInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[1];
+      if (!albumInput) throw new Error('album photo input not found');
+
+      await user.upload(albumInput, oversizedFile('huge-album.png'));
+
+      expect(
+        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+      ).toBeTruthy();
+    });
+  });
+
+  describe('place with a memo but no name', () => {
+    it('names the day, blocks submit, and does not silently drop the memo', async () => {
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      await fillRequiredFields(user, container);
+
+      const day1Heading = screen.getByText('1일차');
+      const day1Card = day1Heading.closest('.slcn-travel-day-editor');
+      if (!day1Card) throw new Error('day 1 card not found');
+
+      await user.click(
+        within(day1Card as HTMLElement).getByRole('button', {
+          name: '장소 추가',
+        })
+      );
+      const memoInput = within(day1Card as HTMLElement).getByRole('textbox', {
+        name: '메모',
+      });
+      await user.type(memoInput, '노을이 예뻤어요');
+      // 장소명 is deliberately left blank.
+
+      await user.click(screen.getByRole('button', { name: '저장하기' }));
+
+      expect(
+        await screen.findByText(
+          '1일차에 메모만 적고 장소명을 비워 둔 곳이 있어요. 장소명을 입력해 주세요.'
+        )
+      ).toBeTruthy();
+      expect(createTravel).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('여행 기간 with no dates entered', () => {
+    it('shows a neutral placeholder and disables both stepper buttons', () => {
+      renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      expect(screen.getByText('—')).toBeTruthy();
+      expect(
+        screen
+          .getByRole('button', { name: '여행 기간 줄이기' })
+          .hasAttribute('disabled')
+      ).toBe(true);
+      expect(
+        screen
+          .getByRole('button', { name: '여행 기간 늘리기' })
+          .hasAttribute('disabled')
+      ).toBe(true);
+    });
+  });
+
+  describe('accessible names', () => {
+    it('gives the tag, 장소명, and 메모 inputs a real accessible name', async () => {
+      const { user } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='register' />
+      );
+
+      expect(screen.getByRole('textbox', { name: '태그 추가' })).toBeTruthy();
+
+      fireEvent.change(screen.getByLabelText(/^시작일/), {
+        target: { value: '2025-06-01' },
+      });
+      fireEvent.change(screen.getByLabelText(/^종료일/), {
+        target: { value: '2025-06-01' },
+      });
+
+      const day1Heading = screen.getByText('1일차');
+      const day1Card = day1Heading.closest('.slcn-travel-day-editor');
+      if (!day1Card) throw new Error('day 1 card not found');
+      await user.click(
+        within(day1Card as HTMLElement).getByRole('button', {
+          name: '장소 추가',
+        })
+      );
+
+      expect(
+        within(day1Card as HTMLElement).getByRole('textbox', {
+          name: '장소명',
+        })
+      ).toBeTruthy();
+      expect(
+        within(day1Card as HTMLElement).getByRole('textbox', { name: '메모' })
+      ).toBeTruthy();
     });
   });
 });

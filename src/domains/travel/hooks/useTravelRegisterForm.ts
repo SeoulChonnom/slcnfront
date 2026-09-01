@@ -35,6 +35,12 @@ export type TravelRegisterFormErrors = {
   startDate?: string;
   endDate?: string;
   coverPhotoFile?: string;
+  /**
+   * Set when a day holds a place row that has a memo but no name —
+   * buildTravelDays (TravelRegisterSection) drops any place without a name,
+   * so submitting silently loses that memo. Names the affected day(s).
+   */
+  days?: string;
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -144,6 +150,20 @@ export function findDaysWithContent(
   );
 }
 
+/**
+ * Days that hold a place row with a memo but no name. buildTravelDays
+ * (TravelRegisterSection) filters out any place whose name is blank, so a
+ * place like this would be dropped from the saved record with no warning —
+ * this is what validateForm uses to catch that before submit.
+ */
+export function findDaysWithNamelessPlaces(days: DayFormRow[]): DayFormRow[] {
+  return days.filter((day) =>
+    day.places.some(
+      (place) => place.name.trim() === '' && place.memo.trim() !== ''
+    )
+  );
+}
+
 export function computeNightsDays(
   startDate: string,
   endDate: string
@@ -187,6 +207,10 @@ function validateForm(
     errors.title = '제목을 입력해 주세요.';
   }
 
+  if (!values.region.trim()) {
+    errors.region = '지역을 입력해 주세요.';
+  }
+
   if (!values.startDate) {
     errors.startDate = '시작일을 선택해 주세요.';
   }
@@ -204,6 +228,15 @@ function validateForm(
   // during registration.
   if (mode === 'register' && !values.coverPhotoFile) {
     errors.coverPhotoFile = '대표 사진을 등록해 주세요.';
+  }
+
+  const namelessPlaceDays = findDaysWithNamelessPlaces(values.days);
+
+  if (namelessPlaceDays.length > 0) {
+    const list = namelessPlaceDays
+      .map((day) => `${day.dayNumber}일차`)
+      .join(', ');
+    errors.days = `${list}에 메모만 적고 장소명을 비워 둔 곳이 있어요. 장소명을 입력해 주세요.`;
   }
 
   return errors;

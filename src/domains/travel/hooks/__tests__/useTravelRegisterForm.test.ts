@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   computeNightsDays,
   findDaysWithContent,
+  findDaysWithNamelessPlaces,
   useTravelRegisterForm,
 } from '@/domains/travel/hooks/useTravelRegisterForm';
 
@@ -448,11 +449,11 @@ describe('useTravelRegisterForm', () => {
     });
 
     it('returns true and clears all errors when all required fields are valid', () => {
-      // Note: region is NOT validated by validateForm — only title, startDate, endDate, coverPhotoFile
       const { result } = renderHook(() =>
         useTravelRegisterForm({
           defaultValues: {
             title: '제주 여행',
+            region: '제주',
             startDate: '2024-06-08',
             endDate: '2024-06-10',
             coverPhotoFile: makeImageFile('cover.jpg'),
@@ -467,6 +468,37 @@ describe('useTravelRegisterForm', () => {
 
       expect(isValid).toBe(true);
       expect(result.current.errors).toEqual({});
+    });
+
+    it('returns false and sets a region error when region is empty', () => {
+      const { result } = renderHook(() =>
+        useTravelRegisterForm({
+          defaultValues: { title: '여행' },
+        })
+      );
+
+      let isValid = true;
+      act(() => {
+        isValid = result.current.validate();
+      });
+
+      expect(isValid).toBe(false);
+      expect(result.current.errors.region).toBe('지역을 입력해 주세요.');
+    });
+
+    it('updateField clears the region error once a region is typed', () => {
+      const { result } = renderHook(() => useTravelRegisterForm());
+
+      act(() => {
+        result.current.validate();
+      });
+      expect(result.current.errors.region).toBeDefined();
+
+      act(() => {
+        result.current.updateField('region', '부산');
+      });
+
+      expect(result.current.errors.region).toBeUndefined();
     });
 
     it('updateField clears the corresponding validation error', () => {
@@ -531,6 +563,7 @@ describe('useTravelRegisterForm', () => {
           mode: 'edit',
           defaultValues: {
             title: '여행',
+            region: '부산',
             startDate: '2024-06-08',
             endDate: '2024-06-10',
           },
@@ -833,6 +866,111 @@ describe('useTravelRegisterForm', () => {
 
       const result = findDaysWithContent(days, '2024-06-08', '2024-06-10');
       expect(result).toEqual([]);
+    });
+  });
+
+  // ── findDaysWithNamelessPlaces (pure helper) ────────────────────────────────
+
+  describe('findDaysWithNamelessPlaces', () => {
+    it('flags a day whose place has a memo but no name', () => {
+      const days = [
+        {
+          localId: 'day-1',
+          date: '2024-06-08',
+          dayNumber: 1,
+          coverPhotoFile: null,
+          places: [
+            {
+              localId: 'p1',
+              name: '',
+              category: '' as const,
+              memo: '노을이 예뻤어요',
+            },
+          ],
+        },
+      ];
+
+      expect(findDaysWithNamelessPlaces(days)).toEqual(days);
+    });
+
+    it('does not flag a day whose places all have names', () => {
+      const days = [
+        {
+          localId: 'day-1',
+          date: '2024-06-08',
+          dayNumber: 1,
+          coverPhotoFile: null,
+          places: [
+            {
+              localId: 'p1',
+              name: '경복궁',
+              category: '' as const,
+              memo: '아침 산책',
+            },
+          ],
+        },
+      ];
+
+      expect(findDaysWithNamelessPlaces(days)).toEqual([]);
+    });
+
+    it('does not flag a blank place row (no name and no memo)', () => {
+      const days = [
+        {
+          localId: 'day-1',
+          date: '2024-06-08',
+          dayNumber: 1,
+          coverPhotoFile: null,
+          places: [
+            { localId: 'p1', name: '', category: '' as const, memo: '' },
+          ],
+        },
+      ];
+
+      expect(findDaysWithNamelessPlaces(days)).toEqual([]);
+    });
+  });
+
+  describe('validate() and places with a memo but no name', () => {
+    it('sets a days error naming the affected day and blocks validation', () => {
+      const { result } = renderHook(() =>
+        useTravelRegisterForm({
+          defaultValues: {
+            title: '여행',
+            region: '부산',
+            coverPhotoFile: makeImageFile('cover.jpg'),
+          },
+        })
+      );
+
+      // startDate/endDate go through updateStartDate/updateEndDate (not
+      // defaultValues) so that `days` is actually built — see the
+      // renderWithOneDay() helper above for the same pattern.
+      act(() => {
+        result.current.updateStartDate('2024-06-08');
+      });
+      act(() => {
+        result.current.updateEndDate('2024-06-08');
+      });
+
+      const dayId = result.current.values.days[0].localId;
+      act(() => {
+        result.current.addPlace(dayId);
+      });
+      const placeId = result.current.values.days[0].places[0].localId;
+      act(() => {
+        result.current.updatePlace(dayId, placeId, 'memo', '노을이 예뻤어요');
+      });
+
+      let isValid = true;
+      act(() => {
+        isValid = result.current.validate();
+      });
+
+      expect(isValid).toBe(false);
+      expect(result.current.errors.days).toBe(
+        '1일차에 메모만 적고 장소명을 비워 둔 곳이 있어요. 장소명을 입력해 주세요.'
+      );
     });
   });
 
