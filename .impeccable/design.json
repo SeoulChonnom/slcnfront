@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-01T07:35:41.213240Z",
+  "title": "Design System: Seoul-Quiet-Editorial",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Seoul Pink",
+        "canonical": "#fe9fc8",
+        "tonalRamp": [
+          "#2b0f1c",
+          "#4d1a31",
+          "#7a2a4e",
+          "#a63a6b",
+          "#cc5a8d",
+          "#e57cab",
+          "#fe9fc8",
+          "#ffd6e7"
+        ]
+      },
+      "accent-muted": {
+        "role": "primary",
+        "displayName": "Darkened Seoul Pink",
+        "canonical": "#a34f6d",
+        "tonalRamp": [
+          "#1f0e14",
+          "#3a1a26",
+          "#5c2939",
+          "#7d384f",
+          "#a34f6d",
+          "#c07791",
+          "#d9a3b6",
+          "#efd4de"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink Black",
+        "canonical": "#1b1b1b",
+        "tonalRamp": [
+          "#000000",
+          "#0d0d0d",
+          "#1b1b1b",
+          "#3a3a3a",
+          "#5c5c5c",
+          "#8a8a8a",
+          "#c2c2c2",
+          "#f2f2f2"
+        ]
+      },
+      "body-muted": {
+        "role": "neutral",
+        "displayName": "Muted Warm Grey",
+        "canonical": "#6f666a",
+        "tonalRamp": [
+          "#171416",
+          "#2b2629",
+          "#443c40",
+          "#5a5054",
+          "#6f666a",
+          "#9a9195",
+          "#c4bdc0",
+          "#ece8ea"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#fff8f8",
+        "tonalRamp": [
+          "#2a2424",
+          "#453c3c",
+          "#6b5e5e",
+          "#948585",
+          "#c0b2b2",
+          "#e2d6d6",
+          "#fff8f8",
+          "#ffffff"
+        ]
+      },
+      "surface-soft": {
+        "role": "secondary",
+        "displayName": "Soft Pink Wash",
+        "canonical": "#ffe8ef",
+        "tonalRamp": [
+          "#33202a",
+          "#4f313f",
+          "#7a4c60",
+          "#a67083",
+          "#cf9aab",
+          "#eec3d1",
+          "#ffe8ef",
+          "#fff5f8"
+        ]
+      },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Semantic Error Red",
+        "canonical": "#c53030",
+        "tonalRamp": [
+          "#2b0b0b",
+          "#4a1414",
+          "#75201f",
+          "#9c2828",
+          "#c53030",
+          "#dc6a6a",
+          "#eda3a3",
+          "#fbdede"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Semantic Success Green",
+        "canonical": "#15794f",
+        "tonalRamp": [
+          "#04170f",
+          "#082a1c",
+          "#0d452e",
+          "#125e3e",
+          "#15794f",
+          "#3fa47a",
+          "#7cc7a7",
+          "#c6e8d8"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display-lg": {
+        "displayName": "Display Large",
+        "purpose": "Section and page headlines; 34px."
+      },
+      "display-md": {
+        "displayName": "Display Medium",
+        "purpose": "Card and panel headings; 28px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default reading size; 15px, the app's most used step."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Secondary metadata and form labels; 14px."
+      },
+      "nav-link": {
+        "displayName": "Nav / Fine",
+        "purpose": "Navigation and dense chrome; 13px."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating",
+        "value": "0 8px 30px rgba(27, 27, 27, 0.08)",
+        "purpose": "Navigation chrome only. Content surfaces stay flat by doctrine."
+      },
+      {
+        "name": "image",
+        "value": "3px 5px 30px rgba(27, 27, 27, 0.18)",
+        "purpose": "Lifts a photograph off the paper ground."
+      },
+      {
+        "name": "modal",
+        "value": "0 24px 80px rgba(27, 27, 27, 0.16)",
+        "purpose": "Dialogs and sheets above the scrim."
+      },
+      {
+        "name": "hairline",
+        "value": "0 0 0 1px rgba(27, 27, 27, 0.08)",
+        "purpose": "A border drawn as elevation, so it does not affect layout."
+      }
+    ],
+    "motion": [
+      {
+        "name": "duration-fast",
+        "value": "160ms",
+        "purpose": "Hover, focus and colour state changes."
+      },
+      {
+        "name": "duration-default",
+        "value": "240ms",
+        "purpose": "Element enter/exit."
+      },
+      {
+        "name": "duration-page",
+        "value": "360ms",
+        "purpose": "Route-level transitions."
+      },
+      {
+        "name": "easing-standard",
+        "value": "cubic-bezier(0.2, 0, 0, 1)",
+        "purpose": "The single easing curve; there is no second one."
+      },
+      {
+        "name": "press-scale",
+        "value": "0.96",
+        "purpose": "Tactile press feedback, dropped under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "420px",
+        "purpose": "Phone. Below this is the small-phone base (<=419px), which needs no query."
+      },
+      {
+        "name": "tablet",
+        "value": "641px",
+        "purpose": "Tablet. Where a form's paired fields start fitting side by side."
+      },
+      {
+        "name": "desktop-sm",
+        "value": "834px",
+        "purpose": "Small desktop."
+      },
+      {
+        "name": "desktop",
+        "value": "1069px",
+        "purpose": "Desktop. Where a content column widens to layout.content-standard."
+      },
+      {
+        "name": "desktop-wide",
+        "value": "1441px",
+        "purpose": "Wide desktop."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single forward action on a screen. Pill-shaped, Seoul Pink, ink text.",
+      "html": "<button class=\"ds-btn-primary\">저장</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:3.125rem;padding:0 1.625rem;border:none;border-radius:var(--radius-pill);background:var(--color-primary);color:var(--color-on-primary);font-family:var(--font-body);font-size:var(--text-body);font-weight:var(--weight-strong);cursor:pointer;transition:background-color var(--duration-fast) var(--easing-standard),transform var(--duration-fast) var(--easing-standard)}.ds-btn-primary:hover{background:var(--color-primary-focus)}.ds-btn-primary:active{transform:scale(var(--press-scale))}.ds-btn-primary:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The way back. Outlined, never competing with the primary action.",
+      "html": "<button class=\"ds-btn-secondary\">이전</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:3.125rem;padding:0 1.625rem;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);background:var(--color-canvas-pure);color:var(--color-ink);font-family:var(--font-body);font-size:var(--text-body);font-weight:var(--weight-strong);cursor:pointer;transition:background-color var(--duration-fast) var(--easing-standard)}.ds-btn-secondary:hover{background:var(--color-surface-muted)}.ds-btn-secondary:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "A quiet exit such as 취소. Reads as text until hovered.",
+      "html": "<button class=\"ds-btn-ghost\">취소</button>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;min-height:3.125rem;padding:0 var(--space-3);border:none;border-radius:var(--radius-pill);background:transparent;color:var(--color-body-muted);font-family:var(--font-body);font-size:var(--text-caption);font-weight:var(--weight-strong);cursor:pointer;transition:background-color var(--duration-fast) var(--easing-standard),color var(--duration-fast) var(--easing-standard)}.ds-btn-ghost:hover{background:var(--color-surface-muted);color:var(--color-ink)}.ds-btn-ghost:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "text-input",
+      "description": "Label above, 48px control, hairline border. Required fields carry an aria-hidden asterisk.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-f1\">나들이 이름<span aria-hidden=\"true\"> *</span></label><div class=\"ds-field-control\"><input id=\"ds-f1\" class=\"ds-field-input\" placeholder=\"예) 부암동 나들이\"></div></div>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:.375rem;min-width:0}.ds-field-label{color:var(--color-ink);font-size:var(--text-nav);font-weight:var(--weight-strong)}.ds-field-control{display:flex;align-items:center;min-width:0;min-height:3rem;padding:0 .875rem;border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:var(--color-canvas-pure);transition:border-color var(--duration-fast) var(--easing-standard)}.ds-field-control:focus-within{border-color:var(--color-primary)}.ds-field-input{flex:1;min-width:0;border:none;background:none;color:var(--color-ink);font-family:var(--font-body);font-size:var(--text-body)}.ds-field-input:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}.ds-field-input::placeholder{color:var(--color-body-muted)}"
+    },
+    {
+      "name": "File Dropzone",
+      "kind": "custom",
+      "refersTo": "file-dropzone",
+      "description": "Signature component. A real drag target, not a styled picker: the native input is clipped to 1x1 and the ring is redrawn on this visible label. Also has a multi-file mode that renders one thumbnail row per picked file, and can hide its own field label when the section heading already carries the same words.",
+      "html": "<div class=\"ds-dropzone\"><label class=\"ds-dropzone-label\" for=\"ds-file\"><svg class=\"ds-dropzone-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V6\"/><path d=\"M5 12l7-7 7 7\"/></svg><span class=\"ds-dropzone-title\">지도 1 파일을 끌어다 놓거나 선택하세요</span><span class=\"ds-dropzone-hint\">PNG · JPG · 최대 10MB</span></label><input id=\"ds-file\" class=\"ds-dropzone-input\" type=\"file\"></div>",
+      "css": ".ds-dropzone{display:flex;flex-direction:column;gap:.5rem;min-width:0;width:100%}.ds-dropzone-label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;padding:2.125rem;border:1px dashed var(--color-border-strong);border-radius:var(--radius-lg);background-color:transparent;background-image:repeating-linear-gradient(135deg,var(--color-stripe-highlight) 0,var(--color-stripe-highlight) 10px,transparent 10px,transparent 20px);cursor:pointer;text-align:center}.ds-dropzone-icon{width:22px;height:22px;color:var(--color-icon-soft)}.ds-dropzone-title{color:var(--color-ink);font-size:var(--text-body);font-weight:var(--weight-strong);word-break:keep-all}.ds-dropzone-hint{color:var(--color-body-muted);font-size:var(--text-nav)}.ds-dropzone-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);border:0}.ds-dropzone:has(> .ds-dropzone-input:focus-visible) .ds-dropzone-label{outline:2px solid var(--color-focus-ring);outline-offset:2px}"
+    },
+    {
+      "name": "Inline Radio Pill",
+      "kind": "chip",
+      "refersTo": "radio-option-inline",
+      "description": "Two-up choice pills that collapse to one column when two no longer fit. The focus ring is on the pill, not the 20px native circle.",
+      "html": "<div class=\"ds-radio-row\"><label class=\"ds-radio-pill\" data-checked=\"true\"><input type=\"radio\" name=\"ds-r\" checked><span>아영</span></label><label class=\"ds-radio-pill\"><input type=\"radio\" name=\"ds-r\"><span>일권</span></label></div>",
+      "css": ".ds-radio-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7em,100%),1fr));gap:.75rem}.ds-radio-pill{display:flex;align-items:center;gap:.75rem;min-width:0;padding:.9375rem 1.125rem;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-canvas-pure);color:var(--color-ink);font-size:var(--text-body);font-weight:var(--weight-strong);cursor:pointer;transition:border-color var(--duration-fast) var(--easing-standard),background-color var(--duration-fast) var(--easing-standard)}.ds-radio-pill[data-checked=\"true\"]{background:var(--color-surface-soft);border-color:var(--color-primary)}.ds-radio-pill input{margin-top:.25rem}@supports selector(:has(*)){.ds-radio-pill:has(input:focus-visible){outline:2px solid var(--color-focus-ring);outline-offset:2px}.ds-radio-pill input:focus-visible{outline:none}}"
+    },
+    {
+      "name": "Step Indicator",
+      "kind": "nav",
+      "refersTo": "step-indicator",
+      "description": "Signature component. An ordered list with three states and connector lines; completed steps use accent-muted because raw pink as text on the pale fill fails 4.5:1.",
+      "html": "<ol class=\"ds-steps\" aria-label=\"나들이 등록 단계\"><li data-state=\"complete\"><span class=\"ds-step-num\">1</span><span>기본 정보</span></li><li data-state=\"current\" aria-current=\"step\"><span class=\"ds-step-num\">2</span><span>지도 정보</span></li><li data-state=\"upcoming\"><span class=\"ds-step-num\">3</span><span>퀴즈 정보</span></li></ol>",
+      "css": ".ds-steps{--gap:.625rem;display:flex;flex-wrap:wrap;gap:var(--gap);min-width:0;margin:0;padding:0;list-style:none}.ds-steps>li{position:relative;display:inline-flex;align-items:center;gap:.5625rem;min-width:0;padding:.5625rem 1rem;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);background:var(--color-canvas-pure);color:var(--color-body-muted);font-size:var(--text-caption);font-weight:var(--weight-strong)}.ds-steps>li+li::before{content:\"\";position:absolute;inset-inline-start:calc(-1 * var(--gap));top:50%;width:var(--gap);height:1px;background:var(--color-divider-soft)}.ds-steps>li[data-state=\"complete\"]{border-color:var(--color-surface-soft);background:var(--color-surface-soft);color:var(--color-accent-muted)}.ds-steps>li[data-state=\"current\"]{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary)}.ds-step-num{display:inline-flex;align-items:center;justify-content:center;width:1.375rem;height:1.375rem;border-radius:var(--radius-pill);background:var(--color-surface-muted);font-size:var(--text-nav)}.ds-steps>li[data-state=\"complete\"] .ds-step-num{background:var(--color-accent-muted);color:var(--color-canvas-pure)}.ds-steps>li[data-state=\"current\"] .ds-step-num{background:var(--color-ink);color:var(--color-canvas-pure)}"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The flat content surface. Hairline border and radius carry it; no shadow, by doctrine.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">부암동 나들이</h3><p class=\"ds-card-body\">그날 걸었던 길과 남겨 둔 말.</p></div>",
+      "css": ".ds-card{min-width:0;padding:1.625rem;border:1px solid var(--color-border);border-radius:var(--radius-xl);background:var(--color-canvas-pure)}.ds-card-title{margin:0 0 .5rem;color:var(--color-ink);font-size:var(--text-display-md);font-weight:var(--weight-strong);letter-spacing:-.01em}.ds-card-body{margin:0;color:var(--color-body-muted);font-size:var(--text-body);line-height:1.47;word-break:keep-all}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A Quiet Seoul Photo Journal",
+    "overview": "A photography-first personal Seoul diary interface, built on warm paper, Seoul Pink, white and ink black. The visual system is quiet editorial: generous whitespace, full-width editorial sections, compact pill actions, and content-first layouts. Content surfaces stay flat; navigation chrome is the one deliberate exception, rendered as floating Seoul Glass. The record is the subject and the interface is the frame around it, never the other way round.",
+    "keyCharacteristics": [
+      "Warm paper ground rather than clinical white",
+      "Seoul Pink used sparingly, as punctuation not as field",
+      "Flat content surfaces; elevation reserved for chrome, photographs and dialogs",
+      "Pill geometry for actions, soft rectangles for containers",
+      "Korean-first typography with keep-all word breaking",
+      "A single easing curve and a small duration set"
+    ],
+    "rules": [
+      {
+        "name": "The Visible Control Rule",
+        "body": "When a native input is hidden so a styled element can stand in for it, the focus ring belongs on the element the user can see, not on the input that legitimately holds focus. Suppress the input's own ring only inside @supports selector(:has(*)). Audit test: tab to every control and confirm the outlined box matches the box you would click.",
+        "section": "accessibility"
+      },
+      {
+        "name": "The Form Column Rule",
+        "body": "The wizard caps its column at layout.content-text (760px) and centres it. A single-line text input stretched to a 1440px shell reads as an unfinished page, not a generous one.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do reference design tokens instead of repeating literal values; every font-size now has a --text-* step.",
+      "Do use a real semantic error/success palette for form feedback; do not misuse brand pink.",
+      "Do keep animations optional and reduction-aware.",
+      "Do validate mobile layouts, including text scaled to 200%, before adding desktop-only decoration."
+    ],
+    "donts": [
+      "Don't use white text on Seoul Pink unless contrast has been independently verified.",
+      "Don't rely on Pink alone to communicate state.",
+      "Don't encode random rotation or irregular radii into reusable components.",
+      "Don't treat user photographs and writing as decoration."
+    ]
+  }
+}
