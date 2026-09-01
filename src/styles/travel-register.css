@@ -100,10 +100,17 @@ slcn-travel-day-editor
 
 /* ── Form layout ──────────────────────────────────────────── */
 
+/* Gap between sections. Bumped from 1.5rem alongside the section-title size
+   fix below: DESIGN.md §5 lists "major content gap: 32-48px" for the space
+   between blocks, and a 21px heading needs the "more space above a heading
+   than below it" craft rule to still read once it stops being barely bigger
+   than body text. The gap to each heading's own content stays 0.75rem
+   (`--space-3`, ~0.75rem below), so this keeps the ratio decisively above
+   1:1 rather than leaving headings equidistant between blocks. */
 .slcn-travel-register-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-8);
 }
 
 .slcn-travel-register-form__submit-error {
@@ -317,7 +324,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: 2rem;
   height: 2rem;
   padding: 0;
-  border: 1.5px solid var(--color-primary);
+  /* Was 1.5px -- not one of DESIGN.md's two documented border steps
+     (`border` / `border-strong`), and a half-pixel is invisible at this
+     scale anyway. The button already reads stronger than a hairline
+     through --color-primary itself (see the category-chip and map-switcher
+     buttons, which use the same 1px + primary-color pairing), so dropping
+     to 1px loses nothing. */
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-full);
   background: var(--color-surface-pearl);
   /* Rewritten alongside this row's restructure: --color-primary-focus
@@ -386,8 +399,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: space-between;
 }
 
+/* Was --text-body-lg (16px), 1px above body text, so these h2s barely read
+   as headings. TravelDetailSection.tsx renders the identical labels (날짜별
+   기록 / 사진 앨범 / 태그) one screen away at --text-tagline (21px) -- the
+   same heading role should use the same step across the two screens of the
+   same trip. */
 .slcn-travel-register-form__section-title {
-  font-size: var(--text-body-lg);
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   margin: 0;
@@ -725,18 +743,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    scroll already; multiplying columns of day cards would only add more
    ways to lose place), but *inside* one place row there is real spare
    width once the section widens to content-standard -- 장소명 and its
-   category chips read naturally as one row, with 메모 kept on its own full
-   line below since it is free text. */
+   category chips read naturally as one row, with 메모 on its own line below
+   (see the place-fields grid override further down for its column). */
 .slcn-travel-day-editor__place-primary-row {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem;
 }
 
+/* >=1069px: 장소명 keeps its own column measure (minmax(12rem, 20rem)), but
+   메모 previously fell outside this grid entirely -- it is place-fields'
+   OTHER child, not primary-row's, so it inherited the full row width and
+   measured 936px wide in a populated card (3.2x the 290px name field it
+   annotates). Promoting place-fields itself to the grid and dissolving
+   primary-row's own box with display:contents lets 장소명 and the category
+   chips fall into row 1 exactly as before, while 메모 (place-fields' next
+   child, in DOM order) auto-places into row 2 column 1 -- directly under
+   the field it is a note on, at the same measure, rather than stretched
+   across chip space it has nothing to do with. */
 @media (min-width: 1069px) {
-  .slcn-travel-day-editor__place-primary-row {
+  .slcn-travel-day-editor__place-fields {
+    display: grid;
     grid-template-columns: minmax(12rem, 20rem) 1fr;
     align-items: start;
     gap: 0.75rem 1rem;
+  }
+
+  .slcn-travel-day-editor__place-primary-row {
+    display: contents;
   }
 }
