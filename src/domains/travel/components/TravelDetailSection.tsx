@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import { TravelDayList } from '@/domains/travel/components/TravelDayList';
+import { TravelImage } from '@/domains/travel/components/TravelImage';
 import { TravelPhotoAlbum } from '@/domains/travel/components/TravelPhotoAlbum';
 import { TravelReviewSection } from '@/domains/travel/components/TravelReviewSection';
 import { TravelTagSection } from '@/domains/travel/components/TravelTagSection';
@@ -64,58 +65,54 @@ export function TravelDetailSection({
           <span className='slcn-travel-detail__nights'>
             {travel.nightsDaysLabel}
           </span>
-          {heroCoverUrl ? (
-            <img
-              src={heroCoverUrl}
-              alt={travel.title}
-              className='slcn-travel-cover-img'
-              fetchPriority='high'
-              decoding='async'
-            />
-          ) : (
-            /* Map placeholder icon (shown when no cover photo) */
-            <span
-              className='slcn-travel-detail__hero-placeholder'
-              aria-hidden='true'
-            >
-              <svg
-                role='img'
-                aria-label='지도'
-                width='48'
-                height='48'
-                viewBox='0 0 24 24'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
+          <TravelImage
+            src={heroCoverUrl}
+            alt={travel.title}
+            className='slcn-travel-cover-img'
+            fetchPriority='high'
+            fallback={
+              /* Map placeholder icon (shown when no cover photo) */
+              <span
+                className='slcn-travel-detail__hero-placeholder'
+                aria-hidden='true'
               >
-                <title>지도</title>
-                <path
-                  d='M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3Z'
-                  stroke='currentColor'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-                <line
-                  x1='9'
-                  y1='3'
-                  x2='9'
-                  y2='18'
-                  stroke='currentColor'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                />
-                <line
-                  x1='15'
-                  y1='6'
-                  x2='15'
-                  y2='21'
-                  stroke='currentColor'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                />
-              </svg>
-            </span>
-          )}
+                <svg
+                  aria-hidden='true'
+                  width='48'
+                  height='48'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3Z'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <line
+                    x1='9'
+                    y1='3'
+                    x2='9'
+                    y2='18'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                  />
+                  <line
+                    x1='15'
+                    y1='6'
+                    x2='15'
+                    y2='21'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                  />
+                </svg>
+              </span>
+            }
+          />
         </div>
 
         {/* Info block */}
@@ -137,7 +134,7 @@ export function TravelDetailSection({
 
       <section className='slcn-travel-detail__section' id='section-days'>
         <h2 className='slcn-travel-detail__section-title'>날짜별 기록</h2>
-        <TravelDayList days={travel.travelDays} onAddPlace={() => {}} />
+        <TravelDayList days={travel.travelDays} />
       </section>
 
       <section className='slcn-travel-detail__section' id='section-album'>
@@ -146,7 +143,6 @@ export function TravelDetailSection({
           photos={travel.photos}
           days={travel.travelDays}
           places={travel.places}
-          onAddPhoto={() => {}}
         />
       </section>
 
@@ -157,11 +153,7 @@ export function TravelDetailSection({
 
       <section className='slcn-travel-detail__section' id='section-tags'>
         <h2 className='slcn-travel-detail__section-title'>태그</h2>
-        <TravelTagSection
-          tags={travel.tags}
-          onAddTag={() => {}}
-          onRemoveTag={() => {}}
-        />
+        <TravelTagSection tags={travel.tags} />
       </section>
     </section>
   );

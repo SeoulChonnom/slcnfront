@@ -205,4 +205,30 @@ describe('TravelDetailSection', () => {
     expect(within(tagsSection).getByText('#부산')).toBeTruthy();
     expect(within(tagsSection).getByText('#가을여행')).toBeTruthy();
   });
+
+  it('renders no editing affordances anywhere on the read-only detail screen', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={travel} />
+    );
+
+    expect(screen.queryByText('장소 추가')).toBeNull();
+    expect(screen.queryByText('사진 추가')).toBeNull();
+    expect(screen.queryByLabelText('태그 추가')).toBeNull();
+    expect(screen.queryByRole('button', { name: /태그 삭제/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: '✕' })).toBeNull();
+  });
+
+  it('shows the tags empty state and no chip list when a travel has no tags', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, tags: [] }} />
+    );
+
+    const tagsSection = document.getElementById('section-tags') as HTMLElement;
+    expect(
+      within(tagsSection).getByText(
+        '아직 태그가 없어요. 여행 수정에서 붙일 수 있어요.'
+      )
+    ).toBeTruthy();
+    expect(tagsSection.querySelector('.slcn-travel-tags__list')).toBeNull();
+  });
 });

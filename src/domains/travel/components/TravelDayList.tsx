@@ -3,7 +3,6 @@ import type { TravelDay } from '@/domains/travel/types';
 
 type TravelDayListProps = {
   days: TravelDay[];
-  onAddPlace: (day: TravelDay) => void;
 };
 
 const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
@@ -24,7 +23,7 @@ function formatRailDate(displayDate: string): string {
   return displayDate.slice(5);
 }
 
-export function TravelDayList({ days, onAddPlace }: TravelDayListProps) {
+export function TravelDayList({ days }: TravelDayListProps) {
   if (days.length === 0) {
     return (
       <p className='slcn-travel-detail__empty'>
@@ -65,17 +64,9 @@ export function TravelDayList({ days, onAddPlace }: TravelDayListProps) {
               </ul>
             ) : (
               <p className='slcn-travel-day__no-place'>
-                이 날의 장소를 추가해 보세요.
+                이 날 기록한 장소가 없어요.
               </p>
             )}
-
-            <button
-              type='button'
-              className='slcn-travel-day__add'
-              onClick={() => onAddPlace(day)}
-            >
-              <span aria-hidden='true'>+</span> 장소 추가
-            </button>
           </div>
         </article>
       ))}

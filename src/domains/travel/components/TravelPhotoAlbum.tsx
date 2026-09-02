@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { TravelImage } from '@/domains/travel/components/TravelImage';
 import type {
   TravelDay,
   TravelPhoto,
@@ -10,7 +11,6 @@ type TravelPhotoAlbumProps = {
   photos: TravelPhoto[];
   days: TravelDay[];
   places: TravelPlace[];
-  onAddPhoto: () => void;
 };
 
 type AlbumFilter = 'all' | 'byDay' | 'byPlace';
@@ -38,15 +38,12 @@ function PhotoGrid({ photos }: { photos: TravelPhoto[] }) {
             className='slcn-travel-album__photo slcn-travel-thumb'
             aria-label={photo.caption ?? '여행 사진'}
           >
-            {url ? (
-              <img
-                src={url}
-                alt={photo.caption ?? '여행 사진'}
-                className='slcn-travel-thumb-img'
-                loading='lazy'
-                decoding='async'
-              />
-            ) : null}
+            <TravelImage
+              src={url}
+              alt={photo.caption ?? '여행 사진'}
+              className='slcn-travel-thumb-img'
+              loading='lazy'
+            />
           </li>
         );
       })}
@@ -58,7 +55,6 @@ export function TravelPhotoAlbum({
   photos,
   days,
   places,
-  onAddPhoto,
 }: TravelPhotoAlbumProps) {
   const [filter, setFilter] = useState<AlbumFilter>('all');
 
@@ -114,18 +110,11 @@ export function TravelPhotoAlbum({
             </button>
           ))}
         </div>
-        <button
-          type='button'
-          className='slcn-travel-album__add'
-          onClick={onAddPhoto}
-        >
-          <span aria-hidden='true'>+</span> 사진 추가
-        </button>
       </div>
 
       {photos.length === 0 ? (
         <p className='slcn-travel-detail__empty'>
-          아직 사진이 없어요. 사진 추가로 첫 장을 올려 보세요.
+          아직 사진이 없어요. 여행 수정에서 사진을 올릴 수 있어요.
         </p>
       ) : filter === 'all' ? (
         <PhotoGrid photos={photos} />

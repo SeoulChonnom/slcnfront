@@ -184,6 +184,10 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   color: var(--color-ink);
   letter-spacing: -0.01em;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* One-line description */

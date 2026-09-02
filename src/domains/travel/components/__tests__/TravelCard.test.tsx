@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { TravelCard } from '@/domains/travel/components/TravelCard';
 import { renderWithProviders } from '@/test/helpers/render';
@@ -86,5 +86,28 @@ describe('TravelCard', () => {
     renderWithProviders(<TravelCard travel={travel} device='main' />);
 
     expect(screen.queryByText('대표')).toBeNull();
+  });
+
+  it('falls back to the placeholder icon when the cover image fails to load', () => {
+    const { container } = renderWithProviders(
+      <TravelCard
+        travel={travel}
+        device='main'
+        coverUrl='https://example.com/cover.jpg'
+      />
+    );
+
+    const img = container.querySelector('.slcn-travel-cover-img');
+    expect(img).toBeTruthy();
+    expect(
+      container.querySelector('.slcn-travel-card__image-placeholder-icon')
+    ).toBeNull();
+
+    fireEvent.error(img as HTMLImageElement);
+
+    expect(container.querySelector('.slcn-travel-cover-img')).toBeNull();
+    expect(
+      container.querySelector('.slcn-travel-card__image-placeholder-icon')
+    ).toBeTruthy();
   });
 });

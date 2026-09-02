@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
+import { TravelImage } from '@/domains/travel/components/TravelImage';
 import type { TravelListItem } from '@/domains/travel/types';
 import { buildDeviceTravelDetailPath } from '@/lib/routing/route-builders';
 
@@ -24,30 +25,28 @@ export function TravelCard({
     >
       {/* Image area */}
       <div className='slcn-travel-card__image-wrap slcn-stripe'>
-        {coverUrl ? (
-          <img
-            src={coverUrl}
-            alt={travel.title}
-            className='slcn-travel-cover-img'
-            loading='lazy'
-            decoding='async'
-          />
-        ) : (
-          <svg
-            className='slcn-travel-card__image-placeholder-icon'
-            width='34'
-            height='34'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='var(--color-icon-soft)'
-            strokeWidth='1.5'
-            aria-hidden='true'
-          >
-            <rect x='3' y='5' width='18' height='14' rx='2' />
-            <circle cx='8.5' cy='10.5' r='1.5' />
-            <path d='M21 15l-5-5L5 19' />
-          </svg>
-        )}
+        <TravelImage
+          src={coverUrl}
+          alt={travel.title}
+          className='slcn-travel-cover-img'
+          loading='lazy'
+          fallback={
+            <svg
+              className='slcn-travel-card__image-placeholder-icon'
+              width='34'
+              height='34'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='var(--color-icon-soft)'
+              strokeWidth='1.5'
+              aria-hidden='true'
+            >
+              <rect x='3' y='5' width='18' height='14' rx='2' />
+              <circle cx='8.5' cy='10.5' r='1.5' />
+              <path d='M21 15l-5-5L5 19' />
+            </svg>
+          }
+        />
 
         {/* Top-left: N박 M일 pill */}
         <span className='slcn-travel-card__nights-pill'>
