@@ -33,9 +33,11 @@
 }
 
 .slcn-travel-thumb {
+  /* No border: individually framed squares read as a UI icon grid, not
+     photography (DESIGN.md "A Quiet Seoul Photo Journal"). The hatch
+     background above still gives the box its shape when empty. */
   position: relative;
   aspect-ratio: 1 / 1;
-  border: 1px solid var(--color-divider-soft);
   border-radius: var(--radius-sm);
 }
 
@@ -102,7 +104,11 @@
 .slcn-travel-detail__hero {
   position: relative;
   width: 100%;
-  height: 16rem;
+  /* DESIGN.md hero-image: aspectRatioDesktop "16 / 9" (mobile overrides to
+     4 / 5 below). A fixed height per breakpoint cropped the same cover
+     photo to two different shapes; one ratio keeps the subject intact at
+     both sizes. */
+  aspect-ratio: 16 / 9;
   /* No individual border/radius — inherited from hero-card */
   border-radius: 0;
   border: none;
@@ -185,6 +191,19 @@
 }
 
 /* ── Sections ────────────────────────────────────────────────────────────── */
+/* Plain wrapper (not a <section>: a named region here would only add
+   landmark noise) around the four content sections. Its gap is distinctly
+   larger than the root stack's 24px so the actions→hero and hero→sections
+   boundaries stay lighter than the grouping between peer content sections
+   — spacing does the grouping work instead of every gap reading the same.
+   32px matches DESIGN.md §5's "major content gap: 32-48px", same token
+   travel-register.css uses for its section gap. */
+.slcn-travel-detail__sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
 /* Sections stack directly; the surface change is the only divider (DESIGN.md
    §5). scroll-margin-top only clears the sticky app header — there is no
    in-page nav to jump from. */
@@ -426,7 +445,12 @@
 
 .slcn-travel-album__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  /* 14rem floor -> 4 columns at the 1024px content width, ~247px each
+     (double the old 117.5px). auto-fill, not auto-fit: with auto-fit a
+     1-photo group would stretch to fill the whole row, so a photo's size
+     would depend on how many siblings it has. Mobile keeps the old 7rem
+     floor below -- this floor would otherwise collapse it to 1 column. */
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   gap: var(--space-3);
   margin: 0;
   padding: 0;
@@ -514,7 +538,8 @@
 
 /* ── Mobile tuning ───────────────────────────────────────────────────────── */
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__hero {
-  height: 12rem;
+  /* DESIGN.md hero-image: aspectRatioMobile "4 / 5". */
+  aspect-ratio: 4 / 5;
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title {
@@ -523,6 +548,13 @@
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-detail__title-block {
   padding: var(--space-4) var(--space-4) var(--space-4);
+}
+
+/* Keep the smaller 7rem floor on mobile: at the 358px mobile content width
+   this still lands on 2 columns (~173px each) -- the 14rem desktop floor
+   above would collapse it to 1 column here. */
+.slcn-travel-detail[data-device="mobile"] .slcn-travel-album__grid {
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
 }
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-day {

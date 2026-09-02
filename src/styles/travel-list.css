@@ -5,7 +5,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 /* ---- Section layout ---- */
 .slcn-travel-list-section {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 
 /* ---- Title ---- */
@@ -29,12 +29,12 @@ Travel List — slcn-travel-list-section & slcn-travel-card
    never outranks either. */
 .slcn-travel-list-section__year-group {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .slcn-travel-list-section__year-heading {
   margin: 0;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--color-border);
   font-size: var(--text-lead);
   font-weight: var(--weight-strong);
@@ -45,7 +45,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 /* ---- Grid ---- */
 .slcn-travel-list-section__grid {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--space-6);
   /* Default: single column (mobile). */
   grid-template-columns: minmax(0, 1fr);
 }
@@ -55,7 +55,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
    reset by this file's single-column default). */
 .slcn-shell-desktop .slcn-travel-list-section__grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem 1.5rem;
+  gap: var(--space-6) var(--space-6);
 }
 
 /* ---- Card ---- */
@@ -147,7 +147,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
 .slcn-travel-card__meta-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   flex-wrap: wrap;
   margin-bottom: 0.125rem;
 }

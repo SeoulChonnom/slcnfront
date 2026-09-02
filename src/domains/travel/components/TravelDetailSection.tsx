@@ -132,29 +132,31 @@ export function TravelDetailSection({
         </div>
       </div>
 
-      <section className='slcn-travel-detail__section' id='section-days'>
-        <h2 className='slcn-travel-detail__section-title'>날짜별 기록</h2>
-        <TravelDayList days={travel.travelDays} />
-      </section>
+      <div className='slcn-travel-detail__sections'>
+        <section className='slcn-travel-detail__section' id='section-days'>
+          <h2 className='slcn-travel-detail__section-title'>날짜별 기록</h2>
+          <TravelDayList days={travel.travelDays} />
+        </section>
 
-      <section className='slcn-travel-detail__section' id='section-album'>
-        <h2 className='slcn-travel-detail__section-title'>사진 앨범</h2>
-        <TravelPhotoAlbum
-          photos={travel.photos}
-          days={travel.travelDays}
-          places={travel.places}
-        />
-      </section>
+        <section className='slcn-travel-detail__section' id='section-album'>
+          <h2 className='slcn-travel-detail__section-title'>사진 앨범</h2>
+          <TravelPhotoAlbum
+            photos={travel.photos}
+            days={travel.travelDays}
+            places={travel.places}
+          />
+        </section>
 
-      <section className='slcn-travel-detail__section' id='section-review'>
-        <h2 className='slcn-travel-detail__section-title'>여행 후기</h2>
-        <TravelReviewSection review={travel.review} />
-      </section>
+        <section className='slcn-travel-detail__section' id='section-review'>
+          <h2 className='slcn-travel-detail__section-title'>여행 후기</h2>
+          <TravelReviewSection review={travel.review} />
+        </section>
 
-      <section className='slcn-travel-detail__section' id='section-tags'>
-        <h2 className='slcn-travel-detail__section-title'>태그</h2>
-        <TravelTagSection tags={travel.tags} />
-      </section>
+        <section className='slcn-travel-detail__section' id='section-tags'>
+          <h2 className='slcn-travel-detail__section-title'>태그</h2>
+          <TravelTagSection tags={travel.tags} />
+        </section>
+      </div>
     </section>
   );
 }
