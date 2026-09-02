@@ -62,7 +62,7 @@ export function TravelCard({
         </div>
 
         {/* Title */}
-        <h2 className='slcn-travel-card__title'>{travel.title}</h2>
+        <h3 className='slcn-travel-card__title'>{travel.title}</h3>
 
         {/* One-line review / description */}
         {travel.oneLineReview ? (

@@ -1343,7 +1343,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   letter-spacing: -0.01em;
 }
 
-.slcn-trip-list-section__toolbar {
+.slcn-trip-list-section__toolbar,
+.slcn-travel-list-section__toolbar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -1354,13 +1355,15 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   flex: none;
 }
 
-.slcn-trip-list-section__search-wrap {
+.slcn-trip-list-section__search-wrap,
+.slcn-travel-list-section__search-wrap {
   position: relative;
   flex: 1 1 20rem;
   max-width: 32.5rem;
 }
 
-.slcn-trip-list-section__search-icon {
+.slcn-trip-list-section__search-icon,
+.slcn-travel-list-section__search-icon {
   position: absolute;
   left: 0.9375rem;
   top: 50%;
@@ -1368,7 +1371,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   pointer-events: none;
 }
 
-.slcn-trip-list-section__search-input {
+.slcn-trip-list-section__search-input,
+.slcn-travel-list-section__search-input {
   width: 100%;
   min-height: 3rem;
   padding: 0 1rem 0 2.75rem;
@@ -1383,7 +1387,8 @@ which lands their still-clickable numbers near 1.5:1. Keep them
     box-shadow var(--duration-fast) ease;
 }
 
-.slcn-trip-list-section__search-input:focus {
+.slcn-trip-list-section__search-input:focus,
+.slcn-travel-list-section__search-input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px
     color-mix(in srgb, var(--color-primary) 22%, transparent);

@@ -8,14 +8,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   gap: 1.5rem;
 }
 
-/* ---- Header: title leads, action follows directly beneath it ---- */
-.slcn-travel-list-section__header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
+/* ---- Title ---- */
 .slcn-travel-list-section__title {
   margin: 0;
   font-size: var(--text-display-md);
@@ -29,6 +22,24 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   flex: none;
   border-radius: var(--radius-pill);
   white-space: nowrap;
+}
+
+/* Year group — a quiet time marker, not a competing heading. Sits above
+   each year's grid; sized between the card title and the page title so it
+   never outranks either. */
+.slcn-travel-list-section__year-group {
+  display: grid;
+  gap: 1rem;
+}
+
+.slcn-travel-list-section__year-heading {
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink-muted);
+  letter-spacing: -0.01em;
 }
 
 /* ---- Grid ---- */
