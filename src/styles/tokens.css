@@ -307,6 +307,9 @@
   --elevation-hairline: 0 0 0 1px rgba(255, 255, 255, 0.08);
   --color-shadow-warm: rgb(0 0 0 / 45%);
   --color-shadow-warm-strong: rgb(0 0 0 / 60%);
+  /* Travel card hover-lift shadow (light: 10% ink tint) -- opaque and deeper
+     like the rest of this block, not a soft tint that would vanish on ink. */
+  --color-cast-lifted: rgb(0 0 0 / 55%);
 
   /* Semantic states. The light values were pushed DARK so white-on-fill and
      fill-as-text-on-tint both cleared 4.5:1 on paper; on ink they have to go

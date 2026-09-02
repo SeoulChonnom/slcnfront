@@ -92,8 +92,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   overflow: hidden;
 }
 
-.slcn-travel-card__image-wrap img,
-.slcn-travel-cover-img {
+.slcn-travel-card__image-wrap img {
   position: absolute;
   inset: 0;
   width: 100%;

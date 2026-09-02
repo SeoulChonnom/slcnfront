@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TravelDetailSection } from '@/domains/travel/components/TravelDetailSection';
 import type { TravelDetail } from '@/domains/travel/types';
@@ -230,5 +230,65 @@ describe('TravelDetailSection', () => {
       )
     ).toBeTruthy();
     expect(tagsSection.querySelector('.slcn-travel-tags__list')).toBeNull();
+  });
+
+  describe('photo album tabs (ARIA tabs pattern)', () => {
+    it('gives the selected tab roving tabindex 0 and the others -1', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+
+      expect(allTab.getAttribute('tabindex')).toBe('0');
+      expect(byDayTab.getAttribute('tabindex')).toBe('-1');
+      expect(byPlaceTab.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('moves selection with ArrowRight and wraps from the last tab to the first', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(byDayTab.getAttribute('aria-selected')).toBe('true');
+      expect(byDayTab.getAttribute('tabindex')).toBe('0');
+      expect(allTab.getAttribute('aria-selected')).toBe('false');
+      expect(allTab.getAttribute('tabindex')).toBe('-1');
+
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(byPlaceTab.getAttribute('aria-selected')).toBe('true');
+
+      // Wraps from the last tab back to the first.
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(allTab.getAttribute('aria-selected')).toBe('true');
+      expect(allTab.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('resolves each tab aria-controls to a tabpanel labelled by the selected tab', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+      const panel = screen.getByRole('tabpanel');
+
+      expect(allTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(byDayTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(byPlaceTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(panel.getAttribute('aria-labelledby')).toBe(allTab.id);
+
+      fireEvent.click(byPlaceTab);
+      expect(panel.getAttribute('aria-labelledby')).toBe(byPlaceTab.id);
+    });
   });
 });
