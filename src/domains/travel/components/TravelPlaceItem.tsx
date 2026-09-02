@@ -38,7 +38,7 @@ export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
                 >
                   <TravelImage
                     src={url}
-                    alt={photo.caption ?? '장소 사진'}
+                    alt=''
                     className='slcn-travel-thumb-img'
                     loading='lazy'
                   />

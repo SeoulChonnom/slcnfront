@@ -226,10 +226,38 @@ describe('TravelDetailSection', () => {
     const tagsSection = document.getElementById('section-tags') as HTMLElement;
     expect(
       within(tagsSection).getByText(
-        '아직 태그가 없어요. 여행 수정에서 붙일 수 있어요.'
+        '아직 태그가 없어요. 여행 수정에서 태그를 붙일 수 있어요.'
       )
     ).toBeTruthy();
     expect(tagsSection.querySelector('.slcn-travel-tags__list')).toBeNull();
+  });
+
+  it('shows the review empty state without pointing to a nonexistent edit flow', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, review: null }} />
+    );
+
+    const reviewSection = document.getElementById(
+      'section-review'
+    ) as HTMLElement;
+    expect(
+      within(reviewSection).getByText('아직 여행 후기가 없어요.')
+    ).toBeTruthy();
+    expect(within(reviewSection).queryByText(/여행 수정/)).toBeNull();
+  });
+
+  it('labels album day groups with 일차, not Day', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={travel} />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: '날짜별' }));
+
+    const albumSection = document.getElementById(
+      'section-album'
+    ) as HTMLElement;
+    expect(within(albumSection).getByText('1일차 · 2025.10.01')).toBeTruthy();
+    expect(within(albumSection).queryByText(/^Day /)).toBeNull();
   });
 
   describe('photo album tabs (ARIA tabs pattern)', () => {

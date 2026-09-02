@@ -124,22 +124,6 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   white-space: nowrap;
 }
 
-/* Top-right pink pill: 대표 */
-.slcn-travel-card__rep-pill {
-  position: absolute;
-  top: 0.625rem;
-  right: 0.625rem;
-  z-index: 2;
-  background: var(--color-primary);
-  color: var(--color-on-primary, #1b1b1b);
-  font-size: var(--text-fine);
-  font-weight: var(--weight-strong);
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--radius-pill);
-  line-height: 1.4;
-  white-space: nowrap;
-}
-
 /* ---- Card body ---- */
 .slcn-travel-card__body {
   display: flex;

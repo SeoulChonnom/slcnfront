@@ -18,7 +18,7 @@ function getMainMobileTitle(pathname: string) {
   }
 
   if (pathname.startsWith('/mobile/travel/')) {
-    return '여행 상세';
+    return '여행';
   }
 
   if (pathname.startsWith('/mobile/travel')) {

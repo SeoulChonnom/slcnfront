@@ -8,7 +8,7 @@ export function TravelTagSection({ tags }: TravelTagSectionProps) {
   if (tags.length === 0) {
     return (
       <p className='slcn-travel-detail__empty'>
-        아직 태그가 없어요. 여행 수정에서 붙일 수 있어요.
+        아직 태그가 없어요. 여행 수정에서 태그를 붙일 수 있어요.
       </p>
     );
   }

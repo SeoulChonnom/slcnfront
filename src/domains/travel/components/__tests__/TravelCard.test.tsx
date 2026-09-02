@@ -74,18 +74,16 @@ describe('TravelCard', () => {
     expect(link.getAttribute('href')).toBe('/mobile/travel/travel-1');
   });
 
-  it('renders the representative pill when isRepresentative is true', () => {
-    renderWithProviders(
-      <TravelCard travel={travel} device='main' isRepresentative />
-    );
-
-    expect(screen.getByText('대표')).toBeTruthy();
-  });
-
-  it('does not render the representative pill by default', () => {
+  it("derives the link's accessible name from its own content instead of an aria-label", () => {
     renderWithProviders(<TravelCard travel={travel} device='main' />);
 
-    expect(screen.queryByText('대표')).toBeNull();
+    const link = screen.getByRole('link', { name: /제주도 여행/ });
+
+    expect(link.hasAttribute('aria-label')).toBe(false);
+    // The name is built from the card's own content, so it still carries the
+    // date range an aria-label would have hidden.
+    expect(link.textContent).toContain('제주도 여행');
+    expect(link.textContent).toContain('2025.06.01 – 2025.06.05');
   });
 
   it('falls back to the placeholder icon when the cover image fails to load', () => {

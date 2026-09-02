@@ -7,21 +7,18 @@ import { buildDeviceTravelDetailPath } from '@/lib/routing/route-builders';
 type TravelCardProps = {
   travel: TravelListItem;
   device: DeviceType;
-  isRepresentative?: boolean;
   coverUrl?: string | null;
 };
 
 export function TravelCard({
   travel,
   device,
-  isRepresentative = false,
   coverUrl = null,
 }: TravelCardProps) {
   return (
     <Link
       to={buildDeviceTravelDetailPath(device, travel.id)}
       className='slcn-travel-card'
-      aria-label={`${travel.title} 여행 보기`}
     >
       {/* Image area */}
       <div className='slcn-travel-card__image-wrap slcn-stripe'>
@@ -52,11 +49,6 @@ export function TravelCard({
         <span className='slcn-travel-card__nights-pill'>
           {travel.nightsDaysLabel}
         </span>
-
-        {/* Top-right: 대표 pill */}
-        {isRepresentative ? (
-          <span className='slcn-travel-card__rep-pill'>대표</span>
-        ) : null}
       </div>
 
       {/* Content area */}

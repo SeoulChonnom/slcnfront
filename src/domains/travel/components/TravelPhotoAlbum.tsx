@@ -52,7 +52,7 @@ function PhotoGrid({ photos }: { photos: TravelPhoto[] }) {
           >
             <TravelImage
               src={url}
-              alt={photo.caption ?? '여행 사진'}
+              alt=''
               className='slcn-travel-thumb-img'
               loading='lazy'
             />
@@ -108,14 +108,14 @@ export function TravelPhotoAlbum({
   const byDayGroups = useMemo<PhotoGroup[]>(() => {
     const groups = days.map((day) => ({
       key: day.id,
-      label: `Day ${day.dayNumber} · ${day.displayDate}`,
+      label: `${day.dayNumber}일차 · ${day.displayDate}`,
       photos: photos.filter((photo) => photo.travelDayId === day.id),
     }));
     const unassigned = photos.filter((photo) => photo.travelDayId === null);
     if (unassigned.length > 0) {
       groups.push({
         key: '__no-day',
-        label: '날짜 미지정',
+        label: '날짜 없는 사진',
         photos: unassigned,
       });
     }
@@ -132,7 +132,7 @@ export function TravelPhotoAlbum({
     if (unassigned.length > 0) {
       groups.push({
         key: '__no-place',
-        label: '장소 미지정',
+        label: '장소 없는 사진',
         photos: unassigned,
       });
     }

@@ -69,12 +69,11 @@ export function TravelListSection({ device }: TravelListSectionProps) {
 
       {!isPending && !isError && data && data.length > 0 ? (
         <div className='slcn-travel-list-section__grid'>
-          {data.map((travel, index) => (
+          {data.map((travel) => (
             <TravelCard
               key={travel.id}
               travel={travel}
               device={device}
-              isRepresentative={index === 0 || travel.coverPhotoId !== null}
               coverUrl={buildOptionalAssetImageUrl(
                 travel.coverPhotoId,
                 'home-feature'
