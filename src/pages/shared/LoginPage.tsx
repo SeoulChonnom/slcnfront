@@ -82,6 +82,7 @@ export function LoginPage({ device }: LoginPageProps) {
           trailing={
             <button
               type='button'
+              tabIndex={-1}
               className='slcn-login-page__clear-button'
               onClick={clearUserName}
               aria-label='아이디 입력값 지우기'
@@ -115,6 +116,7 @@ export function LoginPage({ device }: LoginPageProps) {
           trailing={
             <button
               type='button'
+              tabIndex={-1}
               className='slcn-login-page__clear-button'
               onClick={clearPassword}
               aria-label='비밀번호 입력값 지우기'

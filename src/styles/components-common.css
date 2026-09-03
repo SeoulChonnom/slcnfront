@@ -147,6 +147,15 @@
   outline: none;
 }
 
+.slcn-field__control:has(> .slcn-field__input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-field__control > .slcn-field__input:focus-visible {
+  outline: none;
+}
+
 .slcn-field__input::placeholder,
 .slcn-field__textarea::placeholder {
   color: var(--color-ink-soft);
@@ -1253,16 +1262,9 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-color: var(--color-border-strong);
   transition:
     border-color 150ms ease,
-    box-shadow 150ms ease,
     background-color 150ms ease;
 }
 
-.slcn-login-page .slcn-field__control:focus-within {
-  border-color: var(--color-brand-pink);
-  box-shadow: 0 0 0 3px var(--color-focus-halo);
-}
-
-.slcn-login-page .slcn-field__input:focus-visible,
 .slcn-login-page__clear-button:focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
@@ -2452,8 +2454,12 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   border-color: var(--color-border-strong);
 }
 
-.slcn-trip-register-wizard .slcn-field__control:focus-within {
-  border-color: var(--color-brand-pink);
+/* The border override above outranks the base error rule by source order, so
+   the error colour has to be restated here or invalid fields lose their red
+   border. Focus is left to the base :has() ring alone -- recolouring the
+   border on :focus-within as well drew a second box around the first. */
+.slcn-trip-register-wizard .slcn-field__control[data-error="true"] {
+  border-color: var(--color-error);
 }
 
 .slcn-trip-register-wizard .slcn-field__input {
