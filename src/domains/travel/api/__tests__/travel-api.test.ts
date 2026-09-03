@@ -155,18 +155,16 @@ describe('travel-api', () => {
         {
           date: '2025-06-01',
           sortOrder: 0,
-          photos: [],
           places: [
             {
               name: '한라산',
               category: 'TOURIST_SPOT',
               sortOrder: 0,
-              photos: [],
             },
           ],
         },
       ],
-      photos: [],
+      files: [{ fileAssetId: 'asset-1', targetType: 'TRAVEL', role: 'COVER' }],
       review: { content: '좋았어요' },
     });
 
@@ -185,7 +183,7 @@ describe('travel-api', () => {
           places: [{ name: '한라산', category: 'TOURIST_SPOT', sortOrder: 0 }],
         },
       ],
-      photos: [],
+      files: [{ fileAssetId: 'asset-1', targetType: 'TRAVEL', role: 'COVER' }],
       review: { content: '좋았어요' },
     });
   });
@@ -212,7 +210,7 @@ describe('travel-api', () => {
       tags: [],
       confirmDeleteDays: true,
       travelDays: [],
-      photos: [],
+      files: [],
       review: {},
     });
 
@@ -252,18 +250,16 @@ describe('travel-api', () => {
           id: 'day-1',
           date: '2025-06-01',
           sortOrder: 0,
-          photos: [],
           places: [
             {
               name: '한라산',
               category: 'TOURIST_SPOT',
               sortOrder: 0,
-              photos: [],
             },
           ],
         },
       ],
-      photos: [],
+      files: [{ fileAssetId: 'asset-1', targetType: 'TRAVEL', role: 'COVER' }],
       review: { content: '좋았어요' },
     });
 

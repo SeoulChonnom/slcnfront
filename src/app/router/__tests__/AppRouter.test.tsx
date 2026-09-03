@@ -80,6 +80,37 @@ describe('AppRouter', () => {
     ).toBeTruthy();
   });
 
+  it('renders the mobile travel register route inside the detail mobile shell, not the main shell', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: 'demo-token',
+      userInfo: {
+        name: 'SLCN Demo',
+        userName: 'demo',
+        roleList: ['admin'],
+      },
+      restoreState: 'success',
+    });
+
+    renderAppRouter('/mobile/travel/register');
+
+    // The detail shell's top bar carries the real title -- if this route
+    // had fallen through to DetailMobileShell's generic '/mobile/' branch
+    // it would read '신발 상세' instead, and if it had stayed on
+    // MainMobileShell there would be no back link and a bottom nav.
+    await waitFor(() => {
+      expect(screen.getByText('새 여행')).toBeTruthy();
+    });
+    expect(screen.queryByText('신발 상세')).toBeNull();
+
+    const backLink = screen.getByRole('link', { name: '이전 화면으로 이동' });
+    expect(backLink.getAttribute('href')).toBe('/mobile/travel');
+
+    expect(
+      screen.queryByRole('navigation', { name: '모바일 하단 내비게이션' })
+    ).toBeNull();
+  });
+
   it('sends unknown internal routes to the device specific not-found page', async () => {
     useAuthStore.setState({
       hydrated: true,

@@ -1,3 +1,14 @@
+/** Mirrors `FileAssetRdo` — the response shape for both upload endpoints. */
+export type FileAsset = {
+  fileId: string;
+  type: string;
+  originalFilename: string;
+  filename: string;
+  path: string;
+  mimeType: string;
+  size: number;
+};
+
 export type PlaceCategory =
   | 'TOURIST_SPOT'
   | 'RESTAURANT'
@@ -128,10 +139,17 @@ export type TravelDetail = {
 
 // ── CDO / UDO view types (passed to mutation hooks) ──────────────────────────
 
-type TravelPhotoCdo = {
-  travelDayId?: string;
-  travelPlaceId?: string;
-  photoFileId: string;
+/**
+ * Mirrors `FileBoxItemCdo`. `targetId` is intentionally omittable: at create
+ * time (and for a travel's own cover/gallery entries) no target row exists
+ * yet for the server to attach the file to, so callers building this at
+ * upload time never set it — see `buildTravelFileBoxItems`.
+ */
+export type TravelFileBoxItemCdo = {
+  fileAssetId: string;
+  targetType: 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE';
+  targetId?: string;
+  role: 'COVER' | 'GALLERY';
   caption?: string;
   sortOrder?: number;
 };
@@ -146,14 +164,15 @@ type TravelReviewUdo = {
 };
 
 export type TravelPlaceUdo = {
+  // Identifies an existing place on update (mirrors `TravelPlaceRdo.placeKey`);
+  // omitted when the place is new.
+  placeKey?: string;
   name: string;
   category: PlaceCategory;
   address?: string;
   memo?: string;
   description?: string;
   sortOrder: number;
-  coverPhotoId?: string;
-  photos: TravelPhotoCdo[];
 };
 
 export type TravelDayUdo = {
@@ -161,9 +180,7 @@ export type TravelDayUdo = {
   date: string;
   title?: string;
   memo?: string;
-  coverPhotoId?: string;
   sortOrder: number;
-  photos: TravelPhotoCdo[];
   places: TravelPlaceUdo[];
 };
 
@@ -172,10 +189,9 @@ export type TravelCdo = {
   region: string;
   startDate: string;
   endDate: string;
-  coverPhotoId?: string;
   tags: string[];
   travelDays: TravelDayUdo[];
-  photos: TravelPhotoCdo[];
+  files?: TravelFileBoxItemCdo[];
   review: TravelReviewUdo;
 };
 
@@ -184,10 +200,9 @@ export type TravelUdo = {
   region: string;
   startDate: string;
   endDate: string;
-  coverPhotoId?: string;
   tags: string[];
   confirmDeleteDays: boolean;
   travelDays: TravelDayUdo[];
-  photos: TravelPhotoCdo[];
+  files?: TravelFileBoxItemCdo[];
   review: TravelReviewUdo;
 };

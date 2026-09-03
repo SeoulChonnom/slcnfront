@@ -7,13 +7,42 @@ slcn-travel-day-editor
 
 /* ── Section wrapper ──────────────────────────────────────── */
 
+/* The desktop and mobile shells (.slcn-shell-desktop__main,
+   .slcn-shell-mobile__main / .slcn-shell-detail-mobile__main) already own
+   the page frame -- max-width, centering, and top/bottom padding. This
+   section used to repeat all three, doubling the padding on both axes and,
+   on mobile, shrinking the usable content width well below the shell's own
+   gutter. The section now contributes only what the shell cannot know: a
+   readable measure for a form. DESIGN.md's frontmatter documents
+   layout.content-text: 760px and layout.content-standard: 1080px, but
+   neither is wired up as a CSS custom property yet, so the literals below
+   are those two documented values used directly rather than inventing a
+   token layer for this pass. */
 .slcn-travel-register-section {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+/* Tablet and up (DESIGN.md §12): enough width to justify a fixed reading
+   measure instead of stretching edge to edge. */
+@media (min-width: 641px) {
+  .slcn-travel-register-section {
+    max-width: 760px;
+    margin: 0 auto;
+    gap: 2rem;
+  }
+}
+
+/* Desktop and up: widen to the standard content measure so paired fields
+   (see the name/date rows and the day editor's place fields) have room to
+   sit side by side instead of leaving the extra width empty. Content-wide
+   (1440px) is reserved for images per DESIGN.md's layout model -- a form is
+   text content, so it stops growing here even on wide desktop. */
+@media (min-width: 1069px) {
+  .slcn-travel-register-section {
+    max-width: 1080px;
+  }
 }
 
 /* ── Header ───────────────────────────────────────────────── */
@@ -43,13 +72,23 @@ slcn-travel-day-editor
   color: var(--color-ink);
 }
 
+/* Only rendered on device='main' (desktop) -- the mobile shell supplies its
+   own visible title, see TravelRegisterSection. Sized down by default since
+   this heading only shows up on a narrowed desktop window; tablet and up
+   get the full display size. */
 .slcn-travel-register-section__title {
-  font-size: var(--text-display-sm);
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--color-ink);
   margin: 0;
+}
+
+@media (min-width: 641px) {
+  .slcn-travel-register-section__title {
+    font-size: var(--text-display-sm);
+  }
 }
 
 .slcn-travel-register-section__subtitle {
@@ -59,7 +98,22 @@ slcn-travel-day-editor
   line-height: 1.5;
 }
 
-.slcn-travel-register-section__submit-error {
+/* ── Form layout ──────────────────────────────────────────── */
+
+/* Gap between sections. Bumped from 1.5rem alongside the section-title size
+   fix below: DESIGN.md §5 lists "major content gap: 32-48px" for the space
+   between blocks, and a 21px heading needs the "more space above a heading
+   than below it" craft rule to still read once it stops being barely bigger
+   than body text. The gap to each heading's own content stays 0.75rem
+   (`--space-3`, ~0.75rem below), so this keeps the ratio decisively above
+   1:1 rather than leaving headings equidistant between blocks. */
+.slcn-travel-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.slcn-travel-register-form__submit-error {
   font-size: var(--text-caption);
   font-weight: var(--weight-strong);
   color: var(--color-error);
@@ -68,12 +122,55 @@ slcn-travel-day-editor
   padding: 0.75rem 1rem;
 }
 
-/* ── Form layout ──────────────────────────────────────────── */
-
-.slcn-travel-register-form {
+/* Restored-draft notice: says what came back before the user starts
+   wondering why the form is not empty. Mirrors
+   .slcn-trip-register-wizard__draft-notice in components-common.css. */
+.slcn-travel-register-form__draft-notice {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.slcn-travel-register-form__draft-text {
+  flex: 1 1 14rem;
+  margin: 0;
+  color: var(--color-body-muted);
+  font-size: var(--text-nav);
+  line-height: 1.5;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.slcn-travel-register-form__draft-actions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: var(--space-1);
+}
+
+.slcn-travel-register-form__draft-actions .slcn-button {
+  padding: 0 var(--space-3);
+  color: var(--color-accent-muted);
+  font-size: var(--text-nav);
+  font-weight: var(--weight-strong);
+  word-break: keep-all;
+}
+
+.slcn-travel-register-form__draft-actions .slcn-button:hover:not(:disabled) {
+  background: var(--color-canvas-pure);
+}
+
+.slcn-travel-register-form__draft-actions
+  .slcn-travel-register-form__draft-discard {
+  color: var(--color-body-muted);
+  font-weight: var(--weight-body);
 }
 
 /* ── Basic info card ──────────────────────────────────────── */
@@ -88,12 +185,40 @@ slcn-travel-day-editor
   gap: 1.25rem;
 }
 
+/* ── Name row (제목 / 지역) ───────────────────────────────── */
+
+/* Stacked by default -- each field keeps the full card width, which is what
+   a phone-width card needs. From tablet up the card itself has more than
+   enough room for two short labeled fields side by side, so pairing them
+   uses that width instead of leaving it empty (see travel-register.css'
+   section-width comment above for why this is a desktop-fit change, not a
+   redesign). */
+.slcn-travel-register-form__name-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 641px) {
+  .slcn-travel-register-form__name-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
 /* ── Date row ─────────────────────────────────────────────── */
 
 .slcn-travel-register-form__date-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 641px) {
+  .slcn-travel-register-form__date-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
 }
 
 .slcn-travel-register-form__date-field {
@@ -105,6 +230,16 @@ slcn-travel-day-editor
 
 .slcn-travel-register-form__date-control {
   position: relative;
+}
+
+/* The calendar icon floats over the input with no reserved space, so at
+   200% text zoom ("2026. 09. 12.") the value's last digits render right
+   under it. Give the input its own padding-right so the icon always sits
+   in dead space instead of on top of the value -- 1rem for the icon's own
+   footprint plus a small buffer, on top of .slcn-field__control's
+   0.875rem edge padding. */
+.slcn-travel-register-form__date-control .slcn-field__input {
+  padding-right: 1.5rem;
 }
 
 .slcn-travel-register-form__date-icon {
@@ -131,19 +266,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* ── Required mark ────────────────────────────────────────── */
 
-.slcn-travel-register-form__required-mark,
 .slcn-travel-register-form__card .slcn-field__label span[aria-hidden] {
-  color: var(--color-primary-focus);
+  color: var(--color-accent-muted);
 }
 
 /* ── Duration stepper row ─────────────────────────────────── */
 
+/* Stacked by default: the meta text (label + helper) sits above the
+   stepper, each getting the row's full width. Squeezing both into one flex
+   row on a phone forced the helper into a ~170px column that wrapped to
+   4+ lines (measured ~115px tall at 390px) and, combined with the
+   stepper's fixed-width children, overflowed the viewport outright at 200%
+   text zoom. Stacking removes the squeeze at any width instead of chasing
+   one breakpoint. */
 .slcn-travel-register-form__duration-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 3.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
   padding: 0.75rem 0.875rem;
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
@@ -154,7 +293,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  flex: 1;
   min-width: 0;
 }
 
@@ -174,8 +312,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .slcn-travel-register-form__duration-stepper {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 0.625rem;
-  flex-shrink: 0;
 }
 
 .slcn-travel-register-form__duration-btn {
@@ -185,10 +324,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: 2rem;
   height: 2rem;
   padding: 0;
-  border: 1.5px solid var(--color-primary);
+  /* Was 1.5px -- not one of DESIGN.md's two documented border steps
+     (`border` / `border-strong`), and a half-pixel is invisible at this
+     scale anyway. The button already reads stronger than a hairline
+     through --color-primary itself (see the category-chip and map-switcher
+     buttons, which use the same 1px + primary-color pairing), so dropping
+     to 1px loses nothing. */
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-full);
   background: var(--color-surface-pearl);
-  color: var(--color-primary-focus);
+  /* Rewritten alongside this row's restructure: --color-primary-focus
+     measures 2.23:1 here and tokens.css forbids it as a text colour.
+     --color-accent-muted is the sanctioned accent-text token (>=4.5:1). */
+  color: var(--color-accent-muted);
   font-size: var(--text-lead);
   font-weight: var(--weight-strong);
   line-height: 1;
@@ -212,9 +360,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-size: var(--text-body);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
-  min-width: 4.5rem;
+  min-width: 3.5rem;
   text-align: center;
   letter-spacing: 0.01em;
+}
+
+/* Phone and up: enough width for the meta text and the stepper to sit side
+   by side without squeezing either. */
+@media (min-width: 420px) {
+  .slcn-travel-register-form__duration-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.5rem;
+  }
+
+  .slcn-travel-register-form__duration-meta {
+    flex: 1;
+  }
+
+  .slcn-travel-register-form__duration-stepper {
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
 }
 
 /* ── Section headings ─────────────────────────────────────── */
@@ -231,8 +399,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: space-between;
 }
 
+/* Was --text-body-lg (16px), 1px above body text, so these h2s barely read
+   as headings. TravelDetailSection.tsx renders the identical labels (날짜별
+   기록 / 사진 앨범 / 태그) one screen away at --text-tagline (21px) -- the
+   same heading role should use the same step across the two screens of the
+   same trip. */
 .slcn-travel-register-form__section-title {
-  font-size: var(--text-body-lg);
+  font-size: var(--text-tagline);
   font-weight: var(--weight-strong);
   color: var(--color-ink);
   margin: 0;
@@ -248,58 +421,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .slcn-travel-register-form__section-count {
   font-size: var(--text-nav);
   font-weight: var(--weight-strong);
-  color: var(--color-primary-focus);
-}
-
-/* ── Dropzone ─────────────────────────────────────────────── */
-
-.slcn-travel-register-form__dropzone {
-  display: block;
-  border: 1.5px dashed var(--color-primary);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-soft);
-  cursor: pointer;
-  transition: background var(--duration-fast) ease;
-  overflow: hidden;
-}
-
-.slcn-travel-register-form__dropzone:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-primary) 40%,
-    var(--color-canvas-pure)
-  );
-}
-
-.slcn-travel-register-form__dropzone-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem 1.5rem;
-  text-align: center;
-}
-
-.slcn-travel-register-form__dropzone-icon {
-  color: var(--color-primary-focus);
-  opacity: 0.7;
-  display: flex;
-}
-
-.slcn-travel-register-form__dropzone-text {
-  font-size: var(--text-body);
-  font-weight: var(--weight-strong);
-  color: var(--color-ink);
-}
-
-.slcn-travel-register-form__dropzone-hint {
-  font-size: var(--text-fine);
-  color: var(--color-ink-muted);
-}
-
-.slcn-travel-register-form__dropzone-input {
-  display: none;
+  /* --color-primary-focus measures 2.23:1 on canvas / 2.34:1 on white here
+     and tokens.css forbids it as a text colour. --color-accent-muted is
+     the sanctioned accent-text token (5.14-5.39:1). Same fix as the
+     duration stepper button above. */
+  color: var(--color-accent-muted);
 }
 
 /* ── Days hint ────────────────────────────────────────────── */
@@ -368,12 +494,32 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* ── Footer ───────────────────────────────────────────────── */
 
+/* Sticky, on both devices: this form runs to a 7-day trip's worth of day
+   cards, and a static footer put 저장하기 thousands of px below the fields
+   being edited, with a submit error rendering just as far from the click
+   that caused it. As the form's last child, `position: sticky; bottom: 0`
+   keeps it pinned to the viewport's bottom edge throughout the scroll and
+   returns to normal flow once the document itself ends -- no extra bottom
+   padding to reserve, no JS. The opaque background stops day-card content
+   from showing through as it scrolls underneath. env(safe-area-inset-bottom)
+   clears the home-indicator area on notched phones; it resolves to 0 on
+   desktop and in browsers without a safe-area inset, so it is unconditional
+   here rather than device-gated. */
 .slcn-travel-register-form__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
   display: flex;
+  /* One row at every width. This bar is sticky, so its height is height the
+     form never gets back: stacked on a 844px phone it stood 133px tall and
+     covered the 대표 사진 section on first paint. Paired, it costs ~76px. */
+  flex-direction: row;
   gap: 0.75rem;
   align-items: center;
-  padding-top: 0.5rem;
+  padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
   border-top: 1px solid var(--color-hairline);
+  background: var(--color-canvas);
+  box-shadow: var(--shadow-floating);
 }
 
 .slcn-travel-register-form__footer > .slcn-button[data-variant="secondary"] {
@@ -383,6 +529,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .slcn-travel-register-form__footer > .slcn-button[data-full-width="true"] {
   flex: 1;
+}
+
+/* On a phone the primary should take the room the row has. On a 1080px
+   content column it should not: `fullWidth` stretched 저장하기 to 985px,
+   which is the phone treatment enlarged rather than a desktop decision.
+   Cap it and let the pair sit at the trailing edge, where the eye already
+   ends after reading the form. */
+@media (min-width: 834px) {
+  .slcn-travel-register-form__footer {
+    justify-content: flex-end;
+  }
+
+  /* `width: 100%` from .slcn-button[data-full-width="true"] has to be undone
+     here, not just the flex growth, or the button still fills the row. */
+  .slcn-travel-register-form__footer > .slcn-button[data-full-width="true"] {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 12rem;
+  }
 }
 
 /* ============================================================
@@ -431,8 +596,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 0.75rem;
 }
 
+/* flex-wrap (not a width breakpoint) is what makes this survive 200% text
+   zoom: zoom raises the root font-size without changing the viewport
+   width, so a px media query never fires, but place-num and place-remove's
+   rem-sized footprints still grow and squeeze the row. Wrapping reacts to
+   the actual squeeze instead of a viewport width that never crosses a
+   breakpoint. See .slcn-travel-day-editor__place-fields below for the
+   other half of the fix. */
 .slcn-travel-day-editor__place-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.625rem;
   align-items: flex-start;
 }
@@ -457,7 +630,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 0;
+  /* Was min-width: 0, which let this column shrink without a floor
+     whenever place-num/place-remove's fixed rem widths grew faster than
+     the space left for it -- exactly what 200% text zoom does. Measured
+     live: the name input's clientWidth dropped to 42px against an 83px
+     scrollWidth, silently truncating "불국사" to "불ㄱ" with no visual
+     sign anything was cut off. A real floor plus flex-wrap on the row
+     (above) lets this column drop to its own full-width line instead of
+     being crushed.
+
+     The floor is capped at 100% because a bare 10rem is 320px once the
+     root font-size doubles, which is wider than a 390px phone can hold
+     once the row's own padding is counted -- it traded the truncation for
+     3px of horizontal page overflow. min() keeps the floor while never
+     letting it exceed the space actually available. */
+  min-width: min(10rem, 100%);
 }
 
 .slcn-travel-day-editor__place-remove {
@@ -488,10 +675,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* ── Category chips ───────────────────────────────────────── */
 
+/* Column gap stays tight; the row gap has to clear the 44px tap box these
+   chips get in components-common.css. A 26px chip centred in a 44px box
+   overhangs 9px per side, so at the old 6px row gap two wrapped rows'
+   boxes overlapped by 12px and the lower row -- painting later -- stole
+   taps aimed just under the upper one. 18px puts the row pitch at 44px so
+   each row owns its full box. Horizontal overhang is at most 0.5px on a
+   43-53px chip, so the column gap is left alone. */
 .slcn-travel-day-editor__category-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.375rem;
+  column-gap: 0.375rem;
+  row-gap: 1.125rem;
 }
 
 .slcn-travel-day-editor__category-chip {
@@ -515,48 +710,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-color: var(--color-primary);
 }
 
-/* ── Day cover photo ──────────────────────────────────────── */
-
-.slcn-travel-day-editor__day-photo {
-  margin-top: 0.25rem;
-}
-
-.slcn-travel-day-editor__day-photo-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: var(--text-nav);
-  font-weight: var(--weight-strong);
-  color: var(--color-ink-muted);
-  cursor: pointer;
-  padding: 0.375rem 0.75rem;
-  border: 1px dashed var(--color-hairline);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  transition:
-    color var(--duration-fast) ease,
-    border-color var(--duration-fast) ease;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.slcn-travel-day-editor__day-photo-label:hover {
-  color: var(--color-primary-focus);
-  border-color: var(--color-primary);
-}
-
-.slcn-travel-day-editor__day-photo-icon {
-  flex-shrink: 0;
-  display: flex;
-  color: var(--color-primary);
-}
-
-.slcn-travel-day-editor__day-photo-input {
-  display: none;
-}
-
 /* ── Add place button ─────────────────────────────────────── */
 
 .slcn-travel-day-editor__add-place {
@@ -568,7 +721,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: transparent;
   font-size: var(--text-caption);
   font-weight: var(--weight-strong);
-  color: var(--color-primary-focus);
+  /* --color-primary-focus measures 2.23:1 on canvas / 2.34:1 on white here
+     and tokens.css forbids it as a text colour. --color-accent-muted is
+     the sanctioned accent-text token (5.14-5.39:1). Same fix as the
+     duration stepper button above -- this button matters more than most,
+     since it's the only route into entering a day's content. */
+  color: var(--color-accent-muted);
   cursor: pointer;
   transition: opacity var(--duration-fast) ease;
   width: fit-content;
@@ -578,30 +736,40 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0.75;
 }
 
-/* ============================================================
-   Responsive adjustments
-   ============================================================ */
+/* ── Place primary row (장소명 + 카테고리) ───────────────────── */
 
-@media (max-width: 600px) {
-  .slcn-travel-register-section {
-    padding: 1.25rem 1rem 3rem;
-    gap: 1.5rem;
+/* Stacked by default, matching the rest of the place row at phone widths.
+   At desktop the day list stays single-column (a 7-day trip is a lot of
+   scroll already; multiplying columns of day cards would only add more
+   ways to lose place), but *inside* one place row there is real spare
+   width once the section widens to content-standard -- 장소명 and its
+   category chips read naturally as one row, with 메모 on its own line below
+   (see the place-fields grid override further down for its column). */
+.slcn-travel-day-editor__place-primary-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+/* >=1069px: 장소명 keeps its own column measure (minmax(12rem, 20rem)), but
+   메모 previously fell outside this grid entirely -- it is place-fields'
+   OTHER child, not primary-row's, so it inherited the full row width and
+   measured 936px wide in a populated card (3.2x the 290px name field it
+   annotates). Promoting place-fields itself to the grid and dissolving
+   primary-row's own box with display:contents lets 장소명 and the category
+   chips fall into row 1 exactly as before, while 메모 (place-fields' next
+   child, in DOM order) auto-places into row 2 column 1 -- directly under
+   the field it is a note on, at the same measure, rather than stretched
+   across chip space it has nothing to do with. */
+@media (min-width: 1069px) {
+  .slcn-travel-day-editor__place-fields {
+    display: grid;
+    grid-template-columns: minmax(12rem, 20rem) 1fr;
+    align-items: start;
+    gap: 0.75rem 1rem;
   }
 
-  .slcn-travel-register-form__date-row {
-    grid-template-columns: 1fr;
-  }
-
-  .slcn-travel-register-form__footer {
-    flex-direction: column-reverse;
-    gap: 0.5rem;
-  }
-
-  .slcn-travel-register-form__footer > .slcn-button[data-variant="secondary"] {
-    width: 100%;
-  }
-
-  .slcn-travel-register-section__title {
-    font-size: var(--text-tagline);
+  .slcn-travel-day-editor__place-primary-row {
+    display: contents;
   }
 }

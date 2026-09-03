@@ -1,4 +1,5 @@
 import { CategoryIcon } from '@/domains/travel/components/CategoryIcon';
+import { TravelImage } from '@/domains/travel/components/TravelImage';
 import { CATEGORY_LABELS, type TravelPlace } from '@/domains/travel/types';
 import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 
@@ -35,15 +36,12 @@ export function TravelPlaceItem({ place }: TravelPlaceItemProps) {
                   className='slcn-travel-place__photo slcn-travel-thumb'
                   aria-label={photo.caption ?? '장소 사진'}
                 >
-                  {url ? (
-                    <img
-                      src={url}
-                      alt={photo.caption ?? '장소 사진'}
-                      className='slcn-travel-thumb-img'
-                      loading='lazy'
-                      decoding='async'
-                    />
-                  ) : null}
+                  <TravelImage
+                    src={url}
+                    alt=''
+                    className='slcn-travel-thumb-img'
+                    loading='lazy'
+                  />
                 </li>
               );
             })}

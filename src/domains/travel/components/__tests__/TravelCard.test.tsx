@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { TravelCard } from '@/domains/travel/components/TravelCard';
 import { renderWithProviders } from '@/test/helpers/render';
@@ -74,17 +74,38 @@ describe('TravelCard', () => {
     expect(link.getAttribute('href')).toBe('/mobile/travel/travel-1');
   });
 
-  it('renders the representative pill when isRepresentative is true', () => {
-    renderWithProviders(
-      <TravelCard travel={travel} device='main' isRepresentative />
-    );
-
-    expect(screen.getByText('대표')).toBeTruthy();
-  });
-
-  it('does not render the representative pill by default', () => {
+  it("derives the link's accessible name from its own content instead of an aria-label", () => {
     renderWithProviders(<TravelCard travel={travel} device='main' />);
 
-    expect(screen.queryByText('대표')).toBeNull();
+    const link = screen.getByRole('link', { name: /제주도 여행/ });
+
+    expect(link.hasAttribute('aria-label')).toBe(false);
+    // The name is built from the card's own content, so it still carries the
+    // date range an aria-label would have hidden.
+    expect(link.textContent).toContain('제주도 여행');
+    expect(link.textContent).toContain('2025.06.01 – 2025.06.05');
+  });
+
+  it('falls back to the placeholder icon when the cover image fails to load', () => {
+    const { container } = renderWithProviders(
+      <TravelCard
+        travel={travel}
+        device='main'
+        coverUrl='https://example.com/cover.jpg'
+      />
+    );
+
+    const img = container.querySelector('.slcn-travel-cover-img');
+    expect(img).toBeTruthy();
+    expect(
+      container.querySelector('.slcn-travel-card__image-placeholder-icon')
+    ).toBeNull();
+
+    fireEvent.error(img as HTMLImageElement);
+
+    expect(container.querySelector('.slcn-travel-cover-img')).toBeNull();
+    expect(
+      container.querySelector('.slcn-travel-card__image-placeholder-icon')
+    ).toBeTruthy();
   });
 });

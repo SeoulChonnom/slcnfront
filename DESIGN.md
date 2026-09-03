@@ -1222,7 +1222,20 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
 - Destructive/danger actions use `{colors.error}` fill with `{colors.error-on}` text (5.47:1) — not the brand pink, not the previous unverified `#D64545` (4.38:1, failed AA).
 - All images require meaningful alt text or an empty alt attribute when decorative.
 - Date and location metadata should remain available to screen readers.
-- Modal focus must be trapped and returned to the trigger on close.
+- Modal focus must be trapped and returned to the trigger on close. Focus should
+  enter on the safe action, never the destructive one.
+
+**The Visible Control Rule.** When a native input is hidden so a styled element
+can stand in for it, the focus ring belongs on the element the user can see, not
+on the input that legitimately holds focus. Two controls got this wrong at once:
+the file dropzone's input is clipped to 1×1, so its ring was clipped away with
+it and the 1146×150 drop target it represents drew nothing; the radio's ring
+outlined the 20×20 native circle rather than the pill-shaped label that is the
+real target. Both now draw on the visible element via `:has(… :focus-visible)`.
+Where that selector carries the ring, suppress the input's own ring only inside
+`@supports selector(:has(*))`, so a browser without `:has()` keeps the small
+indicator instead of losing focus visibility entirely. Audit test: tab to every
+control and confirm the outlined box matches the box you would click.
 
 ---
 
@@ -1304,14 +1317,38 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
    - Upcoming steps: `{colors.body-muted}`
    - Connector lines: `{colors.divider-soft}`
    - Token reference: `{components.step-indicator}`
-3. Step content (conditional on current step):
-   - Step 1: Logo image FileDropzone + trip type RadioGroup + date TextField
-   - Step 2: Map image FileDropzone (primary) + optional second map FileDropzone
-   - Step 3: Quiz question TextField + answer options list + correct answer selection
-4. Error alert (visible only on submission error; semantic error color)
-5. Actions row:
+   - Completed steps additionally use `{colors.accent-muted}` for the label,
+     not raw Seoul Pink: pink as TEXT on the pale complete-state fill does not
+     clear 4.5:1. See section 3.
+3. Restored-draft notice (only when a `sessionStorage` draft was recovered):
+   quiet `{colors.surface-muted}` bar naming which picked files could not be
+   restored, with "이어서 쓰기" and a quieter "새로 쓰기" that discards.
+4. Step content (conditional on current step). Every field below is required
+   unless marked optional; the full inventory matters because this screen is
+   the sole authoring surface for a trip record:
+   - Step 1 (기본 정보): trip type RadioGroup (아영 / 일권) + date TextField +
+     나들이 이름 TextField + logo image FileDropzone
+   - Step 2 (지도 정보): 지도 1 FileDropzone + 드라이브 링크 TextField, plus an
+     optional second map revealed by "2번 지도 추가하기" which adds 지도 2
+     FileDropzone and the 버튼 1 / 버튼 2 TextFields that become the map
+     switcher's tab labels on the detail screen
+   - Step 3 (퀴즈 정보): 퀴즈 제목 + three to six 보기 options + 정답 선택
+     RadioGroup + 정답 제목 / 정답 텍스트 / 오답 제목 / 오답 텍스트
+   - Each FileDropzone shows the chosen file as a thumbnail, name and size with
+     a clear control, and accepts a real drag-and-drop, not only a picker.
+5. Error alert (visible only on submission error; semantic error color).
+   Submit failures surface Korean guidance mapped from the API error, never the
+   raw developer message.
+6. Actions row:
+   - Cancel ("취소", button-ghost, left-aligned): leaves the flow, and opens a
+     ConfirmDialog first whenever the form has unsaved input
    - Previous button (button-secondary, visible on steps 2 and 3 only)
    - Next / Save button (button-primary; label: "다음" on steps 1–2, "저장" on step 3)
+
+**The Form Column Rule.** The wizard caps its column at `{layout.content-text}`
+(760px) and centres it. A single-line text input stretched to a 1440px shell reads
+as an unfinished page, not a generous one; the list and detail siblings keep the
+full width because their content is images.
 
 ### 15.5 Login
 
@@ -1399,6 +1436,12 @@ Use art-directed crops rather than merely shrinking a wide desktop image into a 
 
 - The exact logo dimensions and clear-space requirements depend on the supplied logo file.
 - Map styling is not specified.
-- Dark mode is **active**. Its values live in the `colors-dark` block above and are applied by redefining the light token names inside a single `:root[data-theme="dark"]` rule, so no component branches on the theme. The gate this entry previously described — the sweep of hardcoded, non-token colours that a theme switch cannot reach — has been completed; there are no remaining raw colour literals outside `src/styles/tokens.css`. The theme is resolved in JS (including the `system` case) and stamped onto `<html data-theme>`, with a blocking pre-paint script in `index.html` so a dark preference does not flash light on load. Photographs and user-supplied calendar colours are deliberately unthemed: they are content, not chrome.
+- Dark mode is **active**. Its values live in the `colors-dark` block above and are applied by redefining the light token names inside a single `:root[data-theme="dark"]` rule, so no component branches on the theme. The gate this entry previously described — the sweep of hardcoded, non-token colours that a theme switch cannot reach — is substantially complete, but four raw literals remain outside `src/styles/tokens.css` and this entry previously claimed, wrongly, that none did: `#f793c2` as the pink-mesh gradient end in `utilities.css`, and `#fe9fc8` three times as the `--slcn-event-color` fallback in `components-common.css` and `components-mobile.css`. All four are fallbacks or gradient endpoints rather than themed surfaces, so nothing renders untokenised today, but they are literals and should either be tokenised or named here as sanctioned exceptions. The theme is resolved in JS (including the `system` case) and stamped onto `<html data-theme>`, with a blocking pre-paint script in `index.html` so a dark preference does not flash light on load. Photographs and user-supplied calendar colours are deliberately unthemed: they are content, not chrome.
+- Four font-size declarations sit off the section 4 type ramp (17px twice,
+  20px once, 11px once), as do three fluid `clamp()` sizes on the home hub whose
+  upper endpoints (56px, 44px) exceed `display-xl`. Every other font-size in the
+  app now reads a `--text-*` token. Closing this gap means either widening the
+  ramp to admit those steps or bringing the home hub back onto it; it is a
+  decision, not an oversight.
 - Photo gallery behavior and image ordering rules require product-level decisions.
 - Record privacy, export, backup, and deletion flows are outside the visual design scope.

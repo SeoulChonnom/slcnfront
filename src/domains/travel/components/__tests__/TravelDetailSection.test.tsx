@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TravelDetailSection } from '@/domains/travel/components/TravelDetailSection';
 import type { TravelDetail } from '@/domains/travel/types';
@@ -177,9 +177,9 @@ describe('TravelDetailSection', () => {
     expect(within(daysSection).getByText('도착과 해변 산책')).toBeTruthy();
     expect(within(daysSection).getByText('온종일 시장 구경')).toBeTruthy();
     expect(within(daysSection).getByText('귀가')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 1')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 2')).toBeTruthy();
-    expect(within(daysSection).getByText('Day 3')).toBeTruthy();
+    expect(within(daysSection).getByText('1일차')).toBeTruthy();
+    expect(within(daysSection).getByText('2일차')).toBeTruthy();
+    expect(within(daysSection).getByText('3일차')).toBeTruthy();
     expect(within(daysSection).getByText('해운대 해변')).toBeTruthy();
 
     // Photo album section: every photo present (grid defaults to 'all')
@@ -204,5 +204,159 @@ describe('TravelDetailSection', () => {
     const tagsSection = document.getElementById('section-tags') as HTMLElement;
     expect(within(tagsSection).getByText('#부산')).toBeTruthy();
     expect(within(tagsSection).getByText('#가을여행')).toBeTruthy();
+  });
+
+  it('renders no editing affordances anywhere on the read-only detail screen', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={travel} />
+    );
+
+    expect(screen.queryByText('장소 추가')).toBeNull();
+    expect(screen.queryByText('사진 추가')).toBeNull();
+    expect(screen.queryByLabelText('태그 추가')).toBeNull();
+    expect(screen.queryByRole('button', { name: /태그 삭제/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: '✕' })).toBeNull();
+  });
+
+  it('shows the tags empty state and no chip list when a travel has no tags', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, tags: [] }} />
+    );
+
+    const tagsSection = document.getElementById('section-tags') as HTMLElement;
+    expect(
+      within(tagsSection).getByText(
+        '아직 태그가 없어요. 여행 수정에서 태그를 붙일 수 있어요.'
+      )
+    ).toBeTruthy();
+    expect(tagsSection.querySelector('.slcn-travel-tags__list')).toBeNull();
+  });
+
+  it('shows the review empty state without pointing to a nonexistent edit flow', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, review: null }} />
+    );
+
+    const reviewSection = document.getElementById(
+      'section-review'
+    ) as HTMLElement;
+    expect(
+      within(reviewSection).getByText('아직 여행 후기가 없어요.')
+    ).toBeTruthy();
+    expect(within(reviewSection).queryByText(/여행 수정/)).toBeNull();
+  });
+
+  it('labels album day groups with 일차, not Day', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={travel} />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: '날짜별' }));
+
+    const albumSection = document.getElementById(
+      'section-album'
+    ) as HTMLElement;
+    expect(within(albumSection).getByText('1일차 · 2025.10.01')).toBeTruthy();
+    expect(within(albumSection).queryByText(/^Day /)).toBeNull();
+  });
+
+  describe('photo album tabs (ARIA tabs pattern)', () => {
+    it('gives the selected tab roving tabindex 0 and the others -1', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+
+      expect(allTab.getAttribute('tabindex')).toBe('0');
+      expect(byDayTab.getAttribute('tabindex')).toBe('-1');
+      expect(byPlaceTab.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('moves selection with ArrowRight and wraps from the last tab to the first', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(byDayTab.getAttribute('aria-selected')).toBe('true');
+      expect(byDayTab.getAttribute('tabindex')).toBe('0');
+      expect(allTab.getAttribute('aria-selected')).toBe('false');
+      expect(allTab.getAttribute('tabindex')).toBe('-1');
+
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(byPlaceTab.getAttribute('aria-selected')).toBe('true');
+
+      // Wraps from the last tab back to the first.
+      fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+      expect(allTab.getAttribute('aria-selected')).toBe('true');
+      expect(allTab.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('resolves each tab aria-controls to a tabpanel labelled by the selected tab', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' travel={travel} />
+      );
+
+      const allTab = screen.getByRole('tab', { name: '전체' });
+      const byDayTab = screen.getByRole('tab', { name: '날짜별' });
+      const byPlaceTab = screen.getByRole('tab', { name: '장소별' });
+      const panel = screen.getByRole('tabpanel');
+
+      expect(allTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(byDayTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(byPlaceTab.getAttribute('aria-controls')).toBe(panel.id);
+      expect(panel.getAttribute('aria-labelledby')).toBe(allTab.id);
+
+      fireEvent.click(byPlaceTab);
+      expect(panel.getAttribute('aria-labelledby')).toBe(byPlaceTab.id);
+    });
+  });
+
+  describe('loading and error states (page shell always present)', () => {
+    it('keeps the back button and drops 여행 수정 while pending', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' isPending />
+      );
+
+      expect(screen.getByRole('button', { name: /여행 목록/ })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: /여행 수정/ })).toBeNull();
+      expect(
+        document.querySelector('.slcn-travel-detail-section__skeleton')
+      ).toBeTruthy();
+    });
+
+    it('keeps the back button, shows the error title, and drops 여행 수정 on error', () => {
+      renderWithMinimalProviders(<TravelDetailSection device='main' isError />);
+
+      expect(screen.getByRole('button', { name: /여행 목록/ })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: /여행 수정/ })).toBeNull();
+      expect(
+        screen.getByRole('heading', { name: '여행을 불러오지 못했어요.' })
+      ).toBeTruthy();
+    });
+  });
+
+  it('renders the album empty message and no tablist when a travel has no photos', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, photos: [] }} />
+    );
+
+    const albumSection = document.getElementById(
+      'section-album'
+    ) as HTMLElement;
+    expect(
+      within(albumSection).getByText(
+        '아직 사진이 없어요. 여행 수정에서 사진을 올릴 수 있어요.'
+      )
+    ).toBeTruthy();
+    expect(screen.queryByRole('tablist')).toBeNull();
   });
 });
