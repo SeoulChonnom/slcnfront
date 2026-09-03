@@ -1,4 +1,5 @@
 import { getAccessToken } from '@/domains/auth/store/auth-store';
+import { resolveApiBaseUrl } from '@/lib/api/base-url';
 import { AppError } from '@/lib/api/errors';
 import { getAppEnv } from '@/lib/env/env';
 
@@ -36,7 +37,7 @@ function buildUrl(
   query: QueryParams | undefined,
   baseUrl: string
 ) {
-  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const normalizedBaseUrl = resolveApiBaseUrl(baseUrl);
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
   const url = new URL(normalizedPath, normalizedBaseUrl);
 
