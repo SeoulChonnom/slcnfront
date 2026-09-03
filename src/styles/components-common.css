@@ -3022,6 +3022,15 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   outline-offset: 2px;
 }
 
+/* The input keeps drawing its own ring underneath the label's; the 1px clip
+   above hides it, so nothing shows today -- the same "correct by accident"
+   the dropzone comment calls out. Suppress it explicitly, matching the guard
+   RadioGroup and FileDropzone already carry, so this stays right if the clip
+   ever changes. */
+.slcn-theme-choice__option input:focus-visible {
+  outline: none;
+}
+
 /* ── prefers-reduced-motion: reduce ───────────────────────────────────────
    Every keyframe animation in this file, plus every transition that moves
    or resizes something, gathered into one query instead of living next to
