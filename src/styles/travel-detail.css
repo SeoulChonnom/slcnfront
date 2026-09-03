@@ -94,7 +94,7 @@
 
 /* ── Hero card (wraps hero image + title block) ───────────────────────────── */
 .slcn-travel-detail__hero-card {
-  border: 1px solid var(--color-divider-soft);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   background: var(--color-canvas-pure);
   overflow: hidden;
@@ -109,9 +109,6 @@
      photo to two different shapes; one ratio keeps the subject intact at
      both sizes. */
   aspect-ratio: 16 / 9;
-  /* No individual border/radius — inherited from hero-card */
-  border-radius: 0;
-  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +122,11 @@
   align-items: center;
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-pill);
-  background: var(--color-surface-dark-1);
+  /* Same scrim token as the travel card's nights pill (tokens.css
+     --color-cast-scrim) -- both badges sit on top of a cover photo in the
+     same role, so a translucent scrim over the image is the right
+     treatment on both screens. */
+  background: var(--color-cast-scrim);
   color: var(--color-on-dark);
   font-size: var(--text-nav);
   font-weight: var(--weight-strong);
@@ -253,7 +254,7 @@
   align-items: start;
   gap: var(--space-4);
   padding: var(--space-5);
-  border: 1px solid var(--color-divider-soft);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-canvas-pure);
 }
@@ -489,7 +490,7 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-4);
-  border: 1px solid var(--color-divider-soft);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-canvas-pure);
 }
@@ -564,12 +565,6 @@
 
 .slcn-travel-detail[data-device="mobile"] .slcn-travel-review__grid {
   grid-template-columns: 1fr;
-}
-
-@media (max-width: 540px) {
-  .slcn-travel-review__grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Skeleton */

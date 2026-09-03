@@ -319,4 +319,44 @@ describe('TravelDetailSection', () => {
       expect(panel.getAttribute('aria-labelledby')).toBe(byPlaceTab.id);
     });
   });
+
+  describe('loading and error states (page shell always present)', () => {
+    it('keeps the back button and drops 여행 수정 while pending', () => {
+      renderWithMinimalProviders(
+        <TravelDetailSection device='main' isPending />
+      );
+
+      expect(screen.getByRole('button', { name: /여행 목록/ })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: /여행 수정/ })).toBeNull();
+      expect(
+        document.querySelector('.slcn-travel-detail-section__skeleton')
+      ).toBeTruthy();
+    });
+
+    it('keeps the back button, shows the error title, and drops 여행 수정 on error', () => {
+      renderWithMinimalProviders(<TravelDetailSection device='main' isError />);
+
+      expect(screen.getByRole('button', { name: /여행 목록/ })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: /여행 수정/ })).toBeNull();
+      expect(
+        screen.getByRole('heading', { name: '여행을 불러오지 못했어요.' })
+      ).toBeTruthy();
+    });
+  });
+
+  it('renders the album empty message and no tablist when a travel has no photos', () => {
+    renderWithMinimalProviders(
+      <TravelDetailSection device='main' travel={{ ...travel, photos: [] }} />
+    );
+
+    const albumSection = document.getElementById(
+      'section-album'
+    ) as HTMLElement;
+    expect(
+      within(albumSection).getByText(
+        '아직 사진이 없어요. 여행 수정에서 사진을 올릴 수 있어요.'
+      )
+    ).toBeTruthy();
+    expect(screen.queryByRole('tablist')).toBeNull();
+  });
 });

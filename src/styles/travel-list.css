@@ -63,7 +63,7 @@ Travel List — slcn-travel-list-section & slcn-travel-card
   display: flex;
   flex-direction: column;
   background: var(--color-surface-pearl, #ffffff);
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   cursor: pointer;

@@ -139,6 +139,19 @@ export function TravelPhotoAlbum({
     return groups.filter((group) => group.photos.length > 0);
   }, [places, photos]);
 
+  // With zero photos there is nothing to filter, so the tablist scaffolding
+  // (and the tabpanel's aria-labelledby, which would otherwise point at a
+  // tab that no longer exists) is skipped entirely.
+  if (photos.length === 0) {
+    return (
+      <div className='slcn-travel-album'>
+        <p className='slcn-travel-detail__empty'>
+          아직 사진이 없어요. 여행 수정에서 사진을 올릴 수 있어요.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className='slcn-travel-album'>
       <div className='slcn-travel-album__toolbar'>
@@ -176,11 +189,7 @@ export function TravelPhotoAlbum({
         // biome-ignore lint/a11y/noNoninteractiveTabindex: WAI-ARIA tabpanel has no focusable content of its own, so the panel itself must be reachable
         tabIndex={0}
       >
-        {photos.length === 0 ? (
-          <p className='slcn-travel-detail__empty'>
-            아직 사진이 없어요. 여행 수정에서 사진을 올릴 수 있어요.
-          </p>
-        ) : filter === 'all' ? (
+        {filter === 'all' ? (
           <PhotoGrid photos={photos} />
         ) : (
           <div className='slcn-travel-album__groups'>
