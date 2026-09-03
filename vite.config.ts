@@ -37,10 +37,16 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      /* The one place the local backend's address is written down. `pnpm dev`
+         serves VITE_API_URL=/api (.env.development), so the browser calls the
+         dev server same-origin and this forwards it on. The backend mounts its
+         own API under /api, so the prefix is passed through rather than
+         rewritten away. Port 9090 is where the local container listens; the
+         8080 in docs/api_spec.json and docs/*.md describes a different
+         environment and is not what dev runs against. */
       '/api': {
         target: 'http://localhost:9090',
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, '')
         secure: false,
       },
     },
