@@ -1,6 +1,6 @@
 import { Fragment, type ReactElement, type ReactNode } from 'react';
 import { Navigate, Route } from 'react-router-dom';
-import { RequireAuth } from '@/app/router/guards';
+import { RequireAuth, RequireRole } from '@/app/router/guards';
 import { renderLazyRoutePage } from '@/app/router/lazy-route-pages';
 import type { DeviceType } from '@/app/router/route-constants';
 import {
@@ -26,7 +26,18 @@ function renderProtectedRoutes(
         key={getRouteDefinitionKey(route)}
         index={route.index}
         path={route.path}
-        element={renderLazyRoutePage(device, route.page)}
+        element={
+          route.requireRole ? (
+            <RequireRole
+              role={route.requireRole}
+              fallbackPath={routeConfig.notFoundPath}
+            >
+              {renderLazyRoutePage(device, route.page)}
+            </RequireRole>
+          ) : (
+            renderLazyRoutePage(device, route.page)
+          )
+        }
       />
     )
   );

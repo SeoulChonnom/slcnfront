@@ -1,8 +1,14 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { RequireAuth } from '@/app/router/guards';
+import { RequireAuth, RequireRole } from '@/app/router/guards';
 import { resetAuthStore, useAuthStore } from '@/domains/auth/store/auth-store';
+import type { Role } from '@/domains/auth/types';
 import { renderWithMinimalProviders } from '@/test/helpers/render';
+
+// biome's useValidAriaRole rule treats any JSX `role='...'` string literal as
+// an HTML/ARIA role attribute, even on this custom component — routed
+// through a typed, non-literal binding so it isn't (mis)validated as one.
+const ADMIN_ROLE: Role = 'admin';
 
 function LocationProbe() {
   const location = useLocation();
@@ -138,5 +144,81 @@ describe('RequireAuth', () => {
     await waitFor(() => {
       expect(screen.getByText('private-page')).toBeTruthy();
     });
+  });
+});
+
+describe('RequireRole', () => {
+  beforeEach(() => {
+    resetAuthStore();
+  });
+
+  afterEach(() => {
+    resetAuthStore();
+  });
+
+  it('renders its children when the user has the required role', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: 'demo-token',
+      userInfo: {
+        name: 'Admin',
+        userName: 'admin',
+        roleList: ['admin', 'user'],
+      },
+      restoreState: 'success',
+    });
+
+    renderWithMinimalProviders(
+      <Routes>
+        <Route path='/main/404' element={<p>not-found-page</p>} />
+        <Route
+          path='/main/inspection/questions'
+          element={
+            <RequireRole role={ADMIN_ROLE} fallbackPath='/main/404'>
+              <p>admin-only-page</p>
+            </RequireRole>
+          }
+        />
+      </Routes>,
+      { route: '/main/inspection/questions' }
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('admin-only-page')).toBeTruthy();
+    });
+  });
+
+  it('redirects to the fallback path (not login) when the role is missing — auth is fine, only permission is missing', async () => {
+    useAuthStore.setState({
+      hydrated: true,
+      accessToken: 'demo-token',
+      userInfo: { name: 'User', userName: 'user', roleList: ['user'] },
+      restoreState: 'success',
+    });
+
+    renderWithMinimalProviders(
+      <>
+        <Routes>
+          <Route path='/main/404' element={<p>not-found-page</p>} />
+          <Route
+            path='/main/inspection/questions'
+            element={
+              <RequireRole role={ADMIN_ROLE} fallbackPath='/main/404'>
+                <p>admin-only-page</p>
+              </RequireRole>
+            }
+          />
+        </Routes>
+        <LocationProbe />
+      </>,
+      { route: '/main/inspection/questions' }
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('not-found-page')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('admin-only-page')).toBeNull();
+    expect(screen.getByTestId('location-probe').textContent).toBe('/main/404');
   });
 });

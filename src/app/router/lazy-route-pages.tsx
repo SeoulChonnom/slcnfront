@@ -71,6 +71,34 @@ const PAGE_LOADERS = {
       import('@/pages/main/ShoeDetailPage').then((module) => ({
         default: module.ShoeDetailPage,
       })),
+    inspectionAreaList: () =>
+      import('@/pages/main/InspectionAreaListPage').then((module) => ({
+        default: module.InspectionAreaListPage,
+      })),
+    inspectionAreaDetail: () =>
+      import('@/pages/main/InspectionAreaDetailPage').then((module) => ({
+        default: module.InspectionAreaDetailPage,
+      })),
+    inspectionPropertyDetail: () =>
+      import('@/pages/main/InspectionPropertyDetailPage').then((module) => ({
+        default: module.InspectionPropertyDetailPage,
+      })),
+    inspectionRegister: () =>
+      import('@/pages/main/InspectionRegisterPage').then((module) => ({
+        default: module.InspectionRegisterPage,
+      })),
+    inspectionVisitEdit: () =>
+      import('@/pages/main/InspectionVisitEditPage').then((module) => ({
+        default: module.InspectionVisitEditPage,
+      })),
+    inspectionPropertyEdit: () =>
+      import('@/pages/main/InspectionPropertyEditPage').then((module) => ({
+        default: module.InspectionPropertyEditPage,
+      })),
+    inspectionQuestions: () =>
+      import('@/pages/main/InspectionQuestionsPage').then((module) => ({
+        default: module.InspectionQuestionsPage,
+      })),
   },
   mobile: {
     home: () =>
@@ -132,6 +160,34 @@ const PAGE_LOADERS = {
     shoeDetail: () =>
       import('@/pages/mobile/ShoeDetailPage').then((module) => ({
         default: module.ShoeDetailPage,
+      })),
+    inspectionAreaList: () =>
+      import('@/pages/mobile/InspectionAreaListPage').then((module) => ({
+        default: module.InspectionAreaListPage,
+      })),
+    inspectionAreaDetail: () =>
+      import('@/pages/mobile/InspectionAreaDetailPage').then((module) => ({
+        default: module.InspectionAreaDetailPage,
+      })),
+    inspectionPropertyDetail: () =>
+      import('@/pages/mobile/InspectionPropertyDetailPage').then((module) => ({
+        default: module.InspectionPropertyDetailPage,
+      })),
+    inspectionRegister: () =>
+      import('@/pages/mobile/InspectionRegisterPage').then((module) => ({
+        default: module.InspectionRegisterPage,
+      })),
+    inspectionVisitEdit: () =>
+      import('@/pages/mobile/InspectionVisitEditPage').then((module) => ({
+        default: module.InspectionVisitEditPage,
+      })),
+    inspectionPropertyEdit: () =>
+      import('@/pages/mobile/InspectionPropertyEditPage').then((module) => ({
+        default: module.InspectionPropertyEditPage,
+      })),
+    inspectionQuestions: () =>
+      import('@/pages/mobile/InspectionQuestionsPage').then((module) => ({
+        default: module.InspectionQuestionsPage,
       })),
   },
 } satisfies Record<DeviceType, Record<RoutePageKey, PageLoader>>;

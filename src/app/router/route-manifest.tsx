@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { DeviceType } from '@/app/router/route-constants';
+import type { Role } from '@/domains/auth/types';
 
 export type DeviceShellKey = 'main' | 'detail';
 
@@ -18,13 +19,21 @@ export type RoutePageKey =
   | 'profile'
   | 'profileVerify'
   | 'profileEdit'
-  | 'shoeDetail';
+  | 'shoeDetail'
+  | 'inspectionAreaList'
+  | 'inspectionAreaDetail'
+  | 'inspectionPropertyDetail'
+  | 'inspectionRegister'
+  | 'inspectionVisitEdit'
+  | 'inspectionPropertyEdit'
+  | 'inspectionQuestions';
 
 export type DeviceProtectedRouteDefinition = {
   index?: true;
   path?: string;
   page: RoutePageKey;
   shell: DeviceShellKey;
+  requireRole?: Role;
 };
 
 export type BaseRouteDefinition = Omit<DeviceProtectedRouteDefinition, 'shell'>;
@@ -44,6 +53,26 @@ export const BASE_PROTECTED_ROUTES: BaseRouteDefinition[] = [
   { path: 'profile', page: 'profile' },
   { path: 'profile/verify', page: 'profileVerify' },
   { path: 'profile/edit', page: 'profileEdit' },
+  { path: 'inspection', page: 'inspectionAreaList' },
+  { path: 'inspection/register', page: 'inspectionRegister' },
+  {
+    path: 'inspection/questions',
+    page: 'inspectionQuestions',
+    requireRole: 'admin',
+  },
+  { path: 'inspection/:areaId', page: 'inspectionAreaDetail' },
+  {
+    path: 'inspection/:areaId/property/:propertyId',
+    page: 'inspectionPropertyDetail',
+  },
+  {
+    path: 'inspection/:areaId/visit/:visitId/edit',
+    page: 'inspectionVisitEdit',
+  },
+  {
+    path: 'inspection/:areaId/visit/:visitId/property/:propertyId/edit',
+    page: 'inspectionPropertyEdit',
+  },
   { path: ':brand/:shoesName', page: 'shoeDetail' },
 ];
 

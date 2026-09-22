@@ -1,0 +1,179 @@
+/* ============================================================
+   Inspection (임장 기록) — tokens + shared building blocks
+   Inherits DESIGN.md's "Seoul Quiet Editorial": hairline rows over cards,
+   colors/spacing/radii/type all pulled from tokens.css. No new colors here —
+   revisit-intent colors reuse --color-success/--color-warning/--color-body-muted.
+   ============================================================ */
+
+:root {
+  /* screen_design.md §3 — the only three tokens this domain adds. */
+  --fr-block: 2.5rem;
+  --fr-block-lg: 3.5rem;
+  --fr-measure: 42rem; /* 672px — memo/review body measure */
+}
+
+/* ---- Hairline row — the base container for area/visit/property rows,
+   replacing cards per DESIGN.md. Page-level sections lay their own grid on
+   top of this; this class only owns the divider + rhythm. ---- */
+.slcn-inspection-hairline-row {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-hairline-row:first-child {
+  border-top: 1px solid var(--color-hairline);
+}
+
+/* ============================================================
+   InterestStars — display + input
+   ============================================================ */
+
+.slcn-inspection-star {
+  color: var(--color-accent-muted);
+  flex: none;
+}
+
+.slcn-inspection-star:not(.slcn-inspection-star--filled) {
+  color: var(--color-border-strong);
+}
+
+.slcn-inspection-interest-stars,
+.slcn-inspection-interest-stars--empty {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  color: var(--color-body);
+}
+
+.slcn-inspection-interest-stars--empty {
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-interest-stars__icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.slcn-inspection-interest-stars__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-interest-input {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.slcn-inspection-interest-input__star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.slcn-inspection-interest-input__star:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-interest-input__star .slcn-inspection-star {
+  width: 22px;
+  height: 22px;
+}
+
+.slcn-inspection-interest-input__value {
+  margin-inline-start: var(--space-2);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+/* ============================================================
+   RevisitIntentMark — text (list) and pill (visit-rail header) variants
+   ============================================================ */
+
+.slcn-inspection-revisit-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+  white-space: nowrap;
+}
+
+.slcn-inspection-revisit-mark--undecided {
+  color: var(--color-body-muted);
+  font-weight: var(--weight-body);
+}
+
+.slcn-inspection-revisit-mark--pill {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+}
+
+/* ============================================================
+   DraftBadge — dashed border + pale-gray "작성 중" + one-line reason
+   ============================================================ */
+
+.slcn-inspection-draft-badge-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-draft-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+  white-space: nowrap;
+}
+
+.slcn-inspection-draft-badge__reason {
+  margin: 0;
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+/* ============================================================
+   TagChips — "태그 N개 + N" (alphabetical, not "top N" — see §4)
+   ============================================================ */
+
+.slcn-inspection-tag-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.slcn-inspection-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-soft);
+  color: var(--color-accent-muted);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+}
+
+.slcn-inspection-tag-chip--more {
+  background: transparent;
+  color: var(--color-body-muted);
+}
