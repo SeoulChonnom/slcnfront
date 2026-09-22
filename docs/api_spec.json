@@ -325,6 +325,500 @@
         ]
       }
     },
+    "/inspection-visits/{visitId}": {
+      "get": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "getInspectionVisit",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionVisitDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "modifyInspectionVisit",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionVisitUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionVisitDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "deleteInspectionVisit",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/properties/{propertyId}": {
+      "get": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "getViewedProperty",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "modifyViewedProperty",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewedPropertyUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "deleteViewedProperty",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/properties/{propertyId}/answers": {
+      "put": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "modifyPropertyAnswers",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyAnswerBulkUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/properties/order": {
+      "put": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "modifyViewedPropertyOrder",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ViewedPropertyOrderUdo"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/images/order": {
+      "put": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "modifyInspectionImageOrder",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FileBoxItemOrderUdo"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/inspection-questions/{questionId}": {
+      "put": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "modifyInspectionQuestionContent",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionContentUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-questions/order": {
+      "put": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "modifyInspectionQuestionOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InspectionQuestionOrderUdo"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/inspection-areas/{areaId}": {
+      "get": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "getInspectionArea",
+        "parameters": [
+          {
+            "name": "areaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "visitId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeProperties",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionAreaDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "modifyInspectionArea",
+        "parameters": [
+          {
+            "name": "areaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionAreaUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionAreaRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "deleteInspectionArea",
+        "parameters": [
+          {
+            "name": "areaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/calendars": {
       "get": {
         "tags": [
@@ -705,6 +1199,351 @@
         }
       }
     },
+    "/inspection-visits": {
+      "get": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "getInspectionVisits",
+        "parameters": [
+          {
+            "name": "areaId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "COMPLETED"
+              ]
+            }
+          },
+          {
+            "name": "revisitIntent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "YES",
+                "MAYBE",
+                "NO"
+              ]
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageRdoInspectionVisitRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "registerInspectionVisit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionVisitCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionVisitDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/properties": {
+      "post": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "registerViewedProperty",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewedPropertyCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-questions": {
+      "get": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "getInspectionQuestions",
+        "parameters": [
+          {
+            "name": "includeDisabled",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "withAnswerCount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionQuestionRdo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "registerInspectionQuestion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-areas": {
+      "get": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "getInspectionAreas",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revisitIntent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "YES",
+                "MAYBE",
+                "NO"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RECENT_VISIT",
+                "VISIT_COUNT",
+                "TOP_INTEREST"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionAreaListRdo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "registerInspectionArea",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionAreaCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionAreaRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/clients/token": {
       "post": {
         "tags": [
@@ -822,11 +1661,41 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "파일 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "원본은 오브젝트 스토리지의 서명된 URL로 리다이렉트",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "ETag 일치, 본문 없음",
             "content": {
               "*/*": {
                 "schema": {
@@ -895,6 +1764,174 @@
             "X-AUTH-TOKEN": []
           }
         ]
+      }
+    },
+    "/inspection-visits/{visitId}/status": {
+      "patch": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "changeInspectionVisitStatus",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionVisitStatusUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionVisitDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/properties/{propertyId}/status": {
+      "patch": {
+        "tags": [
+          "viewed-property-resource"
+        ],
+        "operationId": "changeViewedPropertyStatus",
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewedPropertyStatusUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-questions/{questionId}/status": {
+      "patch": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "changeInspectionQuestionStatus",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionStatusUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-questions/{questionId}/policy": {
+      "patch": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "modifyInspectionQuestionPolicy",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionPolicyUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionRdo"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/calendars/{calendarId}/hide": {
@@ -1076,17 +2113,106 @@
         ]
       }
     },
-    "/assets/files/{fileId}": {
+    "/inspection-visits/{visitId}/complex-names": {
       "get": {
         "tags": [
-          "file-resource"
+          "viewed-property-resource"
         ],
-        "summary": "파일 ID 조회 API",
-        "description": "FileAsset ID를 통해 파일을 조회합니다.",
-        "operationId": "getFileById",
+        "operationId": "getComplexNames",
         "parameters": [
           {
-            "name": "fileId",
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "VISIT",
+              "enum": [
+                "VISIT",
+                "AREA"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-tags": {
+      "get": {
+        "tags": [
+          "inspection-tag-resource"
+        ],
+        "operationId": "getInspectionTags",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "VISIT",
+                "PROPERTY"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionTagRdo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-questions/{questionId}/versions": {
+      "get": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "getInspectionQuestionVersions",
+        "parameters": [
+          {
+            "name": "questionId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1096,7 +2222,252 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionQuestionVersionRdo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-properties/{propertyId}": {
+      "get": {
+        "tags": [
+          "inspection-property-resource"
+        ],
+        "operationId": "getInspectionProperty",
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-areas/{areaId}/properties": {
+      "get": {
+        "tags": [
+          "inspection-area-resource"
+        ],
+        "operationId": "getAreaProperties",
+        "parameters": [
+          {
+            "name": "areaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "complexName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AreaViewedPropertyRdo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets/files/{fileId}": {
+      "get": {
+        "tags": [
+          "file-resource"
+        ],
+        "summary": "파일 ID 조회 API",
+        "description": "FileAsset ID를 통해 파일을 조회합니다. variant(home-feature, home-thumb) 또는 width를 지정하면 축소본을 응답합니다. 파라미터를 지정하지 않거나 variant=original이면 원본을 응답하고, 알 수 없는 variant는 기본 축소본(home-feature)으로 응답합니다. 축소본이 아직 생성되지 않은 자산은 원본으로 폴백합니다. format 파라미터는 호환을 위해 받기만 하고 사용하지 않습니다. 원본은 오브젝트 스토리지의 서명된 URL로 302 리다이렉트하고, 축소본은 서버가 바이트를 그대로 응답합니다.",
+        "operationId": "getFileById",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "파일 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "원본은 오브젝트 스토리지의 서명된 URL로 리다이렉트",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "ETag 일치, 본문 없음",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/assets/files/{fileId}/download": {
+      "get": {
+        "tags": [
+          "file-resource"
+        ],
+        "summary": "파일 다운로드 API",
+        "description": "FileAsset ID의 파일을 첨부 파일로 내려받습니다. 기본은 원본이며, variant를 지정하면 해당 축소본을 내려받습니다. 알 수 없는 variant는 원본으로 처리합니다. Content-Disposition에 업로드 당시의 파일명이 담깁니다.",
+        "operationId": "downloadFileById",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "파일 다운로드 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "원본은 오브젝트 스토리지의 서명된 URL로 리다이렉트",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "ETag 일치, 본문 없음",
             "content": {
               "*/*": {
                 "schema": {
@@ -1203,7 +2574,8 @@
               "logo",
               "map",
               "travel",
-              "profile"
+              "profile",
+              "inspection"
             ]
           },
           "originalFilename": {
@@ -1221,6 +2593,20 @@
           "size": {
             "type": "integer",
             "format": "int64"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1253,7 +2639,9 @@
               "TRAVEL",
               "TRAVEL_DAY",
               "TRAVEL_PLACE",
-              "TRIP"
+              "TRIP",
+              "INSPECTION_VISIT",
+              "VIEWED_PROPERTY"
             ]
           },
           "targetId": {
@@ -1415,7 +2803,9 @@
               "TRAVEL",
               "TRAVEL_DAY",
               "TRAVEL_PLACE",
-              "TRIP"
+              "TRIP",
+              "INSPECTION_VISIT",
+              "VIEWED_PROPERTY"
             ]
           },
           "targetId": {
@@ -1677,6 +3067,675 @@
           }
         }
       },
+      "InspectionVisitUdo": {
+        "type": "object",
+        "properties": {
+          "visitedAt": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "revisitIntent": {
+            "type": "string",
+            "enum": [
+              "YES",
+              "MAYBE",
+              "NO"
+            ]
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemUdo"
+            }
+          }
+        }
+      },
+      "IncompleteSummaryRdo": {
+        "type": "object",
+        "properties": {
+          "unansweredRequiredCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unansweredRequiredQuestions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnansweredQuestionRdo"
+            }
+          },
+          "missingFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "draftPropertyCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visitMissingFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "draftVisitCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionAreaBriefRdo": {
+        "type": "object",
+        "properties": {
+          "areaId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionVisitDetailRdo": {
+        "type": "object",
+        "properties": {
+          "inspectionVisitId": {
+            "type": "string"
+          },
+          "area": {
+            "$ref": "#/components/schemas/InspectionAreaBriefRdo"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "revisitIntent": {
+            "type": "string",
+            "enum": [
+              "YES",
+              "MAYBE",
+              "NO"
+            ]
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ViewedPropertyDetailRdo"
+            }
+          },
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemRdo"
+            }
+          },
+          "incompleteSummary": {
+            "$ref": "#/components/schemas/IncompleteSummaryRdo"
+          }
+        }
+      },
+      "PropertyAnswerRdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "questionVersionNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "question": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "LONG_TEXT",
+              "BOOLEAN",
+              "SINGLE_SELECT",
+              "MULTI_SELECT",
+              "NUMBER",
+              "RATING"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "answered": {
+            "type": "boolean"
+          },
+          "choiceOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionChoiceSdo"
+            }
+          },
+          "textValue": {
+            "type": "string"
+          },
+          "booleanValue": {
+            "type": "boolean"
+          },
+          "numberValue": {
+            "type": "number"
+          },
+          "ratingValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectedCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isCurrentVersion": {
+            "type": "boolean"
+          },
+          "questionEnabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "QuestionChoiceSdo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UnansweredQuestionRdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ViewedPropertyBriefRdo": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string"
+          },
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ViewedPropertyDetailRdo": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string"
+          },
+          "inspectionVisitId": {
+            "type": "string"
+          },
+          "areaId": {
+            "type": "string"
+          },
+          "areaName": {
+            "type": "string"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemRdo"
+            }
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropertyAnswerRdo"
+            }
+          },
+          "incompleteSummary": {
+            "$ref": "#/components/schemas/IncompleteSummaryRdo"
+          },
+          "prevProperty": {
+            "$ref": "#/components/schemas/ViewedPropertyBriefRdo"
+          },
+          "nextProperty": {
+            "$ref": "#/components/schemas/ViewedPropertyBriefRdo"
+          }
+        }
+      },
+      "ViewedPropertyUdo": {
+        "type": "object",
+        "properties": {
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemUdo"
+            }
+          }
+        }
+      },
+      "PropertyAnswerBulkUdo": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropertyAnswerUdo"
+            }
+          }
+        }
+      },
+      "PropertyAnswerUdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "textValue": {
+            "type": "string"
+          },
+          "booleanValue": {
+            "type": "boolean"
+          },
+          "numberValue": {
+            "type": "number"
+          },
+          "ratingValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectedCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ViewedPropertyOrderUdo": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FileBoxItemOrderUdo": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionContentUdo": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionChoiceSdo"
+            }
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionQuestionRdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "LONG_TEXT",
+              "BOOLEAN",
+              "SINGLE_SELECT",
+              "MULTI_SELECT",
+              "NUMBER",
+              "RATING"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "currentVersionNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionChoiceSdo"
+            }
+          },
+          "unit": {
+            "type": "string"
+          },
+          "answerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionOrderUdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionAreaUdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionAreaRdo": {
+        "type": "object",
+        "properties": {
+          "areaId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "visitCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstVisitedAt": {
+            "type": "string"
+          },
+          "lastVisitedAt": {
+            "type": "string"
+          },
+          "totalPropertyCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "latestVisit": {
+            "$ref": "#/components/schemas/InspectionVisitSummaryRdo"
+          },
+          "topProperty": {
+            "$ref": "#/components/schemas/ViewedPropertyBriefRdo"
+          },
+          "incompleteSummary": {
+            "$ref": "#/components/schemas/IncompleteSummaryRdo"
+          },
+          "thumbnails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemRdo"
+            }
+          },
+          "totalImageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchedProperty": {
+            "$ref": "#/components/schemas/MatchedPropertyRdo"
+          }
+        }
+      },
+      "InspectionVisitSummaryRdo": {
+        "type": "object",
+        "properties": {
+          "visitId": {
+            "type": "string"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "revisitIntent": {
+            "type": "string",
+            "enum": [
+              "YES",
+              "MAYBE",
+              "NO"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "propertyCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "incompleteSummary": {
+            "$ref": "#/components/schemas/IncompleteSummaryRdo"
+          },
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
+          }
+        }
+      },
+      "MatchedPropertyRdo": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string"
+          },
+          "visitId": {
+            "type": "string"
+          },
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "CalendarUdo": {
         "type": "object",
         "properties": {
@@ -1846,7 +3905,9 @@
               "TRAVEL",
               "TRAVEL_DAY",
               "TRAVEL_PLACE",
-              "TRIP"
+              "TRIP",
+              "INSPECTION_VISIT",
+              "VIEWED_PROPERTY"
             ]
           },
           "targetId": {
@@ -2091,6 +4152,141 @@
           }
         }
       },
+      "InspectionAreaCdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionVisitCdo": {
+        "type": "object",
+        "properties": {
+          "areaId": {
+            "type": "string"
+          },
+          "area": {
+            "$ref": "#/components/schemas/InspectionAreaCdo"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "revisitIntent": {
+            "type": "string",
+            "enum": [
+              "YES",
+              "MAYBE",
+              "NO"
+            ]
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemCdo"
+            }
+          }
+        }
+      },
+      "ViewedPropertyCdo": {
+        "type": "object",
+        "properties": {
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "pros": {
+            "type": "string"
+          },
+          "cons": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileBoxItemCdo"
+            }
+          }
+        }
+      },
+      "InspectionQuestionCdo": {
+        "type": "object",
+        "properties": {
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "LONG_TEXT",
+              "BOOLEAN",
+              "SINGLE_SELECT",
+              "MULTI_SELECT",
+              "NUMBER",
+              "RATING"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionChoiceSdo"
+            }
+          },
+          "unit": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "ClientTokenCdo": {
         "type": "object",
         "properties": {
@@ -2158,6 +4354,50 @@
             "format": "int32",
             "description": "정렬 순서",
             "example": 1
+          }
+        }
+      },
+      "InspectionVisitStatusUdo": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          }
+        }
+      },
+      "ViewedPropertyStatusUdo": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          }
+        }
+      },
+      "InspectionQuestionStatusUdo": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InspectionQuestionPolicyUdo": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2280,6 +4520,241 @@
             "type": "string",
             "description": "검색 종료 일시(ISO 8601)",
             "example": "2026-05-01T00:00:00+09:00"
+          }
+        }
+      },
+      "InspectionVisitRdo": {
+        "type": "object",
+        "properties": {
+          "inspectionVisitId": {
+            "type": "string"
+          },
+          "area": {
+            "$ref": "#/components/schemas/InspectionAreaBriefRdo"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "oneLineReview": {
+            "type": "string"
+          },
+          "revisitIntent": {
+            "type": "string",
+            "enum": [
+              "YES",
+              "MAYBE",
+              "NO"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
+          },
+          "propertyCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "topInterestProperty": {
+            "$ref": "#/components/schemas/ViewedPropertyBriefRdo"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cover": {
+            "$ref": "#/components/schemas/FileBoxItemRdo"
+          },
+          "incompleteSummary": {
+            "$ref": "#/components/schemas/IncompleteSummaryRdo"
+          }
+        }
+      },
+      "PageRdoInspectionVisitRdo": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InspectionVisitRdo"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InspectionTagRdo": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "usageCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionVersionRdo": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "versionNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionChoiceSdo"
+            }
+          },
+          "unit": {
+            "type": "string"
+          },
+          "answerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "current": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InspectionAreaListRdo": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InspectionAreaRdo"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "revisitIntentCounts": {
+            "$ref": "#/components/schemas/RevisitIntentCountsRdo"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/InspectionAreaTotalsRdo"
+          }
+        }
+      },
+      "InspectionAreaTotalsRdo": {
+        "type": "object",
+        "properties": {
+          "areaCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "visitCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "propertyCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RevisitIntentCountsRdo": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "YES": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "MAYBE": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "NO": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "InspectionAreaDetailRdo": {
+        "type": "object",
+        "properties": {
+          "area": {
+            "$ref": "#/components/schemas/InspectionAreaRdo"
+          },
+          "visits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InspectionVisitSummaryRdo"
+            }
+          },
+          "hasMoreVisits": {
+            "type": "boolean"
+          },
+          "visitPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectedVisit": {
+            "$ref": "#/components/schemas/InspectionVisitDetailRdo"
+          }
+        }
+      },
+      "AreaViewedPropertyRdo": {
+        "type": "object",
+        "properties": {
+          "propertyId": {
+            "type": "string"
+          },
+          "visitId": {
+            "type": "string"
+          },
+          "visitedAt": {
+            "type": "string"
+          },
+          "complexName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "interestLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "COMPLETED"
+            ]
           }
         }
       }
