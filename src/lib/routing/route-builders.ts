@@ -111,10 +111,6 @@ export function buildDeviceInspectionRegisterPath(device: DeviceType) {
   return buildDevicePath(device, 'inspection', 'register');
 }
 
-export function buildDeviceInspectionQuestionsPath(device: DeviceType) {
-  return buildDevicePath(device, 'inspection', 'questions');
-}
-
 export function buildDeviceInspectionAreaDetailPath(
   device: DeviceType,
   areaId: string

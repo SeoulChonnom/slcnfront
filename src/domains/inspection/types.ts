@@ -13,7 +13,7 @@ export type AnswerType =
 export type TagScope = 'VISIT' | 'PROPERTY';
 export type ComplexNameScope = 'VISIT' | 'AREA';
 export type AreaSort = 'RECENT_VISIT' | 'VISIT_COUNT' | 'TOP_INTEREST';
-export type InspectionFileRole = 'COVER' | 'GALLERY';
+type InspectionFileRole = 'COVER' | 'GALLERY';
 
 /** Mirrors `FileAssetRdo` for `type=inspection` uploads. */
 export type FileAsset = {
@@ -44,13 +44,13 @@ export type FileBoxItem = {
   };
 };
 
-export type QuestionChoice = {
+type QuestionChoice = {
   code: string;
   label: string;
   sortOrder: number;
 };
 
-export type UnansweredQuestion = {
+type UnansweredQuestion = {
   questionId: string;
   question: string;
   sortOrder: number;
@@ -122,7 +122,7 @@ export type RevisitIntentCounts = {
   UNDECIDED: number;
 };
 
-export type InspectionAreaTotals = {
+type InspectionAreaTotals = {
   areaCount: number;
   visitCount: number;
   propertyCount: number;
@@ -184,7 +184,7 @@ export type PropertyAnswer = {
   questionEnabled: boolean;
 };
 
-export type InspectionAreaBrief = {
+type InspectionAreaBrief = {
   areaId: string;
   name: string;
 };
@@ -287,7 +287,7 @@ export type InspectionQuestionVersion = {
 
 // ── Request (Cdo/Udo) types ──────────────────────────────────────────────────
 
-export type InspectionFileBoxItemCdo = {
+type InspectionFileBoxItemCdo = {
   fileAssetId: string;
   role: InspectionFileRole;
   caption?: string;

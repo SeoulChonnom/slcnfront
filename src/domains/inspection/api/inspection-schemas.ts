@@ -264,7 +264,7 @@ const inspectionQuestionVersionSchema = z.object({
 
 // ── Top-level response schemas ───────────────────────────────────────────────
 
-export const inspectionAreaListResponseSchema = z.object({
+const inspectionAreaListResponseSchema = z.object({
   items: z.array(inspectionAreaSchema).default([]),
   totalCount: z.number(),
   hasNext: z.boolean(),
@@ -272,7 +272,7 @@ export const inspectionAreaListResponseSchema = z.object({
   totals: inspectionAreaTotalsSchema,
 });
 
-export const inspectionAreaDetailResponseSchema = z.object({
+const inspectionAreaDetailResponseSchema = z.object({
   area: inspectionAreaSchema,
   visits: z.array(inspectionVisitSummarySchema).default([]),
   hasMoreVisits: z.boolean(),
@@ -281,31 +281,23 @@ export const inspectionAreaDetailResponseSchema = z.object({
   selectedVisit: inspectionVisitDetailSchema.nullable(),
 });
 
-export const areaViewedPropertyListSchema = z.array(areaViewedPropertySchema);
+const areaViewedPropertyListSchema = z.array(areaViewedPropertySchema);
 
-export const inspectionVisitListResponseSchema = z.object({
+const inspectionVisitListResponseSchema = z.object({
   items: z.array(inspectionVisitListItemSchema).default([]),
   totalCount: z.number(),
   hasNext: z.boolean(),
 });
 
-export const inspectionTagListSchema = z.array(inspectionTagSchema);
+const inspectionTagListSchema = z.array(inspectionTagSchema);
 
-export const inspectionQuestionListSchema = z.array(inspectionQuestionSchema);
+const inspectionQuestionListSchema = z.array(inspectionQuestionSchema);
 
-export const inspectionQuestionVersionListSchema = z.array(
+const inspectionQuestionVersionListSchema = z.array(
   inspectionQuestionVersionSchema
 );
 
-export const complexNameListSchema = z.array(z.string());
-
-export {
-  inspectionAreaSchema,
-  inspectionQuestionSchema,
-  inspectionVisitDetailSchema,
-  inspectionVisitListItemSchema,
-  viewedPropertyDetailSchema,
-};
+const complexNameListSchema = z.array(z.string());
 
 // ── Inferred DTO types ────────────────────────────────────────────────────────
 

@@ -9,7 +9,7 @@ type ApiClientLike = Pick<ReturnType<typeof createApiClient>, 'post'>;
  * fe_implementation_decisions.md §3-⑧ and api.md §7①). Uploading more in one
  * request risks a `413`.
  */
-export const INSPECTION_UPLOAD_BATCH_SIZE = 6;
+const INSPECTION_UPLOAD_BATCH_SIZE = 6;
 
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
@@ -21,13 +21,13 @@ function chunk<T>(items: T[], size: number): T[][] {
   return chunks;
 }
 
-export type UploadProgress = {
+type UploadProgress = {
   /** Files whose upload request has completed (successfully). */
   completed: number;
   total: number;
 };
 
-export function createInspectionFilesApi(client: ApiClientLike = apiClient) {
+function createInspectionFilesApi(client: ApiClientLike = apiClient) {
   return {
     /**
      * Uploads `files` in batches of {@link INSPECTION_UPLOAD_BATCH_SIZE},

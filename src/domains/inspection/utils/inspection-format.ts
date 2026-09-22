@@ -70,12 +70,6 @@ export const REVISIT_INTENT_META: Record<RevisitIntent, RevisitIntentMeta> = {
 
 export const REVISIT_INTENT_UNDECIDED_LABEL = '미정';
 
-export function formatRevisitIntentLabel(intent: RevisitIntent | null): string {
-  return intent
-    ? REVISIT_INTENT_META[intent].label
-    : REVISIT_INTENT_UNDECIDED_LABEL;
-}
-
 // ── Interest level ────────────────────────────────────────────────────────────
 
 export const MAX_INTEREST_LEVEL = 5;

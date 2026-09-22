@@ -59,7 +59,7 @@ type ApiClientLike = Pick<
   'get' | 'post' | 'put' | 'patch' | 'delete'
 >;
 
-export function createInspectionApi(client: ApiClientLike = apiClient) {
+function createInspectionApi(client: ApiClientLike = apiClient) {
   return {
     // ── Areas ───────────────────────────────────────────────────────────────
 

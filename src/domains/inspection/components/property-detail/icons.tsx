@@ -77,22 +77,6 @@ export function ChevronIcon(props: IconProps) {
   );
 }
 
-export function ProIcon(props: IconProps) {
-  return (
-    <BaseIcon {...props} strokeWidth='1.7'>
-      <path d='M12 6.5v11M6.5 12h11' />
-    </BaseIcon>
-  );
-}
-
-export function ConIcon(props: IconProps) {
-  return (
-    <BaseIcon {...props} strokeWidth='1.7'>
-      <path d='M6.5 12h11' />
-    </BaseIcon>
-  );
-}
-
 export function InfoIcon(props: IconProps) {
   return (
     <BaseIcon {...props} strokeWidth='1.7'>

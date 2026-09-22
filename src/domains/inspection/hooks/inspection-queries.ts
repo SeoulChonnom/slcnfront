@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import type {
   ComplexNameScope,
-  InspectionAreaCdo,
   InspectionAreaListParams,
   InspectionAreaUdo,
   InspectionQuestionCdo,
@@ -174,28 +173,11 @@ function useInvalidateInspection() {
     queryClient.invalidateQueries({ queryKey: inspectionQueryKeys.all });
 }
 
-export function useCreateInspectionArea() {
-  const invalidate = useInvalidateInspection();
-  return useMutation({
-    mutationFn: (payload: InspectionAreaCdo) =>
-      inspectionApi.createArea(payload),
-    onSuccess: () => invalidate(),
-  });
-}
-
 export function useUpdateInspectionArea(areaId: string) {
   const invalidate = useInvalidateInspection();
   return useMutation({
     mutationFn: (payload: InspectionAreaUdo) =>
       inspectionApi.updateArea(areaId, payload),
-    onSuccess: () => invalidate(),
-  });
-}
-
-export function useDeleteInspectionArea() {
-  const invalidate = useInvalidateInspection();
-  return useMutation({
-    mutationFn: (areaId: string) => inspectionApi.deleteArea(areaId),
     onSuccess: () => invalidate(),
   });
 }
