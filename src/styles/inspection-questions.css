@@ -1,3 +1,506 @@
 /* 임장 기록 — questions 화면 전용 스타일.
    공통 토큰과 프리미티브(별·재방문 마크·DRAFT 배지·태그 칩)는 inspection.css에 있다.
    이 파일에는 이 화면에만 쓰는 레이아웃만 둔다. */
+
+.slcn-inspection-questions-section {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: var(--fr-block) var(--space-5) var(--fr-block-lg);
+}
+
+.slcn-inspection-questions-section__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--fr-block);
+}
+
+.slcn-inspection-questions-section__title {
+  font-size: var(--text-display-md);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-questions-section__subtitle {
+  margin-top: var(--space-2);
+  max-width: var(--fr-measure);
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+  word-break: keep-all;
+}
+
+.slcn-inspection-questions-section__actions {
+  display: flex;
+  flex: none;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-questions-section__error {
+  margin-bottom: var(--space-4);
+  color: var(--color-error);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-questions-section__empty {
+  padding: var(--fr-block) 0;
+  border-top: 1px solid var(--color-hairline);
+  color: var(--color-body-muted);
+  font-size: var(--text-body);
+}
+
+/* ---- Column header row (desktop only — see the 833px block below) ---- */
+
+.slcn-inspection-qhead {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 6.5rem 4.5rem 7rem 5.5rem;
+  gap: var(--space-4);
+  padding: 0 var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-qlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- Question row ---- */
+
+.slcn-inspection-qrow {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 6.5rem 4.5rem 7rem 5.5rem;
+  align-items: start;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+}
+
+.slcn-inspection-qrow[data-unused="true"] {
+  background: var(--color-surface-muted);
+}
+
+.slcn-inspection-qrow[data-dragging="true"] {
+  opacity: 0.5;
+}
+
+.slcn-inspection-qrow__grab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-qrow__reorder-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: grab;
+}
+
+.slcn-inspection-qrow__reorder-grab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1rem;
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-qrow__reorder-grab svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.slcn-inspection-qrow__move {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 1.375rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: var(--text-caption);
+  line-height: 1;
+}
+
+.slcn-inspection-qrow__move:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.slcn-inspection-qrow__move:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-qrow__main {
+  min-width: 0;
+}
+
+.slcn-inspection-qrow__text {
+  font-size: var(--text-body);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+  word-break: keep-all;
+}
+
+.slcn-inspection-qrow[data-unused="true"] .slcn-inspection-qrow__text {
+  font-weight: var(--weight-body);
+}
+
+.slcn-inspection-qrow__sub {
+  margin-top: 0.1875rem;
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-qrow__history-toggle {
+  margin-top: var(--space-2);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-accent-muted);
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+
+.slcn-inspection-qrow__history-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-qrow__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 0.125rem;
+}
+
+.slcn-inspection-question-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-muted);
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+}
+
+.slcn-inspection-question-required {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--color-accent-muted);
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-qrow__optional {
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-qrow__toggle-label {
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+}
+
+.slcn-inspection-qrow__edit {
+  justify-self: start;
+}
+
+.slcn-inspection-qrow__error {
+  grid-column: 2 / -1;
+  margin-top: var(--space-2);
+  color: var(--color-error);
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+}
+
+/* ---- Version history accordion ---- */
+
+.slcn-inspection-qversions {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) 0 0;
+  border-top: 1px dashed var(--color-hairline);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-qversions__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: baseline;
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-qversions__no {
+  min-width: 1.75rem;
+  color: var(--color-ink);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-qversions__content {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  color: var(--color-ink);
+}
+
+.slcn-inspection-qversions__meta {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.slcn-inspection-qversions__skel {
+  height: 1rem;
+  margin-top: var(--space-2);
+}
+
+.slcn-inspection-qversions__error {
+  margin-top: var(--space-2);
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+/* ---- Loading skeleton — same grid shape as a real row, no spinner ---- */
+
+.slcn-inspection-qlist-skeleton .slcn-inspection-qrow {
+  align-items: center;
+}
+
+.slcn-inspection-qrow__skel-grab {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-xs);
+}
+
+.slcn-inspection-qrow__skel-line {
+  height: 1rem;
+  width: 70%;
+}
+
+.slcn-inspection-qrow__skel-line--sub {
+  height: 0.75rem;
+  width: 40%;
+  margin-top: var(--space-2);
+}
+
+.slcn-inspection-qrow__skel-chip {
+  height: 1.5rem;
+  border-radius: var(--radius-xs);
+}
+
+.slcn-inspection-qrow__skel-btn {
+  height: 2rem;
+  border-radius: var(--radius-pill);
+}
+
+/* ---- Question form modal (create + edit share this) ---- */
+
+.slcn-inspection-question-modal {
+  max-width: 34rem;
+}
+
+.slcn-inspection-question-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.slcn-inspection-question-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.slcn-inspection-question-form__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-question-form__disable {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.slcn-inspection-question-form__disable:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-question-form__actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.slcn-inspection-question-form__error {
+  color: var(--color-error);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-alert {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-ink);
+  font-size: var(--text-caption);
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.slcn-inspection-alert svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  color: var(--color-body-muted);
+}
+
+/* ---- Choice editor (SINGLE_SELECT / MULTI_SELECT only) ---- */
+
+.slcn-inspection-choice-editor {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-choice-editor__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-choice-editor__row {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) 2.75rem;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.slcn-inspection-choice-editor__code,
+.slcn-inspection-choice-editor__label {
+  min-width: 0;
+  height: 2.75rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: var(--text-body);
+}
+
+.slcn-inspection-choice-editor__code:focus-visible,
+.slcn-inspection-choice-editor__label:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-choice-editor__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-choice-editor__remove svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.slcn-inspection-choice-editor__remove:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.slcn-inspection-choice-editor__add {
+  justify-self: start;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-accent-muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+
+/* ============================================================
+   Mobile (<=833px) — screen_design.md §8 반응형 경계.
+   타입·필수·사용은 질문 아래로 접어 쌓는다 (§5.5 명시).
+   ============================================================ */
+
+@media (max-width: 833px) {
+  .slcn-inspection-questions-section {
+    padding: var(--space-5) var(--space-5) var(--fr-block-lg);
+  }
+
+  .slcn-inspection-questions-section__head {
+    flex-direction: column;
+  }
+
+  .slcn-inspection-questions-section__actions {
+    width: 100%;
+  }
+
+  .slcn-inspection-questions-section__actions .slcn-button {
+    flex: 1;
+  }
+
+  .slcn-inspection-qhead {
+    display: none;
+  }
+
+  .slcn-inspection-qrow {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    row-gap: var(--space-3);
+  }
+
+  .slcn-inspection-qrow__meta {
+    grid-column: 2;
+    margin-top: 0;
+  }
+
+  .slcn-inspection-qrow__edit {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .slcn-inspection-question-form__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
