@@ -211,7 +211,7 @@ describe('InspectionPropertyDetailSection', () => {
 
     // Quote / tags / memo / pros-cons
     expect(screen.getByText('“가장 마음에 들었던 집”')).toBeTruthy();
-    expect(screen.getByText('남향')).toBeTruthy();
+    expect(screen.getByText('#남향')).toBeTruthy();
     expect(screen.getByText('거실이 넓다.')).toBeTruthy();
     expect(screen.getByText('오후 채광 좋음')).toBeTruthy();
     expect(screen.getByText('관리비 비쌈')).toBeTruthy();

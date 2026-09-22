@@ -22,8 +22,11 @@ export function TagChips({ tags, max = 3, className }: TagChipsProps) {
   return (
     <span className={cn('slcn-inspection-tag-chips', className)}>
       {visible.map((tag) => (
+        // The server normalises the stored name without a '#', and the design
+        // shows one on every chip. Prefixing here keeps the filter value the
+        // server expects (an exact, case-sensitive match) out of the display.
         <span key={tag} className='slcn-inspection-tag-chip'>
-          {tag}
+          #{tag}
         </span>
       ))}
       {overflow > 0 ? (
