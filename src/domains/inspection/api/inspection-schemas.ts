@@ -277,7 +277,8 @@ export const inspectionAreaDetailResponseSchema = z.object({
   visits: z.array(inspectionVisitSummarySchema).default([]),
   hasMoreVisits: z.boolean(),
   visitPageSize: z.number().int(),
-  selectedVisit: inspectionVisitDetailSchema,
+  // Null for an area with no visits yet. That is a normal state, not an error.
+  selectedVisit: inspectionVisitDetailSchema.nullable(),
 });
 
 export const areaViewedPropertyListSchema = z.array(areaViewedPropertySchema);

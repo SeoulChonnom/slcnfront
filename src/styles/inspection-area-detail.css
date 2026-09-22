@@ -1,3 +1,672 @@
 /* 임장 기록 — area-detail 화면 전용 스타일.
    공통 토큰과 프리미티브(별·재방문 마크·DRAFT 배지·태그 칩)는 inspection.css에 있다.
    이 파일에는 이 화면에만 쓰는 레이아웃만 둔다. */
+
+.slcn-inspection-area-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fr-block);
+  max-width: 64rem;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+  padding-block: var(--space-8);
+}
+
+/* ---- Breadcrumb ---- */
+
+.slcn-inspection-area-detail__crumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail__crumb a {
+  color: var(--color-body-muted);
+  text-decoration: none;
+}
+
+.slcn-inspection-area-detail__crumb a:hover {
+  color: var(--color-ink);
+}
+
+.slcn-inspection-area-detail__crumb [aria-current="page"] {
+  color: var(--color-ink);
+  font-weight: var(--weight-strong);
+}
+
+/* ---- Head ---- */
+
+.slcn-inspection-area-detail__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.slcn-inspection-area-detail__title {
+  font-size: var(--text-display-md);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail__subline {
+  margin: var(--space-2) 0 0;
+  color: var(--color-body-muted);
+  font-size: var(--text-body);
+}
+
+.slcn-inspection-area-detail__head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.slcn-inspection-area-detail__head-actions svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ============================================================
+   Visit rail — signature element (screen_design.md §4.5)
+   ============================================================ */
+
+.slcn-inspection-area-detail-rail-wrap {
+  border-top: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-area-detail-rail {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.slcn-inspection-area-detail-rail__item {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 11rem;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-inline-end: 1px solid var(--color-hairline);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail-rail__item:last-of-type {
+  border-inline-end: 0;
+}
+
+.slcn-inspection-area-detail-rail__item:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+.slcn-inspection-area-detail-rail__item--selected {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.slcn-inspection-area-detail-rail__ord {
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+  white-space: nowrap;
+}
+
+.slcn-inspection-area-detail-rail__date {
+  font-size: var(--text-body-lg);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.slcn-inspection-area-detail-rail__sub {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+}
+
+/* Icon-only revisit mark inside the compact rail row — the label stays for
+   screen readers (screen_design.md §4.1's sr-only rule) but is hidden
+   visually here so it doesn't compete with the date/count text. */
+.slcn-inspection-area-detail-rail__revisit
+  .slcn-inspection-revisit-mark
+  > span:last-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.slcn-inspection-area-detail-rail__more {
+  flex: none;
+  align-self: center;
+  margin-inline: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.slcn-inspection-area-detail-rail__load-more-status {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+/* ============================================================
+   Visit panel
+   ============================================================ */
+
+.slcn-inspection-area-detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fr-block);
+}
+
+.slcn-inspection-area-detail-panel__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.slcn-inspection-area-detail-panel__datetime {
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.slcn-inspection-area-detail-panel__actions {
+  margin-inline-start: auto;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-area-detail-panel__quote {
+  font-size: var(--text-display-sm);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+  max-width: var(--fr-measure);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-panel__tags {
+  margin-top: var(--space-3);
+}
+
+.slcn-inspection-area-detail-panel__memo {
+  max-width: var(--fr-measure);
+  color: var(--color-body);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.slcn-inspection-area-detail-panel__memo p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ---- Pros / cons ---- */
+
+.slcn-inspection-area-detail-proscons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-proscons__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: var(--weight-strong);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: var(--space-3);
+}
+
+.slcn-inspection-area-detail-proscons__label svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.slcn-inspection-area-detail-proscons__label[data-kind="pro"] {
+  color: var(--color-success);
+}
+
+.slcn-inspection-area-detail-proscons__label[data-kind="con"] {
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail-proscons dd {
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-proscons ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-area-detail-proscons li {
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.slcn-inspection-area-detail-proscons__empty {
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+}
+
+/* ---- Gallery ---- */
+
+.slcn-inspection-area-detail-gallery-section__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.slcn-inspection-area-detail-gallery-section__title {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-gallery-section__count {
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-area-detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slcn-inspection-area-detail-gallery__item figure {
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-gallery__frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-muted);
+}
+
+.slcn-inspection-area-detail-gallery__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.slcn-inspection-area-detail-gallery__item figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail-gallery__more {
+  margin-top: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--color-body);
+  font-size: var(--text-caption);
+  cursor: pointer;
+}
+
+.slcn-inspection-area-detail-gallery__more svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ---- Empty visit properties (§36 — not a defect) ---- */
+
+.slcn-inspection-area-detail-empty-properties {
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail-empty-properties__title {
+  margin: 0 0 var(--space-2);
+  font-weight: var(--weight-strong);
+  color: var(--color-body);
+}
+
+.slcn-inspection-area-detail-empty-properties__body {
+  margin: 0;
+  font-size: var(--text-caption);
+}
+
+/* ---- Properties ---- */
+
+.slcn-inspection-area-detail-properties__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.slcn-inspection-area-detail-properties__title {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-properties__count {
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-area-detail-properties__add {
+  margin-inline-start: auto;
+}
+
+.slcn-inspection-area-detail-properties__add svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.slcn-inspection-area-detail-complex {
+  margin-top: var(--space-6);
+}
+
+.slcn-inspection-area-detail-complex__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.slcn-inspection-area-detail-complex__name {
+  font-size: var(--text-body-lg);
+  font-weight: var(--weight-strong);
+  margin: 0;
+}
+
+.slcn-inspection-area-detail-complex__count {
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-area-detail-complex__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.slcn-inspection-area-detail-prop {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-hairline);
+  text-decoration: none;
+  color: inherit;
+}
+
+.slcn-inspection-area-detail-complex__rows
+  .slcn-inspection-area-detail-prop:first-child {
+  border-top: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-area-detail-prop:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-area-detail-prop__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.slcn-inspection-area-detail-prop__name {
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-area-detail-prop:hover
+  .slcn-inspection-area-detail-prop__name {
+  color: var(--color-accent-muted);
+}
+
+.slcn-inspection-area-detail-prop__line {
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slcn-inspection-area-detail-prop__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-area-detail-prop__rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.slcn-inspection-area-detail-prop__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-area-detail-prop__delta svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.slcn-inspection-area-detail-prop__delta[data-direction="up"] {
+  color: var(--color-success);
+}
+
+.slcn-inspection-area-detail-prop__delta[data-direction="down"] {
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-detail-prop__go {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-body-muted);
+}
+
+/* ---- Loading skeleton ---- */
+
+.slcn-inspection-area-detail__skeleton-head {
+  height: 5rem;
+  border-radius: var(--radius-lg);
+}
+
+.slcn-inspection-area-detail__skeleton-rail {
+  height: 4.5rem;
+  border-radius: var(--radius-md);
+}
+
+.slcn-inspection-area-detail__skeleton-body {
+  height: 24rem;
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   Area edit modal
+   ============================================================ */
+
+.slcn-inspection-area-edit-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.slcn-inspection-area-edit-modal__error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-area-edit-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ============================================================
+   Responsive — 833px breakpoint (DESIGN.md §12 / screen_design.md §8)
+   ============================================================ */
+
+@media (max-width: 833px) {
+  .slcn-inspection-area-detail {
+    padding-inline: var(--space-4);
+    padding-block: var(--space-6);
+    gap: var(--fr-block);
+  }
+
+  .slcn-inspection-area-detail__head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .slcn-inspection-area-detail__head-actions {
+    justify-content: flex-start;
+  }
+
+  /* Rail extends past the viewport edge so the next tab peeks in, per
+     screen_design.md §4.5's mobile note. */
+  .slcn-inspection-area-detail-rail-wrap {
+    margin-inline: calc(var(--space-4) * -1);
+  }
+
+  .slcn-inspection-area-detail-rail {
+    padding-inline-start: var(--space-4);
+  }
+
+  .slcn-inspection-area-detail-panel__actions {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+
+  .slcn-inspection-area-detail-proscons {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .slcn-inspection-area-detail-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .slcn-inspection-area-detail-properties__head {
+    flex-wrap: wrap;
+  }
+
+  .slcn-inspection-area-detail-properties__add {
+    margin-inline-start: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* §5.4③ / this screen's own mobile note: interest moves below the name,
+     the row becomes single-column, and the chevron sits beside the rating
+     instead of at the far edge of a wide row. */
+  .slcn-inspection-area-detail-prop {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "name name"
+      "rating go";
+  }
+
+  .slcn-inspection-area-detail-prop__body {
+    grid-area: name;
+  }
+
+  .slcn-inspection-area-detail-prop__rating {
+    grid-area: rating;
+    align-items: flex-start;
+  }
+
+  .slcn-inspection-area-detail-prop__go {
+    grid-area: go;
+    justify-self: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slcn-inspection-area-detail-rail__item {
+    transition: none;
+  }
+}
+
+/* Area with no visits yet — the server sends selectedVisit: null. A quiet
+   dotted block, the same language the zero-property visit uses, because
+   neither is a failure. */
+.slcn-inspection-area-detail__no-visit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--fr-block) var(--space-6);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.slcn-inspection-area-detail__no-visit-title {
+  font-weight: 600;
+  color: var(--color-body);
+}
+
+.slcn-inspection-area-detail__no-visit-body {
+  color: var(--color-body-muted);
+}

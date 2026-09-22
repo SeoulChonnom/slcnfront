@@ -98,7 +98,9 @@ export function createInspectionApi(client: ApiClientLike = apiClient) {
         visits: dto.visits.map(mapInspectionVisitSummaryDto),
         hasMoreVisits: dto.hasMoreVisits,
         visitPageSize: dto.visitPageSize,
-        selectedVisit: mapInspectionVisitDetailDto(dto.selectedVisit),
+        selectedVisit: dto.selectedVisit
+          ? mapInspectionVisitDetailDto(dto.selectedVisit)
+          : null,
       };
     },
 

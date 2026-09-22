@@ -158,7 +158,8 @@ export type InspectionAreaDetail = {
   hasMoreVisits: boolean;
   /** Use this as `size` when paging further visits — never hardcode it. */
   visitPageSize: number;
-  selectedVisit: InspectionVisitDetail;
+  /** Null when the area has no visits yet. */
+  selectedVisit: InspectionVisitDetail | null;
 };
 
 export type PropertyAnswer = {
