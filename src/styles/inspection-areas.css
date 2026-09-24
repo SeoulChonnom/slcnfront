@@ -1,0 +1,554 @@
+/* 임장 기록 — areas 화면 전용 스타일.
+   공통 토큰과 프리미티브(별·재방문 마크·DRAFT 배지·태그 칩)는 inspection.css에 있다.
+   이 파일에는 이 화면에만 쓰는 레이아웃만 둔다. */
+
+.slcn-inspection-area-list {
+  max-width: 77.5rem;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+  padding-block: var(--fr-block) var(--fr-block-lg);
+}
+
+/* ── Page head ─────────────────────────────────────────────────────────── */
+
+.slcn-inspection-area-list__head {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.slcn-inspection-area-list__head-text {
+  flex: 1 1 22rem;
+  min-width: 0;
+}
+
+.slcn-inspection-area-list__title {
+  font-size: var(--text-display-lg);
+  font-weight: var(--weight-strong);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.slcn-inspection-area-list__subline {
+  margin-top: var(--space-2);
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+}
+
+/* ── Toolbar: search + filter chips + sort ────────────────────────────── */
+
+.slcn-inspection-area-list__toolbar {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.slcn-inspection-area-list__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.slcn-inspection-area-list__search-icon {
+  position: absolute;
+  left: 1.125rem;
+  color: var(--color-icon-muted);
+  pointer-events: none;
+}
+
+.slcn-inspection-area-list__search input {
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 var(--space-4) 0 3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas-pure);
+  font: inherit;
+  font-size: var(--text-body-lg);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-area-list__search input::placeholder {
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-list__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.slcn-inspection-area-list__chip-row {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.slcn-inspection-area-list__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.375rem;
+  padding: 0.5rem 0.9375rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: var(--color-canvas-pure);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+  white-space: nowrap;
+  transition: border-color var(--duration-fast) var(--easing-standard);
+}
+
+.slcn-inspection-area-list__filter:hover {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-area-list__filter:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-area-list__filter[aria-pressed="true"] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-area-list__sort {
+  flex: none;
+}
+
+.slcn-inspection-area-list__sort select {
+  min-height: 2.375rem;
+  padding: 0.4375rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas-pure);
+  color: var(--color-body);
+  font: inherit;
+  font-size: var(--text-caption);
+  cursor: pointer;
+}
+
+.slcn-inspection-area-list__sort select:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Mobile-only FAB: hidden by default, shown in the <=833px block where the
+   header button is hidden. */
+.slcn-inspection-area-list__fab {
+  display: none;
+}
+
+/* ── Row list ──────────────────────────────────────────────────────────── */
+
+.slcn-inspection-area-list__list {
+  border-top: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-area-list__list .slcn-inspection-hairline-row:first-child {
+  border-top: 0;
+}
+
+.slcn-inspection-area-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 15rem 10.5rem;
+  gap: var(--space-5);
+  align-items: start;
+  padding: var(--space-6) var(--space-3);
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.slcn-inspection-area-row:hover {
+  background: var(--color-stripe-highlight);
+}
+
+.slcn-inspection-area-row:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+/* Visit-count rail (§4.4) — decorative dots, but the number + "최근 MM.DD"
+   next to them carry the actual count so it's never color-only. */
+.slcn-inspection-area-row__visits {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4375rem;
+}
+
+.slcn-inspection-area-row__visits-count {
+  font-size: var(--text-display-sm);
+  font-weight: var(--weight-strong);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.slcn-inspection-area-row__visits-count small {
+  margin-left: 0.125rem;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-body);
+  color: var(--color-body-muted);
+  letter-spacing: 0;
+}
+
+.slcn-inspection-area-row__visits-dots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.slcn-inspection-area-row__visits-dots i {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+}
+
+.slcn-inspection-area-row__visits-dots i[data-latest="true"] {
+  background: var(--color-primary);
+}
+
+.slcn-inspection-area-row__visits-last {
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+/* Main column — name, description, one-liner, tags */
+
+.slcn-inspection-area-row__main {
+  min-width: 0;
+}
+
+.slcn-inspection-area-row__name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-display-sm);
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
+}
+
+.slcn-inspection-area-row__draft-badge {
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-area-row__desc {
+  margin-top: 0.1875rem;
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-row__quote {
+  margin-top: var(--space-3);
+  max-width: 34rem;
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
+}
+
+.slcn-inspection-area-row__quote--empty {
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-row__tags {
+  margin-top: var(--space-4);
+}
+
+/* Meta column — revisit intent, last-visit date, second line */
+
+.slcn-inspection-area-row__meta {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: 0.375rem;
+}
+
+.slcn-inspection-area-row__metaline {
+  display: block;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-row__metaline strong {
+  margin: 0 0.125rem;
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+/* Top-interest-property column */
+
+.slcn-inspection-area-row__top {
+  padding-top: 0.125rem;
+}
+
+.slcn-inspection-area-row__top-label {
+  display: block;
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-row__top-complex {
+  display: block;
+  margin-top: 0.375rem;
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-area-row__top-name {
+  display: block;
+  margin-top: 0.0625rem;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+  line-height: 1.35;
+}
+
+.slcn-inspection-area-row__top-name--empty {
+  color: var(--color-body-muted);
+  font-weight: var(--weight-body);
+}
+
+.slcn-inspection-area-row__top-rating {
+  margin-top: 0.25rem;
+}
+
+.slcn-inspection-area-row__thumbs {
+  display: flex;
+  gap: 0.25rem;
+  padding-top: 0.375rem;
+}
+
+.slcn-inspection-area-row__thumb {
+  width: 2.625rem;
+  height: 2.625rem;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.slcn-inspection-area-row__thumb--more {
+  display: grid;
+  place-items: center;
+  background: var(--color-surface-muted);
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+/* ── Skeleton (§6: same grid as a real row, no spinner) ───────────────── */
+
+.slcn-inspection-area-list__skeleton {
+  border-top: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-area-list__skeleton .slcn-inspection-hairline-row:first-child {
+  border-top: 0;
+}
+
+.slcn-inspection-skel {
+  border-radius: var(--radius-sm);
+}
+
+.slcn-inspection-skel--visits-count {
+  width: 2.5rem;
+  height: 1.75rem;
+}
+
+.slcn-inspection-skel--visits-dots {
+  width: 2.75rem;
+  height: 0.375rem;
+  margin-top: 0.6rem;
+}
+
+.slcn-inspection-skel--name {
+  width: 9rem;
+  height: 1.5rem;
+}
+
+.slcn-inspection-skel--desc {
+  width: 12rem;
+  height: 0.9rem;
+  margin-top: 0.6rem;
+}
+
+.slcn-inspection-skel--quote {
+  width: 22rem;
+  max-width: 100%;
+  height: 1.1rem;
+  margin-top: 1rem;
+}
+
+.slcn-inspection-skel--tags {
+  width: 14rem;
+  max-width: 100%;
+  height: 2rem;
+  margin-top: 1rem;
+  border-radius: var(--radius-pill);
+}
+
+.slcn-inspection-skel--meta-line {
+  width: 9rem;
+  height: 1rem;
+}
+
+.slcn-inspection-skel--top-label {
+  width: 5rem;
+  height: 0.8rem;
+}
+
+.slcn-inspection-skel--top-name {
+  width: 7rem;
+  height: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* ── No-results actions (two independent CTAs) ────────────────────────── */
+
+.slcn-inspection-area-list__no-results-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+/* ── Mobile (≤833px) — collapse to a 2-column rail + stacked body,
+   hide the top "임장 기록하기" button (a bottom FAB owns that action once
+   the FAB is added), single-row horizontal-scroll filter chips. ───────── */
+
+@media (max-width: 833px) {
+  .slcn-inspection-area-list {
+    padding-inline: var(--space-5);
+    padding-block: var(--space-5) 7rem;
+  }
+
+  .slcn-inspection-area-list__head {
+    display: block;
+    margin-bottom: var(--space-5);
+  }
+
+  .slcn-inspection-area-list__title {
+    font-size: var(--text-display-md);
+  }
+
+  .slcn-inspection-area-list__register {
+    display: none;
+  }
+
+  /* The FAB replaces it. 56px keeps it above the 44px touch minimum, and it
+     clears the fixed bottom nav (1rem + its own height + safe area). */
+  .slcn-inspection-area-list__fab {
+    position: fixed;
+    right: var(--space-4);
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    z-index: 31;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    min-width: 0;
+    height: 3.5rem;
+    padding: 0;
+    border-radius: var(--radius-pill);
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .slcn-inspection-area-list__search input {
+    height: 2.875rem;
+    padding: 0 var(--space-3) 0 2.625rem;
+    font-size: var(--text-body);
+  }
+
+  .slcn-inspection-area-list__search-icon {
+    left: 0.875rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .slcn-inspection-area-list__filters {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .slcn-inspection-area-list__chip-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--space-5));
+    padding-inline: var(--space-5);
+  }
+
+  .slcn-inspection-area-list__chip-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slcn-inspection-area-list__chip-row > * {
+    flex: none;
+  }
+
+  .slcn-inspection-area-list__filter {
+    min-height: 2.25rem;
+    padding: 0.4375rem 0.8125rem;
+  }
+
+  .slcn-inspection-area-row,
+  .slcn-inspection-area-list__skeleton .slcn-inspection-hairline-row {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-5) 0;
+  }
+
+  .slcn-inspection-area-row__name {
+    font-size: var(--text-tagline);
+  }
+
+  .slcn-inspection-area-row__quote {
+    margin-top: var(--space-2);
+    font-size: var(--text-body);
+    max-width: none;
+  }
+
+  .slcn-inspection-area-row__tags {
+    margin-top: var(--space-3);
+  }
+
+  .slcn-inspection-area-row__meta {
+    grid-column: 2;
+    gap: var(--space-2);
+    padding-top: var(--space-3);
+  }
+
+  .slcn-inspection-area-row__top {
+    grid-column: 2;
+    padding-top: var(--space-2);
+  }
+
+  .slcn-inspection-area-row__thumbs img,
+  .slcn-inspection-area-row__thumb {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .slcn-inspection-area-list__skeleton .slcn-inspection-area-row__meta,
+  .slcn-inspection-area-list__skeleton .slcn-inspection-area-row__top {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slcn-inspection-area-row {
+    transition: none;
+  }
+}

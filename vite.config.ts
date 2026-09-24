@@ -45,7 +45,7 @@ export default defineConfig({
          8080 in docs/api_spec.json and docs/*.md describes a different
          environment and is not what dev runs against. */
       '/api': {
-        target: 'http://localhost:9090',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
       },

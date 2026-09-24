@@ -78,6 +78,24 @@ function NavIcon({ name }: { name?: NavigationIconName }) {
       </svg>
     );
   }
+  if (name === 'inspection') {
+    return (
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.9'
+        aria-hidden='true'
+      >
+        <path d='M5 21V5a2 2 0 012-2h7a2 2 0 012 2v16' />
+        <path d='M16 10h3a2 2 0 012 2v9' />
+        <path d='M3 21h18' />
+        <path d='M9 7h2M9 11h2M9 15h2' />
+      </svg>
+    );
+  }
   if (name === 'shoes') {
     return (
       <svg

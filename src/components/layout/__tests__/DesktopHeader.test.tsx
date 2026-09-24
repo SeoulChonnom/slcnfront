@@ -71,7 +71,7 @@ describe('DesktopHeader', () => {
       within(nav)
         .getAllByRole('link')
         .map((link) => link.textContent)
-    ).toEqual(['홈', '여행', '나들이', '달력']);
+    ).toEqual(['홈', '여행', '나들이', '임장', '달력']);
   });
 
   it('renders the approved home navigation in order with Home active', () => {
@@ -84,7 +84,7 @@ describe('DesktopHeader', () => {
       within(nav)
         .getAllByRole('link')
         .map((link) => link.textContent)
-    ).toEqual(['홈', '여행', '나들이', '달력']);
+    ).toEqual(['홈', '여행', '나들이', '임장', '달력']);
     expect(
       within(nav).getByRole('link', { name: '홈' }).getAttribute('aria-current')
     ).toBe('page');

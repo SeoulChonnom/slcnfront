@@ -9,6 +9,12 @@ import '@/styles/globals.css';
 import '@/styles/travel-list.css';
 import '@/styles/travel-detail.css';
 import '@/styles/travel-register.css';
+import '@/styles/inspection.css';
+import '@/styles/inspection-areas.css';
+import '@/styles/inspection-area-detail.css';
+import '@/styles/inspection-property-detail.css';
+import '@/styles/inspection-register.css';
+import '@/styles/inspection-questions.css';
 
 const container = document.getElementById('root');
 

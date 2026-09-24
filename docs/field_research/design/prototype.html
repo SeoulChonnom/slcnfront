@@ -1,0 +1,2045 @@
+<!doctype html>
+<!--
+IMPECCABLE DIRECTION CONTRACT — 임장(inspection) 화면
+THESIS: 임장 기록은 "다녀온 곳"이 아니라 "바뀐 판단"을 되짚는 노트다. 이 화면들은 지역을
+회차(visit)로 세로 관통시키고, 같은 매물의 관심도 변화를 1급 정보로 드러낸다. 부동산 앱의
+기본값인 카드 그리드 + 지도 + 매물 스펙 테이블을 거부한다.
+OWN-WORLD: Seoul Quiet Editorial을 그대로 상속(따뜻한 종이 #FFF8F8, Seoul Pink, 잉크 블랙,
+Pretendard, 18/24px 라운드, 글래스는 내비게이션 크롬 전용). 단 이 도메인은 Operate 모드라
+컨테이너를 카드가 아니라 헤어라인 罫선 행으로 바꾸고 세로 리듬을 80px → 40~56px로 압축한다.
+STORY: 사용자는 목록에서 "어디를 몇 번 걸었나"를 먼저 읽고, 지역 상세의 회차 레일에서 시간을
+갈아끼우며, 매물 상세에서 "6월엔 ★3, 9월엔 ★5"를 마주한다.
+FIRST VIEWPORT: 지역 리스트 — 제목 한 줄, 검색 필드, 그리고 곧바로 지역 행. 각 행 왼쪽에
+회차 도트 스택(걸은 횟수), 가운데 지역명과 최신 한줄평, 오른쪽에 최고 관심 매물과 임장 사진 3장.
+FORM: 헤어라인 罫선 행 + 회차 레일. 사용자가 선택지 미리보기로 직접 고정한 구성.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the
+verdict, DESIGN.md, and every shipping raster carrying its provenance.
+-->
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>임장 기록 · 상세 디자인 프로토타입 — 서울 촌놈</title>
+<link rel="stylesheet" href="../../../node_modules/pretendard/dist/web/static/Pretendard-Regular.css" />
+<link rel="stylesheet" href="../../../node_modules/pretendard/dist/web/static/Pretendard-SemiBold.css" />
+<style>
+/* ────────────────────────────────────────────────────────────────────────
+   TOKENS — src/styles/tokens.css 에서 그대로 가져온 값. 새 토큰은 맨 아래
+   "임장 도메인 추가 토큰" 블록에만 있다.
+   ──────────────────────────────────────────────────────────────────────── */
+:root {
+  --color-primary: #fe9fc8;
+  --color-primary-focus: #ff7fb8;
+  --color-accent-muted: #a34f6d;
+  --color-focus-ring: var(--color-accent-muted);
+
+  --color-ink: #1b1b1b;
+  --color-body: #1b1b1b;
+  --color-body-muted: #6f666a;
+  --color-body-on-dark: #ffffff;
+
+  --color-canvas: #fff8f8;
+  --color-canvas-pure: #ffffff;
+  --color-surface-soft: #ffe8ef;
+  --color-surface-muted: #f8eef1;
+
+  --color-divider-soft: rgba(27, 27, 27, 0.08);
+  --color-hairline: rgba(27, 27, 27, 0.12);
+  --color-border: #efe0e5;
+  --color-border-strong: #ead9df;
+  --color-stripe-highlight: #fcf4f6;
+  --color-icon-soft: #d8a9bc;
+  --color-icon-muted: #c58ea3;
+  --color-focus-halo: rgb(254 159 200 / 20%);
+  --color-on-primary: #1b1b1b;
+  --color-on-dark: #ffffff;
+  --color-surface-disabled: var(--color-surface-muted);
+  --color-body-disabled: #9c9295;
+
+  --color-success: #15794f;
+  --color-success-surface: #eaf6f0;
+  --color-success-border: #bfe5cf;
+  --color-error: #c53030;
+  --color-error-on: #ffffff;
+  --color-error-surface: #fff1f1;
+  --color-error-border: #f2caca;
+  --color-warning: #955b0a;
+  --color-warning-surface: #fbefe0;
+  --color-warning-border: #e8d08a;
+
+  --shadow-floating: 0 8px 30px rgba(27, 27, 27, 0.08);
+  --shadow-image: 3px 5px 30px rgba(27, 27, 27, 0.18);
+  --shadow-modal: 0 24px 80px rgba(27, 27, 27, 0.16);
+
+  --font-stack: Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --weight-body: 400;
+  --weight-strong: 600;
+
+  --text-display-xl: 2.5rem;
+  --text-display-lg: 2.125rem;
+  --text-display-md: 1.75rem;
+  --text-display-sm: 1.5rem;
+  --text-tagline: 1.3125rem;
+  --text-lead: 1.125rem;
+  --text-body-lg: 1rem;
+  --text-body: 0.9375rem;
+  --text-caption: 0.875rem;
+  --text-nav: 0.8125rem;
+  --text-fine: 0.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  --duration-fast: 160ms;
+  --duration-default: 240ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ── 임장 도메인 추가 토큰 ─────────────────────────────────────────────
+     이 도메인은 Operate 모드라 다이어리보다 세로 리듬이 조밀하다. 섹션
+     간격을 --space-section(80px)이 아니라 아래 두 값으로 쓴다. */
+  --fr-block: 2.5rem;     /* 40px — 한 화면 안 블록 사이 */
+  --fr-block-lg: 3.5rem;  /* 56px — 성격이 바뀌는 구간 사이 */
+  --fr-rule: 1px solid var(--color-border);
+  --fr-measure: 42rem;    /* 672px — 임장 메모 본문 측정폭 */
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-body);
+  font-family: var(--font-stack);
+  font-size: var(--text-body);
+  font-weight: var(--weight-body);
+  line-height: 1.47;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, p, figure, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img { max-width: 100%; display: block; }
+svg { width: 1.125rem; height: 1.125rem; flex: none; }
+.fr-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+
+/* 브라우저가 기본으로 그리는 표면도 이 팔레트에서 색을 받는다. */
+::selection { background: var(--color-surface-soft); color: var(--color-ink); }
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+.fr-scroll-x { scrollbar-width: thin; scrollbar-color: var(--color-icon-soft) transparent; }
+.fr-scroll-x::-webkit-scrollbar { height: 6px; }
+.fr-scroll-x::-webkit-scrollbar-thumb { background: var(--color-icon-soft); border-radius: var(--radius-pill); }
+.fr-scroll-x::-webkit-scrollbar-track { background: transparent; }
+.fr-num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   SHELL — 데스크톱 글래스 캡슐 헤더 / 모바일 글래스 탭바.
+   DESIGN.md §6: 글래스는 내비게이션 크롬 전용. 콘텐츠 표면에는 절대 금지.
+   ──────────────────────────────────────────────────────────────────────── */
+.fr-shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+.fr-header { position: sticky; top: 0; z-index: 30; padding-top: var(--space-3); }
+.fr-header__inner {
+  display: flex; align-items: center; gap: var(--space-6);
+  width: calc(100% - 0.75rem); max-width: 77.5rem; min-height: 3.875rem;
+  margin: 0 auto var(--space-3); padding: 0.875rem 1.625rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-canvas) 50%, transparent);
+  backdrop-filter: blur(6px) saturate(1.5);
+  -webkit-backdrop-filter: blur(6px) saturate(1.5);
+  border: 1px solid color-mix(in srgb, var(--color-canvas-pure) 55%, transparent);
+  box-shadow:
+    inset 0 1px 1px color-mix(in srgb, var(--color-canvas-pure) 70%, transparent),
+    inset 0 -2px 3px color-mix(in srgb, var(--color-canvas-pure) 30%, transparent),
+    0 8px 26px color-mix(in srgb, var(--color-icon-muted) 16%, transparent);
+}
+.fr-header__home { display: inline-flex; align-items: center; gap: 0.6875rem; text-decoration: none; }
+.fr-header__logo { width: 2.375rem; height: 2.375rem; object-fit: contain; flex: none; }
+.fr-header__brand { font-size: var(--text-lead); font-weight: var(--weight-strong); }
+.fr-header__nav { display: flex; align-items: center; gap: var(--space-1); margin-left: auto; }
+.fr-header__nav a {
+  display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 0.875rem;
+  border-radius: var(--radius-pill); font-size: var(--text-nav); text-decoration: none;
+  color: var(--color-body-muted); transition: color var(--duration-fast) var(--ease-standard);
+}
+.fr-header__nav a:hover { color: var(--color-ink); }
+.fr-header__nav a[aria-current] { color: var(--color-ink); font-weight: var(--weight-strong); background: var(--color-surface-soft); }
+.fr-header__avatar {
+  width: 2.25rem; height: 2.25rem; border-radius: var(--radius-pill); flex: none;
+  background: var(--color-surface-soft); border: 1px solid var(--color-border);
+  display: grid; place-items: center; font-size: var(--text-fine); color: var(--color-accent-muted);
+  margin-left: var(--space-2);
+}
+
+.fr-topbar { display: none; }
+.fr-tabbar { display: none; }
+
+.fr-main { flex: 1; width: 100%; max-width: 77.5rem; margin: 0 auto; padding: var(--space-8) 3rem var(--fr-block-lg); }
+.fr-main--text { max-width: 64rem; }
+
+/* ────────────────────────────────────────────────────────────────────────
+   PRIMITIVES
+   ──────────────────────────────────────────────────────────────────────── */
+.fr-page-head { display: flex; align-items: flex-end; gap: var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-6); }
+.fr-page-head__text { flex: 1 1 22rem; min-width: 0; }
+.fr-title { font-size: var(--text-display-lg); font-weight: var(--weight-strong); line-height: 1.18; letter-spacing: -0.02em; }
+.fr-title--md { font-size: var(--text-display-md); line-height: 1.2; }
+.fr-title--sm { font-size: var(--text-display-sm); line-height: 1.25; }
+.fr-subline { margin-top: var(--space-2); color: var(--color-body-muted); font-size: var(--text-caption); }
+
+.fr-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 2.75rem; padding: 0.6875rem 1.375rem; border-radius: var(--radius-pill);
+  border: 1px solid transparent; background: var(--color-primary); color: var(--color-on-primary);
+  font-size: var(--text-body); font-weight: var(--weight-strong); cursor: pointer; white-space: nowrap;
+  transition: transform var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard);
+}
+.fr-btn:active { transform: scale(0.96); }
+.fr-btn svg { width: 1.125rem; height: 1.125rem; flex: none; }
+.fr-btn--sm svg { width: 1rem; height: 1rem; }
+.fr-btn[data-variant="secondary"] { background: var(--color-canvas-pure); border-color: var(--color-hairline); font-weight: var(--weight-body); }
+.fr-btn[data-variant="ghost"] { background: transparent; border-color: transparent; color: var(--color-body-muted); font-weight: var(--weight-body); }
+.fr-btn[data-variant="ghost"]:hover { color: var(--color-ink); }
+.fr-btn[data-variant="utility"] { background: var(--color-ink); color: var(--color-on-dark); border-radius: var(--radius-sm); min-height: 2.25rem; padding: 0.5rem 0.9375rem; font-size: var(--text-caption); font-weight: var(--weight-body); }
+.fr-btn[data-variant="danger"] { background: var(--color-error); color: var(--color-error-on); }
+.fr-btn[disabled] { background: var(--color-surface-disabled); color: var(--color-body-disabled); border-color: var(--color-border); cursor: not-allowed; }
+.fr-btn[disabled]:active { transform: none; }
+.fr-btn--sm { min-height: 2.25rem; padding: 0.4375rem 0.9375rem; font-size: var(--text-caption); }
+
+.fr-link { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-primary); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.fr-link--quiet { color: var(--color-body-muted); text-decoration-color: var(--color-border-strong); text-decoration-thickness: 1px; font-size: var(--text-caption); }
+
+.fr-chip {
+  display: inline-flex; align-items: center; gap: var(--space-1); min-height: 2rem;
+  padding: 0.5rem 0.8125rem; border-radius: var(--radius-pill);
+  background: var(--color-surface-soft); color: var(--color-ink);
+  font-size: var(--text-caption); white-space: nowrap;
+}
+.fr-chip--ghost { background: transparent; border: 1px solid var(--color-border); color: var(--color-body-muted); }
+.fr-chip--count { background: transparent; color: var(--color-body-muted); padding-left: var(--space-1); }
+.fr-chip-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.fr-filter {
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.375rem;
+  padding: 0.5rem 0.9375rem; border-radius: var(--radius-pill); cursor: pointer;
+  background: var(--color-canvas-pure); border: 1px solid var(--color-border);
+  color: var(--color-body-muted); font-size: var(--text-caption); white-space: nowrap;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.fr-filter:hover { border-color: var(--color-border-strong); color: var(--color-ink); }
+.fr-filter[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); font-weight: var(--weight-strong); }
+.fr-filter[aria-pressed="true"] .fr-filter__mark { opacity: 1; }
+.fr-filter__mark { opacity: 0; width: 0.875rem; height: 0.875rem; flex: none; }
+
+.fr-search { position: relative; display: flex; align-items: center; }
+.fr-search__icon { position: absolute; left: 1.125rem; width: 1.125rem; height: 1.125rem; color: var(--color-icon-muted); pointer-events: none; }
+.fr-search input {
+  width: 100%; height: 3.25rem; padding: 0 3rem 0 3rem; border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline); background: var(--color-canvas-pure);
+  font: inherit; font-size: var(--text-body-lg); color: var(--color-ink);
+}
+.fr-search input::placeholder { color: var(--color-body-muted); }
+.fr-search__clear {
+  position: absolute; right: 0.625rem; width: 2rem; height: 2rem; display: grid; place-items: center;
+  border: 0; background: transparent; border-radius: var(--radius-pill); color: var(--color-body-muted); cursor: pointer;
+}
+.fr-search__clear:hover { background: var(--color-surface-muted); color: var(--color-ink); }
+
+.fr-field { display: block; }
+.fr-field__label { display: block; font-size: var(--text-caption); font-weight: var(--weight-strong); margin-bottom: var(--space-2); }
+.fr-field__req { color: var(--color-accent-muted); margin-left: 0.25rem; }
+.fr-field__hint { margin-top: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-input, .fr-textarea, .fr-select {
+  width: 100%; border: 1px solid var(--color-hairline); background: var(--color-canvas-pure);
+  font: inherit; font-size: var(--text-body); color: var(--color-ink);
+}
+.fr-input, .fr-select { min-height: 3rem; padding: 0.875rem 1rem; border-radius: var(--radius-md); }
+.fr-textarea { min-height: 7.5rem; padding: var(--space-4); border-radius: var(--radius-lg); resize: vertical; line-height: 1.6; }
+.fr-textarea--sm { min-height: 6rem; }
+.fr-input::placeholder, .fr-textarea::placeholder { color: var(--color-body-disabled); }
+.fr-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+.fr-stack { display: grid; gap: var(--space-5); }
+.fr-stack--tight { gap: var(--space-3); }
+
+/* 터치 타깃 보정. 시각 크기를 키우지 않고 히트 영역만 44x44 로 넓힌다.
+   DESIGN.md §13 의 최소 터치 타깃을 작은 버튼/칩까지 지키기 위한 장치다. */
+.fr-btn--sm, button.fr-chip, .fr-filter, .fr-search__clear, .fr-thumb__del, .fr-chip button { position: relative; }
+/* 인라인 텍스트 링크와 스위치도 세로로 눌리는 범위를 넓힌다. 보이는 크기는 그대로다. */
+.fr-crumb a, .fr-link--quiet { display: inline-block; padding-block: 0.5rem; margin-block: -0.5rem; }
+.fr-switch { min-height: 2.75rem; }
+.fr-thumb input { min-height: 2.25rem; }
+.fr-btn--sm::after, button.fr-chip::after, .fr-filter::after,
+.fr-search__clear::after, .fr-thumb__del::after, .fr-chip button::after {
+  content: ""; position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  width: 100%; height: 100%; min-width: 2.75rem; min-height: 2.75rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   도메인 표시 요소
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* 재방문 의사 — 색만으로 뜻하지 않는다(§13). 항상 글자 + 그린 마크가 붙는다.
+   NO 는 error 빨강을 쓰지 않는다. 빨강은 파괴적 동작과 실패에만 남겨둔다. */
+.fr-revisit { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--text-caption); white-space: nowrap; }
+.fr-revisit svg { width: 1rem; height: 1rem; flex: none; }
+.fr-revisit[data-value="YES"] { color: var(--color-success); }
+.fr-revisit[data-value="MAYBE"] { color: var(--color-warning); }
+.fr-revisit[data-value="NO"] { color: var(--color-body-muted); }
+.fr-revisit--pill { padding: 0.3125rem 0.6875rem; border-radius: var(--radius-pill); border: 1px solid currentColor; }
+
+/* 관심도 — 별은 유니코드가 아니라 그린 SVG. 분홍(#FE9FC8)은 흰 바탕에서 1.91:1이라
+   의미를 지닌 그래픽으로 쓸 수 없어 accent-muted(5.39:1)로 칠하고, 숫자를 항상 함께 둔다. */
+.fr-rating { display: inline-flex; align-items: center; gap: var(--space-2); }
+.fr-rating__stars { display: inline-flex; gap: 0.125rem; }
+.fr-rating__stars svg { width: 1rem; height: 1rem; }
+.fr-rating__on { fill: var(--color-accent-muted); }
+.fr-rating__off { fill: var(--color-border-strong); }
+.fr-rating__value { font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-rating--lg .fr-rating__stars svg { width: 1.5rem; height: 1.5rem; }
+.fr-rating--lg .fr-rating__value { font-size: var(--text-body-lg); color: var(--color-ink); font-weight: var(--weight-strong); }
+
+/* 상태 배지 — 완료는 무표시, 작성중만 표시한다. */
+.fr-draft {
+  display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-pill); border: 1px dashed var(--color-border-strong);
+  background: var(--color-surface-muted); color: var(--color-body-muted);
+  font-size: var(--text-fine); white-space: nowrap;
+}
+.fr-draft svg { width: 0.75rem; height: 0.75rem; }
+
+/* 회차 도트 — 이 지역을 몇 번 걸었는지. 장식이 아니라 개수 정보. */
+.fr-visits { display: flex; flex-direction: column; gap: 0.4375rem; align-items: flex-start; }
+.fr-visits__count { font-size: var(--text-display-sm); font-weight: var(--weight-strong); line-height: 1; letter-spacing: -0.02em; }
+.fr-visits__count small { font-size: var(--text-caption); font-weight: var(--weight-body); color: var(--color-body-muted); margin-left: 0.125rem; letter-spacing: 0; }
+.fr-visits__dots { display: flex; gap: 0.25rem; }
+.fr-visits__dots i { width: 0.375rem; height: 0.375rem; border-radius: var(--radius-pill); background: var(--color-border-strong); }
+.fr-visits__dots i:first-child { background: var(--color-primary); }
+.fr-visits__last { font-size: var(--text-fine); color: var(--color-body-muted); }
+
+/* ── 지역 행 ───────────────────────────────────────────────────────────── */
+.fr-area-list { border-top: var(--fr-rule); }
+.fr-area {
+  display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 15rem 10.5rem;
+  gap: var(--space-5); align-items: start;
+  padding: var(--space-6) var(--space-3);
+  border-bottom: var(--fr-rule);
+  text-decoration: none; color: inherit;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+.fr-area:hover { background: var(--color-stripe-highlight); }
+.fr-area__name { font-size: var(--text-display-sm); font-weight: var(--weight-strong); letter-spacing: -0.01em; }
+.fr-area__desc { margin-top: 0.1875rem; font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-area__quote { margin-top: var(--space-3); font-size: var(--text-body-lg); line-height: 1.5; max-width: 34rem; }
+.fr-area__tags { margin-top: var(--space-4); }
+.fr-area__meta { display: grid; gap: var(--space-3); padding-top: 0.375rem; }
+.fr-area__metaline { display: block; font-size: var(--text-caption); line-height: 1.5; color: var(--color-body-muted); }
+.fr-area__metaline b { margin: 0 0.125rem; }
+.fr-area__metaline b { font-weight: var(--weight-strong); color: var(--color-ink); }
+.fr-area__top { padding-top: 0.125rem; }
+.fr-area__top-label { display: block; font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-area__top-complex { display: block; margin-top: 0.375rem; font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-area__top-name { display: block; margin-top: 0.0625rem; font-size: var(--text-caption); font-weight: var(--weight-strong); line-height: 1.35; }
+.fr-area__thumbs { display: flex; gap: 0.25rem; padding-top: 0.375rem; }
+.fr-area__thumbs img { width: 2.625rem; height: 2.625rem; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
+.fr-area__thumbs span {
+  width: 2.625rem; height: 2.625rem; display: grid; place-items: center; border-radius: var(--radius-sm);
+  background: var(--color-surface-muted); color: var(--color-body-muted); font-size: var(--text-fine);
+}
+
+/* ── 회차 레일 ─────────────────────────────────────────────────────────── */
+.fr-rail { display: flex; gap: 0; border-top: var(--fr-rule); border-bottom: var(--fr-rule); overflow-x: auto; }
+.fr-rail__item {
+  flex: none; min-width: 11rem; padding: var(--space-4) var(--space-5) var(--space-4) 0;
+  margin-right: var(--space-5); border: 0; background: transparent; text-align: left; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.fr-rail__item + .fr-rail__item { padding-left: var(--space-5); border-left: var(--fr-rule); }
+.fr-rail__ord { font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-rail__date { margin-top: 0.125rem; font-size: var(--text-lead); font-weight: var(--weight-strong); letter-spacing: -0.01em; color: var(--color-body-muted); }
+.fr-rail__sub { margin-top: 0.375rem; display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-rail__item[aria-selected="true"] { border-bottom-color: var(--color-ink); }
+.fr-rail__item[aria-selected="true"] .fr-rail__date { color: var(--color-ink); }
+.fr-rail__item:hover .fr-rail__date { color: var(--color-ink); }
+
+/* ── 기록 본문 ─────────────────────────────────────────────────────────── */
+.fr-section { margin-top: var(--fr-block); }
+.fr-section--lg { margin-top: var(--fr-block-lg); }
+.fr-section__head { display: flex; align-items: baseline; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--fr-rule); margin-bottom: var(--space-5); }
+.fr-section__title { font-size: var(--text-tagline); font-weight: var(--weight-strong); letter-spacing: -0.01em; }
+.fr-section__count { font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-section__action { margin-left: auto; }
+
+.fr-quote { font-size: var(--text-display-sm); font-weight: var(--weight-strong); line-height: 1.4; letter-spacing: -0.02em; max-width: 30rem; }
+.fr-prose { max-width: var(--fr-measure); font-size: var(--text-body-lg); line-height: 1.7; white-space: pre-line; }
+.fr-proscons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
+.fr-proscons__label { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); font-weight: var(--weight-strong); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-border); }
+.fr-proscons__label svg { width: 1rem; height: 1rem; }
+.fr-proscons dt[data-kind="pro"] { color: var(--color-success); }
+.fr-proscons dt[data-kind="con"] { color: var(--color-warning); }
+.fr-proscons dd { margin-top: var(--space-3); }
+.fr-proscons li { padding: 0.375rem 0 0.375rem 1rem; position: relative; line-height: 1.55; }
+.fr-proscons li::before { content: ""; position: absolute; left: 0; top: 0.875rem; width: 0.3125rem; height: 1px; background: var(--color-icon-muted); }
+
+.fr-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+.fr-gallery figure { margin: 0; }
+.fr-gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow-image); }
+.fr-gallery figcaption { margin-top: var(--space-2); font-size: var(--text-caption); color: var(--color-body-muted); }
+
+/* ── 단지 그룹 + 매물 행 ───────────────────────────────────────────────── */
+.fr-complex + .fr-complex { margin-top: var(--space-8); }
+.fr-complex__head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-2); }
+.fr-complex__name { font-size: var(--text-body-lg); font-weight: var(--weight-strong); }
+.fr-complex__count { font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-props { border-top: var(--fr-rule); }
+.fr-prop {
+  display: grid; grid-template-columns: minmax(0, 1fr) 9rem 2rem; gap: var(--space-5);
+  align-items: center; padding: var(--space-4) var(--space-3); border-bottom: var(--fr-rule);
+  text-decoration: none; color: inherit; transition: background var(--duration-fast) var(--ease-standard);
+}
+.fr-prop:hover { background: var(--color-stripe-highlight); }
+.fr-prop__name { font-size: var(--text-body-lg); font-weight: var(--weight-strong); }
+.fr-prop__line { margin-top: 0.25rem; font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-prop__tags { margin-top: var(--space-3); }
+.fr-prop__go { justify-self: end; color: var(--color-icon-muted); width: 1.25rem; height: 1.25rem; }
+.fr-prop__rating { justify-self: end; text-align: right; display: grid; gap: 0.25rem; justify-items: end; }
+
+/* ── 매물 상세: 회차 연결 스트립 ───────────────────────────────────────── */
+.fr-lineage {
+  max-width: 46rem;
+  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  background: var(--color-surface-muted); padding: var(--space-4) var(--space-5);
+}
+.fr-lineage__head { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.fr-lineage__head button { margin-left: auto; }
+.fr-lineage__head svg { width: 1rem; height: 1rem; color: var(--color-accent-muted); }
+.fr-lineage__note { margin-top: 0.25rem; font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-lineage__list { margin-top: var(--space-3); display: grid; gap: 0.125rem; }
+.fr-lineage__row {
+  display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-md); background: var(--color-canvas-pure); text-decoration: none; color: inherit;
+}
+.fr-lineage__row:hover { background: var(--color-canvas); }
+.fr-lineage__row[aria-current] { background: transparent; border: 1px dashed var(--color-border-strong); }
+.fr-lineage__date { font-size: var(--text-caption); font-weight: var(--weight-strong); min-width: 6.5rem; }
+.fr-lineage__delta { margin-left: auto; display: inline-flex; align-items: center; gap: 0.25rem; font-size: var(--text-caption); }
+.fr-lineage__delta[data-dir="up"] { color: var(--color-success); }
+.fr-lineage__delta[data-dir="down"] { color: var(--color-warning); }
+.fr-lineage__delta[data-dir="same"] { color: var(--color-body-muted); }
+.fr-lineage__delta svg { width: 0.875rem; height: 0.875rem; }
+.fr-lineage__dismiss { margin-top: var(--space-3); }
+
+.fr-crumb { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); color: var(--color-body-muted); margin-bottom: var(--space-5); flex-wrap: wrap; }
+.fr-crumb a { text-decoration: none; }
+.fr-crumb a:hover { color: var(--color-ink); text-decoration: underline; text-underline-offset: 3px; }
+.fr-crumb svg { width: 0.875rem; height: 0.875rem; color: var(--color-icon-muted); }
+
+/* ── 문답 ──────────────────────────────────────────────────────────────── */
+.fr-qa { border-top: var(--fr-rule); }
+.fr-qa__item { padding: var(--space-5) 0; border-bottom: var(--fr-rule); display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: var(--space-8); }
+.fr-qa__q { font-size: var(--text-body); font-weight: var(--weight-strong); line-height: 1.5; }
+.fr-qa__flags { margin-top: var(--space-2); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.fr-qa__flag { font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-qa__flag[data-kind="required"] { color: var(--color-accent-muted); }
+.fr-qa__a { font-size: var(--text-body-lg); line-height: 1.65; }
+.fr-qa__a[data-empty] { color: var(--color-body-muted); display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-body); }
+.fr-qa__a[data-empty] svg { width: 1rem; height: 1rem; color: var(--color-warning); }
+.fr-qa__bool { display: inline-flex; align-items: center; gap: var(--space-2); }
+.fr-qa__bool svg { width: 1.125rem; height: 1.125rem; }
+
+/* ── 모달 ──────────────────────────────────────────────────────────────
+   DESIGN.md §8.10. 흰 표면, 24px 라운드, 절제된 그림자, 제목 + 주 동작 하나.
+   모바일에서는 위쪽만 둥근 바텀 시트가 된다. */
+.fr-modal[hidden] { display: none; }
+.fr-modal {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: var(--space-6);
+}
+.fr-modal__scrim {
+  position: absolute; inset: 0; border: 0; padding: 0;
+  background: var(--color-overlay-soft);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+}
+.fr-modal__dialog {
+  position: relative; width: 100%; max-width: 34rem; max-height: 85vh; overflow-y: auto;
+  background: var(--color-canvas-pure); border: 1px solid var(--color-divider-soft);
+  border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow-modal);
+}
+.fr-modal__head { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-6); }
+.fr-modal__title { font-size: var(--text-display-sm); font-weight: var(--weight-strong); letter-spacing: -0.01em; }
+.fr-modal__sub { margin-top: 0.25rem; font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-modal__close {
+  margin-left: auto; width: 2.25rem; height: 2.25rem; flex: none; display: grid; place-items: center;
+  border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+  background: var(--color-canvas-pure); color: var(--color-body-muted); cursor: pointer;
+}
+.fr-modal__close:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
+.fr-modal__foot { display: flex; gap: var(--space-3); align-items: center; margin-top: var(--space-8); }
+
+/* ── 빈 상태 / 로딩 / 오류 ─────────────────────────────────────────────── */
+.fr-empty {
+  border-radius: var(--radius-xl); background: var(--color-surface-muted);
+  padding: var(--space-10) var(--space-8); text-align: center;
+}
+.fr-empty__title { font-size: var(--text-tagline); font-weight: var(--weight-strong); }
+.fr-empty__body { margin: var(--space-2) auto 0; max-width: 26rem; color: var(--color-body-muted); font-size: var(--text-caption); line-height: 1.6; }
+.fr-empty__action { margin-top: var(--space-6); }
+.fr-empty--quiet { background: transparent; border: 1px dashed var(--color-border-strong); padding: var(--space-8); }
+
+.fr-alert { display: flex; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); font-size: var(--text-caption); line-height: 1.6; }
+.fr-alert svg { width: 1.125rem; height: 1.125rem; flex: none; margin-top: 0.125rem; }
+.fr-alert[data-tone="error"] { background: var(--color-error-surface); border: 1px solid var(--color-error-border); color: var(--color-ink); }
+.fr-alert[data-tone="error"] svg { color: var(--color-error); }
+.fr-alert[data-tone="warning"] { background: var(--color-warning-surface); border: 1px solid var(--color-warning-border); color: var(--color-ink); }
+.fr-alert[data-tone="warning"] svg { color: var(--color-warning); }
+.fr-alert[data-tone="success"] { background: var(--color-success-surface); border: 1px solid var(--color-success-border); color: var(--color-ink); }
+.fr-alert[data-tone="success"] svg { color: var(--color-success); }
+.fr-alert[data-tone="muted"] { background: var(--color-surface-muted); border: 1px solid var(--color-border); color: var(--color-body-muted); }
+.fr-alert b { font-weight: var(--weight-strong); color: var(--color-ink); }
+
+.fr-skel { background: linear-gradient(90deg, var(--color-surface-muted) 0%, var(--color-stripe-highlight) 50%, var(--color-surface-muted) 100%); background-size: 200% 100%; border-radius: var(--radius-sm); animation: fr-shimmer 1.4s linear infinite; }
+@keyframes fr-shimmer { to { background-position: -200% 0; } }
+.fr-skel-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 15rem 10.5rem; gap: var(--space-5); padding: var(--space-6) var(--space-3); border-bottom: var(--fr-rule); }
+
+/* ── 작성 마법사 ───────────────────────────────────────────────────────── */
+.fr-wizard { max-width: 50rem; margin: 0 auto; }
+.fr-steps { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--fr-block); }
+.fr-steps__item { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); color: var(--color-body-muted); }
+.fr-steps__num { width: 1.5rem; height: 1.5rem; border-radius: var(--radius-pill); display: grid; place-items: center; font-size: var(--text-fine); border: 1px solid var(--color-border-strong); }
+.fr-steps__item[data-state="done"] { color: var(--color-accent-muted); }
+.fr-steps__item[data-state="done"] .fr-steps__num { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+.fr-steps__item[data-state="current"] { color: var(--color-ink); font-weight: var(--weight-strong); }
+.fr-steps__item[data-state="current"] .fr-steps__num { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-dark); }
+.fr-steps__bar { flex: 1; height: 1px; background: var(--color-divider-soft); }
+.fr-autosave { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-autosave svg { width: 0.875rem; height: 0.875rem; color: var(--color-success); }
+
+.fr-radio-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.fr-radio {
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.75rem;
+  padding: 0.625rem 1.125rem; border-radius: var(--radius-pill); cursor: pointer;
+  background: var(--color-canvas-pure); border: 1px solid var(--color-border); font-size: var(--text-body);
+}
+.fr-radio input { position: absolute; opacity: 0; width: 0; height: 0; }
+.fr-radio svg { width: 1.125rem; height: 1.125rem; }
+.fr-radio:has(input:checked) { border-color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-ink); font-weight: var(--weight-strong); }
+.fr-radio:has(input:focus-visible) { outline: 2px solid var(--color-focus-ring); outline-offset: 3px; }
+
+.fr-stars-input { display: inline-flex; gap: var(--space-1); align-items: center; }
+.fr-stars-input button { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border: 0; background: transparent; cursor: pointer; border-radius: var(--radius-pill); }
+.fr-stars-input button:hover { background: var(--color-surface-muted); }
+.fr-stars-input svg { width: 1.625rem; height: 1.625rem; }
+.fr-stars-input__label { margin-left: var(--space-3); font-size: var(--text-caption); color: var(--color-body-muted); }
+
+.fr-drop {
+  border: 1px dashed var(--color-border-strong); border-radius: var(--radius-lg);
+  background: var(--color-canvas-pure); padding: var(--space-6); text-align: center;
+}
+.fr-drop__title { font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.fr-drop__hint { margin-top: var(--space-1); font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-drop__thumbs { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-5); }
+.fr-thumb { width: 7rem; }
+.fr-thumb__img { position: relative; }
+.fr-thumb img { width: 7rem; height: 5.25rem; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+.fr-thumb__grab { position: absolute; top: 0.25rem; left: 0.25rem; width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border-radius: var(--radius-xs); background: rgb(255 255 255 / 86%); color: var(--color-body-muted); }
+.fr-thumb__grab svg { width: 0.875rem; height: 0.875rem; }
+.fr-thumb__del { position: absolute; top: 0.25rem; right: 0.25rem; width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border: 0; border-radius: var(--radius-pill); background: rgb(255 255 255 / 86%); color: var(--color-ink); cursor: pointer; }
+.fr-thumb__del svg { width: 0.75rem; height: 0.75rem; }
+.fr-thumb input { width: 100%; margin-top: var(--space-2); border: 0; border-bottom: 1px solid var(--color-border); background: transparent; font: inherit; font-size: var(--text-fine); padding: 0.25rem 0; color: var(--color-ink); }
+
+.fr-editrow {
+  display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) 9rem auto; gap: var(--space-4);
+  align-items: center; padding: var(--space-4) var(--space-3); border-bottom: var(--fr-rule);
+}
+.fr-editrow__grab { color: var(--color-icon-muted); cursor: grab; }
+.fr-editrow__grab svg { width: 1rem; height: 1rem; }
+.fr-editrow__name { font-size: var(--text-body); font-weight: var(--weight-strong); }
+.fr-editrow__sub { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: 0.375rem; font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-editrow__name { overflow-wrap: anywhere; }
+
+.fr-check { display: flex; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-divider-soft); align-items: flex-start; font-size: var(--text-caption); }
+.fr-check svg { width: 1.125rem; height: 1.125rem; flex: none; margin-top: 0.0625rem; }
+.fr-check[data-ok="true"] svg { color: var(--color-success); }
+.fr-check[data-ok="false"] svg { color: var(--color-warning); }
+.fr-check[data-ok="false"] { color: var(--color-ink); }
+.fr-check__why { display: block; margin-top: 0.1875rem; font-size: var(--text-fine); color: var(--color-body-muted); }
+
+/* ── 질문 관리 ─────────────────────────────────────────────────────────── */
+.fr-qrow {
+  display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) 7rem 5rem 6.5rem 4.5rem;
+  gap: var(--space-4); align-items: center; padding: var(--space-4) var(--space-3); border-bottom: var(--fr-rule);
+}
+.fr-qrow[data-disabled] { background: var(--color-surface-muted); color: var(--color-body-muted); }
+.fr-qrow__text { font-size: var(--text-body); font-weight: var(--weight-strong); }
+.fr-qrow[data-disabled] .fr-qrow__text { font-weight: var(--weight-body); }
+.fr-qrow__sub { margin-top: 0.1875rem; font-size: var(--text-fine); color: var(--color-body-muted); }
+.fr-type { display: inline-flex; align-items: center; padding: 0.1875rem 0.5rem; border-radius: var(--radius-xs); background: var(--color-surface-muted); border: 1px solid var(--color-border); font-size: var(--text-fine); color: var(--color-body-muted); white-space: nowrap; }
+.fr-qhead { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) 7rem 5rem 6.5rem 4.5rem; gap: var(--space-4); padding: 0 var(--space-3) var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); border-bottom: var(--fr-rule); }
+.fr-switch { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); cursor: pointer; }
+.fr-switch i { width: 2.25rem; height: 1.25rem; border-radius: var(--radius-pill); background: var(--color-border-strong); position: relative; transition: background var(--duration-fast) var(--ease-standard); }
+.fr-switch i::after { content: ""; position: absolute; top: 0.1875rem; left: 0.1875rem; width: 0.875rem; height: 0.875rem; border-radius: var(--radius-pill); background: var(--color-canvas-pure); transition: transform var(--duration-fast) var(--ease-standard); }
+.fr-switch input { position: absolute; opacity: 0; }
+.fr-switch:has(input:checked) i { background: var(--color-primary); }
+.fr-switch:has(input:checked) i::after { transform: translateX(1rem); }
+.fr-switch:has(input:focus-visible) i { outline: 2px solid var(--color-focus-ring); outline-offset: 3px; }
+
+.fr-vhist { margin-top: var(--space-2); display: grid; gap: var(--space-2); }
+.fr-vhist__row { display: flex; gap: var(--space-4); align-items: baseline; font-size: var(--text-fine); color: var(--color-body-muted); padding: var(--space-2) 0; border-top: 1px solid var(--color-divider-soft); }
+.fr-vhist__v { font-weight: var(--weight-strong); color: var(--color-ink); min-width: 1.75rem; }
+
+/* ────────────────────────────────────────────────────────────────────────
+   반응형 — 실제 앱은 /main 과 /mobile 이 별도 구현이다. 이 프로토타입은
+   두 구성을 한 파일에서 보여주려고 미디어쿼리로 전환한다.
+   경계 833px = DESIGN.md §12 의 태블릿/소형 데스크톱 경계.
+   ──────────────────────────────────────────────────────────────────────── */
+@media (max-width: 833px) {
+  .fr-header { display: none; }
+
+  .fr-topbar {
+    display: flex; position: sticky; top: 0; z-index: 30; padding: var(--space-2) var(--space-3) 0;
+  }
+  .fr-topbar__inner {
+    display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 3.25rem;
+    padding: 0.5rem 1rem; border-radius: var(--radius-xl);
+    background: color-mix(in srgb, var(--color-canvas) 55%, transparent);
+    backdrop-filter: blur(9px) saturate(1.7); -webkit-backdrop-filter: blur(9px) saturate(1.7);
+    border: 1px solid color-mix(in srgb, var(--color-canvas-pure) 55%, transparent);
+    box-shadow: inset 0 1px 1px color-mix(in srgb, var(--color-canvas-pure) 70%, transparent),
+      0 8px 26px color-mix(in srgb, var(--color-icon-muted) 16%, transparent);
+  }
+  .fr-topbar__logo { width: 1.75rem; height: 1.75rem; object-fit: contain; flex: none; }
+  .fr-topbar__title { font-size: var(--text-body-lg); font-weight: var(--weight-strong); }
+  .fr-topbar__back { width: 2.25rem; height: 2.25rem; margin-left: -0.375rem; display: grid; place-items: center; border: 0; background: transparent; border-radius: var(--radius-pill); }
+  .fr-topbar__back svg { width: 1.25rem; height: 1.25rem; }
+  .fr-topbar__spacer { margin-left: auto; }
+
+  .fr-tabbar { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0 var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom)); }
+  .fr-tabbar__inner {
+    display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; padding: 0.375rem;
+    border-radius: var(--radius-xl);
+    background: color-mix(in srgb, var(--color-canvas) 55%, transparent);
+    backdrop-filter: blur(9px) saturate(1.7); -webkit-backdrop-filter: blur(9px) saturate(1.7);
+    border: 1px solid color-mix(in srgb, var(--color-canvas-pure) 55%, transparent);
+    box-shadow: inset 0 1px 1px color-mix(in srgb, var(--color-canvas-pure) 70%, transparent),
+      0 8px 26px color-mix(in srgb, var(--color-icon-muted) 20%, transparent);
+  }
+  .fr-tabbar a {
+    display: grid; justify-items: center; gap: 0.1875rem; min-height: 2.875rem; padding: 0.375rem 0;
+    border-radius: var(--radius-lg); text-decoration: none; color: var(--color-body-muted); font-size: 0.6875rem;
+  }
+  .fr-tabbar a svg { width: 1.25rem; height: 1.25rem; }
+  .fr-tabbar a[aria-current] { color: var(--color-ink); background: var(--color-surface-soft); font-weight: var(--weight-strong); }
+
+  .fr-main { padding: var(--space-5) var(--space-5) 7rem; max-width: none; }
+  .fr-title { font-size: var(--text-display-md); }
+  .fr-title--md { font-size: var(--text-display-sm); }
+  .fr-title--sm { font-size: var(--text-tagline); }
+  .fr-quote { font-size: var(--text-tagline); }
+
+  .fr-page-head { display: block; margin-bottom: var(--space-5); }
+  .fr-page-head__action { margin-top: var(--space-4); }
+  .fr-search input { height: 3rem; font-size: var(--text-body); }
+
+  .fr-area { gap: var(--space-4); padding: var(--space-5) 0; }
+  .fr-area__name { font-size: var(--text-tagline); }
+  .fr-area__quote { font-size: var(--text-body); margin-top: var(--space-2); }
+  .fr-area__meta { grid-column: 2; gap: var(--space-2); padding-top: var(--space-3); }
+  .fr-area__metaline { font-size: var(--text-fine); }
+  .fr-area__top { grid-column: 2; padding-top: var(--space-2); }
+  .fr-area__thumbs { grid-column: 2; padding-top: var(--space-3); }
+  .fr-area__thumbs img, .fr-area__thumbs span { width: 3rem; height: 3rem; }
+  .fr-area__tags { margin-top: var(--space-3); }
+  .fr-visits__count { font-size: var(--text-tagline); }
+  .fr-skel-row { gap: var(--space-4); padding: var(--space-5) 0; }
+
+  .fr-rail { margin-inline: calc(-1 * var(--space-5)); padding-inline: var(--space-5); }
+  .fr-rail__item { min-width: 8.5rem; padding-right: var(--space-4); margin-right: var(--space-4); }
+  .fr-rail__item + .fr-rail__item { padding-left: var(--space-4); }
+  .fr-rail__date { font-size: var(--text-body-lg); }
+
+  .fr-proscons { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .fr-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .fr-prop { grid-template-columns: minmax(0, 1fr) 1.25rem; gap: var(--space-3); padding: var(--space-4) 0; }
+  .fr-prop__rating { grid-column: 1; justify-self: start; justify-items: start; margin-top: var(--space-2); }
+  .fr-prop__go { grid-row: 1; grid-column: 2; align-self: start; margin-top: 0.25rem; }
+  .fr-qa__item { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding: var(--space-4) 0; }
+  .fr-qa__a { font-size: var(--text-body); }
+  .fr-grid-2 { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+  .fr-section { margin-top: var(--space-8); }
+  .fr-section--lg { margin-top: var(--space-10); }
+
+  /* 라벨이 긴 라디오 묶음은 가로로 늘어놓으면 줄마다 길이가 달라 읽히지 않는다.
+     세로로 쌓아 왼쪽 정렬을 맞춘다. 예/아니오처럼 짧은 묶음은 가로를 유지한다. */
+  .fr-radio-row--stack { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+  .fr-radio-row--stack .fr-radio { justify-content: flex-start; }
+
+  .fr-steps__item span:last-child { display: none; }
+  .fr-steps__item[data-state="current"] span:last-child { display: inline; }
+  /* 행마다 독립 그리드라서 버튼 폭이 다르면 이름 칸도 달라진다. '이어서 쓰기'(94px)가
+     붙은 행은 이름 칸이 188px 로 줄어 1px 차이로 이름이 꺾였다. 이름은 전체 폭 줄로 올리고
+     관심도와 버튼을 그 아래 줄에 나란히 둔다. */
+  .fr-editrow { grid-template-columns: 1.25rem minmax(0, 1fr) auto; gap: var(--space-2) var(--space-3); align-items: center; }
+  .fr-editrow > span:first-child { grid-row: 1; align-self: start; margin-top: 0.125rem; }
+  .fr-editrow > div { grid-column: 2 / -1; grid-row: 1; }
+  .fr-editrow__rating { grid-column: 2; grid-row: 2; }
+  .fr-editrow > .fr-btn { grid-column: 3; grid-row: 2; }
+  .fr-drop__thumbs .fr-thumb { width: 6rem; }
+  .fr-thumb img { width: 6rem; height: 4.5rem; }
+
+  .fr-qhead { display: none; }
+  .fr-qrow { grid-template-columns: 1.25rem minmax(0, 1fr) 4.5rem; gap: var(--space-3); padding: var(--space-4) 0; }
+  .fr-qrow__meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .fr-qrow__switch { grid-column: 2; }
+  .fr-empty { padding: var(--space-8) var(--space-5); }
+  .fr-modal { padding: 0; place-items: end stretch; }
+  .fr-modal__dialog {
+    max-width: none; max-height: 88vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom));
+  }
+  /* 시트 바닥은 주 동작 한 줄 + 파괴적/부수 동작 한 줄로 나눈다.
+     가로로 흘리면 버튼 세 개가 제각각 다른 폭으로 접힌다. */
+  .fr-modal__foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-6); }
+  .fr-modal__foot > span[style] { display: none; }
+  .fr-modal__foot .fr-btn[data-variant="ghost"] { grid-column: 1 / -1; order: 2; }
+
+  /* ── 모바일 컨트롤 밀도 ──────────────────────────────────────────────
+     데스크톱 값 그대로 쓰면 390px 에서 입력 52~54px, 버튼 46px + 좌우 22px 로
+     화면을 과하게 먹는다. 44px(터치 최소)과 48px(앱 기준) 사이로 조인다. */
+  .fr-btn { min-height: 2.75rem; padding: 0.5rem 1.125rem; }
+  .fr-btn--sm { min-height: 2.25rem; padding: 0.375rem 0.875rem; }
+  .fr-input, .fr-select { min-height: 3rem; padding: 0.6875rem 0.875rem; }
+  .fr-textarea { min-height: 5.5rem; padding: 0.875rem; }
+  .fr-textarea--sm { min-height: 4.5rem; }
+  .fr-search input { height: 2.875rem; padding: 0 2.625rem; font-size: var(--text-body); }
+  .fr-search__icon { left: 0.875rem; width: 1rem; height: 1rem; }
+  .fr-search__clear { right: 0.4375rem; }
+  .fr-chip { min-height: 1.875rem; padding: 0.375rem 0.6875rem; }
+  .fr-filter { min-height: 2.25rem; padding: 0.4375rem 0.8125rem; }
+  /* 필터 줄이 3행으로 접히면 첫 기록이 첫 화면 밖으로 밀린다. 한 줄 가로 스크롤로. */
+  .fr-chip-row[role="group"] {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--space-5)); padding-inline: var(--space-5);
+  }
+  .fr-chip-row[role="group"]::-webkit-scrollbar { display: none; }
+  .fr-chip-row[role="group"] > * { flex: none; }
+  .fr-chip-row[role="group"] > span[style] { display: none; }
+  .fr-thumb input { padding: 0.4375rem 0; }
+  .fr-stars-input button { width: 2.75rem; height: 2.75rem; }
+  .fr-hide-mobile { display: none; }
+  .fr-area { grid-template-columns: 4.25rem minmax(0, 1fr); }
+  .fr-skel-row { grid-template-columns: 4.25rem minmax(0, 1fr); }
+  body[data-active-screen="areas"] .fr-fab,
+  body[data-active-screen="area"] .fr-fab,
+  body[data-active-screen="property"] .fr-fab { display: grid; }
+  .fr-fab { position: fixed; right: var(--space-5); bottom: 5.5rem; z-index: 35; width: 3.5rem; height: 3.5rem; border-radius: var(--radius-pill); border: 0; background: var(--color-primary); color: var(--color-on-primary); box-shadow: var(--shadow-floating); display: grid; place-items: center; }
+  .fr-fab svg { width: 1.5rem; height: 1.5rem; }
+}
+.fr-fab { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ── 프로토타입 전용 크롬(실제 화면 아님). ?bare=1 이면 감춘다. ───────── */
+.proto-bar {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 1rem; z-index: 100;
+  display: flex; gap: 0.25rem; padding: 0.375rem; border-radius: var(--radius-pill);
+  background: rgb(27 27 27 / 92%); box-shadow: var(--shadow-modal); max-width: calc(100vw - 2rem); overflow-x: auto;
+}
+.proto-bar button {
+  border: 0; background: transparent; color: rgb(255 255 255 / 66%); font-size: 0.75rem;
+  padding: 0.4375rem 0.75rem; border-radius: var(--radius-pill); cursor: pointer; white-space: nowrap;
+}
+.proto-bar button[aria-pressed="true"] { background: var(--color-primary); color: var(--color-ink); }
+body[data-bare="1"] .proto-bar { display: none; }
+.proto-note { margin-top: var(--fr-block-lg); padding-top: var(--space-4); border-top: var(--fr-rule); font-size: var(--text-fine); color: var(--color-body-muted); line-height: 1.7; }
+[data-screen] { display: none; }
+[data-screen].is-active { display: block; }
+/* 사진 자리 — 이 프로토타입에는 실사진이 없다. 실제 화면에서는 업로드된
+   임장/매물 사진이 들어가고, 여기서는 자리와 캡션만 정확히 잡는다. */
+.fr-ph {
+  display: grid; place-items: center; background: var(--color-surface-muted);
+  border: 1px solid var(--color-border); color: var(--color-icon-soft);
+  border-radius: var(--radius-lg); position: relative;
+}
+.fr-ph svg { width: 1.75rem; height: 1.75rem; }
+.fr-ph--sm { border-radius: var(--radius-sm); }
+.fr-ph--sm svg { width: 1rem; height: 1rem; }
+.fr-ph--tile { aspect-ratio: 4 / 3; }
+.fr-ph--wide { aspect-ratio: 16 / 9; }
+.fr-ph__cap { position: absolute; bottom: var(--space-3); left: var(--space-3); font-size: var(--text-fine); color: var(--color-body-muted); }
+
+</style>
+</head>
+<body>
+<svg class="fr-sprite" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.9l2.72 5.79 6.28.93-4.55 4.5 1.08 6.35L12 17.47l-5.53 2.99 1.08-6.35-4.55-4.5 6.28-.93z"/></symbol>
+<symbol id="i-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></symbol>
+<symbol id="i-maybe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.4v5.2"/><circle cx="12" cy="16.2" r="0.9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.6 15.4l6.8-6.8"/></symbol>
+<symbol id="i-pro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 6.5v11M6.5 12h11"/></symbol>
+<symbol id="i-con" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6.5 12h11"/></symbol>
+<symbol id="i-draft" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10v4"/><circle cx="12" cy="16.8" r="0.9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11.2v5"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-grab" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M6.5 11.5L12 6l5.5 5.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13"/><path d="M6.5 12.5L12 18l5.5-5.5"/></symbol>
+<symbol id="i-same" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 12h12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.5a4 4 0 006 .5l2.5-2.5a4 4 0 00-5.6-5.6L11.6 7"/><path d="M14 10.5a4 4 0 00-6-.5L5.5 12.5a4 4 0 005.6 5.6L12.4 17"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6.5 8 6.5"/><path d="M6.5 10.2V19h11v-8.8"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5L3.8 6.8V19l5.2-2.3 6 2.3 5.2-2.3V4.5L15 6.8z"/><path d="M9 4.5v12.2M15 6.8V19"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V6.2l7-2.4v16.2M12 20h7V10l-7-2.3"/><path d="M8 9.2h1M8 12.6h1M8 16h1M15 12.6h1M15 16h1"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.6-3.2 4-4.8 7-4.8s5.4 1.6 7 4.8"/></symbol>
+<symbol id="i-photo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M3.8 15.5l4.2-4 3.4 3.2 3.2-3.4 5.4 5.2"/><circle cx="9" cy="9.8" r="1.2"/></symbol>
+</defs></svg>
+
+<div class="fr-shell">
+
+<header class="fr-header">
+  <div class="fr-header__inner">
+    <a class="fr-header__home" href="#"><img class="fr-header__logo" src="../../../src/assets/img/SLCN.webp" alt="서울 촌놈" /><span class="fr-header__brand">서울 촌놈</span></a>
+    <nav class="fr-header__nav" aria-label="주요 메뉴">
+      <a href="#">홈</a><a href="#">나들이</a><a href="#">여행</a><a href="#" aria-current="page">임장</a><a href="#">캘린더</a>
+    </nav>
+    <span class="fr-header__avatar" aria-hidden="true">아영</span>
+  </div>
+</header>
+
+<div class="fr-topbar">
+  <div class="fr-topbar__inner">
+    <img class="fr-topbar__logo" src="../../../src/assets/img/SLCN.webp" alt="" />
+    <span class="fr-topbar__title" data-mobile-title>임장</span>
+    <span class="fr-topbar__spacer"></span>
+    <span class="fr-header__avatar" aria-hidden="true">아영</span>
+  </div>
+</div>
+
+<main class="fr-main">
+
+<!-- ═════════════════ 1. 임장 지역 리스트 ═════════════════ -->
+<section data-screen="areas" class="is-active" aria-label="임장 지역 목록">
+  <div class="fr-page-head">
+    <div class="fr-page-head__text">
+      <h1 class="fr-title">임장</h1>
+      <p class="fr-subline">6개 지역을 10번 걸었고, 매물 17건을 봤습니다.</p>
+    </div>
+    <div class="fr-page-head__action fr-hide-mobile"><button class="fr-btn" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg>임장 기록하기</button></div>
+  </div>
+
+  <div class="fr-stack--tight" style="display:grid;gap:var(--space-4);margin-bottom:var(--space-6)">
+    <div class="fr-search">
+      <svg class="fr-search__icon" aria-hidden="true"><use href="#i-search"/></svg>
+      <label class="sr-only" for="q-area">임장 검색</label>
+      <input id="q-area" type="search" placeholder="지역, 단지, 매물, 태그로 찾기" />
+    </div>
+    <div class="fr-chip-row" role="group" aria-label="재방문 의사 필터">
+      <button class="fr-filter" type="button" aria-pressed="true"><svg class="fr-filter__mark" aria-hidden="true"><use href="#i-check"/></svg>전체 6</button>
+      <button class="fr-filter" type="button" aria-pressed="false"><svg class="fr-filter__mark" aria-hidden="true"><use href="#i-check"/></svg>다시 임장하고 싶음 3</button>
+      <button class="fr-filter" type="button" aria-pressed="false"><svg class="fr-filter__mark" aria-hidden="true"><use href="#i-check"/></svg>조금 더 고민 2</button>
+      <button class="fr-filter" type="button" aria-pressed="false"><svg class="fr-filter__mark" aria-hidden="true"><use href="#i-check"/></svg>재방문하지 않을 예정 1</button>
+      <span style="flex:1"></span>
+      <button class="fr-filter" type="button" aria-pressed="false">최근 임장순 <svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    </div>
+  </div>
+
+  <div class="fr-area-list">
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">3<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="fr-visits__last">최근 09.17</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">성수동</h2>
+        <p class="fr-area__desc">서울숲 ~ 뚝섬역 주변</p>
+        <p class="fr-area__quote">“직주근접과 분위기는 좋지만 가격이 부담된다.”</p>
+        <div class="fr-area__tags fr-chip-row">
+          <span class="fr-chip">#서울숲</span><span class="fr-chip">#한강</span><span class="fr-chip">#직주근접</span><span class="fr-chip fr-chip--count">+2</span>
+        </div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg>다시 임장하고 싶음</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.09.17</b> 목 14:00</span>
+        <span class="fr-area__metaline">누적 매물 <b class="fr-num">4</b>건 · 첫 임장 <span class="fr-num">2026.03.11</span></span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-complex">트리마제</span>
+        <span class="fr-area__top-name">101동 1203호 / 84A</span>
+        <span class="fr-rating" style="margin-top:.25rem" data-rating="5"></span>
+        <span class="fr-area__thumbs">
+          <span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span>
+          <span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span>
+          <span>+9</span>
+        </span>
+      </div>
+    </a>
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">2<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i><i></i></span>
+        <span class="fr-visits__last">최근 08.21</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">잠실</h2>
+        <p class="fr-area__desc">잠실역 ~ 석촌호수</p>
+        <p class="fr-area__quote">“학군과 교통은 최고인데, 단지가 오래된 티가 난다.”</p>
+        <div class="fr-area__tags fr-chip-row">
+          <span class="fr-chip">#학군</span><span class="fr-chip">#대단지</span><span class="fr-chip">#재건축</span>
+        </div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="MAYBE"><svg aria-hidden="true"><use href="#i-maybe"/></svg>조금 더 고민</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.08.21</b> 금 10:30</span>
+        <span class="fr-area__metaline">누적 매물 <b class="fr-num">4</b>건 · 첫 임장 <span class="fr-num">2026.04.18</span></span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-complex">잠실엘스</span>
+        <span class="fr-area__top-name">124동 2102호 / 84B</span>
+        <span class="fr-rating" style="margin-top:.25rem" data-rating="4"></span>
+        <span class="fr-area__thumbs">
+          <span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span>
+          <span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span>
+          <span>+6</span>
+        </span>
+      </div>
+    </a>
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">1<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i></span>
+        <span class="fr-visits__last">최근 09.20</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">목동 <span class="fr-draft" style="vertical-align:.2em"><svg aria-hidden="true"><use href="#i-draft"/></svg>작성 중</span></h2>
+        <p class="fr-area__desc">목동 5~7단지, 오목교역 인근</p>
+        <p class="fr-area__quote" style="color:var(--color-body-muted)">한줄평을 아직 쓰지 않았습니다.</p>
+        <div class="fr-area__tags fr-chip-row"><span class="fr-chip">#학군</span></div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="MAYBE"><svg aria-hidden="true"><use href="#i-maybe"/></svg>조금 더 고민</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.09.20</b> 일 13:00</span>
+        <span class="fr-area__metaline">누적 매물 <b class="fr-num">2</b>건 · 필수 문답 <b>3개</b> 미작성</span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-complex">목동7단지</span>
+        <span class="fr-area__top-name">701동 1104호 / 101㎡</span>
+        <span class="fr-rating" style="margin-top:.25rem" data-rating="4"></span>
+        <span class="fr-area__thumbs"><span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span><span>+2</span></span>
+      </div>
+    </a>
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">1<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i></span>
+        <span class="fr-visits__last">최근 07.05</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">흑석동</h2>
+        <p class="fr-area__desc">9호선 흑석역 ~ 중앙대 후문</p>
+        <p class="fr-area__quote">“언덕이 생각보다 훨씬 가파르다. 매일 오르내릴 자신이 없다.”</p>
+        <div class="fr-area__tags fr-chip-row"><span class="fr-chip">#9호선</span><span class="fr-chip">#언덕</span><span class="fr-chip">#신축</span></div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="NO"><svg aria-hidden="true"><use href="#i-no"/></svg>재방문하지 않을 예정</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.07.05</b> 일 16:00</span>
+        <span class="fr-area__metaline">누적 매물 <b class="fr-num">2</b>건</span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-complex">아크로리버하임</span>
+        <span class="fr-area__top-name">102동 1801호 / 84A</span>
+        <span class="fr-rating" style="margin-top:.25rem" data-rating="3"></span>
+        <span class="fr-area__thumbs"><span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span><span>+4</span></span>
+      </div>
+    </a>
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">1<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i></span>
+        <span class="fr-visits__last">최근 06.14</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">광교</h2>
+        <p class="fr-area__desc">광교호수공원 일대</p>
+        <p class="fr-area__quote">“호수공원만 한 바퀴 돌고 왔다. 집은 다음에.”</p>
+        <div class="fr-area__tags fr-chip-row"><span class="fr-chip">#호수뷰</span><span class="fr-chip">#신도시</span></div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg>다시 임장하고 싶음</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.06.14</b> 토 15:30</span>
+        <span class="fr-area__metaline">본 매물 없음 · 지역만 확인</span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-name" style="color:var(--color-body-muted);font-weight:var(--weight-body)">아직 없음</span>
+        <span class="fr-area__thumbs"><span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span><span>+3</span></span>
+      </div>
+    </a>
+
+    <a class="fr-area" href="#" data-goto="area">
+      <div class="fr-visits">
+        <span class="fr-visits__count fr-num">2<small>회</small></span>
+        <span class="fr-visits__dots" aria-hidden="true"><i></i><i></i></span>
+        <span class="fr-visits__last">최근 05.30</span>
+      </div>
+      <div>
+        <h2 class="fr-area__name">마곡</h2>
+        <p class="fr-area__desc">마곡나루역 ~ 서울식물원</p>
+        <p class="fr-area__quote">“직장은 가깝지만 저녁에 갈 곳이 없다.”</p>
+        <div class="fr-area__tags fr-chip-row"><span class="fr-chip">#직주근접</span><span class="fr-chip">#신도시</span><span class="fr-chip">#상권부족</span></div>
+      </div>
+      <div class="fr-area__meta">
+        <span class="fr-revisit" data-value="NO"><svg aria-hidden="true"><use href="#i-no"/></svg>재방문하지 않을 예정</span>
+        <span class="fr-area__metaline">최근 임장 <b class="fr-num">2026.05.30</b> 토 11:00</span>
+        <span class="fr-area__metaline">누적 매물 <b class="fr-num">5</b>건 · 첫 임장 <span class="fr-num">2026.02.08</span></span>
+      </div>
+      <div class="fr-area__top">
+        <span class="fr-area__top-label">최고 관심 매물</span>
+        <span class="fr-area__top-complex">마곡엠밸리7단지</span>
+        <span class="fr-area__top-name">703동 1502호 / 84C</span>
+        <span class="fr-rating" style="margin-top:.25rem" data-rating="3"></span>
+        <span class="fr-area__thumbs"><span class="fr-ph fr-ph--sm"><svg aria-hidden="true"><use href="#i-photo"/></svg></span><span>+7</span></span>
+      </div>
+    </a>
+
+  </div>
+  <p class="proto-note">데모 데이터입니다. 실제 기록·사진이 아니며 화면 구조 확인용으로 작성했습니다.</p>
+</section>
+
+<!-- ═════════════════ 1-b. 목록 부수 상태 ═════════════════ -->
+<section data-screen="states" aria-label="목록 화면의 부수 상태">
+  <div class="fr-page-head"><div class="fr-page-head__text"><h1 class="fr-title">목록 화면의 네 가지 상태</h1><p class="fr-subline">로딩 · 검색 무결과 · 기록 없음 · 불러오기 실패</p></div></div>
+
+  <div class="fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">로딩</h2><span class="fr-section__count">골격은 실제 행과 같은 그리드를 유지한다</span></div>
+    <div class="fr-area-list" aria-busy="true">
+      <div class="fr-skel-row"><div><div class="fr-skel" style="height:1.75rem;width:2.5rem"></div><div class="fr-skel" style="height:.375rem;width:2.75rem;margin-top:.6rem"></div></div><div><div class="fr-skel" style="height:1.5rem;width:9rem"></div><div class="fr-skel" style="height:.9rem;width:12rem;margin-top:.6rem"></div><div class="fr-skel" style="height:1.1rem;width:22rem;margin-top:1rem"></div><div class="fr-skel" style="height:2rem;width:14rem;margin-top:1rem;border-radius:9999px"></div></div><div><div class="fr-skel" style="height:1rem;width:9rem"></div><div class="fr-skel" style="height:.9rem;width:11rem;margin-top:.8rem"></div></div><div><div class="fr-skel" style="height:.8rem;width:5rem"></div><div class="fr-skel" style="height:1rem;width:7rem;margin-top:.5rem"></div></div></div>
+      <div class="fr-skel-row"><div><div class="fr-skel" style="height:1.75rem;width:2.5rem"></div><div class="fr-skel" style="height:.375rem;width:2.75rem;margin-top:.6rem"></div></div><div><div class="fr-skel" style="height:1.5rem;width:7rem"></div><div class="fr-skel" style="height:.9rem;width:10rem;margin-top:.6rem"></div><div class="fr-skel" style="height:1.1rem;width:19rem;margin-top:1rem"></div><div class="fr-skel" style="height:2rem;width:11rem;margin-top:1rem;border-radius:9999px"></div></div><div><div class="fr-skel" style="height:1rem;width:8rem"></div><div class="fr-skel" style="height:.9rem;width:11rem;margin-top:.8rem"></div></div><div><div class="fr-skel" style="height:.8rem;width:5rem"></div><div class="fr-skel" style="height:1rem;width:6rem;margin-top:.5rem"></div></div></div>
+    </div>
+  </div>
+
+  <div class="fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">검색 결과 없음</h2><span class="fr-section__count">검색어와 필터를 그대로 두고, 무엇을 지울지 제안한다</span></div>
+    <div class="fr-search" style="margin-bottom:var(--space-5);max-width:34rem">
+      <svg class="fr-search__icon" aria-hidden="true"><use href="#i-search"/></svg>
+      <label class="sr-only" for="q-none">임장 검색</label>
+      <input id="q-none" type="search" value="반포" />
+      <button class="fr-search__clear" type="button" aria-label="검색어 지우기"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="fr-empty">
+      <p class="fr-empty__title">‘반포’와 맞는 기록이 없습니다</p>
+      <p class="fr-empty__body">지역명, 단지/건물명, 매물명, 태그에서 찾았습니다. ‘조금 더 고민’ 필터를 끄면 더 넓게 볼 수 있습니다.</p>
+      <div class="fr-empty__action" style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+        <button class="fr-btn" data-variant="secondary" type="button">필터 해제</button>
+        <button class="fr-btn" type="button">‘반포’ 지역 새로 임장 기록</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">첫 방문 — 기록 없음</h2><span class="fr-section__count">빈 자리는 장식이 아니라 다음 동작이 된다</span></div>
+    <div class="fr-empty">
+      <p class="fr-empty__title">아직 임장 기록이 없습니다</p>
+      <p class="fr-empty__body">지역을 하나 정해 걸어 보고, 돌아와서 그날의 인상과 본 매물을 남겨 두세요. 매물을 하나도 보지 않은 날도 기록할 수 있습니다.</p>
+      <div class="fr-empty__action"><button class="fr-btn" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg>첫 임장 기록하기</button></div>
+    </div>
+  </div>
+
+  <div class="fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">불러오기 실패</h2><span class="fr-section__count">문제와 복구 방법을 함께 적는다</span></div>
+    <div class="fr-alert" data-tone="error" role="alert">
+      <svg aria-hidden="true"><use href="#i-warn"/></svg>
+      <span><b>임장 목록을 불러오지 못했습니다.</b><br />네트워크 연결을 확인한 뒤 다시 시도해 주세요. 계속 실패하면 잠시 후 열어 보시면 됩니다.</span>
+    </div>
+    <div style="margin-top:var(--space-4)"><button class="fr-btn" data-variant="danger" type="button">다시 시도</button></div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 2. 지역 상세 ═════════════════ -->
+<section data-screen="area" aria-label="임장 지역 상세">
+  <nav class="fr-crumb" aria-label="현재 위치"><a href="#" data-goto="areas">임장</a><svg aria-hidden="true"><use href="#i-chev"/></svg><span aria-current="page">성수동</span></nav>
+
+  <div class="fr-page-head">
+    <div class="fr-page-head__text">
+      <h1 class="fr-title">성수동</h1>
+      <p class="fr-subline">서울숲 ~ 뚝섬역 주변 · 임장 <span class="fr-num">3</span>회 · 누적 매물 <span class="fr-num">4</span>건 · 첫 임장 <span class="fr-num">2026.03.11</span></p>
+    </div>
+    <div class="fr-page-head__action" style="display:flex;gap:var(--space-3);flex-wrap:wrap">
+      <button class="fr-btn" data-variant="ghost" type="button">지역 정보 수정</button>
+      <button class="fr-btn" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg>이 지역 다시 임장</button>
+    </div>
+  </div>
+
+  <div class="fr-rail fr-scroll-x" role="tablist" aria-label="임장 회차">
+    <button class="fr-rail__item" type="button" role="tab" aria-selected="true" data-visit="3">
+      <span class="fr-rail__ord">3차 · 가장 최근</span>
+      <span class="fr-rail__date fr-num">2026.09.17</span>
+      <span class="fr-rail__sub">목 14:00 · 매물 3<span class="fr-revisit" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg><span class="sr-only">다시 임장하고 싶음</span></span></span>
+    </button>
+    <button class="fr-rail__item" type="button" role="tab" aria-selected="false" data-visit="2">
+      <span class="fr-rail__ord">2차</span>
+      <span class="fr-rail__date fr-num">2026.06.02</span>
+      <span class="fr-rail__sub">화 11:00 · 매물 1<span class="fr-revisit" data-value="MAYBE"><svg aria-hidden="true"><use href="#i-maybe"/></svg><span class="sr-only">조금 더 고민</span></span></span>
+    </button>
+    <button class="fr-rail__item" type="button" role="tab" aria-selected="false" data-visit="1">
+      <span class="fr-rail__ord">1차 · 처음</span>
+      <span class="fr-rail__date fr-num">2026.03.11</span>
+      <span class="fr-rail__sub">수 18:30 · 매물 없음<span class="fr-revisit" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg><span class="sr-only">다시 임장하고 싶음</span></span></span>
+    </button>
+  </div>
+
+  <!-- ── 3차 ── -->
+  <div data-visit-panel="3">
+    <div class="fr-section" style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">
+      <span class="fr-revisit fr-revisit--pill" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg>다시 임장하고 싶음</span>
+      <span style="font-size:var(--text-caption);color:var(--color-body-muted)" class="fr-num">2026.09.17 목요일 14:00 · 오후</span>
+      <span style="margin-left:auto;display:flex;gap:var(--space-2)">
+        <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button">이 임장 수정</button>
+      </span>
+    </div>
+
+    <div class="fr-section">
+      <p class="fr-quote">“직주근접과 분위기는 좋지만 가격이 부담된다.”</p>
+      <div class="fr-chip-row" style="margin-top:var(--space-5)">
+        <span class="fr-chip">#서울숲</span><span class="fr-chip">#한강</span><span class="fr-chip">#직주근접</span><span class="fr-chip">#카페상권</span><span class="fr-chip">#가격부담</span>
+      </div>
+      <p class="fr-prose" style="margin-top:var(--space-6)">세 번째 방문. 평일 오후 두 시에 뚝섬역에서 내려 서울숲까지 걸었다. 6월에 왔을 때보다 카페가 두어 곳 더 생겼고, 주말이 아닌데도 사람이 꽤 많았다.
+
+성수역 쪽 공장 지대는 아직 정리가 덜 됐지만, 서울숲 쪽은 거의 다른 동네처럼 보인다. 출퇴근 동선은 확실히 짧아진다. 문제는 값이다. 6월에 봤던 매물이 그새 더 올라 있었다.</p>
+    </div>
+
+    <div class="fr-section">
+      <dl class="fr-proscons">
+        <div>
+          <dt class="fr-proscons__label" data-kind="pro"><svg aria-hidden="true"><use href="#i-pro"/></svg>장점</dt>
+          <dd><ul><li>2호선·수인분당선 모두 도보권</li><li>서울숲이 실질적인 앞마당</li><li>퇴근 후 걸어 다닐 만한 상권</li><li>한강 접근이 자전거로 10분</li></ul></dd>
+        </div>
+        <div>
+          <dt class="fr-proscons__label" data-kind="con"><svg aria-hidden="true"><use href="#i-con"/></svg>단점</dt>
+          <dd><ul><li>가격대가 예산을 크게 넘음</li><li>주말 유동 인구가 많아 번잡함</li><li>성수역 북쪽은 아직 공장 소음</li></ul></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="fr-section">
+      <div class="fr-section__head"><h2 class="fr-section__title">임장 사진</h2><span class="fr-section__count">6장</span></div>
+      <div class="fr-gallery">
+        <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>서울숲 북문에서 본 단지 전경</figcaption></figure>
+        <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>뚝섬역 3번 출구에서 걸어 올라오는 길</figcaption></figure>
+        <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>단지 안 조경과 산책로</figcaption></figure>
+      </div>
+      <div style="margin-top:var(--space-4)"><button class="fr-btn fr-btn--sm" data-variant="secondary" type="button">사진 6장 모두 보기</button></div>
+    </div>
+
+    <div class="fr-section--lg fr-section">
+      <div class="fr-section__head">
+        <h2 class="fr-section__title">확인 매물</h2><span class="fr-section__count">단지 2곳 · 매물 3건</span>
+        <span class="fr-section__action"><button class="fr-btn fr-btn--sm" data-variant="secondary" type="button"><svg aria-hidden="true" style="width:1rem;height:1rem"><use href="#i-plus"/></svg>매물 추가</button></span>
+      </div>
+
+      <div class="fr-complex">
+        <div class="fr-complex__head"><h3 class="fr-complex__name">트리마제</h3><span class="fr-complex__count">매물 2건</span></div>
+        <div class="fr-props">
+          <a class="fr-prop" href="#" data-goto="property">
+            <div>
+              <p class="fr-prop__name">101동 1203호 / 84A</p>
+              <p class="fr-prop__line">“이번 임장에서 가장 마음에 들었던 집”</p>
+              <div class="fr-prop__tags fr-chip-row"><span class="fr-chip">#남향</span><span class="fr-chip">#고층</span><span class="fr-chip">#한강뷰</span><span class="fr-chip fr-chip--count">+1</span></div>
+            </div>
+            <span class="fr-prop__rating"><span class="fr-rating" data-rating="5"></span><span style="font-size:var(--text-fine);color:var(--color-success);display:inline-flex;align-items:center;gap:.25rem"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-up"/></svg>6월보다 2단계</span></span>
+            <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+          </a>
+          <a class="fr-prop" href="#" data-goto="property">
+            <div>
+              <p class="fr-prop__name">102동 1501호 / 84A</p>
+              <p class="fr-prop__line">“구조는 같은데 뷰가 아쉽다”</p>
+              <div class="fr-prop__tags fr-chip-row"><span class="fr-chip">#고층</span><span class="fr-chip">#올수리</span></div>
+            </div>
+            <span class="fr-prop__rating"><span class="fr-rating" data-rating="4"></span></span>
+            <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="fr-complex">
+        <div class="fr-complex__head"><h3 class="fr-complex__name">서울숲리버뷰자이</h3><span class="fr-complex__count">매물 1건</span></div>
+        <div class="fr-props">
+          <a class="fr-prop" href="#" data-goto="property">
+            <div>
+              <p class="fr-prop__name">105동 803호 / 84B</p>
+              <p class="fr-prop__line">“가격은 가장 현실적, 대신 저층”</p>
+              <div class="fr-prop__tags fr-chip-row"><span class="fr-chip">#가격적정</span><span class="fr-chip">#저층</span></div>
+            </div>
+            <span class="fr-prop__rating"><span class="fr-rating" data-rating="4"></span></span>
+            <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2차 ── -->
+  <div data-visit-panel="2" hidden>
+    <div class="fr-section" style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">
+      <span class="fr-revisit fr-revisit--pill" data-value="MAYBE"><svg aria-hidden="true"><use href="#i-maybe"/></svg>조금 더 고민</span>
+      <span style="font-size:var(--text-caption);color:var(--color-body-muted)" class="fr-num">2026.06.02 화요일 11:00 · 오전</span>
+      <span style="margin-left:auto"><button class="fr-btn fr-btn--sm" data-variant="secondary" type="button">이 임장 수정</button></span>
+    </div>
+    <div class="fr-section">
+      <p class="fr-quote">“장마철이라 누수만 봤다.”</p>
+      <div class="fr-chip-row" style="margin-top:var(--space-5)"><span class="fr-chip">#서울숲</span><span class="fr-chip">#장마</span></div>
+      <p class="fr-prose" style="margin-top:var(--space-6)">비 오는 평일 오전. 일부러 비 오는 날 골라서 갔다. 단지 배수는 나쁘지 않았고, 지하 주차장에도 물이 고인 자국은 없었다. 다만 본 집 자체가 도배가 낡아서 인상이 좋지 않았다.</p>
+    </div>
+    <div class="fr-section">
+      <dl class="fr-proscons">
+        <div><dt class="fr-proscons__label" data-kind="pro"><svg aria-hidden="true"><use href="#i-pro"/></svg>장점</dt><dd><ul><li>비 오는 날에도 단지 배수 양호</li><li>지하 주차장 습기 없음</li></ul></dd></div>
+        <div><dt class="fr-proscons__label" data-kind="con"><svg aria-hidden="true"><use href="#i-con"/></svg>단점</dt><dd><ul><li>본 집 내부 상태가 낡음</li><li>비 오는 날 언덕길이 미끄러움</li></ul></dd></div>
+      </dl>
+    </div>
+    <div class="fr-section--lg fr-section">
+      <div class="fr-section__head"><h2 class="fr-section__title">확인 매물</h2><span class="fr-section__count">단지 1곳 · 매물 1건</span></div>
+      <div class="fr-complex">
+        <div class="fr-complex__head"><h3 class="fr-complex__name">트리마제</h3><span class="fr-complex__count">매물 1건</span></div>
+        <div class="fr-props">
+          <a class="fr-prop" href="#" data-goto="property">
+            <div>
+              <p class="fr-prop__name">101동 1203호 / 84A</p>
+              <p class="fr-prop__line">“구조는 좋은데 도배가 너무 낡았다”</p>
+              <div class="fr-prop__tags fr-chip-row"><span class="fr-chip">#남향</span><span class="fr-chip">#수리필요</span></div>
+            </div>
+            <span class="fr-prop__rating"><span class="fr-rating" data-rating="3"></span></span>
+            <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 1차: 매물 0건 ── -->
+  <div data-visit-panel="1" hidden>
+    <div class="fr-section" style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">
+      <span class="fr-revisit fr-revisit--pill" data-value="YES"><svg aria-hidden="true"><use href="#i-yes"/></svg>다시 임장하고 싶음</span>
+      <span style="font-size:var(--text-caption);color:var(--color-body-muted)" class="fr-num">2026.03.11 수요일 18:30 · 저녁</span>
+      <span style="margin-left:auto"><button class="fr-btn fr-btn--sm" data-variant="secondary" type="button">이 임장 수정</button></span>
+    </div>
+    <div class="fr-section">
+      <p class="fr-quote">“일단 동네가 마음에 든다.”</p>
+      <div class="fr-chip-row" style="margin-top:var(--space-5)"><span class="fr-chip">#첫방문</span><span class="fr-chip">#야간</span></div>
+      <p class="fr-prose" style="margin-top:var(--space-6)">퇴근하고 바로 넘어가서 해가 진 뒤 한 시간쯤 걸었다. 집은 보지 않고 동네만 봤다. 밤에도 길이 밝고 사람이 다니는 편이라 무섭지 않았다.</p>
+    </div>
+    <div class="fr-section--lg fr-section">
+      <div class="fr-section__head"><h2 class="fr-section__title">확인 매물</h2><span class="fr-section__count">0건</span></div>
+      <div class="fr-empty fr-empty--quiet">
+        <p class="fr-empty__title">이 날은 매물을 보지 않았습니다</p>
+        <p class="fr-empty__body">동네만 확인한 임장입니다. 이 상태로도 완료된 기록입니다.</p>
+      </div>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다. 회차 버튼을 누르면 아래 기록이 바뀝니다(실제 화면에서는 <span class="fr-num">?visit=</span> 파라미터로 남습니다).</p>
+</section>
+
+<!-- ═════════════════ 3. 매물 상세 ═════════════════ -->
+<section data-screen="property" aria-label="매물 상세">
+  <nav class="fr-crumb" aria-label="현재 위치">
+    <a href="#" data-goto="areas">임장</a><svg aria-hidden="true"><use href="#i-chev"/></svg>
+    <a href="#" data-goto="area">성수동</a><svg aria-hidden="true"><use href="#i-chev"/></svg>
+    <a href="#" data-goto="area" class="fr-num">2026.09.17 임장</a><svg aria-hidden="true"><use href="#i-chev"/></svg>
+    <span aria-current="page">트리마제 101동 1203호</span>
+  </nav>
+
+  <div class="fr-page-head">
+    <div class="fr-page-head__text">
+      <p style="font-size:var(--text-body-lg);font-weight:var(--weight-strong);color:var(--color-body-muted)">트리마제</p>
+      <h1 class="fr-title fr-title--md" style="margin-top:.25rem">101동 1203호 / 84A</h1>
+      <div style="margin-top:var(--space-4);display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">
+        <span class="fr-rating fr-rating--lg" data-rating="5" data-label="매우 관심 있음"></span>
+      </div>
+    </div>
+    <div class="fr-page-head__action" style="display:flex;gap:var(--space-3)">
+      <button class="fr-btn fr-btn--sm" data-variant="ghost" type="button">삭제</button>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button">매물 수정</button>
+    </div>
+  </div>
+
+  <div class="fr-section" style="margin-top:var(--space-6)">
+    <div class="fr-lineage">
+      <p class="fr-lineage__head"><svg aria-hidden="true"><use href="#i-link"/></svg>같은 이름으로 기록된 다른 회차
+        <button class="fr-link fr-link--quiet" style="border:0;background:none;padding-inline:0;cursor:pointer;font-weight:var(--weight-body)" type="button">연결 해제</button></p>
+      <p class="fr-lineage__note">성수동에서 단지와 매물명이 같은 기록을 자동으로 묶었습니다. 다른 집이라면 연결을 해제할 수 있습니다.</p>
+      <div class="fr-lineage__list">
+        <div class="fr-lineage__row" aria-current="true">
+          <span class="fr-lineage__date fr-num">2026.09.17</span>
+          <span class="fr-rating" data-rating="5"></span>
+          <span class="fr-lineage__delta" data-dir="up"><svg aria-hidden="true"><use href="#i-up"/></svg>2단계 올림 · 지금 보는 기록</span>
+        </div>
+        <a class="fr-lineage__row" href="#">
+          <span class="fr-lineage__date fr-num">2026.06.02</span>
+          <span class="fr-rating" data-rating="3"></span>
+          <span class="fr-lineage__delta" data-dir="same"><svg aria-hidden="true"><use href="#i-same"/></svg>처음 본 회차</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-section">
+    <p class="fr-quote">“이번 임장에서 가장 마음에 들었던 집.”</p>
+    <div class="fr-chip-row" style="margin-top:var(--space-5)">
+      <span class="fr-chip">#남향</span><span class="fr-chip">#고층</span><span class="fr-chip">#한강뷰</span><span class="fr-chip">#올수리</span>
+    </div>
+    <p class="fr-prose" style="margin-top:var(--space-6)">6월에 봤을 때는 도배가 낡아서 별 셋을 줬는데, 집주인이 여름에 전체 수리를 했다고 한다. 같은 집이 맞나 싶을 정도로 인상이 달랐다.
+
+거실에서 한강이 보이는 각도가 생각보다 넓다. 다만 관리비가 월 40만 원대라고 해서 한참 계산기를 두드렸다.</p>
+  </div>
+
+  <div class="fr-section">
+    <dl class="fr-proscons">
+      <div>
+        <dt class="fr-proscons__label" data-kind="pro"><svg aria-hidden="true"><use href="#i-pro"/></svg>장점</dt>
+        <dd><ul><li>오후 내내 직사광이 들어옴</li><li>거실 정면 한강 조망</li><li>거실–주방 동선이 짧음</li><li>여름에 전체 수리 완료</li></ul></dd>
+      </div>
+      <div>
+        <dt class="fr-proscons__label" data-kind="con"><svg aria-hidden="true"><use href="#i-con"/></svg>단점</dt>
+        <dd><ul><li>관리비가 월 40만 원대</li><li>매매가가 예산을 초과</li><li>출근 시간 엘리베이터 대기 김</li></ul></dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">매물 사진</h2><span class="fr-section__count">6장</span></div>
+    <div class="fr-gallery">
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>거실</figcaption></figure>
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>거실 창밖 뷰</figcaption></figure>
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>주방</figcaption></figure>
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>안방과 드레스룸</figcaption></figure>
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>욕실</figcaption></figure>
+      <figure><div class="fr-ph fr-ph--tile"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><figcaption>현관 팬트리</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="fr-section--lg fr-section">
+    <div class="fr-section__head"><h2 class="fr-section__title">문답</h2><span class="fr-section__count">필수 5개 · 선택 3개</span></div>
+    <div class="fr-qa">
+      <div class="fr-qa__item">
+        <div>
+          <p class="fr-qa__q">거실 채광은 어떤가?</p>
+          <p class="fr-qa__flags"><span class="fr-qa__flag" data-kind="required">필수</span><span class="fr-qa__flag">· 이 기록은 v1 질문 기준</span></p>
+        </div>
+        <p class="fr-qa__a">오후 두 시에 봤는데 조명 없이도 충분히 밝았다. 네 시가 넘어가면 서향 빛이 거실 안쪽까지 길게 들어온다.</p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">외부 소음은 어떤가?</p><p class="fr-qa__flags"><span class="fr-qa__flag" data-kind="required">필수</span></p></div>
+        <p class="fr-qa__a">강변북로가 내려다보이지만 창을 닫으면 거의 들리지 않았다. 창을 열면 확실히 들린다.</p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">수납 공간은 충분한가?</p><p class="fr-qa__flags"><span class="fr-qa__flag" data-kind="required">필수</span></p></div>
+        <p class="fr-qa__a">현관 팬트리와 안방 드레스룸은 충분하다. 주방 상부장이 생각보다 얕아서 그릇은 따로 둘 자리가 필요하다.</p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">주차는 세대당 몇 대인가?</p><p class="fr-qa__flags"><span class="fr-qa__flag" data-kind="required">필수</span><span class="fr-qa__flag">· 숫자</span></p></div>
+        <p class="fr-qa__a fr-num">1.4대</p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">관리비 수준은?</p><p class="fr-qa__flags"><span class="fr-qa__flag" data-kind="required">필수</span><span class="fr-qa__flag">· 단일 선택</span></p></div>
+        <p class="fr-qa__a"><span class="fr-chip">비싼 편</span></p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">즉시 입주 가능한가?</p><p class="fr-qa__flags"><span class="fr-qa__flag">선택 · 예/아니오</span></p></div>
+        <p class="fr-qa__a"><span class="fr-qa__bool"><svg aria-hidden="true" style="color:var(--color-body-muted)"><use href="#i-no"/></svg>아니오 — 12월 이후 가능</span></p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">다시 보러 오고 싶은가?</p><p class="fr-qa__flags"><span class="fr-qa__flag">선택 · 별점</span></p></div>
+        <p class="fr-qa__a"><span class="fr-rating" data-rating="5"></span></p>
+      </div>
+      <div class="fr-qa__item">
+        <div><p class="fr-qa__q">반려동물을 키울 수 있는가?</p><p class="fr-qa__flags"><span class="fr-qa__flag">선택</span><span class="fr-qa__flag">· 현재 미사용 질문</span></p></div>
+        <p class="fr-qa__a">가능하다고 들었다. 소형견 기준.</p>
+      </div>
+    </div>
+    <div class="fr-alert" data-tone="muted" style="margin-top:var(--space-5)">
+      <svg aria-hidden="true"><use href="#i-info"/></svg>
+      <span>이 매물은 <b>2026.09.17</b> 임장 시점의 질문 구성으로 저장되어 있습니다. 이후 질문이 바뀌어도 이 기록의 문답은 그대로 유지됩니다.</span>
+    </div>
+  </div>
+
+  <div class="fr-section--lg fr-section" style="display:flex;gap:var(--space-4);justify-content:space-between;border-top:var(--fr-rule);padding-top:var(--space-5)">
+    <a class="fr-link fr-link--quiet" href="#" data-goto="area">← 이 임장의 매물 목록</a>
+    <a class="fr-link fr-link--quiet" href="#" data-goto="property">다음 매물 · 102동 1501호 →</a>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 4. 작성 ① 지역 선택 ═════════════════ -->
+<section data-screen="w1" aria-label="임장 작성 1단계">
+  <div class="fr-wizard">
+    <div class="fr-steps">
+      <span class="fr-steps__item" data-state="current"><span class="fr-steps__num">1</span><span>지역</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item"><span class="fr-steps__num">2</span><span>임장 기록</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item"><span class="fr-steps__num">3</span><span>확인 매물</span></span>
+    </div>
+
+    <h1 class="fr-title fr-title--md">어디를 걸었나요?</h1>
+    <p class="fr-subline">이미 임장한 지역이면 기존 지역을 고르세요. 같은 지역의 새 회차로 저장됩니다.</p>
+
+    <div class="fr-search" style="margin-top:var(--space-6)">
+      <svg class="fr-search__icon" aria-hidden="true"><use href="#i-search"/></svg>
+      <label class="sr-only" for="q-w1">지역 검색</label>
+      <input id="q-w1" type="search" value="성수" />
+      <button class="fr-search__clear" type="button" aria-label="검색어 지우기"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+
+    <ul class="fr-props" style="margin-top:var(--space-5)">
+      <li><button class="fr-prop" type="button" style="width:100%;border-left:0;border-right:0;border-top:0;background:none;text-align:left">
+        <span>
+          <span class="fr-prop__name" style="display:block">성수동</span>
+          <span class="fr-prop__line" style="display:block">서울숲 ~ 뚝섬역 주변 · 임장 3회 · 최근 <span class="fr-num">2026.09.17</span></span>
+        </span>
+        <span class="fr-prop__rating"><span class="fr-chip fr-chip--ghost">4번째 회차로 기록</span></span>
+        <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button></li>
+      <li><button class="fr-prop" type="button" style="width:100%;border-left:0;border-right:0;border-top:0;background:none;text-align:left">
+        <span>
+          <span class="fr-prop__name" style="display:block">성수동2가</span>
+          <span class="fr-prop__line" style="display:block">건대입구 쪽 · 임장 1회 · 최근 <span class="fr-num">2026.01.24</span></span>
+        </span>
+        <span class="fr-prop__rating"><span class="fr-chip fr-chip--ghost">2번째 회차로 기록</span></span>
+        <svg class="fr-prop__go" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button></li>
+    </ul>
+
+    <div style="margin-top:var(--space-6);padding:var(--space-5);border:1px dashed var(--color-border-strong);border-radius:var(--radius-lg);background:var(--color-canvas-pure)">
+      <p style="font-size:var(--text-caption);font-weight:var(--weight-strong)">찾는 지역이 없나요?</p>
+      <div class="fr-stack" style="margin-top:var(--space-4)">
+        <label class="fr-field"><span class="fr-field__label">지역명<span class="fr-field__req">*</span></span><input class="fr-input" value="성수" /></label>
+        <label class="fr-field"><span class="fr-field__label">지역 설명</span><input class="fr-input" placeholder="예: 서울숲 ~ 뚝섬역 주변" /><span class="fr-field__hint">나중에 같은 이름의 지역을 구분할 때 씁니다.</span></label>
+      </div>
+      <div style="margin-top:var(--space-5)"><button class="fr-btn" data-variant="secondary" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg>‘성수’ 새 지역으로 추가</button></div>
+    </div>
+
+    <div style="display:flex;gap:var(--space-3);margin-top:var(--fr-block);align-items:center">
+      <button class="fr-btn" data-variant="ghost" type="button">취소</button>
+      <span style="flex:1"></span>
+      <button class="fr-btn" type="button" disabled>다음</button>
+    </div>
+    <p class="fr-field__hint" style="text-align:right">지역을 먼저 고르면 다음으로 넘어갈 수 있습니다.</p>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 5. 작성 ② 임장 기본 정보 ═════════════════ -->
+<section data-screen="w2" aria-label="임장 작성 2단계">
+  <div class="fr-wizard">
+    <div class="fr-steps">
+      <span class="fr-steps__item" data-state="done"><span class="fr-steps__num"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-check"/></svg></span><span>지역</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item" data-state="current"><span class="fr-steps__num">2</span><span>임장 기록</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item"><span class="fr-steps__num">3</span><span>확인 매물</span></span>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap">
+      <h1 class="fr-title fr-title--md">성수동 · 4번째 임장</h1>
+      <span class="fr-autosave"><svg aria-hidden="true"><use href="#i-check"/></svg>14:22에 임시 저장됨</span>
+    </div>
+    <p class="fr-subline">필수는 일시와 재방문 의사 둘뿐입니다. 나머지는 나중에 채워도 됩니다.</p>
+
+    <div class="fr-stack" style="margin-top:var(--space-8)">
+      <div class="fr-grid-2">
+        <label class="fr-field"><span class="fr-field__label">임장 날짜<span class="fr-field__req">*</span></span><input class="fr-input fr-num" type="date" value="2026-09-24" /></label>
+        <label class="fr-field"><span class="fr-field__label">임장 시각<span class="fr-field__req">*</span></span><input class="fr-input fr-num" type="time" value="14:00" /><span class="fr-field__hint">요일과 ‘오후’ 같은 표현은 저장한 시각에서 자동으로 만듭니다.</span></label>
+      </div>
+
+      <fieldset class="fr-field" style="border:0;padding:0;margin:0">
+        <legend class="fr-field__label">다시 임장할 생각이 있나요?<span class="fr-field__req">*</span></legend>
+        <div class="fr-radio-row fr-radio-row--stack">
+          <label class="fr-radio"><input type="radio" name="revisit" checked /><svg style="color:var(--color-success)" aria-hidden="true"><use href="#i-yes"/></svg>다시 임장하고 싶음</label>
+          <label class="fr-radio"><input type="radio" name="revisit" /><svg style="color:var(--color-warning)" aria-hidden="true"><use href="#i-maybe"/></svg>조금 더 고민</label>
+          <label class="fr-radio"><input type="radio" name="revisit" /><svg style="color:var(--color-body-muted)" aria-hidden="true"><use href="#i-no"/></svg>재방문하지 않을 예정</label>
+        </div>
+        <p class="fr-field__hint">이 지역 전체에 대한 판단이 아니라, 오늘 다녀와서 내린 판단입니다.</p>
+      </fieldset>
+
+      <label class="fr-field"><span class="fr-field__label">한줄평</span><input class="fr-input" placeholder="오늘 하루를 한 문장으로" /></label>
+      <label class="fr-field"><span class="fr-field__label">전체 메모</span><textarea class="fr-textarea" placeholder="걸은 길, 만난 사람, 기억해 둘 것"></textarea></label>
+
+      <div class="fr-grid-2">
+        <label class="fr-field"><span class="fr-field__label">장점</span><textarea class="fr-textarea fr-textarea--sm" placeholder="한 줄에 하나씩"></textarea></label>
+        <label class="fr-field"><span class="fr-field__label">단점</span><textarea class="fr-textarea fr-textarea--sm" placeholder="한 줄에 하나씩"></textarea></label>
+      </div>
+
+      <div class="fr-field">
+        <span class="fr-field__label">태그</span>
+        <div class="fr-chip-row" style="margin-bottom:var(--space-3)">
+          <span class="fr-chip">#서울숲 <button type="button" aria-label="서울숲 태그 빼기" style="border:0;background:none;padding:0;display:inline-flex;cursor:pointer"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+          <span class="fr-chip">#한강 <button type="button" aria-label="한강 태그 빼기" style="border:0;background:none;padding:0;display:inline-flex;cursor:pointer"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+        </div>
+        <input class="fr-input" placeholder="태그를 입력하고 Enter" />
+        <div class="fr-chip-row" style="margin-top:var(--space-3)">
+          <span class="fr-field__hint" style="margin:0">자주 쓴 태그</span>
+          <button class="fr-chip fr-chip--ghost" type="button">#직주근접</button>
+          <button class="fr-chip fr-chip--ghost" type="button">#카페상권</button>
+          <button class="fr-chip fr-chip--ghost" type="button">#학군</button>
+        </div>
+      </div>
+
+      <div class="fr-field">
+        <span class="fr-field__label">임장 사진</span>
+        <div class="fr-drop">
+          <p class="fr-drop__title">사진을 끌어다 놓거나 눌러서 고르세요</p>
+          <p class="fr-drop__hint">단지 입구, 조경, 주차장, 역까지 가는 길처럼 지역 전체에 해당하는 사진입니다. 매물 사진은 다음 단계에서 매물마다 따로 넣습니다.</p>
+          <div class="fr-drop__thumbs">
+            <div class="fr-thumb">
+              <div class="fr-thumb__img"><div class="fr-ph fr-ph--sm" style="width:7rem;height:5.25rem"><svg aria-hidden="true"><use href="#i-photo"/></svg></div>
+                <span class="fr-thumb__grab"><svg aria-hidden="true"><use href="#i-grab"/></svg></span>
+                <button class="fr-thumb__del" type="button" aria-label="사진 빼기"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+              <input value="단지 입구" aria-label="사진 설명" />
+            </div>
+            <div class="fr-thumb">
+              <div class="fr-thumb__img"><div class="fr-ph fr-ph--sm" style="width:7rem;height:5.25rem"><svg aria-hidden="true"><use href="#i-photo"/></svg></div>
+                <span class="fr-thumb__grab"><svg aria-hidden="true"><use href="#i-grab"/></svg></span>
+                <button class="fr-thumb__del" type="button" aria-label="사진 빼기"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+              <input placeholder="설명 없음" aria-label="사진 설명" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:var(--space-3);margin-top:var(--fr-block);align-items:center">
+      <button class="fr-btn" data-variant="ghost" type="button">나가기</button>
+      <span style="flex:1"></span>
+      <button class="fr-btn" data-variant="secondary" type="button">이전</button>
+      <button class="fr-btn" type="button">다음 · 매물 등록</button>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 6. 작성 ③ 확인 매물 목록 ═════════════════ -->
+<section data-screen="w3" aria-label="임장 작성 3단계">
+  <div class="fr-wizard">
+    <div class="fr-steps">
+      <span class="fr-steps__item" data-state="done"><span class="fr-steps__num"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-check"/></svg></span><span>지역</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item" data-state="done"><span class="fr-steps__num"><svg style="width:.75rem;height:.75rem" aria-hidden="true"><use href="#i-check"/></svg></span><span>임장 기록</span></span>
+      <span class="fr-steps__bar"></span>
+      <span class="fr-steps__item" data-state="current"><span class="fr-steps__num">3</span><span>확인 매물</span></span>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap">
+      <h1 class="fr-title fr-title--md">오늘 본 매물</h1>
+      <span class="fr-autosave"><svg aria-hidden="true"><use href="#i-check"/></svg>방금 임시 저장됨</span>
+    </div>
+    <p class="fr-subline">순서를 끌어서 바꿀 수 있습니다. 매물을 하나도 넣지 않고 완료해도 됩니다.</p>
+
+    <div style="margin-top:var(--space-6);border-top:var(--fr-rule)">
+      <div class="fr-editrow">
+        <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+        <div>
+          <p class="fr-editrow__name">트리마제 · 101동 1203호 / 84A</p>
+          <p class="fr-editrow__sub">필수 문답 5개 모두 작성</p>
+        </div>
+        <span class="fr-editrow__rating fr-rating" data-rating="5"></span>
+        <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-goto="w3p">수정</button>
+      </div>
+      <div class="fr-editrow">
+        <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+        <div>
+          <p class="fr-editrow__name">트리마제 · 102동 1501호 / 84A</p>
+          <p class="fr-editrow__sub"><span class="fr-draft"><svg aria-hidden="true"><use href="#i-draft"/></svg>작성 중</span><span style="color:var(--color-warning)">필수 문답 2개 남음 — 관리비 수준, 주차 대수</span></p>
+        </div>
+        <span class="fr-editrow__rating fr-rating" data-rating="4"></span>
+        <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-goto="w3p">이어서 쓰기</button>
+      </div>
+      <div class="fr-editrow">
+        <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+        <div>
+          <p class="fr-editrow__name">서울숲리버뷰자이 · 105동 803호 / 84B</p>
+          <p class="fr-editrow__sub"><span class="fr-draft"><svg aria-hidden="true"><use href="#i-draft"/></svg>작성 중</span><span style="color:var(--color-warning)">관심도와 필수 문답 5개 남음</span></p>
+        </div>
+        <span class="fr-editrow__rating" style="font-size:var(--text-fine);color:var(--color-body-muted)">관심도 미입력</span>
+        <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-goto="w3p">이어서 쓰기</button>
+      </div>
+    </div>
+
+    <div style="margin-top:var(--space-5)">
+      <button class="fr-btn" data-variant="secondary" type="button" data-goto="w3p"><svg aria-hidden="true"><use href="#i-plus"/></svg>매물 추가</button>
+    </div>
+
+    <div class="fr-alert" data-tone="muted" style="margin-top:var(--fr-block)">
+      <svg aria-hidden="true"><use href="#i-info"/></svg>
+      <span>이 임장에서 쓰는 질문은 <b>작성을 시작한 2026.09.24 14:22</b> 시점 구성으로 고정됐습니다. 지금 질문이 바뀌어도 이 임장에는 반영되지 않습니다.</span>
+    </div>
+
+    <div style="display:flex;gap:var(--space-3);margin-top:var(--fr-block);align-items:center;flex-wrap:wrap">
+      <button class="fr-btn" data-variant="ghost" type="button">나중에 이어서 쓰기</button>
+      <span style="flex:1"></span>
+      <button class="fr-btn" data-variant="secondary" type="button">이전</button>
+      <button class="fr-btn" type="button" data-goto="w4">임장 완료하기</button>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 7. 작성 ③-1 매물 편집 ═════════════════ -->
+<section data-screen="w3p" aria-label="매물 편집">
+  <div class="fr-wizard">
+    <nav class="fr-crumb" aria-label="현재 위치"><a href="#" data-goto="w3">성수동 · 4번째 임장</a><svg aria-hidden="true"><use href="#i-chev"/></svg><span aria-current="page">매물 2 / 3</span></nav>
+
+    <div style="display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap">
+      <h1 class="fr-title fr-title--md">102동 1501호 / 84A</h1>
+      <span class="fr-draft"><svg aria-hidden="true"><use href="#i-draft"/></svg>작성 중</span>
+      <span class="fr-autosave"><svg aria-hidden="true"><use href="#i-check"/></svg>방금 임시 저장됨</span>
+    </div>
+
+    <div class="fr-stack" style="margin-top:var(--space-8)">
+      <div class="fr-grid-2">
+        <label class="fr-field">
+          <span class="fr-field__label">단지 / 건물명<span class="fr-field__req">*</span></span>
+          <input class="fr-input" list="complexes" value="트리마제" />
+          <datalist id="complexes"><option value="트리마제"></option><option value="서울숲리버뷰자이"></option><option value="아크로서울포레스트"></option></datalist>
+          <span class="fr-field__hint">이 임장과 지역에서 이미 쓴 이름이 자동 완성됩니다. 같은 이름이어야 회차 간 매물이 연결됩니다.</span>
+        </label>
+        <label class="fr-field"><span class="fr-field__label">매물명<span class="fr-field__req">*</span></span><input class="fr-input" value="102동 1501호 / 84A" /><span class="fr-field__hint">동·호수·평형을 한 줄로 적습니다.</span></label>
+      </div>
+
+      <fieldset class="fr-field" style="border:0;padding:0;margin:0">
+        <legend class="fr-field__label">관심도<span class="fr-field__req">*</span></legend>
+        <div class="fr-stars-input" role="radiogroup" aria-label="관심도 1에서 5">
+          <button type="button" role="radio" aria-checked="false" aria-label="1점 관심 없음"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+          <button type="button" role="radio" aria-checked="false" aria-label="2점 관심 낮음"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+          <button type="button" role="radio" aria-checked="false" aria-label="3점 보통"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+          <button type="button" role="radio" aria-checked="true" aria-label="4점 관심 있음"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+          <button type="button" role="radio" aria-checked="false" aria-label="5점 매우 관심 있음"><svg viewBox="0 0 24 24" class="fr-rating__off"><use href="#i-star"/></svg></button>
+          <span class="fr-stars-input__label">4 / 5 · 관심 있음</span>
+        </div>
+      </fieldset>
+
+      <label class="fr-field"><span class="fr-field__label">한줄평</span><input class="fr-input" value="구조는 같은데 뷰가 아쉽다" /></label>
+      <label class="fr-field"><span class="fr-field__label">매물 메모</span><textarea class="fr-textarea fr-textarea--sm">101동과 평면은 같은데 앞 동에 막혀서 강이 거의 안 보인다.</textarea></label>
+      <div class="fr-grid-2">
+        <label class="fr-field"><span class="fr-field__label">장점</span><textarea class="fr-textarea fr-textarea--sm">올수리 완료
+관리 상태 좋음</textarea></label>
+        <label class="fr-field"><span class="fr-field__label">단점</span><textarea class="fr-textarea fr-textarea--sm">앞 동에 조망 막힘</textarea></label>
+      </div>
+      <div class="fr-field">
+        <span class="fr-field__label">태그</span>
+        <div class="fr-chip-row" style="margin-bottom:var(--space-3)"><span class="fr-chip">#고층</span><span class="fr-chip">#올수리</span></div>
+        <input class="fr-input" placeholder="태그를 입력하고 Enter" />
+      </div>
+      <div class="fr-field">
+        <span class="fr-field__label">매물 사진</span>
+        <div class="fr-drop">
+          <p class="fr-drop__title">거실, 주방, 방, 창밖 뷰, 하자</p>
+          <p class="fr-drop__hint">사진마다 설명을 붙여 두면 나중에 매물끼리 비교할 때 훨씬 빨리 찾습니다.</p>
+          <div class="fr-drop__thumbs">
+            <div class="fr-thumb"><div class="fr-thumb__img"><div class="fr-ph fr-ph--sm" style="width:7rem;height:5.25rem"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><span class="fr-thumb__grab"><svg aria-hidden="true"><use href="#i-grab"/></svg></span><button class="fr-thumb__del" type="button" aria-label="사진 빼기"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><input value="거실" aria-label="사진 설명" /></div>
+            <div class="fr-thumb"><div class="fr-thumb__img"><div class="fr-ph fr-ph--sm" style="width:7rem;height:5.25rem"><svg aria-hidden="true"><use href="#i-photo"/></svg></div><span class="fr-thumb__grab"><svg aria-hidden="true"><use href="#i-grab"/></svg></span><button class="fr-thumb__del" type="button" aria-label="사진 빼기"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><input value="거실 창밖" aria-label="사진 설명" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-section--lg fr-section">
+      <div class="fr-section__head"><h2 class="fr-section__title">문답</h2><span class="fr-section__count">필수 5개 중 3개 작성</span></div>
+
+      <div class="fr-stack">
+        <label class="fr-field"><span class="fr-field__label">거실 및 방의 채광은 어떤가?<span class="fr-field__req">*</span></span><textarea class="fr-textarea fr-textarea--sm">남향인데 앞 동에 가려서 오전에만 볕이 든다.</textarea></label>
+        <label class="fr-field"><span class="fr-field__label">외부 소음은 어떤가?<span class="fr-field__req">*</span></span><textarea class="fr-textarea fr-textarea--sm">101동보다 조용했다.</textarea></label>
+        <label class="fr-field"><span class="fr-field__label">수납 공간은 충분한가?<span class="fr-field__req">*</span></span><textarea class="fr-textarea fr-textarea--sm">101동과 동일한 구조.</textarea></label>
+
+        <label class="fr-field">
+          <span class="fr-field__label">주차는 세대당 몇 대인가?<span class="fr-field__req">*</span></span>
+          <input class="fr-input fr-num" type="number" step="0.1" placeholder="예: 1.4" />
+          <span class="fr-field__hint" style="color:var(--color-warning)">아직 비어 있습니다.</span>
+        </label>
+
+        <fieldset class="fr-field" style="border:0;padding:0;margin:0">
+          <legend class="fr-field__label">관리비 수준은?<span class="fr-field__req">*</span></legend>
+          <div class="fr-radio-row">
+            <label class="fr-radio"><input type="radio" name="fee" />저렴한 편</label>
+            <label class="fr-radio"><input type="radio" name="fee" />보통</label>
+            <label class="fr-radio"><input type="radio" name="fee" />비싼 편</label>
+          </div>
+          <p class="fr-field__hint" style="color:var(--color-warning)">아직 고르지 않았습니다.</p>
+        </fieldset>
+
+        <fieldset class="fr-field" style="border:0;padding:0;margin:0">
+          <legend class="fr-field__label">즉시 입주 가능한가?</legend>
+          <div class="fr-radio-row">
+            <label class="fr-radio"><input type="radio" name="movein" />예</label>
+            <label class="fr-radio"><input type="radio" name="movein" checked />아니오</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="fr-field" style="border:0;padding:0;margin:0">
+          <legend class="fr-field__label">다시 보러 오고 싶은가?</legend>
+          <div class="fr-stars-input" role="radiogroup" aria-label="1에서 5">
+            <button type="button" role="radio" aria-checked="false" aria-label="1점"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+            <button type="button" role="radio" aria-checked="false" aria-label="2점"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+            <button type="button" role="radio" aria-checked="true" aria-label="3점"><svg viewBox="0 0 24 24" class="fr-rating__on"><use href="#i-star"/></svg></button>
+            <button type="button" role="radio" aria-checked="false" aria-label="4점"><svg viewBox="0 0 24 24" class="fr-rating__off"><use href="#i-star"/></svg></button>
+            <button type="button" role="radio" aria-checked="false" aria-label="5점"><svg viewBox="0 0 24 24" class="fr-rating__off"><use href="#i-star"/></svg></button>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="fr-alert" data-tone="warning" style="margin-top:var(--fr-block)">
+      <svg aria-hidden="true"><use href="#i-warn"/></svg>
+      <span><b>아직 이 매물을 완료할 수 없습니다.</b><br />주차 대수와 관리비 수준을 채우면 완료됩니다. 지금 저장해 두고 나중에 이어서 써도 됩니다.</span>
+    </div>
+
+    <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6);align-items:center;flex-wrap:wrap">
+      <button class="fr-btn" data-variant="ghost" type="button">매물 삭제</button>
+      <span style="flex:1"></span>
+      <button class="fr-btn" data-variant="secondary" type="button" data-goto="w3">작성 중으로 저장</button>
+      <button class="fr-btn" type="button" disabled>매물 완료</button>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 8. 작성 ④ 완료 검증 ═════════════════ -->
+<section data-screen="w4" aria-label="임장 완료 확인">
+  <div class="fr-wizard">
+    <h1 class="fr-title fr-title--md">임장을 완료할까요?</h1>
+    <p class="fr-subline">성수동 · 4번째 임장 · <span class="fr-num">2026.09.24</span> 목 14:00</p>
+
+    <div style="margin-top:var(--space-8)">
+      <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>임장 지역이 정해졌습니다 <span class="fr-check__why">성수동</span></span></div>
+      <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>임장 일시가 입력됐습니다 <span class="fr-check__why fr-num">2026.09.24 14:00</span></span></div>
+      <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>재방문 의사가 입력됐습니다 <span class="fr-check__why">다시 임장하고 싶음</span></span></div>
+      <div class="fr-check" data-ok="false"><svg aria-hidden="true"><use href="#i-warn"/></svg><span>매물 2건이 아직 작성 중입니다
+        <span class="fr-check__why">102동 1501호 — 주차 대수, 관리비 수준 미작성<br />105동 803호 — 관심도와 필수 문답 5개 미작성</span></span></div>
+    </div>
+
+    <div class="fr-alert" data-tone="warning" style="margin-top:var(--space-6)">
+      <svg aria-hidden="true"><use href="#i-warn"/></svg>
+      <span>작성 중인 매물이 있으면 임장을 완료할 수 없습니다. 두 가지 중 하나를 고르세요.</span>
+    </div>
+
+    <div class="fr-stack" style="margin-top:var(--space-6)">
+      <button class="fr-btn" data-variant="secondary" type="button" data-goto="w3" style="justify-content:space-between;text-align:left;padding:var(--space-5);border-radius:var(--radius-lg);min-height:auto">
+        <span><b style="display:block">남은 두 매물을 마저 쓰기</b><span style="font-size:var(--text-caption);color:var(--color-body-muted)">102동 1501호부터 이어서 씁니다</span></span>
+        <svg style="width:1.25rem;height:1.25rem;color:var(--color-icon-muted)" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+      <button class="fr-btn" data-variant="secondary" type="button" style="justify-content:space-between;text-align:left;padding:var(--space-5);border-radius:var(--radius-lg);min-height:auto">
+        <span><b style="display:block">두 매물을 이 임장에서 빼고 완료하기</b><span style="font-size:var(--text-caption);color:var(--color-body-muted)">작성 중인 내용은 지워집니다</span></span>
+        <svg style="width:1.25rem;height:1.25rem;color:var(--color-icon-muted)" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+    </div>
+
+    <div style="display:flex;gap:var(--space-3);margin-top:var(--fr-block);align-items:center">
+      <button class="fr-btn" data-variant="ghost" type="button" data-goto="w3">돌아가기</button>
+      <span style="flex:1"></span>
+      <button class="fr-btn" type="button" disabled>임장 완료</button>
+    </div>
+
+    <div class="fr-section--lg fr-section">
+      <div class="fr-section__head"><h2 class="fr-section__title">모두 채웠을 때</h2><span class="fr-section__count">같은 화면의 통과 상태</span></div>
+      <div>
+        <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>임장 지역이 정해졌습니다</span></div>
+        <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>임장 일시가 입력됐습니다</span></div>
+        <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>재방문 의사가 입력됐습니다</span></div>
+        <div class="fr-check" data-ok="true"><svg aria-hidden="true"><use href="#i-check"/></svg><span>매물 3건 모두 관심도와 필수 문답을 채웠습니다</span></div>
+      </div>
+      <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6);align-items:center">
+        <span style="flex:1"></span><button class="fr-btn" type="button" data-goto="area">임장 완료</button>
+      </div>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+<!-- ═════════════════ 9. 질문 관리(관리자) ═════════════════ -->
+<section data-screen="admin" aria-label="질문 관리">
+  <div class="fr-page-head">
+    <div class="fr-page-head__text">
+      <h1 class="fr-title">질문 관리</h1>
+      <p class="fr-subline">매물마다 묻는 질문입니다. 여기서 바꾼 내용은 <b>앞으로 만드는 매물</b>부터 적용되고, 이미 저장된 답변은 그대로 남습니다.</p>
+    </div>
+    <div class="fr-page-head__action" style="display:flex;gap:var(--space-3)">
+      <button class="fr-btn" data-variant="secondary" type="button">순서 변경</button>
+      <button class="fr-btn" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg>질문 추가</button>
+    </div>
+  </div>
+
+  <div class="fr-qhead" aria-hidden="true"><span></span><span>질문</span><span>타입</span><span>필수</span><span>사용</span><span></span></div>
+
+  <div>
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div>
+        <p class="fr-qrow__text">거실 및 방의 채광은 어떤가?</p>
+        <p class="fr-qrow__sub">v2 · 답변 <span class="fr-num">12</span>건 · 마지막 수정 <span class="fr-num">2026.05.02</span></p>
+        <div class="fr-vhist">
+          <p style="font-size:var(--text-fine);color:var(--color-body-muted);margin-top:var(--space-2)">버전 기록</p>
+          <div class="fr-vhist__row"><span class="fr-vhist__v">v2</span><span>거실 및 방의 채광은 어떤가?</span><span class="fr-num" style="margin-left:auto">2026.05.02 · 답변 7건</span></div>
+          <div class="fr-vhist__row"><span class="fr-vhist__v">v1</span><span>거실 채광은 어떤가?</span><span class="fr-num" style="margin-left:auto">2026.01.08 · 답변 5건</span></div>
+        </div>
+      </div>
+      <span class="fr-qrow__meta"><span class="fr-type">긴 글</span></span>
+      <span class="fr-qrow__meta"><span class="fr-chip fr-chip--ghost" style="color:var(--color-accent-muted);border-color:var(--color-border-strong)">필수</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">외부 소음은 어떤가?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">12</span>건</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">긴 글</span></span>
+      <span class="fr-qrow__meta"><span class="fr-chip fr-chip--ghost" style="color:var(--color-accent-muted);border-color:var(--color-border-strong)">필수</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">수납 공간은 충분한가?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">11</span>건</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">긴 글</span></span>
+      <span class="fr-qrow__meta"><span class="fr-chip fr-chip--ghost" style="color:var(--color-accent-muted);border-color:var(--color-border-strong)">필수</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">주차는 세대당 몇 대인가?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">9</span>건</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">숫자</span></span>
+      <span class="fr-qrow__meta"><span class="fr-chip fr-chip--ghost" style="color:var(--color-accent-muted);border-color:var(--color-border-strong)">필수</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">관리비 수준은?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">9</span>건 · 보기 3개: 저렴한 편 / 보통 / 비싼 편</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">단일 선택</span></span>
+      <span class="fr-qrow__meta"><span class="fr-chip fr-chip--ghost" style="color:var(--color-accent-muted);border-color:var(--color-border-strong)">필수</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow">
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">즉시 입주 가능한가?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">7</span>건</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">예 / 아니오</span></span>
+      <span class="fr-qrow__meta"><span style="font-size:var(--text-fine);color:var(--color-body-muted)">선택</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" checked /><i></i>사용중</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+
+    <div class="fr-qrow" data-disabled>
+      <span class="fr-editrow__grab" aria-hidden="true"><svg><use href="#i-grab"/></svg></span>
+      <div><p class="fr-qrow__text">반려동물을 키울 수 있는가?</p><p class="fr-qrow__sub">v1 · 답변 <span class="fr-num">3</span>건 · 신규 매물에는 표시되지 않음</p></div>
+      <span class="fr-qrow__meta"><span class="fr-type">한 줄 글</span></span>
+      <span class="fr-qrow__meta"><span style="font-size:var(--text-fine);color:var(--color-body-muted)">선택</span></span>
+      <label class="fr-switch fr-qrow__switch"><input type="checkbox" /><i></i>미사용</label>
+      <button class="fr-btn fr-btn--sm" data-variant="secondary" type="button" data-open-modal="question-modal">수정</button>
+    </div>
+  </div>
+
+  <div class="fr-modal" id="question-modal" role="dialog" aria-modal="true" aria-labelledby="question-modal-title" hidden>
+    <button class="fr-modal__scrim" type="button" aria-label="닫기" data-modal-close></button>
+    <div class="fr-modal__dialog">
+      <div class="fr-modal__head">
+        <div>
+          <h2 class="fr-modal__title" id="question-modal-title">질문 수정</h2>
+          <p class="fr-modal__sub">현재 v2 · 답변 12건이 이 질문을 참조하고 있습니다.</p>
+        </div>
+        <button class="fr-modal__close" type="button" aria-label="닫기" data-modal-close><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+      <div class="fr-stack">
+      <label class="fr-field"><span class="fr-field__label">질문<span class="fr-field__req">*</span></span><input class="fr-input" value="거실 및 방의 채광은 어떤가?" /></label>
+      <div class="fr-grid-2">
+        <label class="fr-field"><span class="fr-field__label">타입</span>
+          <select class="fr-select"><option>긴 글</option><option>한 줄 글</option><option>숫자</option><option>예 / 아니오</option><option>단일 선택</option><option>다중 선택</option><option>별점</option></select>
+          <span class="fr-field__hint">답변이 있는 질문은 타입을 바꿀 수 없습니다.</span>
+        </label>
+        <fieldset class="fr-field" style="border:0;padding:0;margin:0"><legend class="fr-field__label">필수 여부</legend>
+          <div class="fr-radio-row"><label class="fr-radio"><input type="radio" name="req" checked />필수</label><label class="fr-radio"><input type="radio" name="req" />선택</label></div>
+        </fieldset>
+      </div>
+      <div class="fr-alert" data-tone="muted">
+        <svg aria-hidden="true"><use href="#i-info"/></svg>
+        <span>질문 문장을 고치면 <b>v3</b>이 새로 생깁니다. 이미 저장된 답변 12건은 각자 답할 때의 문장(v1·v2)을 그대로 보여 줍니다.</span>
+      </div>
+      </div>
+      <div class="fr-modal__foot">
+        <button class="fr-btn" data-variant="ghost" type="button">미사용 처리</button>
+        <span style="flex:1"></span>
+        <button class="fr-btn" data-variant="secondary" type="button" data-modal-close>취소</button>
+        <button class="fr-btn" type="button" data-modal-close>v3으로 저장</button>
+      </div>
+    </div>
+  </div>
+  <p class="proto-note">데모 데이터입니다.</p>
+</section>
+
+</main>
+
+<nav class="fr-tabbar" aria-label="주요 메뉴">
+  <div class="fr-tabbar__inner">
+    <a href="#"><svg aria-hidden="true"><use href="#i-home"/></svg>홈</a>
+    <a href="#"><svg aria-hidden="true"><use href="#i-map"/></svg>나들이</a>
+    <a href="#" aria-current="page"><svg aria-hidden="true"><use href="#i-building"/></svg>임장</a>
+    <a href="#"><svg aria-hidden="true"><use href="#i-cal"/></svg>캘린더</a>
+    <a href="#"><svg aria-hidden="true"><use href="#i-user"/></svg>프로필</a>
+  </div>
+</nav>
+<button class="fr-fab" type="button" aria-label="임장 기록하기"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+</div>
+
+<div class="proto-bar fr-scroll-x" role="group" aria-label="프로토타입 화면 선택"></div>
+
+<script>
+(function () {
+  var SCREENS = [
+    ['areas', '① 지역 리스트'], ['states', '① 상태'], ['area', '② 지역 상세'], ['property', '③ 매물 상세'],
+    ['w1', '작성① 지역'], ['w2', '작성② 임장'], ['w3', '작성③ 매물'], ['w3p', '작성③-1 매물편집'],
+    ['w4', '작성④ 완료'], ['admin', '질문 관리'], ['admin-modal', '질문 수정 모달']
+  ];
+  var TITLES = {
+    areas: '임장', states: '임장', area: '성수동', property: '101동 1203호',
+    w1: '임장 기록', w2: '임장 기록', w3: '임장 기록', w3p: '매물 작성', w4: '임장 완료',
+    admin: '질문 관리', 'admin-modal': '질문 관리'
+  };
+
+  /* 별점은 유니코드가 아니라 SVG 로 그린다. 숫자를 항상 함께 둬서 색만으로 뜻하지 않게 한다. */
+  document.querySelectorAll('.fr-rating[data-rating]').forEach(function (el) {
+    var n = Number(el.getAttribute('data-rating'));
+    var label = el.getAttribute('data-label');
+    var stars = '<span class="fr-rating__stars" aria-hidden="true">';
+    for (var i = 1; i <= 5; i++) {
+      stars += '<svg viewBox="0 0 24 24" class="' + (i <= n ? 'fr-rating__on' : 'fr-rating__off') + '"><use href="#i-star"/></svg>';
+    }
+    stars += '</span>';
+    el.innerHTML = stars
+      + '<span class="fr-rating__value fr-num">' + n + (label ? ' / 5 · ' + label : '') + '</span>'
+      + '<span class="sr-only">관심도 5점 만점에 ' + n + '점</span>';
+  });
+
+  var bar = document.querySelector('.proto-bar');
+  SCREENS.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = s[1]; b.setAttribute('data-target', s[0]);
+    b.addEventListener('click', function () { show(s[0]); });
+    bar.appendChild(b);
+  });
+
+  function show(id) {
+    var withModal = id === 'admin-modal';
+    var screenId = withModal ? 'admin' : id;
+    document.querySelectorAll('[data-screen]').forEach(function (el) {
+      el.classList.toggle('is-active', el.getAttribute('data-screen') === screenId);
+    });
+    closeModal();
+    if (withModal) openModal('question-modal');
+    bar.querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-target') === id));
+    });
+    document.body.setAttribute('data-active-screen', screenId);
+    var t = document.querySelector('[data-mobile-title]');
+    if (t) t.textContent = TITLES[id] || '임장';
+    try {
+      if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id + location.search);
+    } catch (err) { /* file:// 에서는 막힐 수 있다 */ }
+    window.scrollTo(0, 0);
+  }
+
+  var lastTrigger = null;
+  function openModal(id) {
+    var m = document.getElementById(id);
+    if (!m) return;
+    m.hidden = false;
+    var first = m.querySelector('input, select, textarea, button:not([data-modal-close])');
+    if (first) first.focus();
+  }
+  function closeModal() {
+    document.querySelectorAll('.fr-modal:not([hidden])').forEach(function (m) { m.hidden = true; });
+    if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (document.querySelector('.fr-modal:not([hidden])')) closeModal();
+  });
+
+  document.addEventListener('click', function (e) {
+    var opener = e.target.closest('[data-open-modal]');
+    if (opener) { lastTrigger = opener; openModal(opener.getAttribute('data-open-modal')); return; }
+    if (e.target.closest('[data-modal-close]')) { closeModal(); return; }
+    var el = e.target.closest('[data-goto]');
+    if (!el) return;
+    e.preventDefault();
+    show(el.getAttribute('data-goto'));
+  });
+
+  document.querySelectorAll('.fr-rail__item').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var v = tab.getAttribute('data-visit');
+      document.querySelectorAll('.fr-rail__item').forEach(function (t) {
+        t.setAttribute('aria-selected', String(t === tab));
+      });
+      document.querySelectorAll('[data-visit-panel]').forEach(function (p) {
+        p.hidden = p.getAttribute('data-visit-panel') !== v;
+      });
+    });
+  });
+
+  document.querySelectorAll('.fr-filter[aria-pressed]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    });
+  });
+
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1) || 'areas'); });
+
+  var params = new URLSearchParams(location.search);
+  if (params.get('bare') === '1') document.body.setAttribute('data-bare', '1');
+  show(location.hash.slice(1) || params.get('screen') || 'areas');
+})();
+</script>
+</body>
+</html>

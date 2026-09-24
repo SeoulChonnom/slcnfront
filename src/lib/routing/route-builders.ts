@@ -102,3 +102,65 @@ export function buildDeviceShoeDetailPath(
 export function buildDeviceNotFoundPath(device: DeviceType) {
   return buildDevicePath(device, '404');
 }
+
+export function buildDeviceInspectionAreaListPath(device: DeviceType) {
+  return buildDevicePath(device, 'inspection');
+}
+
+export function buildDeviceInspectionRegisterPath(device: DeviceType) {
+  return buildDevicePath(device, 'inspection', 'register');
+}
+
+export function buildDeviceInspectionAreaDetailPath(
+  device: DeviceType,
+  areaId: string
+) {
+  return buildDevicePath(device, 'inspection', encodeSegment(areaId));
+}
+
+export function buildDeviceInspectionPropertyDetailPath(
+  device: DeviceType,
+  areaId: string,
+  propertyId: string
+) {
+  return buildDevicePath(
+    device,
+    'inspection',
+    encodeSegment(areaId),
+    'property',
+    encodeSegment(propertyId)
+  );
+}
+
+export function buildDeviceInspectionVisitEditPath(
+  device: DeviceType,
+  areaId: string,
+  visitId: string
+) {
+  return buildDevicePath(
+    device,
+    'inspection',
+    encodeSegment(areaId),
+    'visit',
+    encodeSegment(visitId),
+    'edit'
+  );
+}
+
+export function buildDeviceInspectionPropertyEditPath(
+  device: DeviceType,
+  areaId: string,
+  visitId: string,
+  propertyId: string
+) {
+  return buildDevicePath(
+    device,
+    'inspection',
+    encodeSegment(areaId),
+    'visit',
+    encodeSegment(visitId),
+    'property',
+    encodeSegment(propertyId),
+    'edit'
+  );
+}

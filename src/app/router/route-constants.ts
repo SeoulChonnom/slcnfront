@@ -19,6 +19,7 @@ export const RESERVED_SHOE_BRAND_SEGMENTS = [
   'calendar',
   'shoesRecom',
   'travel',
+  'inspection',
   'profile',
   'main',
   'mobile',

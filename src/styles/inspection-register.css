@@ -1,0 +1,734 @@
+/* 임장 기록 — register 화면 전용 스타일.
+   공통 토큰과 프리미티브(별·재방문 마크·DRAFT 배지·태그 칩)는 inspection.css에 있다.
+   이 파일에는 이 화면에만 쓰는 레이아웃만 둔다.
+   반응형 경계는 screen_design.md §8과 같은 833px. */
+
+/* ============================================================
+   Wizard shell — register/visit-edit/property-edit 공통
+   ============================================================ */
+
+.slcn-inspection-register,
+.slcn-inspection-property-edit {
+  max-width: 50rem;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  padding-block: var(--fr-block);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fr-block);
+}
+
+.slcn-inspection-register__title {
+  font-size: var(--text-display-sm);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-register__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fr-block);
+  padding: var(--space-6);
+}
+
+.slcn-inspection-property-edit__breadcrumb {
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-property-edit__breadcrumb a {
+  color: var(--color-body-muted);
+  text-decoration: underline;
+}
+
+/* ---- step indicator ---- */
+
+.slcn-inspection-register__step-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: var(--space-4);
+}
+
+.slcn-inspection-register__step-indicator > li {
+  flex: 1;
+}
+
+.slcn-inspection-register__step-indicator button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+  cursor: pointer;
+}
+
+.slcn-inspection-register__step-indicator button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.slcn-inspection-register__step-indicator button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.slcn-inspection-register__step-indicator > li[data-state="current"] button {
+  color: var(--color-ink);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-register__step-indicator span[aria-hidden] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-register__step-indicator
+  > li[data-state="current"]
+  span[aria-hidden] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.slcn-inspection-register__actions,
+.slcn-inspection-property-edit__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  border-top: 1px solid var(--color-hairline);
+  padding-top: var(--space-4);
+}
+
+.slcn-inspection-property-edit__actions-spacer {
+  flex: 1;
+}
+
+.slcn-inspection-register__next-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-register__next-reason {
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register__error {
+  color: var(--color-error);
+  font-size: var(--text-caption);
+}
+
+/* ============================================================
+   Step body shared layout
+   ============================================================ */
+
+.slcn-inspection-register-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--fr-measure);
+}
+
+.slcn-inspection-register-step__title {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-register-step__lead {
+  color: var(--color-body-muted);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-register-step__hint {
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-register-step__error {
+  color: var(--color-error);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-register-textarea {
+  min-height: 96px;
+}
+
+.slcn-inspection-register-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* ============================================================
+   ① 지역
+   ============================================================ */
+
+.slcn-inspection-register-area-selected {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-soft);
+  font-size: var(--text-caption);
+}
+
+.slcn-inspection-register-area-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.slcn-inspection-register-area-result {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-3);
+  text-align: left;
+  padding-block: var(--space-3);
+  border: none;
+  border-bottom: 1px solid var(--color-hairline);
+  background: none;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.slcn-inspection-register-area-result:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+.slcn-inspection-register-area-result--selected {
+  background: var(--color-surface-soft);
+}
+
+.slcn-inspection-register-area-result__name {
+  grid-column: 1;
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+
+.slcn-inspection-register-area-result__desc {
+  grid-column: 1;
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-register-area-result__meta {
+  grid-column: 1;
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+}
+
+.slcn-inspection-register-area-result__chip {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-muted);
+  color: var(--color-accent-muted);
+  font-size: var(--text-fine);
+  white-space: nowrap;
+}
+
+.slcn-inspection-register-new-area {
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.slcn-inspection-register-new-area__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ============================================================
+   ② 기본 정보
+   ============================================================ */
+
+.slcn-inspection-register-autosave {
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register-autosave[data-saved="true"] {
+  color: var(--color-accent-muted);
+}
+
+.slcn-inspection-register-datetime {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-register-revisit-group .slcn-radio-group {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-register-tags__input-row {
+  max-width: 20rem;
+}
+
+.slcn-inspection-register-tags__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-register-tags__list button.slcn-inspection-tag-chip {
+  position: relative;
+  border: none;
+  cursor: pointer;
+}
+
+/* 44px 히트 영역만 넓히고 칩 자체는 작게 둔다 (screen_design.md §8). */
+.slcn-inspection-register-tags__list button.slcn-inspection-tag-chip::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
+
+.slcn-inspection-register-tags__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register-tags__suggestions button {
+  border: 1px dashed var(--color-border-strong);
+  cursor: pointer;
+}
+
+/* ============================================================
+   Photo manager — shared between visit and property photos
+   ============================================================ */
+
+.slcn-inspection-photo-manager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-photo-manager__progress {
+  font-size: var(--text-fine);
+  color: var(--color-accent-muted);
+}
+
+.slcn-inspection-photo-manager__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-photo-manager__item {
+  display: grid;
+  grid-template-columns: 24px 64px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas-pure);
+}
+
+.slcn-inspection-photo-manager__item[data-dragging-over="true"] {
+  border-color: var(--color-accent-muted);
+  background: var(--color-surface-soft);
+}
+
+.slcn-inspection-photo-manager__handle {
+  cursor: grab;
+  text-align: center;
+  color: var(--color-body-muted);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slcn-inspection-photo-manager__thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slcn-inspection-photo-manager__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slcn-inspection-photo-manager__thumb-placeholder {
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+  text-align: center;
+}
+
+.slcn-inspection-photo-manager__cover-mark {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  background: var(--color-cast-scrim);
+  color: var(--color-on-dark);
+  font-size: var(--text-fine);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.slcn-inspection-photo-manager__caption {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding-inline: var(--space-2);
+  font-size: var(--text-fine);
+  background: var(--color-canvas-pure);
+}
+
+.slcn-inspection-photo-manager__caption:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+.slcn-inspection-photo-manager__remove {
+  position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--color-error);
+  font-size: var(--text-fine);
+  cursor: pointer;
+}
+
+/* ============================================================
+   ③ 확인 매물
+   ============================================================ */
+
+.slcn-inspection-register-property-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.slcn-inspection-register-property-row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-register-property-row__handle {
+  cursor: grab;
+  color: var(--color-body-muted);
+  text-align: center;
+}
+
+.slcn-inspection-register-property-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.slcn-inspection-register-property-row__name {
+  font-weight: var(--weight-strong);
+  color: var(--color-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slcn-inspection-register-property-row__reason {
+  display: block;
+}
+
+.slcn-inspection-register-add-property {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.slcn-inspection-register-add-property__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ============================================================
+   ④ 완료 검증
+   ============================================================ */
+
+.slcn-inspection-register-completion {
+  max-width: 50rem;
+  margin-inline: auto;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-canvas-pure);
+  box-shadow: var(--shadow-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.slcn-inspection-register-completion__title {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-register-completion__server-message {
+  color: var(--color-warning);
+  font-size: var(--text-caption);
+  background: var(--color-warning-surface);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+
+.slcn-inspection-register-completion__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.slcn-inspection-register-completion__checklist
+  > li[data-state="ok"]
+  > span[aria-hidden] {
+  color: var(--color-success);
+}
+
+.slcn-inspection-register-completion__checklist
+  > li[data-state="blocked"]
+  > span[aria-hidden] {
+  color: var(--color-warning);
+}
+
+.slcn-inspection-register-completion__property-list {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding-inline-start: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-register-completion__property-list > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-caption);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register-completion__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   문답 (③-1 매물 편집)
+   ============================================================ */
+
+.slcn-inspection-register-answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-hairline);
+}
+
+.slcn-inspection-register-answer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-register-answer__description {
+  margin: 0;
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register-answer__badge {
+  margin-inline-start: var(--space-2);
+  font-size: var(--text-fine);
+  color: var(--color-body-muted);
+}
+
+.slcn-inspection-register-answer__warning {
+  margin: 0;
+  font-size: var(--text-fine);
+  color: var(--color-warning);
+}
+
+.slcn-inspection-register-answer__pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-register-answer__pill {
+  min-height: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-canvas-pure);
+  color: var(--color-body);
+  cursor: pointer;
+}
+
+.slcn-inspection-register-answer__pill--selected {
+  border-color: var(--color-accent-muted);
+  background: var(--color-surface-soft);
+  color: var(--color-accent-muted);
+  font-weight: var(--weight-strong);
+}
+
+.slcn-inspection-register-answer__pill:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Skeleton
+   ============================================================ */
+
+.slcn-inspection-register-skeleton {
+  height: 320px;
+  border-radius: var(--radius-lg);
+}
+
+.slcn-inspection-register-properties-skeleton {
+  height: 160px;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   모바일 (< 833px) — screen_design.md §8 실측 치수
+   ============================================================ */
+
+@media (max-width: 832px) {
+  .slcn-inspection-register,
+  .slcn-inspection-property-edit {
+    padding-inline: var(--space-4);
+  }
+
+  .slcn-inspection-register__card {
+    padding: var(--space-4);
+    gap: var(--space-6);
+  }
+
+  .slcn-inspection-register-datetime {
+    grid-template-columns: 1fr;
+  }
+
+  /* 라벨이 긴 라디오 묶음은 모바일에서 세로로 쌓는다. */
+  .slcn-inspection-register-revisit-group .slcn-radio-group {
+    flex-direction: column;
+  }
+
+  .slcn-inspection-register-pros-cons {
+    grid-template-columns: 1fr;
+  }
+
+  /* 텍스트영역이 한 화면에 여러 개다 — 88 / 78px로 줄인다. */
+  .slcn-inspection-register-step .slcn-inspection-register-textarea {
+    min-height: 88px;
+  }
+
+  .slcn-inspection-register-pros-cons .slcn-inspection-register-textarea {
+    min-height: 78px;
+  }
+
+  .slcn-inspection-register-property-row {
+    grid-template-columns: 24px 1fr;
+    grid-template-areas:
+      "handle name"
+      ". interest-actions";
+  }
+
+  .slcn-inspection-register-property-row__handle {
+    grid-area: handle;
+  }
+
+  .slcn-inspection-register-property-row__main {
+    grid-area: name;
+  }
+
+  .slcn-inspection-register-property-row__interest,
+  .slcn-inspection-register-property-row__actions {
+    grid-area: interest-actions;
+  }
+
+  .slcn-inspection-register-property-row {
+    display: grid;
+  }
+
+  .slcn-inspection-register-property-row__interest {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .slcn-inspection-register-property-row__actions {
+    grid-row: 3;
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .slcn-inspection-photo-manager__item {
+    grid-template-columns: 24px 48px 1fr auto;
+  }
+
+  .slcn-inspection-photo-manager__thumb {
+    width: 48px;
+    height: 48px;
+  }
+}
