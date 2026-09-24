@@ -1,3 +1,4 @@
+import { resolveApiBaseUrl } from '@/lib/api/base-url';
 import {
   type ImageVariant,
   toImageVariantQuery,
@@ -20,10 +21,9 @@ export function buildAssetImageUrl(
   fileId: string,
   variant: ImageVariant = 'original'
 ) {
-  const baseUrl = getAppEnv().apiUrl;
   const url = new URL(
     `assets/files/${encodeURIComponent(fileId)}`,
-    baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
+    resolveApiBaseUrl(getAppEnv().apiUrl)
   );
 
   for (const [key, value] of Object.entries(
