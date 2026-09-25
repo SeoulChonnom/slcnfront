@@ -15,6 +15,7 @@ type PhotoManagerProps = {
   onRemove: (key: string) => void;
   onReorder: (nextPhotos: LocalPhotoItem[]) => void;
   uploadProgress: PhotoUploadProgress | null;
+  uploadError?: string | null;
   className?: string;
 };
 
@@ -45,6 +46,7 @@ export function PhotoManager({
   onRemove,
   onReorder,
   uploadProgress,
+  uploadError = null,
   className,
 }: PhotoManagerProps) {
   const dragIndexRef = useRef<number | null>(null);
@@ -87,6 +89,12 @@ export function PhotoManager({
           }
         }}
       />
+
+      {uploadError ? (
+        <p className='slcn-inspection-photo-manager__error' role='alert'>
+          {uploadError}
+        </p>
+      ) : null}
 
       {uploadProgress ? (
         <p className='slcn-inspection-photo-manager__progress' role='status'>

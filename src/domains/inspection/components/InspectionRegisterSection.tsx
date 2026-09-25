@@ -188,6 +188,7 @@ export function InspectionRegisterSection({
             }
             onReorderPhotos={handleReorderPhotos}
             photoUploadProgress={photoUploader.progress}
+            photoUploadError={photoUploader.error}
             savedAtLabel={formatSavedAtLabel(wizard.lastSavedAt)}
             errors={wizard.stepErrors}
           />

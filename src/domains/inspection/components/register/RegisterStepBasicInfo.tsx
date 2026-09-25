@@ -30,6 +30,7 @@ type RegisterStepBasicInfoProps = {
   onRemovePhoto: (key: string) => void;
   onReorderPhotos: (next: LocalPhotoItem[]) => void;
   photoUploadProgress: PhotoUploadProgress | null;
+  photoUploadError?: string | null;
   savedAtLabel: string;
   errors: Record<string, string>;
 };
@@ -43,6 +44,7 @@ export function RegisterStepBasicInfo({
   onRemovePhoto,
   onReorderPhotos,
   photoUploadProgress,
+  photoUploadError = null,
   savedAtLabel,
   errors,
 }: RegisterStepBasicInfoProps) {
@@ -212,6 +214,7 @@ export function RegisterStepBasicInfo({
         onRemove={onRemovePhoto}
         onReorder={onReorderPhotos}
         uploadProgress={photoUploadProgress}
+        uploadError={photoUploadError}
       />
     </div>
   );
