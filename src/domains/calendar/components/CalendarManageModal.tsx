@@ -302,7 +302,7 @@ export function CalendarManageModal({
       <ConfirmDialog
         isOpen={isConfirmingDelete}
         title={`"${calendarToDeleteName}" 캘린더를 삭제할까요?`}
-        description='이 캘린더에 속한 일정도 모두 함께 사라지고, 되돌릴 수 없어요.'
+        description='삭제한 캘린더는 되돌릴 수 없어요. 일정이 남아 있는 캘린더는 일정을 먼저 옮기거나 지워야 삭제할 수 있어요.'
         confirmLabel='정말 삭제할게요'
         cancelLabel='계속 둘게요'
         isConfirming={isSubmitting}
