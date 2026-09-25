@@ -65,12 +65,6 @@ export function createScheduleApi(client: ApiClientLike = apiClient) {
         responseType: 'void',
       });
     },
-    async hideSchedule(id: string) {
-      await client.put<void>({
-        path: `/schedule/${encodeURIComponent(id)}/hide`,
-        responseType: 'void',
-      });
-    },
   };
 }
 
