@@ -23,6 +23,8 @@ const scheduleEventSchema = z.object({
   end: z.string(),
   allDay: z.boolean(),
   location: z.string(),
+  recurrenceRule: z.string().nullish(),
+  occurrenceId: z.string().nullish(),
 });
 
 export type CalendarMetaDto = z.infer<typeof calendarMetaSchema>;

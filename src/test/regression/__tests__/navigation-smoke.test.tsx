@@ -35,6 +35,8 @@ const schedule = {
   end: '2099-09-01T11:00:00+09:00',
   allDay: false,
   location: '성수동',
+  recurrenceRule: null,
+  occurrenceId: null,
 };
 
 const dayOut = {

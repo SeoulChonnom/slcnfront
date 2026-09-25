@@ -92,6 +92,11 @@ export function formatDraftDateTime(
   return dayjs(`${dateValue}T${timeValue}`).format(API_DATE_TIME_FORMAT);
 }
 
+/**
+ * All-day `end` is exclusive on the wire (and in FullCalendar): a one-day
+ * event on 1/1 ends on 1/2. The editor form shows the inclusive last day, so
+ * these two convert at that boundary and nowhere else.
+ */
 export function toExclusiveAllDayEnd(endValue: string) {
   return dayjs(endValue).add(1, 'day').format(API_DATE_FORMAT);
 }
@@ -108,11 +113,10 @@ export function doesScheduleOverlapRange(
   start: string,
   end: string,
   rangeStart: string,
-  rangeEnd: string,
-  allDay: boolean
+  rangeEnd: string
 ) {
   const eventStart = dayjs(start);
-  const normalizedEventEnd = allDay ? dayjs(end).add(1, 'day') : dayjs(end);
+  const normalizedEventEnd = dayjs(end);
   const queryStart = dayjs(rangeStart);
   const queryEnd = dayjs(rangeEnd);
 

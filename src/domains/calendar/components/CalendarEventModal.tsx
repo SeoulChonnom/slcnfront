@@ -4,6 +4,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { TextareaField, TextField } from '@/components/ui/TextField';
 import type { CalendarEditorModel } from '@/domains/calendar/hooks/useCalendarSectionController';
+import { isRecurringSchedule } from '@/domains/calendar/types';
 
 type CalendarEventModalProps = {
   editor: CalendarEditorModel;
@@ -22,7 +23,11 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
     onDelete,
     onDraftChange,
   } = editor;
-  const title = event ? '일정 수정' : '일정 추가';
+  // The list API only returns occurrences, never the series' own start, so a
+  // save from here would re-anchor the whole series on this occurrence.
+  // Recurring schedules are view-and-delete only.
+  const isRecurring = event !== null && isRecurringSchedule(event);
+  const title = isRecurring ? '반복 일정' : event ? '일정 수정' : '일정 추가';
   const editableCalendars = calendars.filter((calendar) => calendar.editable);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const eventTitle = event?.title || draft.title || '이 일정';
@@ -44,128 +49,139 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
             await onSubmit();
           }}
         >
-          <TextField
-            label='제목'
-            value={draft.title}
-            placeholder='예) 부암동 나들이'
-            autoFocus
-            onChange={(changeEvent) => {
-              onDraftChange({
-                title: changeEvent.target.value,
-              });
-            }}
-            required
-          />
-          <div className='slcn-calendar-modal__field'>
-            <span className='slcn-field__label'>캘린더</span>
-            <div className='slcn-calendar-modal__chips'>
-              {editableCalendars.map((calendar) => {
-                const active = calendar.id === draft.calendarId;
+          <fieldset
+            className='slcn-calendar-modal__fields'
+            disabled={isRecurring}
+          >
+            <TextField
+              label='제목'
+              value={draft.title}
+              placeholder='예) 부암동 나들이'
+              autoFocus
+              onChange={(changeEvent) => {
+                onDraftChange({
+                  title: changeEvent.target.value,
+                });
+              }}
+              required
+            />
+            <div className='slcn-calendar-modal__field'>
+              <span className='slcn-field__label'>캘린더</span>
+              <div className='slcn-calendar-modal__chips'>
+                {editableCalendars.map((calendar) => {
+                  const active = calendar.id === draft.calendarId;
 
-                return (
-                  <button
-                    key={calendar.id}
-                    type='button'
-                    className='slcn-calendar-modal__chip'
-                    data-active={active}
-                    aria-pressed={active}
-                    disabled={isSubmitting}
-                    onClick={() => {
-                      onDraftChange({ calendarId: calendar.id });
-                    }}
-                  >
-                    <span
-                      className='slcn-calendar-modal__chip-dot'
-                      style={{ backgroundColor: calendar.backgroundColor }}
-                      aria-hidden='true'
-                    />
-                    <span>{calendar.name}</span>
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={calendar.id}
+                      type='button'
+                      className='slcn-calendar-modal__chip'
+                      data-active={active}
+                      aria-pressed={active}
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        onDraftChange({ calendarId: calendar.id });
+                      }}
+                    >
+                      <span
+                        className='slcn-calendar-modal__chip-dot'
+                        style={{ backgroundColor: calendar.backgroundColor }}
+                        aria-hidden='true'
+                      />
+                      <span>{calendar.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <TextareaField
-            label='설명'
-            value={draft.body}
-            onChange={(changeEvent) => {
-              onDraftChange({
-                body: changeEvent.target.value,
-              });
-            }}
-            rows={4}
-          />
-          <TextField
-            label='장소'
-            value={draft.location}
-            onChange={(changeEvent) => {
-              onDraftChange({
-                location: changeEvent.target.value,
-              });
-            }}
-          />
-          <label className='slcn-calendar-modal__checkbox'>
-            <input
-              type='checkbox'
-              checked={draft.allDay}
+            <TextareaField
+              label='설명'
+              value={draft.body}
               onChange={(changeEvent) => {
                 onDraftChange({
-                  allDay: changeEvent.target.checked,
+                  body: changeEvent.target.value,
                 });
               }}
+              rows={4}
             />
-            <span>종일 일정</span>
-          </label>
-          <div className='slcn-calendar-modal__datetime-grid'>
             <TextField
-              label='시작일'
-              type='date'
-              value={draft.startDate}
+              label='장소'
+              value={draft.location}
               onChange={(changeEvent) => {
                 onDraftChange({
-                  startDate: changeEvent.target.value,
+                  location: changeEvent.target.value,
                 });
               }}
-              required
             />
-            {!draft.allDay ? (
-              <TextField
-                label='시작 시각'
-                type='time'
-                value={draft.startTime}
+            <label className='slcn-calendar-modal__checkbox'>
+              <input
+                type='checkbox'
+                checked={draft.allDay}
                 onChange={(changeEvent) => {
                   onDraftChange({
-                    startTime: changeEvent.target.value,
+                    allDay: changeEvent.target.checked,
+                  });
+                }}
+              />
+              <span>종일 일정</span>
+            </label>
+            <div className='slcn-calendar-modal__datetime-grid'>
+              <TextField
+                label='시작일'
+                type='date'
+                value={draft.startDate}
+                onChange={(changeEvent) => {
+                  onDraftChange({
+                    startDate: changeEvent.target.value,
                   });
                 }}
                 required
               />
-            ) : null}
-            <TextField
-              label='종료일'
-              type='date'
-              value={draft.endDate}
-              onChange={(changeEvent) => {
-                onDraftChange({
-                  endDate: changeEvent.target.value,
-                });
-              }}
-              required
-            />
-            {!draft.allDay ? (
+              {!draft.allDay ? (
+                <TextField
+                  label='시작 시각'
+                  type='time'
+                  value={draft.startTime}
+                  onChange={(changeEvent) => {
+                    onDraftChange({
+                      startTime: changeEvent.target.value,
+                    });
+                  }}
+                  required
+                />
+              ) : null}
               <TextField
-                label='종료 시각'
-                type='time'
-                value={draft.endTime}
+                label='종료일'
+                type='date'
+                value={draft.endDate}
                 onChange={(changeEvent) => {
                   onDraftChange({
-                    endTime: changeEvent.target.value,
+                    endDate: changeEvent.target.value,
                   });
                 }}
                 required
               />
-            ) : null}
-          </div>
+              {!draft.allDay ? (
+                <TextField
+                  label='종료 시각'
+                  type='time'
+                  value={draft.endTime}
+                  onChange={(changeEvent) => {
+                    onDraftChange({
+                      endTime: changeEvent.target.value,
+                    });
+                  }}
+                  required
+                />
+              ) : null}
+            </div>
+          </fieldset>
+          {isRecurring ? (
+            <p className='slcn-calendar-modal__notice' role='note'>
+              반복 일정은 여기서 수정할 수 없어요. 삭제하면 반복되는 일정 전체가
+              함께 삭제돼요.
+            </p>
+          ) : null}
           {errorMessage ? (
             <p className='slcn-calendar-modal__error' role='alert'>
               {errorMessage}
@@ -192,16 +208,22 @@ export function CalendarEventModal({ editor }: CalendarEventModalProps) {
             >
               취소
             </Button>
-            <Button type='submit' loading={isSubmitting}>
-              저장
-            </Button>
+            {isRecurring ? null : (
+              <Button type='submit' loading={isSubmitting}>
+                저장
+              </Button>
+            )}
           </div>
         </form>
       </Modal>
       <ConfirmDialog
         isOpen={isConfirmingDelete}
         title='일정을 삭제할까요?'
-        description={`"${eventTitle}" 일정이 사라지고, 다시 볼 수 없어요.`}
+        description={
+          isRecurring
+            ? `반복되는 "${eventTitle}" 일정이 모두 사라지고, 다시 볼 수 없어요.`
+            : `"${eventTitle}" 일정이 사라지고, 다시 볼 수 없어요.`
+        }
         confirmLabel='삭제할게요'
         cancelLabel='계속 둘게요'
         isConfirming={isSubmitting}

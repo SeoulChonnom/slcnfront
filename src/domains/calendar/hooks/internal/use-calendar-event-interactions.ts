@@ -2,10 +2,11 @@ import type { EventApi, EventDropArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import { useCallback } from 'react';
 import { mapEventApiToSchedulePayload } from '@/domains/calendar/mappers/fullcalendar-event-mappers';
-import type {
-  CalendarMeta,
-  ScheduleEvent,
-  ScheduleMutationPayload,
+import {
+  type CalendarMeta,
+  getScheduleKey,
+  type ScheduleEvent,
+  type ScheduleMutationPayload,
 } from '@/domains/calendar/types';
 import { buildQuickCreateSelection } from '@/domains/calendar/utils/calendar-controller-helpers';
 
@@ -30,6 +31,13 @@ export function useCalendarEventInteractions({
 }: UseCalendarEventInteractionsOptions) {
   const handleEventMutationFromCalendar = useCallback(
     async (event: EventApi, revert: () => void) => {
+      // Recurring events render non-editable; this guards against a drag that
+      // slips through, since saving one would move the whole series.
+      if (event.extendedProps.isRecurring) {
+        revert();
+        return;
+      }
+
       try {
         await updateSchedule(mapEventApiToSchedulePayload(event));
       } catch {
@@ -58,7 +66,7 @@ export function useCalendarEventInteractions({
   const onEventClick = useCallback(
     (event: EventApi) => {
       const selectedEvent = schedules.find(
-        (schedule) => schedule.id === event.id
+        (schedule) => getScheduleKey(schedule) === event.id
       );
 
       if (!selectedEvent) {

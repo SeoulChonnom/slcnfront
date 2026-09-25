@@ -62,6 +62,8 @@ describe('calendar-controller-helpers', () => {
             end: '2026-04-14T10:00:00+09:00',
             allDay: false,
             location: '서울',
+            recurrenceRule: null,
+            occurrenceId: null,
           },
           {
             id: 'schedule-2',
@@ -72,6 +74,8 @@ describe('calendar-controller-helpers', () => {
             end: '2026-04-15T10:00:00+09:00',
             allDay: false,
             location: '서울',
+            recurrenceRule: null,
+            occurrenceId: null,
           },
         ],
         visibleCalendarIds
@@ -86,6 +90,8 @@ describe('calendar-controller-helpers', () => {
         end: '2026-04-15T10:00:00+09:00',
         allDay: false,
         location: '서울',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
     ]);
   });
