@@ -271,6 +271,85 @@ describe('TravelRegisterSection', () => {
       expect(payload.photos).toBeUndefined();
     });
 
+    it('keeps the travel’s existing photos when album photos are added while editing', async () => {
+      // The server replaces the whole file list on update. Sending only the
+      // new photo would wipe the cover (a 400) and every existing photo.
+      getTravelDetail.mockResolvedValue({
+        ...mockTravelDetail,
+        files: [
+          {
+            id: 'item-cover',
+            fileAssetId: 'old-cover',
+            targetType: 'TRAVEL',
+            targetId: null,
+            role: 'COVER',
+            caption: null,
+            sortOrder: 0,
+          },
+          {
+            id: 'item-album',
+            fileAssetId: 'old-album',
+            rawFileAssetId: 'old-raw',
+            targetType: 'TRAVEL',
+            targetId: null,
+            role: 'GALLERY',
+            caption: null,
+            sortOrder: 0,
+          },
+        ],
+      });
+      uploadTravelFiles.mockResolvedValue([fileAsset({ fileId: 'new-album' })]);
+      updateTravel.mockResolvedValue(mockTravelDetail);
+
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='edit' travelId='travel-1' />
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /제목/ })).toBeTruthy();
+      });
+
+      const albumInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[1];
+      if (!albumInput) throw new Error('album photo input not found');
+      await user.upload(
+        albumInput,
+        new File(['album'], 'album.png', { type: 'image/png' })
+      );
+
+      await user.click(screen.getByRole('button', { name: '수정하기' }));
+
+      await waitFor(() => {
+        expect(updateTravel).toHaveBeenCalledTimes(1);
+      });
+
+      const payload = updateTravel.mock.calls[0]?.[1];
+      expect(payload.files).toEqual([
+        {
+          id: 'item-cover',
+          fileAssetId: 'old-cover',
+          targetType: 'TRAVEL',
+          role: 'COVER',
+          sortOrder: 0,
+        },
+        {
+          id: 'item-album',
+          fileAssetId: 'old-album',
+          rawFileAssetId: 'old-raw',
+          targetType: 'TRAVEL',
+          role: 'GALLERY',
+          sortOrder: 0,
+        },
+        {
+          fileAssetId: 'new-album',
+          targetType: 'TRAVEL',
+          role: 'GALLERY',
+          sortOrder: 1,
+        },
+      ]);
+    });
+
     it('surfaces an error and never calls the create mutation when the upload fails', async () => {
       uploadTravelFile.mockRejectedValue(new Error('업로드 서버 오류'));
 
