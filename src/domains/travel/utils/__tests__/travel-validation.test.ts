@@ -12,8 +12,12 @@ function fileOfSize(bytes: number): File {
 }
 
 describe('validateTravelFileSize', () => {
-  it('returns null for a file within the 10MB limit', () => {
+  it('returns null for a file within the 50MB limit', () => {
     expect(validateTravelFileSize(fileOfSize(1024))).toBeNull();
+  });
+
+  it('accepts a 40MB camera JPG', () => {
+    expect(validateTravelFileSize(fileOfSize(40 * 1024 * 1024))).toBeNull();
   });
 
   it('returns null for a file exactly at the limit', () => {
@@ -25,7 +29,7 @@ describe('validateTravelFileSize', () => {
   it("returns the screen's informal message for an oversized file", () => {
     expect(
       validateTravelFileSize(fileOfSize(MAX_TRAVEL_FILE_SIZE_BYTES + 1))
-    ).toBe('사진은 10MB까지 올릴 수 있어요.');
+    ).toBe('사진은 50MB까지 올릴 수 있어요.');
   });
 });
 

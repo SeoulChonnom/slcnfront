@@ -49,8 +49,7 @@ export function useCalendarRangeData({
       schedule.start,
       schedule.end,
       range.start,
-      range.end,
-      schedule.allDay
+      range.end
     )
   );
 

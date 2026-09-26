@@ -138,6 +138,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-26T10:00:00+09:00',
         allDay: false,
         location: '성수',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-past',
@@ -148,6 +150,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-25T09:00:00+09:00',
         allDay: false,
         location: '집',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-today',
@@ -158,6 +162,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-25T20:00:00+09:00',
         allDay: false,
         location: '을지로',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
     ];
 
@@ -182,6 +188,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-29',
         allDay: true,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-yesterday-all-day',
@@ -192,6 +200,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-28',
         allDay: true,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-timed-past',
@@ -202,6 +212,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-28T11:00:00+09:00',
         allDay: false,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
     ];
 
@@ -226,6 +238,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-30T10:00:00+09:00',
         allDay: false,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-tomorrow-timed-late',
@@ -236,6 +250,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-29T00:30:00Z',
         allDay: false,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-tomorrow-all-day',
@@ -246,6 +262,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-30',
         allDay: true,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-tomorrow-timed-early',
@@ -256,6 +274,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-29T01:00:00+09:00',
         allDay: false,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
       {
         id: 'schedule-tomorrow-timed-middle',
@@ -266,6 +286,8 @@ describe('home travel retrieval helpers', () => {
         end: '2026-08-29T02:00:00+09:00',
         allDay: false,
         location: '',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
     ];
 

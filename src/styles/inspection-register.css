@@ -336,6 +336,12 @@
   gap: var(--space-3);
 }
 
+.slcn-inspection-photo-manager__error {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--color-error);
+}
+
 .slcn-inspection-photo-manager__progress {
   font-size: var(--text-fine);
   color: var(--color-accent-muted);

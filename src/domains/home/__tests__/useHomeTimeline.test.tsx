@@ -123,6 +123,8 @@ describe('useHomeTimeline', () => {
         end: '2099-08-25T20:00:00+09:00',
         allDay: false,
         location: '을지로',
+        recurrenceRule: null,
+        occurrenceId: null,
       },
     ]);
 

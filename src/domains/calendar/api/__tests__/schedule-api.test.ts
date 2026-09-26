@@ -4,7 +4,7 @@ import { createApiClient } from '@/lib/api/api-client';
 import type { AppError } from '@/lib/api/errors';
 
 describe('schedule-api', () => {
-  it('calls range, current, create, update, hide and delete endpoints correctly', async () => {
+  it('calls range, current, create, update and delete endpoints correctly', async () => {
     const eventBody = {
       id: 'schedule-1',
       calendarId: 'cal-1',
@@ -69,7 +69,6 @@ describe('schedule-api', () => {
       ...payload,
       id: 'schedule-1',
     });
-    await scheduleApi.hideSchedule('schedule-1');
     await scheduleApi.deleteSchedule('schedule-1');
 
     expect(rangeResult[0]?.allDay).toBe(false);
@@ -85,10 +84,6 @@ describe('schedule-api', () => {
     expect(fetchFn.mock.calls[2]?.[1]?.method).toBe('POST');
     expect(fetchFn.mock.calls[3]?.[1]?.method).toBe('PUT');
     expect(fetchFn.mock.calls[4]?.[0]).toBe(
-      'http://localhost:8080/api/schedule/schedule-1/hide'
-    );
-    expect(fetchFn.mock.calls[4]?.[1]?.method).toBe('PUT');
-    expect(fetchFn.mock.calls[5]?.[0]).toBe(
       'http://localhost:8080/api/schedule/schedule-1'
     );
   });

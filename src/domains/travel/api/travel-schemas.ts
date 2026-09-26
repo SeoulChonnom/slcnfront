@@ -92,6 +92,7 @@ const fileAssetSchema = z.object({
 const fileBoxItemRdoSchema = z.object({
   id: z.string(),
   fileAssetId: z.string(),
+  rawFileAssetId: z.string().nullish(),
   targetType: z.enum(['TRAVEL', 'TRAVEL_DAY', 'TRAVEL_PLACE', 'TRIP']),
   targetId: z.string().nullable(),
   role: z.enum(['COVER', 'GALLERY', 'LOGO', 'FIRST_MAP', 'SECOND_MAP']),

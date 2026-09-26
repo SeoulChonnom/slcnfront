@@ -22,6 +22,7 @@ import type {
   TravelFileBoxItemCdo,
   TravelPlaceUdo,
 } from '@/domains/travel/types';
+import { getUploadErrorMessage } from '@/lib/api/upload-limits';
 import {
   buildDeviceTravelDetailPath,
   buildDeviceTravelListPath,
@@ -92,14 +93,6 @@ function mapDetailToDefaultValues(
   };
 }
 
-function deriveUploadErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.message) {
-    return `사진을 올리지 못했어요. ${error.message}`;
-  }
-
-  return '사진을 올리지 못했어요. 잠시 뒤 다시 시도해 주세요.';
-}
-
 // ── Inner form controller ─────────────────────────────────────────────────────
 
 type TravelRegisterFormControllerProps = {
@@ -107,6 +100,8 @@ type TravelRegisterFormControllerProps = {
   mode: 'register' | 'edit';
   travelId?: string;
   resolvedInitialValues: TravelRegisterFormValues;
+  /** The travel's current files in edit mode; empty when registering. */
+  existingFiles: TravelDetail['files'];
 };
 
 function TravelRegisterFormController({
@@ -114,6 +109,7 @@ function TravelRegisterFormController({
   mode,
   travelId,
   resolvedInitialValues,
+  existingFiles,
 }: TravelRegisterFormControllerProps) {
   const navigate = useNavigate();
   const isEdit = mode === 'edit';
@@ -163,10 +159,13 @@ function TravelRegisterFormController({
         files = buildTravelFileBoxItems({
           coverFileId: coverAsset?.fileId ?? null,
           albumFileIds: albumAssets.map((asset) => asset.fileId),
+          // The server replaces the whole list on update, so the travel's
+          // current photos have to go back with the new ones or they're lost.
+          existingItems: existingFiles,
         });
       } catch (error) {
         setSubmitPhase('idle');
-        setUploadErrorMessage(deriveUploadErrorMessage(error));
+        setUploadErrorMessage(getUploadErrorMessage(error));
         return;
       }
     }
@@ -346,6 +345,7 @@ export function TravelRegisterSection({
           mode={mode}
           travelId={travelId}
           resolvedInitialValues={resolvedInitialValues}
+          existingFiles={isEdit ? (existingTravel?.files ?? []) : []}
         />
       ) : null}
     </section>

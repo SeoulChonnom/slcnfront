@@ -1,4 +1,4 @@
-import type { ScheduleEvent } from '@/domains/calendar/types';
+import { getScheduleKey, type ScheduleEvent } from '@/domains/calendar/types';
 import { toSortKey } from '@/domains/home/utils/home-dates';
 import type { TravelListItem } from '@/domains/travel/types';
 
@@ -121,7 +121,7 @@ export function getNearestSchedules(
         a.dateKey.localeCompare(b.dateKey) ||
         a.kindRank - b.kindRank ||
         a.timedTime - b.timedTime ||
-        a.schedule.id.localeCompare(b.schedule.id)
+        getScheduleKey(a.schedule).localeCompare(getScheduleKey(b.schedule))
     )
     .slice(0, Math.max(0, limit))
     .map(({ schedule }) => schedule);

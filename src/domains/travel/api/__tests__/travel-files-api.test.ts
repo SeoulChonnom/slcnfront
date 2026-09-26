@@ -90,4 +90,37 @@ describe('travel-files-api', () => {
     expect(result).toEqual([]);
     expect(fetchFn).not.toHaveBeenCalled();
   });
+
+  it('uploadTravelFiles: splits a large album into sequential batches and keeps order', async () => {
+    const assets = Array.from({ length: 7 }, (_, index) => ({
+      ...fileAsset,
+      fileId: `file-${index}`,
+    }));
+    const fetchFn = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(makeJsonResponse(assets.slice(0, 6)))
+      .mockResolvedValueOnce(makeJsonResponse(assets.slice(6)));
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080/api',
+      getAccessToken: () => 'token-123',
+    });
+    const api = createTravelFilesApi(client);
+
+    const result = await api.uploadTravelFiles(
+      assets.map(
+        (_, index) =>
+          new File([`${index}`], `${index}.jpg`, { type: 'image/jpeg' })
+      )
+    );
+
+    expect(result.map((asset) => asset.fileId)).toEqual(
+      assets.map((asset) => asset.fileId)
+    );
+    expect(fetchFn).toHaveBeenCalledTimes(2);
+    const sizes = fetchFn.mock.calls.map(([, init]) =>
+      init?.body instanceof FormData ? init.body.getAll('files').length : 0
+    );
+    expect(sizes).toEqual([6, 1]);
+  });
 });

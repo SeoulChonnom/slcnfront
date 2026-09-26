@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
-import type { ScheduleEvent } from '@/domains/calendar/types';
+import { getScheduleKey, type ScheduleEvent } from '@/domains/calendar/types';
 import { MemoryChronicleFeature } from '@/domains/home/components/MemoryChronicleFeature';
 import { TravelArchiveRow } from '@/domains/home/components/TravelArchiveRow';
 import { useHomeTimeline } from '@/domains/home/hooks/useHomeTimeline';
@@ -268,7 +268,7 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             ) : model.nearestSchedules.length > 0 ? (
               <ol className='slcn-home__schedule-list'>
                 {model.nearestSchedules.map((schedule) => (
-                  <li key={schedule.id}>
+                  <li key={getScheduleKey(schedule)}>
                     <ScheduleLink device={device} schedule={schedule} />
                   </li>
                 ))}

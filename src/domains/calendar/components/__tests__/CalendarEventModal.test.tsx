@@ -177,6 +177,8 @@ describe('CalendarEventModal', () => {
             start: '2026-04-14T09:00:00+09:00',
             end: '2026-04-14T10:00:00+09:00',
             allDay: false,
+            recurrenceRule: null,
+            occurrenceId: null,
           },
           errorMessage: null,
           isSubmitting: false,
@@ -241,6 +243,8 @@ describe('CalendarEventModal', () => {
             start: '2026-04-14T09:00:00+09:00',
             end: '2026-04-14T10:00:00+09:00',
             allDay: false,
+            recurrenceRule: null,
+            occurrenceId: null,
           },
           errorMessage: null,
           isSubmitting: false,
@@ -291,6 +295,8 @@ describe('CalendarEventModal', () => {
             start: '2026-04-14T09:00:00+09:00',
             end: '2026-04-14T10:00:00+09:00',
             allDay: false,
+            recurrenceRule: null,
+            occurrenceId: null,
           },
           errorMessage: null,
           isSubmitting: false,
@@ -310,5 +316,66 @@ describe('CalendarEventModal', () => {
     await waitFor(() => {
       expect(onDelete).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('shows a recurring occurrence read-only and warns that delete takes the series', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    render(
+      <CalendarEventModal
+        editor={{
+          isOpen: true,
+          calendars,
+          draft: {
+            calendarId: 'cal-1',
+            title: '주간 회의',
+            body: '',
+            location: '',
+            allDay: false,
+            startDate: '2026-04-14',
+            startTime: '09:00',
+            endDate: '2026-04-14',
+            endTime: '10:00',
+          },
+          event: {
+            id: 'schedule-1',
+            calendarId: 'cal-1',
+            title: '주간 회의',
+            body: '',
+            location: '',
+            start: '2026-04-14T09:00:00+09:00',
+            end: '2026-04-14T10:00:00+09:00',
+            allDay: false,
+            recurrenceRule: 'FREQ=WEEKLY;BYDAY=TU',
+            occurrenceId: 'schedule-1/2026-04-14T09:00:00+09:00',
+          },
+          errorMessage: null,
+          isSubmitting: false,
+          onClose: vi.fn(),
+          onDraftChange: vi.fn(),
+          onSubmit,
+          onDelete: vi.fn().mockResolvedValue(undefined),
+        }}
+      />
+    );
+
+    expect(screen.getByText('반복 일정')).toBeTruthy();
+    expect(screen.getByRole('note').textContent).toContain(
+      '반복되는 일정 전체가 함께 삭제돼요'
+    );
+    expect(screen.queryByRole('button', { name: '저장' })).toBeNull();
+    expect(
+      screen.getByRole('textbox', { name: /제목/ }).matches(':disabled')
+    ).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: '삭제' }));
+
+    const confirmDialog = await screen.findByRole('dialog', {
+      name: '일정을 삭제할까요?',
+    });
+    expect(confirmDialog.textContent).toContain(
+      '반복되는 "주간 회의" 일정이 모두'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 });

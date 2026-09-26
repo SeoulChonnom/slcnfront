@@ -1,6 +1,10 @@
 import { type Dispatch, type SetStateAction, useState } from 'react';
 import { inspectionFilesApi } from '@/domains/inspection/api/inspection-files-api';
 import type { LocalPhotoItem } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
+import {
+  getUploadErrorMessage,
+  MAX_UPLOAD_FILE_BYTES,
+} from '@/lib/api/upload-limits';
 
 export type PhotoUploadProgress = { completed: number; total: number };
 
@@ -23,8 +27,26 @@ export function useInspectionPhotoUploader(
   setPhotos: Dispatch<SetStateAction<LocalPhotoItem[]>>
 ) {
   const [progress, setProgress] = useState<PhotoUploadProgress | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  async function addFiles(files: File[]) {
+  async function addFiles(selectedFiles: File[]) {
+    // The server rejects an oversized file with a 413 that fails the whole
+    // batch, so drop it here and upload the rest.
+    const files = selectedFiles.filter(
+      (file) => file.size <= MAX_UPLOAD_FILE_BYTES
+    );
+    const skippedCount = selectedFiles.length - files.length;
+
+    setError(
+      skippedCount > 0
+        ? `50MB를 넘는 사진 ${skippedCount}장은 올리지 않았어요.`
+        : null
+    );
+
+    if (files.length === 0) {
+      return;
+    }
+
     const localItems: LocalPhotoItem[] = files.map((file) => ({
       key: nextLocalKey(),
       file,
@@ -57,9 +79,10 @@ export function useInspectionPhotoUploader(
             : item;
         })
       );
-    } catch {
+    } catch (uploadError) {
       // Upload failed — drop the placeholders so the list doesn't carry
-      // permanently-stuck "업로드 중" thumbnails.
+      // permanently-stuck "업로드 중" thumbnails, and say why.
+      setError(getUploadErrorMessage(uploadError));
       const failedKeys = new Set(localItems.map((item) => item.key));
 
       setPhotos((current) =>
@@ -90,5 +113,5 @@ export function useInspectionPhotoUploader(
     setPhotos(next);
   }
 
-  return { progress, addFiles, removeFile, updateCaption, reorder };
+  return { progress, error, addFiles, removeFile, updateCaption, reorder };
 }

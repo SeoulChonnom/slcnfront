@@ -15,6 +15,7 @@ type PhotoManagerProps = {
   onRemove: (key: string) => void;
   onReorder: (nextPhotos: LocalPhotoItem[]) => void;
   uploadProgress: PhotoUploadProgress | null;
+  uploadError?: string | null;
   className?: string;
 };
 
@@ -45,6 +46,7 @@ export function PhotoManager({
   onRemove,
   onReorder,
   uploadProgress,
+  uploadError = null,
   className,
 }: PhotoManagerProps) {
   const dragIndexRef = useRef<number | null>(null);
@@ -79,7 +81,7 @@ export function PhotoManager({
         hideLabel={hideLabel}
         multiple
         prompt='사진을 끌어다 놓거나 선택하세요'
-        hint='JPG · PNG · 최대 10MB, 여러 장 선택 가능'
+        hint='JPG · PNG · 최대 50MB, 여러 장 선택 가능'
         files={[]}
         onFilesSelect={(files) => {
           if (files.length > 0) {
@@ -87,6 +89,12 @@ export function PhotoManager({
           }
         }}
       />
+
+      {uploadError ? (
+        <p className='slcn-inspection-photo-manager__error' role='alert'>
+          {uploadError}
+        </p>
+      ) : null}
 
       {uploadProgress ? (
         <p className='slcn-inspection-photo-manager__progress' role='status'>

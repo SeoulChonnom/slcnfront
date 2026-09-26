@@ -46,9 +46,11 @@ export type TravelPhoto = {
   sortOrder: number;
 };
 
-type FileBoxItem = {
+export type FileBoxItem = {
   id: string;
   fileAssetId: string;
+  /** RAW attached to this photo, download-only. Absent when there is none. */
+  rawFileAssetId?: string | null;
   targetType: 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE' | 'TRIP';
   targetId: string | null;
   role: 'COVER' | 'GALLERY' | 'LOGO' | 'FIRST_MAP' | 'SECOND_MAP';
@@ -146,7 +148,10 @@ export type TravelDetail = {
  * upload time never set it — see `buildTravelFileBoxItems`.
  */
 export type TravelFileBoxItemCdo = {
+  /** Set for an item that already exists, so the server keeps it in place. */
+  id?: string;
   fileAssetId: string;
+  rawFileAssetId?: string;
   targetType: 'TRAVEL' | 'TRAVEL_DAY' | 'TRAVEL_PLACE';
   targetId?: string;
   role: 'COVER' | 'GALLERY';

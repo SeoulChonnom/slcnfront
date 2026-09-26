@@ -260,6 +260,7 @@ export function InspectionVisitEditSection({
           onRemovePhoto={(key) => photoUploader.removeFile(key, photos)}
           onReorderPhotos={handleReorderPhotos}
           photoUploadProgress={photoUploader.progress}
+          photoUploadError={photoUploader.error}
           savedAtLabel={formatSavedAtLabel(lastSavedAt)}
           errors={{}}
         />

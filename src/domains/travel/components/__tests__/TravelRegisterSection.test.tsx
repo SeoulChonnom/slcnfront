@@ -271,6 +271,85 @@ describe('TravelRegisterSection', () => {
       expect(payload.photos).toBeUndefined();
     });
 
+    it('keeps the travel’s existing photos when album photos are added while editing', async () => {
+      // The server replaces the whole file list on update. Sending only the
+      // new photo would wipe the cover (a 400) and every existing photo.
+      getTravelDetail.mockResolvedValue({
+        ...mockTravelDetail,
+        files: [
+          {
+            id: 'item-cover',
+            fileAssetId: 'old-cover',
+            targetType: 'TRAVEL',
+            targetId: null,
+            role: 'COVER',
+            caption: null,
+            sortOrder: 0,
+          },
+          {
+            id: 'item-album',
+            fileAssetId: 'old-album',
+            rawFileAssetId: 'old-raw',
+            targetType: 'TRAVEL',
+            targetId: null,
+            role: 'GALLERY',
+            caption: null,
+            sortOrder: 0,
+          },
+        ],
+      });
+      uploadTravelFiles.mockResolvedValue([fileAsset({ fileId: 'new-album' })]);
+      updateTravel.mockResolvedValue(mockTravelDetail);
+
+      const { user, container } = renderWithMinimalProviders(
+        <TravelRegisterSection device='main' mode='edit' travelId='travel-1' />
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /제목/ })).toBeTruthy();
+      });
+
+      const albumInput = container.querySelectorAll<HTMLInputElement>(
+        '.slcn-file-dropzone__input'
+      )[1];
+      if (!albumInput) throw new Error('album photo input not found');
+      await user.upload(
+        albumInput,
+        new File(['album'], 'album.png', { type: 'image/png' })
+      );
+
+      await user.click(screen.getByRole('button', { name: '수정하기' }));
+
+      await waitFor(() => {
+        expect(updateTravel).toHaveBeenCalledTimes(1);
+      });
+
+      const payload = updateTravel.mock.calls[0]?.[1];
+      expect(payload.files).toEqual([
+        {
+          id: 'item-cover',
+          fileAssetId: 'old-cover',
+          targetType: 'TRAVEL',
+          role: 'COVER',
+          sortOrder: 0,
+        },
+        {
+          id: 'item-album',
+          fileAssetId: 'old-album',
+          rawFileAssetId: 'old-raw',
+          targetType: 'TRAVEL',
+          role: 'GALLERY',
+          sortOrder: 0,
+        },
+        {
+          fileAssetId: 'new-album',
+          targetType: 'TRAVEL',
+          role: 'GALLERY',
+          sortOrder: 1,
+        },
+      ]);
+    });
+
     it('surfaces an error and never calls the create mutation when the upload fails', async () => {
       uploadTravelFile.mockRejectedValue(new Error('업로드 서버 오류'));
 
@@ -450,7 +529,7 @@ describe('TravelRegisterSection', () => {
   describe('cover/album file size validation', () => {
     function oversizedFile(name: string): File {
       const file = new File(['x'], name, { type: 'image/png' });
-      Object.defineProperty(file, 'size', { value: 11 * 1024 * 1024 });
+      Object.defineProperty(file, 'size', { value: 51 * 1024 * 1024 });
       return file;
     }
 
@@ -475,7 +554,7 @@ describe('TravelRegisterSection', () => {
       await user.upload(coverInput, oversizedFile('huge-cover.png'));
 
       expect(
-        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+        await screen.findByText('사진은 50MB까지 올릴 수 있어요.')
       ).toBeTruthy();
 
       // The oversized file never entered form state, so the required
@@ -485,7 +564,7 @@ describe('TravelRegisterSection', () => {
       await user.click(screen.getByRole('button', { name: '저장하기' }));
 
       expect(createTravel).not.toHaveBeenCalled();
-      expect(screen.getByText('사진은 10MB까지 올릴 수 있어요.')).toBeTruthy();
+      expect(screen.getByText('사진은 50MB까지 올릴 수 있어요.')).toBeTruthy();
     });
 
     it('rejects an oversized album photo with an informal message', async () => {
@@ -501,7 +580,7 @@ describe('TravelRegisterSection', () => {
       await user.upload(albumInput, oversizedFile('huge-album.png'));
 
       expect(
-        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+        await screen.findByText('사진은 50MB까지 올릴 수 있어요.')
       ).toBeTruthy();
     });
   });

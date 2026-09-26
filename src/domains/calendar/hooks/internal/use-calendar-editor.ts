@@ -7,10 +7,11 @@ import {
   mapDraftToSchedulePayload,
   validateCalendarEventDraft,
 } from '@/domains/calendar/mappers/schedule-event-mappers';
-import type {
-  CalendarMeta,
-  ScheduleEvent,
-  ScheduleMutationPayload,
+import {
+  type CalendarMeta,
+  isRecurringSchedule,
+  type ScheduleEvent,
+  type ScheduleMutationPayload,
 } from '@/domains/calendar/types';
 import { getMutationErrorMessage } from '@/domains/calendar/utils/calendar-controller-helpers';
 
@@ -89,6 +90,18 @@ export function useCalendarEditor({
   );
 
   const onSubmitEditor = useCallback(async () => {
+    // The modal hides its save button for these; this is the backstop. An
+    // occurrence carries its own start, not the series', so saving it would
+    // re-anchor the whole series.
+    if (editorState.event && isRecurringSchedule(editorState.event)) {
+      setEditorState((current) => ({
+        ...current,
+        error: '반복 일정은 여기서 수정할 수 없어요.',
+      }));
+
+      return;
+    }
+
     const error = validateCalendarEventDraft(editorState.draft);
 
     if (error) {

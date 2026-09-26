@@ -830,6 +830,18 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   gap: 0.875rem;
 }
 
+/* Groups the inputs so a recurring schedule can disable them in one place;
+   it adds no box of its own. */
+.slcn-calendar-modal__fields {
+  display: contents;
+}
+
+.slcn-calendar-modal__notice {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
 .slcn-calendar-modal__field {
   display: flex;
   flex-direction: column;

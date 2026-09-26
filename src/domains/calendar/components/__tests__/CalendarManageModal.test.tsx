@@ -228,7 +228,7 @@ describe('CalendarManageModal', () => {
     });
     // The dialog must say what is lost: deleting a calendar also removes
     // its schedules.
-    expect(confirmDialog.textContent).toContain('일정도 모두 함께 사라지고');
+    expect(confirmDialog.textContent).toContain('일정이 남아 있는 캘린더는');
     expect(onDelete).not.toHaveBeenCalled();
 
     // The safe option holds focus, so a stray Enter cannot delete a calendar.

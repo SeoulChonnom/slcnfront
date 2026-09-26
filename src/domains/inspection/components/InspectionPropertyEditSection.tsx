@@ -456,6 +456,7 @@ export function InspectionPropertyEditSection({
           onRemove={(key) => photoUploader.removeFile(key, photos)}
           onReorder={photoUploader.reorder}
           uploadProgress={photoUploader.progress}
+          uploadError={photoUploader.error}
         />
 
         <PropertyAnswerFields

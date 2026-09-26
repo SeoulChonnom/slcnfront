@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
-import type {
-  CalendarEventInput,
-  CalendarMeta,
-  ScheduleEvent,
-  ScheduleMutationPayload,
+import {
+  type CalendarEventInput,
+  type CalendarMeta,
+  getScheduleKey,
+  isRecurringSchedule,
+  type ScheduleEvent,
+  type ScheduleMutationPayload,
 } from '@/domains/calendar/types';
 import {
   API_DATE_FORMAT,
@@ -93,7 +95,9 @@ export function createDraftFromSchedule(
     allDay: event.allDay,
     startDate: coerceDateValue(event.start),
     startTime: coerceTimeValue(event.start),
-    endDate: coerceDateValue(event.end),
+    endDate: event.allDay
+      ? (toInclusiveAllDayEnd(event.end) ?? coerceDateValue(event.start))
+      : coerceDateValue(event.end),
     endTime: coerceTimeValue(event.end),
   };
 }
@@ -139,13 +143,16 @@ export function mapDraftToSchedulePayload(
   draft: CalendarEventDraft,
   id?: string
 ): ScheduleMutationPayload {
+  const end = formatDraftDateTime(draft.endDate, draft.endTime, draft.allDay);
+
   return {
     id,
     calendarId: draft.calendarId,
     title: draft.title.trim(),
     body: draft.body.trim(),
     start: formatDraftDateTime(draft.startDate, draft.startTime, draft.allDay),
-    end: formatDraftDateTime(draft.endDate, draft.endTime, draft.allDay),
+    // The form holds the inclusive last day; the API wants the day after.
+    end: draft.allDay ? toExclusiveAllDayEnd(end) : end,
     allDay: draft.allDay,
     location: draft.location.trim(),
   };
@@ -155,22 +162,29 @@ export function mapScheduleToCalendarEventInput(
   schedule: ScheduleEvent,
   calendar: CalendarMeta | null
 ): CalendarEventInput {
+  // Dragging an occurrence would PUT its own start as the master's, moving
+  // the whole series, so recurring schedules stay put on the grid.
+  const isRecurring = isRecurringSchedule(schedule);
+  const editable = !isRecurring && (calendar?.editable ?? true);
+
   return {
-    id: schedule.id,
+    id: getScheduleKey(schedule),
     title: schedule.title,
     start: schedule.start,
-    end: schedule.allDay ? toExclusiveAllDayEnd(schedule.end) : schedule.end,
+    end: schedule.end,
     allDay: schedule.allDay,
     backgroundColor: calendar?.backgroundColor,
     borderColor: calendar?.borderColor,
     textColor: calendar?.textColor,
-    editable: calendar?.editable ?? true,
-    startEditable: calendar?.startEditable ?? calendar?.editable ?? true,
-    durationEditable: calendar?.durationEditable ?? calendar?.editable ?? true,
+    editable,
+    startEditable: editable && (calendar?.startEditable ?? true),
+    durationEditable: editable && (calendar?.durationEditable ?? true),
     extendedProps: {
       body: schedule.body,
       location: schedule.location,
       calendarId: schedule.calendarId,
+      scheduleId: schedule.id,
+      isRecurring,
     },
   };
 }
