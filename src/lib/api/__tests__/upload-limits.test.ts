@@ -27,19 +27,27 @@ describe('splitIntoUploadBatches', () => {
     ]);
   });
 
-  it('starts a new batch before the total would pass 50MB', () => {
-    // Six files just under the 10MB per-file cap would be ~60MB of content
-    // plus multipart overhead — over the server's 60MB request limit.
-    expect(
-      ids(splitIntoUploadBatches(files(9.9, 9.9, 9.9, 9.9, 9.9, 9.9)))
-    ).toEqual([[0, 1, 2, 3, 4], [5]]);
+  it('starts a new batch before the total would pass 100MB', () => {
+    // Three 40MB camera JPGs would be 120MB of content — over the server's
+    // 110MB request limit before multipart overhead is even counted.
+    expect(ids(splitIntoUploadBatches(files(40, 40, 40)))).toEqual([
+      [0, 1],
+      [2],
+    ]);
   });
 
   it('keeps file order across batches', () => {
-    expect(ids(splitIntoUploadBatches(files(30, 30, 5, 30)))).toEqual([
+    expect(ids(splitIntoUploadBatches(files(60, 45, 5, 60)))).toEqual([
       [0],
       [1, 2],
       [3],
+    ]);
+  });
+
+  it('gives a file at the per-file cap a batch of its own when needed', () => {
+    expect(ids(splitIntoUploadBatches(files(50, 50, 50)))).toEqual([
+      [0, 1],
+      [2],
     ]);
   });
 });
@@ -53,7 +61,7 @@ describe('getUploadErrorMessage', () => {
     });
 
     expect(getUploadErrorMessage(error)).toBe(
-      '사진 용량이 너무 커서 올리지 못했어요. 10MB 이하 사진으로 다시 시도해 주세요.'
+      '사진 용량이 너무 커서 올리지 못했어요. 50MB 이하 사진으로 다시 시도해 주세요.'
     );
   });
 

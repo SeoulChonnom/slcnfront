@@ -1,17 +1,18 @@
 /**
- * Travel-domain-local file validation. Mirrors the 10MB ceiling in
- * src/domains/trip/utils/trip-validation.ts, but is kept as its own copy
- * rather than a cross-domain import — trip and travel are separate domains
- * (see AGENTS.md) and this screen's message is in its own informal voice
- * ('~해요'), unlike trip's formal '~습니다'.
+ * Travel-domain-local file validation. The 50MB ceiling matches the server's
+ * per-file multipart cap, raised so camera JPGs (20~40MB) fit. Trip keeps its
+ * own stricter copy in src/domains/trip/utils/trip-validation.ts rather than a
+ * cross-domain import — trip and travel are separate domains (see AGENTS.md)
+ * and this screen's message is in its own informal voice ('~해요'), unlike
+ * trip's formal '~습니다'.
  */
 
-export const MAX_TRAVEL_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+export const MAX_TRAVEL_FILE_SIZE_BYTES = 50 * 1024 * 1024;
 
 /** Returns a Korean error message when `file` is over the size limit, or null when it's fine. */
 export function validateTravelFileSize(file: File): string | null {
   if (file.size > MAX_TRAVEL_FILE_SIZE_BYTES) {
-    return '사진은 10MB까지 올릴 수 있어요.';
+    return '사진은 50MB까지 올릴 수 있어요.';
   }
 
   return null;

@@ -81,7 +81,7 @@ export function PhotoManager({
         hideLabel={hideLabel}
         multiple
         prompt='사진을 끌어다 놓거나 선택하세요'
-        hint='JPG · PNG · 최대 10MB, 여러 장 선택 가능'
+        hint='JPG · PNG · 최대 50MB, 여러 장 선택 가능'
         files={[]}
         onFilesSelect={(files) => {
           if (files.length > 0) {

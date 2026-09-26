@@ -497,6 +497,7 @@ export function TravelRegisterForm({
           required
           accept='.jpg,.jpeg,.png'
           prompt='대표 사진을 끌어다 놓거나 선택하세요'
+          hint='PNG · JPG · 최대 50MB'
           file={values.coverPhotoFile}
           error={coverFileError ?? errors.coverPhotoFile}
           ref={coverPhotoRef}

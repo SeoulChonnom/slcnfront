@@ -529,7 +529,7 @@ describe('TravelRegisterSection', () => {
   describe('cover/album file size validation', () => {
     function oversizedFile(name: string): File {
       const file = new File(['x'], name, { type: 'image/png' });
-      Object.defineProperty(file, 'size', { value: 11 * 1024 * 1024 });
+      Object.defineProperty(file, 'size', { value: 51 * 1024 * 1024 });
       return file;
     }
 
@@ -554,7 +554,7 @@ describe('TravelRegisterSection', () => {
       await user.upload(coverInput, oversizedFile('huge-cover.png'));
 
       expect(
-        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+        await screen.findByText('사진은 50MB까지 올릴 수 있어요.')
       ).toBeTruthy();
 
       // The oversized file never entered form state, so the required
@@ -564,7 +564,7 @@ describe('TravelRegisterSection', () => {
       await user.click(screen.getByRole('button', { name: '저장하기' }));
 
       expect(createTravel).not.toHaveBeenCalled();
-      expect(screen.getByText('사진은 10MB까지 올릴 수 있어요.')).toBeTruthy();
+      expect(screen.getByText('사진은 50MB까지 올릴 수 있어요.')).toBeTruthy();
     });
 
     it('rejects an oversized album photo with an informal message', async () => {
@@ -580,7 +580,7 @@ describe('TravelRegisterSection', () => {
       await user.upload(albumInput, oversizedFile('huge-album.png'));
 
       expect(
-        await screen.findByText('사진은 10MB까지 올릴 수 있어요.')
+        await screen.findByText('사진은 50MB까지 올릴 수 있어요.')
       ).toBeTruthy();
     });
   });

@@ -1,14 +1,14 @@
 import { AppError } from '@/lib/api/errors';
 
 /** Server multipart cap per file (`spring.servlet.multipart.max-file-size`). */
-export const MAX_UPLOAD_FILE_BYTES = 10 * 1024 * 1024;
+export const MAX_UPLOAD_FILE_BYTES = 50 * 1024 * 1024;
 
 /**
  * Bytes of file content per upload request. The server caps a whole request at
- * 60MB; this leaves room for multipart boundaries and headers so a batch of
+ * 110MB; this leaves room for multipart boundaries and headers so a batch of
  * files just under the per-file cap can't tip the request over.
  */
-const MAX_UPLOAD_BATCH_BYTES = 50 * 1024 * 1024;
+const MAX_UPLOAD_BATCH_BYTES = 100 * 1024 * 1024;
 
 /**
  * Files per upload request. Each photo gets its size variants generated inside
@@ -55,7 +55,7 @@ export function splitIntoUploadBatches<T extends Pick<File, 'size'>>(
  */
 export function getUploadErrorMessage(error: unknown): string {
   if (error instanceof AppError && error.status === 413) {
-    return '사진 용량이 너무 커서 올리지 못했어요. 10MB 이하 사진으로 다시 시도해 주세요.';
+    return '사진 용량이 너무 커서 올리지 못했어요. 50MB 이하 사진으로 다시 시도해 주세요.';
   }
 
   if (error instanceof AppError && error.code === 'NETWORK_ERROR') {

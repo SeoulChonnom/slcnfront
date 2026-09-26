@@ -39,7 +39,7 @@ export function useInspectionPhotoUploader(
 
     setError(
       skippedCount > 0
-        ? `10MB를 넘는 사진 ${skippedCount}장은 올리지 않았어요.`
+        ? `50MB를 넘는 사진 ${skippedCount}장은 올리지 않았어요.`
         : null
     );
 
