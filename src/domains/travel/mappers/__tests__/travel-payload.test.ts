@@ -57,7 +57,7 @@ describe('buildTravelFileBoxItems', () => {
         fileAssetId: 'cover-1',
         targetType: 'TRAVEL',
         role: 'COVER',
-        sortOrder: 0,
+        sortOrder: 1,
       },
     ]);
   });
@@ -73,19 +73,19 @@ describe('buildTravelFileBoxItems', () => {
         fileAssetId: 'album-1',
         targetType: 'TRAVEL',
         role: 'GALLERY',
-        sortOrder: 0,
+        sortOrder: 1,
       },
       {
         fileAssetId: 'album-2',
         targetType: 'TRAVEL',
         role: 'GALLERY',
-        sortOrder: 1,
+        sortOrder: 2,
       },
       {
         fileAssetId: 'album-3',
         targetType: 'TRAVEL',
         role: 'GALLERY',
-        sortOrder: 2,
+        sortOrder: 3,
       },
     ]);
   });
@@ -101,19 +101,19 @@ describe('buildTravelFileBoxItems', () => {
         fileAssetId: 'cover-1',
         targetType: 'TRAVEL',
         role: 'COVER',
-        sortOrder: 0,
+        sortOrder: 1,
       },
       {
         fileAssetId: 'album-1',
         targetType: 'TRAVEL',
         role: 'GALLERY',
-        sortOrder: 0,
+        sortOrder: 1,
       },
       {
         fileAssetId: 'album-2',
         targetType: 'TRAVEL',
         role: 'GALLERY',
-        sortOrder: 1,
+        sortOrder: 2,
       },
     ]);
     expect(result.every((item) => !('targetId' in item))).toBe(true);
@@ -183,7 +183,7 @@ describe('buildTravelFileBoxItems', () => {
           fileAssetId: 'new-cover',
           targetType: 'TRAVEL',
           role: 'COVER',
-          sortOrder: 0,
+          sortOrder: 1,
         },
       ]);
       expect(result.map((item) => item.id).filter(Boolean)).toEqual([

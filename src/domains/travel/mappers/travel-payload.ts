@@ -72,9 +72,11 @@ export function buildTravelFileBoxItems(input: {
     .filter((item) => input.coverFileId === null || !isRootCover(item))
     .map(toKeptItem);
 
+  // The server treats sortOrder <= 0 as "unset" and renumbers it to the next
+  // slot, which can collide with an explicit 1 — so numbering starts at 1.
   const nextGallerySortOrder =
     Math.max(
-      -1,
+      0,
       ...keptItems.filter(isRootGallery).map((item) => item.sortOrder ?? 0)
     ) + 1;
 
@@ -85,7 +87,7 @@ export function buildTravelFileBoxItems(input: {
       fileAssetId: input.coverFileId,
       targetType: 'TRAVEL',
       role: 'COVER',
-      sortOrder: 0,
+      sortOrder: 1,
     });
   }
 
