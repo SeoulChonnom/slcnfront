@@ -103,12 +103,20 @@ describe('createApiClient', () => {
 
   it('normalizes non-ok responses into AppError', async () => {
     const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(JSON.stringify({ message: 'Bad request payload' }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      new Response(
+        JSON.stringify({
+          title: '질문 분류는 필수입니다.',
+          status: 400,
+          code: 'INSPECTION_QUESTION_CATEGORY_REQUIRED',
+          errors: [],
+        }),
+        {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
     );
     const client = createApiClient({
       fetchFn,
@@ -123,7 +131,75 @@ describe('createApiClient', () => {
       name: 'AppError',
       code: 'HTTP_ERROR',
       status: 400,
-      message: 'Bad request payload',
+      apiCode: 'INSPECTION_QUESTION_CATEGORY_REQUIRED',
+      fieldErrors: [],
+      message: '질문 분류는 필수입니다.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('exposes field-level validation errors', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          title: '퀴즈 제목을 입력해 주세요.',
+          status: 400,
+          code: 'VALIDATION_FAILED',
+          errors: [
+            {
+              field: 'quiz.title',
+              code: 'NOT_BLANK',
+              message: '퀴즈 제목을 입력해 주세요.',
+            },
+          ],
+        }),
+        {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+    });
+
+    await expect(
+      client.post({ path: '/api/error', body: {} })
+    ).rejects.toMatchObject({
+      apiCode: 'VALIDATION_FAILED',
+      fieldErrors: [
+        {
+          field: 'quiz.title',
+          code: 'NOT_BLANK',
+          message: '퀴즈 제목을 입력해 주세요.',
+        },
+      ],
+      message: '퀴즈 제목을 입력해 주세요.',
+    } satisfies Partial<AppError>);
+  });
+
+  it('falls back to the status line when the error body has no title', async () => {
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ status: 500, errors: [] }), {
+        status: 500,
+        statusText: 'Internal Server Error',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+    const client = createApiClient({
+      fetchFn,
+      getBaseUrl: () => 'http://localhost:8080',
+    });
+
+    await expect(client.get({ path: '/api/error' })).rejects.toMatchObject({
+      status: 500,
+      apiCode: undefined,
+      fieldErrors: [],
+      message: '500 Internal Server Error',
     } satisfies Partial<AppError>);
   });
 

@@ -105,12 +105,20 @@ describe('auth-api', () => {
 
   it('propagates restoreSession transport errors as AppError', async () => {
     const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(JSON.stringify({ message: 'restore failed' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      new Response(
+        JSON.stringify({
+          title: 'restore failed',
+          status: 401,
+          code: 'UNAUTHORIZED',
+          errors: [],
+        }),
+        {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
     );
     const authApi = createAuthApi(
       createApiClient({
@@ -123,6 +131,7 @@ describe('auth-api', () => {
       name: 'AppError',
       code: 'HTTP_ERROR',
       status: 401,
+      apiCode: 'UNAUTHORIZED',
       message: 'restore failed',
     } satisfies Partial<AppError>);
     expect(fetchFn.mock.calls[0]?.[0]).toBe(
