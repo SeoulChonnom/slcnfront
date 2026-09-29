@@ -1,6 +1,6 @@
 import { getAccessToken } from '@/domains/auth/store/auth-store';
 import { resolveApiBaseUrl } from '@/lib/api/base-url';
-import { AppError } from '@/lib/api/errors';
+import { type ApiFieldError, AppError } from '@/lib/api/errors';
 import { getAppEnv } from '@/lib/env/env';
 
 type Primitive = string | number | boolean;
@@ -28,9 +28,43 @@ export type ApiRequestOptions = {
   responseType?: ResponseType;
 };
 
+/**
+ * Server error body: `{ title, status, code, errors }`. `title` is the
+ * human-readable sentence and `code` the cause identifier FE branches on.
+ * `message` is the legacy `{ success, message }` field, kept as a fallback.
+ */
 type ErrorPayload = {
-  message?: string;
+  title?: unknown;
+  code?: unknown;
+  errors?: unknown;
+  message?: unknown;
 };
+
+function readNonEmptyString(value: unknown) {
+  return typeof value === 'string' && value.trim() ? value : undefined;
+}
+
+function readFieldErrors(value: unknown): ApiFieldError[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (typeof item !== 'object' || item === null) {
+      return [];
+    }
+
+    const { field, code, message } = item as Record<string, unknown>;
+
+    return [
+      {
+        field: typeof field === 'string' ? field : '',
+        code: typeof code === 'string' ? code : '',
+        message: typeof message === 'string' ? message : '',
+      },
+    ];
+  });
+}
 
 function buildUrl(
   path: string,
@@ -59,11 +93,18 @@ function isFormData(body: ApiRequestOptions['body']): body is FormData {
 async function parseError(response: Response) {
   const contentType = response.headers.get('content-type') ?? '';
 
+  const fallbackMessage = `${response.status} ${response.statusText}`;
+
   if (contentType.includes('application/json')) {
-    const payload = (await response.json()) as ErrorPayload;
+    const payload = (await response.json()) as ErrorPayload | null;
 
     return {
-      message: payload.message ?? `${response.status} ${response.statusText}`,
+      message:
+        readNonEmptyString(payload?.title) ??
+        readNonEmptyString(payload?.message) ??
+        fallbackMessage,
+      apiCode: readNonEmptyString(payload?.code),
+      fieldErrors: readFieldErrors(payload?.errors),
       details: payload,
     };
   }
@@ -71,7 +112,9 @@ async function parseError(response: Response) {
   const message = await response.text();
 
   return {
-    message: message || `${response.status} ${response.statusText}`,
+    message: message || fallbackMessage,
+    apiCode: undefined,
+    fieldErrors: [],
     details: message || null,
   };
 }
@@ -165,6 +208,8 @@ export function createApiClient(config: ApiClientConfig = {}) {
         code: 'HTTP_ERROR',
         message: parsedError.message,
         status: response.status,
+        apiCode: parsedError.apiCode,
+        fieldErrors: parsedError.fieldErrors,
         details: parsedError.details,
       });
     }

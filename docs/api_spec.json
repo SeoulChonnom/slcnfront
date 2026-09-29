@@ -17,6 +17,10 @@
       "description": "서비스 간 토큰 발급"
     },
     {
+      "name": "일정 피드 API",
+      "description": "일정 ICS 피드 토큰 관리"
+    },
+    {
       "name": "일정 정보 API",
       "description": "일정 정보 조회"
     },
@@ -295,36 +299,6 @@
         ]
       }
     },
-    "/schedule/{scheduleId}/hide": {
-      "put": {
-        "tags": [
-          "일정 정보 API"
-        ],
-        "summary": "일정 삭제(숨김)",
-        "description": "일정 목록 삭제 API",
-        "operationId": "hideSchedule",
-        "parameters": [
-          {
-            "name": "scheduleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "X-AUTH-TOKEN": []
-          }
-        ]
-      }
-    },
     "/inspection-visits/{visitId}": {
       "get": {
         "tags": [
@@ -408,8 +382,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -521,8 +495,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -605,8 +579,8 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -641,8 +615,8 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -707,8 +681,74 @@
           "required": true
         },
         "responses": {
+          "204": {
+            "description": "성공. 본문 없음"
+          }
+        }
+      }
+    },
+    "/inspection-question-categories/{categoryId}": {
+      "put": {
+        "tags": [
+          "inspection-question-category-resource"
+        ],
+        "operationId": "renameInspectionQuestionCategory",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionCategoryUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionCategoryRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-question-categories/order": {
+      "put": {
+        "tags": [
+          "inspection-question-category-resource"
+        ],
+        "operationId": "modifyInspectionQuestionCategoryOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InspectionQuestionCategoryOrderUdo"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -813,8 +853,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "성공. 본문 없음"
           }
         }
       }
@@ -1199,6 +1239,71 @@
         }
       }
     },
+    "/schedule/feeds": {
+      "get": {
+        "tags": [
+          "일정 피드 API"
+        ],
+        "summary": "일정 피드 목록 조회",
+        "description": "생성된 일정 피드의 안전한 메타데이터를 조회합니다.",
+        "operationId": "getFeeds",
+        "responses": {
+          "200": {
+            "description": "일정 피드 목록 조회 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleFeedRdo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "일정 피드 API"
+        ],
+        "summary": "일정 피드 생성",
+        "description": "외부 캘린더 구독용 일정 피드를 생성합니다.",
+        "operationId": "createFeed",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleFeedCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "일정 피드 생성 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleFeedCreatedRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
     "/inspection-visits": {
       "get": {
         "tags": [
@@ -1440,6 +1545,68 @@
         }
       }
     },
+    "/inspection-question-categories": {
+      "get": {
+        "tags": [
+          "inspection-question-category-resource"
+        ],
+        "operationId": "getInspectionQuestionCategories",
+        "parameters": [
+          {
+            "name": "includeDisabled",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InspectionQuestionCategoryRdo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inspection-question-category-resource"
+        ],
+        "operationId": "registerInspectionQuestionCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionCategoryCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionCategoryRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/inspection-areas": {
       "get": {
         "tags": [
@@ -1574,6 +1741,100 @@
             }
           }
         }
+      }
+    },
+    "/assets/raw-uploads": {
+      "post": {
+        "tags": [
+          "raw-upload-resource"
+        ],
+        "summary": "RAW 업로드 세션 생성 API",
+        "description": "여행 사진의 RAW(RAF) 첨부를 저장소에 직접 올릴 파트별 서명 URL을 발급합니다.",
+        "operationId": "createSession",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RawUploadSessionCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "세션 생성 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RawUploadSessionRdo"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "서명 URL을 지원하지 않는 저장소 설정",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RawUploadSessionRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/assets/raw-uploads/{fileId}/complete": {
+      "post": {
+        "tags": [
+          "raw-upload-resource"
+        ],
+        "summary": "RAW 업로드 완료 API",
+        "description": "파트 ETag로 업로드를 완료하고 크기와 RAF 매직을 검증합니다.",
+        "operationId": "complete",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RawUploadCompleteCdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "완료 성공. 이미 완료된 업로드도 같은 응답",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileAssetRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
       }
     },
     "/assets/files": {
@@ -1934,6 +2195,86 @@
         }
       }
     },
+    "/inspection-questions/{questionId}/category": {
+      "patch": {
+        "tags": [
+          "inspection-question-resource"
+        ],
+        "operationId": "moveInspectionQuestionCategory",
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionCategoryMoveUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-question-categories/{categoryId}/status": {
+      "patch": {
+        "tags": [
+          "inspection-question-category-resource"
+        ],
+        "operationId": "changeInspectionQuestionCategoryStatus",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQuestionCategoryStatusUdo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQuestionCategoryRdo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/calendars/{calendarId}/hide": {
       "patch": {
         "tags": [
@@ -2111,6 +2452,67 @@
             "X-AUTH-TOKEN": []
           }
         ]
+      }
+    },
+    "/schedule/feeds/{feedToken}/calendar.ics": {
+      "get": {
+        "tags": [
+          "일정 피드 API"
+        ],
+        "summary": "일정 ICS 피드 조회",
+        "description": "토큰 URL로 외부 캘린더가 구독할 읽기 전용 ICS 피드를 조회합니다.",
+        "operationId": "getCalendar",
+        "parameters": [
+          {
+            "name": "feedToken",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ICS 피드 조회 성공",
+            "content": {
+              "text/calendar;charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/calendar; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "ETag 일치, 본문 없음",
+            "content": {
+              "text/calendar;charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/calendar; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": []
       }
     },
     "/inspection-visits/{visitId}/complex-names": {
@@ -2485,13 +2887,60 @@
         ]
       }
     },
+    "/assets/files/{fileId}/download-url": {
+      "get": {
+        "tags": [
+          "file-resource"
+        ],
+        "summary": "다운로드 URL 발급 API",
+        "description": "원본(RAW 첨부 포함)을 첨부 파일로 받을 서명 URL을 발급합니다. 브라우저는 location.href로 이동합니다. 쿠키 인증은 허용하지 않으며, 로컬 저장소 설정에서는 501입니다.",
+        "operationId": "getDownloadUrl",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "발급 성공",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadUrlRdo"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "서명 URL을 지원하지 않는 저장소 설정",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadUrlRdo"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
     "/schedule/{scheduleId}": {
       "delete": {
         "tags": [
           "일정 정보 API"
         ],
-        "summary": "일정 완전 삭제",
-        "description": "일정 데이터 삭제 API",
+        "summary": "일정 삭제",
+        "description": "일정 삭제 API",
         "operationId": "deleteSchedule",
         "parameters": [
           {
@@ -2506,6 +2955,36 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/schedule/feeds/{feedId}": {
+      "delete": {
+        "tags": [
+          "일정 피드 API"
+        ],
+        "summary": "일정 피드 폐기",
+        "description": "외부 캘린더가 더 이상 일정 피드를 조회하지 못하도록 폐기합니다.",
+        "operationId": "deleteFeed",
+        "parameters": [
+          {
+            "name": "feedId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "일정 피드 폐기 성공"
           }
         },
         "security": [
@@ -2536,6 +3015,39 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ]
+      }
+    },
+    "/assets/raw-uploads/{fileId}": {
+      "delete": {
+        "tags": [
+          "raw-upload-resource"
+        ],
+        "summary": "RAW 업로드 취소·삭제 API",
+        "description": "업로드 중이면 세션을 중단하고, 여행에 연결되지 않은 완료 RAW는 삭제합니다.",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "삭제 성공"
+          },
+          "409": {
+            "description": "여행에 연결된 RAW"
           }
         },
         "security": [
@@ -2607,6 +3119,20 @@
             "items": {
               "type": "string"
             }
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "IMAGE",
+              "RAW"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "READY"
+            ]
           }
         }
       },
@@ -2631,6 +3157,9 @@
             "type": "string"
           },
           "fileAssetId": {
+            "type": "string"
+          },
+          "rawFileAssetId": {
             "type": "string"
           },
           "targetType": {
@@ -2797,6 +3326,9 @@
           "fileAssetId": {
             "type": "string"
           },
+          "rawFileAssetId": {
+            "type": "string"
+          },
           "targetType": {
             "type": "string",
             "enum": [
@@ -2829,6 +3361,9 @@
             "format": "int32"
           },
           "file": {
+            "$ref": "#/components/schemas/FileAssetRdo"
+          },
+          "rawFile": {
             "$ref": "#/components/schemas/FileAssetRdo"
           }
         }
@@ -3035,6 +3570,11 @@
             "type": "string",
             "description": "장소",
             "example": "location"
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "description": "반복 규칙",
+            "example": "FREQ=DAILY;COUNT=3"
           }
         }
       },
@@ -3063,6 +3603,12 @@
             "type": "boolean"
           },
           "location": {
+            "type": "string"
+          },
+          "recurrenceRule": {
+            "type": "string"
+          },
+          "occurrenceId": {
             "type": "string"
           }
         }
@@ -3289,6 +3835,16 @@
           },
           "questionEnabled": {
             "type": "boolean"
+          },
+          "categoryId": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "categorySortOrder": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3319,6 +3875,9 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
+          },
+          "categoryName": {
+            "type": "string"
           }
         }
       },
@@ -3594,6 +4153,16 @@
           "answerCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "categoryId": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "categorySortOrder": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3601,6 +4170,48 @@
         "type": "object",
         "properties": {
           "questionId": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionCategoryUdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionQuestionCategoryRdo": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "enabledQuestionCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionCategoryOrderUdo": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
             "type": "string"
           },
           "sortOrder": {
@@ -3899,6 +4510,9 @@
           "fileAssetId": {
             "type": "string"
           },
+          "rawFileAssetId": {
+            "type": "string"
+          },
           "targetType": {
             "type": "string",
             "enum": [
@@ -4149,6 +4763,44 @@
             "type": "string",
             "description": "장소",
             "example": "location"
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "description": "반복 규칙",
+            "example": "FREQ=DAILY;COUNT=3"
+          }
+        }
+      },
+      "ScheduleFeedCdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "일정 피드 이름",
+            "example": "Google Calendar",
+            "maxLength": 100,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ScheduleFeedCreatedRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "feedUrl": {
+            "type": "string"
+          },
+          "registeredTime": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -4284,6 +4936,21 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
+          },
+          "categoryId": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionQuestionCategoryCdo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4357,6 +5024,84 @@
           }
         }
       },
+      "RawUploadSessionCdo": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RawUploadPartUrlRdo": {
+        "type": "object",
+        "properties": {
+          "partNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "RawUploadSessionRdo": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "uploadId": {
+            "type": "string"
+          },
+          "partSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RawUploadPartUrlRdo"
+            }
+          }
+        }
+      },
+      "RawUploadCompleteCdo": {
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RawUploadPartCdo"
+            }
+          }
+        }
+      },
+      "RawUploadPartCdo": {
+        "type": "object",
+        "properties": {
+          "partNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "etag": {
+            "type": "string"
+          }
+        }
+      },
       "InspectionVisitStatusUdo": {
         "type": "object",
         "properties": {
@@ -4398,6 +5143,22 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "InspectionQuestionCategoryMoveUdo": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          }
+        }
+      },
+      "InspectionQuestionCategoryStatusUdo": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
           }
         }
       },
@@ -4520,6 +5281,21 @@
             "type": "string",
             "description": "검색 종료 일시(ISO 8601)",
             "example": "2026-05-01T00:00:00+09:00"
+          }
+        }
+      },
+      "ScheduleFeedRdo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "registeredTime": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -4755,6 +5531,25 @@
               "DRAFT",
               "COMPLETED"
             ]
+          }
+        }
+      },
+      "DownloadUrlRdo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
