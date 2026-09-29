@@ -88,13 +88,17 @@ export function InspectionPropertyEditSection({
 
   const detail = propertyQuery.data;
 
+  /** The last `{ fields, photos }` state that is already on the server. */
+  const pendingSnapshotRef = useRef<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (hydratedRef.current || !detail) {
       return;
     }
 
     hydratedRef.current = true;
-    setFields({
+    const initialFields: BasicFields = {
       complexName: detail.complexName,
       name: detail.name,
       interestLevel: detail.interestLevel,
@@ -103,20 +107,26 @@ export function InspectionPropertyEditSection({
       pros: detail.pros ?? '',
       cons: detail.cons ?? '',
       tags: detail.tags,
+    };
+    const initialPhotos: LocalPhotoItem[] = detail.photos.map((photo) => ({
+      key: photo.id,
+      id: photo.id,
+      fileAssetId: photo.fileAssetId,
+      caption: photo.caption ?? '',
+    }));
+    // What was just loaded is by definition already saved. Without this
+    // baseline the autosave effect below sees a "new" snapshot on the first
+    // render and PUTs the unchanged property as soon as the screen opens —
+    // an extra write that can also overwrite a concurrent edit (no
+    // optimistic locking, fe_implementation_decisions.md §3-⑥).
+    pendingSnapshotRef.current = JSON.stringify({
+      fields: initialFields,
+      photos: initialPhotos,
     });
-    setPhotos(
-      detail.photos.map((photo) => ({
-        key: photo.id,
-        id: photo.id,
-        fileAssetId: photo.fileAssetId,
-        caption: photo.caption ?? '',
-      }))
-    );
+    setFields(initialFields);
+    setPhotos(initialPhotos);
     setAnswers(detail.answers);
   }, [detail]);
-
-  const pendingSnapshotRef = useRef<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!fields) {
