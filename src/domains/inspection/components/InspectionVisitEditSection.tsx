@@ -15,6 +15,7 @@ import {
   useUpdateInspectionVisit,
   useUpdateInspectionVisitStatus,
 } from '@/domains/inspection/hooks/inspection-queries';
+import { useAutosave } from '@/domains/inspection/hooks/useAutosave';
 import { useInspectionPhotoUploader } from '@/domains/inspection/hooks/useInspectionPhotoUploader';
 import {
   buildVisitFilesPayload,
@@ -78,6 +79,11 @@ export function InspectionVisitEditSection({
 
   const detail = visitQuery.data;
 
+  const autosave = useAutosave({
+    snapshot: values ? { values, photos } : null,
+    onSave: (snapshot) => save(snapshot.values, snapshot.photos),
+  });
+
   useEffect(() => {
     if (hydratedRef.current || !detail) {
       return;
@@ -86,7 +92,7 @@ export function InspectionVisitEditSection({
     hydratedRef.current = true;
     const { date, time } = splitVisitedAt(detail.visitedAt);
 
-    setValues({
+    const initialValues: VisitBasicFormValues = {
       visitedAtDate: date,
       visitedAtTime: time,
       revisitIntent: detail.revisitIntent,
@@ -95,48 +101,18 @@ export function InspectionVisitEditSection({
       pros: detail.pros ?? '',
       cons: detail.cons ?? '',
       tags: detail.tags,
-    });
-    setPhotos(
-      detail.photos.map((photo) => ({
-        key: photo.id,
-        id: photo.id,
-        fileAssetId: photo.fileAssetId,
-        caption: photo.caption ?? '',
-      }))
-    );
-  }, [detail]);
-
-  const pendingSnapshotRef = useRef<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (!values) {
-      return;
-    }
-
-    const snapshot = JSON.stringify({ values, photos });
-
-    if (pendingSnapshotRef.current === snapshot) {
-      return;
-    }
-
-    pendingSnapshotRef.current = snapshot;
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      void save(values, photos);
-    }, 800);
-
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, photos]);
+    const initialPhotos: LocalPhotoItem[] = detail.photos.map((photo) => ({
+      key: photo.id,
+      id: photo.id,
+      fileAssetId: photo.fileAssetId,
+      caption: photo.caption ?? '',
+    }));
+    // What was just loaded is already saved — opening must not PUT.
+    autosave.markClean({ values: initialValues, photos: initialPhotos });
+    setValues(initialValues);
+    setPhotos(initialPhotos);
+  }, [detail, autosave.markClean]);
 
   async function save(
     next: VisitBasicFormValues,
@@ -200,6 +176,10 @@ export function InspectionVisitEditSection({
     }
 
     setStatusError(null);
+
+    // Completion is checked server-side, so send edits still waiting out
+    // the autosave delay first.
+    await autosave.flush();
 
     try {
       await statusMutation.mutateAsync(

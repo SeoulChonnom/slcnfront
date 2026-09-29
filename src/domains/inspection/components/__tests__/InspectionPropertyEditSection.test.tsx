@@ -1,11 +1,18 @@
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InspectionPropertyEditSection } from '@/domains/inspection/components/InspectionPropertyEditSection';
-import type { ViewedPropertyDetail } from '@/domains/inspection/types';
+import { AUTOSAVE_DELAY_MS } from '@/domains/inspection/hooks/useAutosave';
+import type {
+  PropertyAnswer,
+  ViewedPropertyDetail,
+} from '@/domains/inspection/types';
 import { renderWithProviders } from '@/test/helpers/render';
 
 const useInspectionVisitPropertyMock = vi.fn();
+const calls: string[] = [];
 const updateMutateAsync = vi.fn();
+const answersMutateAsync = vi.fn();
+const statusMutateAsync = vi.fn();
 
 function idleMutation(overrides: Record<string, unknown> = {}) {
   return {
@@ -21,11 +28,36 @@ vi.mock('@/domains/inspection/hooks/inspection-queries', () => ({
     useInspectionVisitPropertyMock(...args),
   useUpdateInspectionProperty: () =>
     idleMutation({ mutateAsync: updateMutateAsync }),
-  useUpdateInspectionPropertyStatus: () => idleMutation(),
+  useUpdateInspectionPropertyStatus: () =>
+    idleMutation({ mutateAsync: statusMutateAsync }),
   useDeleteInspectionProperty: () => idleMutation(),
-  useSaveInspectionPropertyAnswers: () => idleMutation(),
+  useSaveInspectionPropertyAnswers: () =>
+    idleMutation({ mutateAsync: answersMutateAsync }),
   useInspectionComplexNames: () => ({ data: [], isPending: false }),
 }));
+
+function answer(overrides: Partial<PropertyAnswer>): PropertyAnswer {
+  return {
+    questionId: 'q-text',
+    questionVersionNo: 1,
+    question: '채광 상태는 어떤가?',
+    description: null,
+    answerType: 'LONG_TEXT',
+    required: true,
+    sortOrder: 1,
+    unit: null,
+    answered: false,
+    choiceOptions: [],
+    textValue: null,
+    booleanValue: null,
+    numberValue: null,
+    ratingValue: null,
+    selectedCodes: [],
+    isCurrentVersion: true,
+    questionEnabled: true,
+    ...overrides,
+  };
+}
 
 function property(): ViewedPropertyDetail {
   return {
@@ -46,9 +78,19 @@ function property(): ViewedPropertyDetail {
     tags: [],
     cover: null,
     photos: [],
-    answers: [],
+    answers: [
+      answer({}),
+      answer({
+        questionId: 'q-dir',
+        question: '방향은?',
+        answerType: 'SINGLE_SELECT',
+        required: false,
+        sortOrder: 2,
+        choiceOptions: [{ code: 'SOUTH', label: '남향', sortOrder: 1 }],
+      }),
+    ],
     incompleteSummary: {
-      unansweredRequiredCount: 0,
+      unansweredRequiredCount: 1,
       unansweredRequiredQuestions: [],
       missingFields: [],
       draftPropertyCount: 0,
@@ -60,12 +102,32 @@ function property(): ViewedPropertyDetail {
   };
 }
 
-/** Longer than the 800 ms autosave debounce. */
-const AUTOSAVE_WINDOW_MS = 1000;
+function renderEdit() {
+  return renderWithProviders(
+    <InspectionPropertyEditSection
+      device='main'
+      areaId='area-1'
+      visitId='visit-1'
+      propertyId='prop-1'
+    />
+  );
+}
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('InspectionPropertyEditSection autosave', () => {
   beforeEach(() => {
-    updateMutateAsync.mockResolvedValue(property());
+    calls.length = 0;
+    updateMutateAsync.mockImplementation(async () => {
+      calls.push('update');
+      return property();
+    });
+    answersMutateAsync.mockImplementation(async () => {
+      calls.push('answers');
+    });
+    statusMutateAsync.mockImplementation(async () => {
+      calls.push('status');
+    });
     useInspectionVisitPropertyMock.mockReturnValue({
       data: property(),
       isPending: false,
@@ -79,40 +141,79 @@ describe('InspectionPropertyEditSection autosave', () => {
   });
 
   it('does not save just because the screen opened', async () => {
-    renderWithProviders(
-      <InspectionPropertyEditSection
-        device='main'
-        areaId='area-1'
-        visitId='visit-1'
-        propertyId='prop-1'
-      />
-    );
+    renderEdit();
 
     expect(screen.getByDisplayValue('검증매물A')).toBeTruthy();
-    await new Promise((resolve) => setTimeout(resolve, AUTOSAVE_WINDOW_MS));
+    await wait(AUTOSAVE_DELAY_MS + 300);
 
     expect(updateMutateAsync).not.toHaveBeenCalled();
+    expect(answersMutateAsync).not.toHaveBeenCalled();
   });
 
-  it('still saves once the user actually edits a field', async () => {
-    const { user } = renderWithProviders(
-      <InspectionPropertyEditSection
-        device='main'
-        areaId='area-1'
-        visitId='visit-1'
-        propertyId='prop-1'
-      />
-    );
+  it('saves a field edit once, 2 seconds after typing stops', async () => {
+    const { user } = renderEdit();
 
     await user.type(screen.getByLabelText('한줄평'), '채광 좋음');
+    await wait(AUTOSAVE_DELAY_MS - 500);
+    expect(updateMutateAsync).not.toHaveBeenCalled();
 
     await waitFor(
       () =>
         expect(updateMutateAsync).toHaveBeenCalledWith(
           expect.objectContaining({ oneLineReview: '채광 좋음' })
         ),
-      { timeout: AUTOSAVE_WINDOW_MS * 2 }
+      { timeout: 1500 }
     );
     expect(updateMutateAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('batches text and choice answers into one request 2 seconds after the last input', async () => {
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '남향' }));
+    await user.type(screen.getByLabelText(/채광 상태는 어떤가/), '밝다');
+    await wait(AUTOSAVE_DELAY_MS - 500);
+    expect(answersMutateAsync).not.toHaveBeenCalled();
+
+    await waitFor(() => expect(answersMutateAsync).toHaveBeenCalledTimes(1), {
+      timeout: 1500,
+    });
+    expect(answersMutateAsync).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        { questionId: 'q-dir', selectedCodes: ['SOUTH'] },
+        { questionId: 'q-text', textValue: '밝다' },
+      ])
+    );
+  });
+
+  it('sends pending answers before completing instead of waiting out the delay', async () => {
+    const { user } = renderEdit();
+
+    await user.type(screen.getByLabelText(/채광 상태는 어떤가/), '밝다');
+    await user.click(screen.getByRole('button', { name: '매물 완료' }));
+
+    await waitFor(() => expect(statusMutateAsync).toHaveBeenCalled());
+    expect(calls.indexOf('answers')).toBeGreaterThanOrEqual(0);
+    expect(calls.indexOf('answers')).toBeLessThan(calls.indexOf('status'));
+
+    await wait(AUTOSAVE_DELAY_MS + 300);
+    expect(answersMutateAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('sends a pending edit when the screen is left inside the delay window', async () => {
+    const { user, unmount } = renderEdit();
+
+    await user.type(screen.getByLabelText('한줄평'), '떠나기 직전');
+    await user.click(screen.getByRole('button', { name: '남향' }));
+    unmount();
+
+    expect(updateMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ oneLineReview: '떠나기 직전' })
+    );
+    await waitFor(() =>
+      expect(answersMutateAsync).toHaveBeenCalledWith([
+        { questionId: 'q-dir', selectedCodes: ['SOUTH'] },
+      ])
+    );
   });
 });
