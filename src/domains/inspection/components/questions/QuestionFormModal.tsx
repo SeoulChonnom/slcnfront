@@ -11,9 +11,11 @@ import {
   CREATABLE_ANSWER_TYPES,
   existingVersionLabels,
   nextVersionLabel,
+  questionErrorMessage,
 } from '@/domains/inspection/components/questions/question-copy';
 import {
   useCreateInspectionQuestion,
+  useMoveInspectionQuestionCategory,
   useUpdateInspectionQuestionContent,
   useUpdateInspectionQuestionPolicy,
   useUpdateInspectionQuestionStatus,
@@ -21,6 +23,7 @@ import {
 import type {
   AnswerType,
   InspectionQuestion,
+  InspectionQuestionCategory,
   QuestionChoiceInput,
 } from '@/domains/inspection/types';
 import { AppError } from '@/lib/api/errors';
@@ -28,8 +31,13 @@ import { AppError } from '@/lib/api/errors';
 type QuestionFormModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  /**
+   * Create: only enabled categories. Edit: every category, so the current
+   * one still renders when it has since been disabled.
+   */
+  categories: InspectionQuestionCategory[];
 } & (
-  | { mode: 'create'; nextSortOrder: number }
+  | { mode: 'create'; defaultCategoryId: string | null }
   | { mode: 'edit'; question: InspectionQuestion }
 );
 
@@ -37,8 +45,17 @@ const CONFLICT_MESSAGE =
   '질문이 이미 수정되었습니다. 새로고침 후 다시 시도하세요.';
 const GENERIC_ERROR_MESSAGE = '저장 중 문제가 생겼습니다. 다시 시도해 주세요.';
 
-function isConflict(error: unknown) {
-  return error instanceof AppError && error.status === 409;
+function saveErrorMessage(error: unknown) {
+  if (error instanceof AppError) {
+    const byCode = questionErrorMessage(error.apiCode);
+    if (byCode) {
+      return byCode;
+    }
+    if (error.status === 409) {
+      return CONFLICT_MESSAGE;
+    }
+  }
+  return GENERIC_ERROR_MESSAGE;
 }
 
 function toRequestChoices(choices: QuestionChoiceInput[]) {
@@ -85,7 +102,7 @@ function validateChoices(choices: QuestionChoiceInput[]) {
  * PUT would actually fire).
  */
 export function QuestionFormModal(props: QuestionFormModalProps) {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, categories } = props;
   const isEdit = props.mode === 'edit';
   const question = isEdit ? props.question : null;
 
@@ -93,7 +110,14 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
   const descriptionInputId = useId();
   const unitInputId = useId();
   const answerTypeInputId = useId();
+  const categoryInputId = useId();
 
+  const [categoryId, setCategoryId] = useState(
+    question?.categoryId ??
+      (props.mode === 'create' ? props.defaultCategoryId : null) ??
+      categories[0]?.categoryId ??
+      ''
+  );
   const [content, setContent] = useState(question?.content ?? '');
   const [description, setDescription] = useState(question?.description ?? '');
   const [answerType, setAnswerType] = useState<AnswerType>(
@@ -122,11 +146,15 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
   const statusMutation = useUpdateInspectionQuestionStatus(
     question?.questionId ?? ''
   );
+  const moveMutation = useMoveInspectionQuestionCategory(
+    question?.questionId ?? ''
+  );
 
   const isSaving =
     createMutation.isPending ||
     updateContentMutation.isPending ||
-    updatePolicyMutation.isPending;
+    updatePolicyMutation.isPending ||
+    moveMutation.isPending;
 
   const needsChoices = answerTypeNeedsChoices(answerType);
   const allowsUnit = answerTypeAllowsUnit(answerType);
@@ -142,7 +170,17 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
       (allowsUnit && trimmedUnit !== (question?.unit ?? ''))
     : true;
   const requiredChanged = isEdit ? required !== question?.required : false;
-  const hasChanges = isEdit ? contentChanged || requiredChanged : true;
+  const categoryChanged = isEdit ? categoryId !== question?.categoryId : false;
+  const hasChanges = isEdit
+    ? contentChanged || requiredChanged || categoryChanged
+    : true;
+  const selectedCategory = categories.find(
+    (category) => category.categoryId === categoryId
+  );
+  const selectableCategories = categories.filter(
+    (category) =>
+      category.enabled || category.categoryId === question?.categoryId
+  );
 
   const saveLabel = !isEdit
     ? '질문 추가'
@@ -177,6 +215,11 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
     setContentError(null);
     setChoicesError(null);
 
+    if (categoryId === '') {
+      setFormError('질문을 넣을 분류를 골라 주세요.');
+      return;
+    }
+
     if (trimmedContent === '') {
       setContentError('질문 문장을 입력해 주세요.');
       return;
@@ -197,7 +240,9 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
           description: trimmedDescription || undefined,
           answerType,
           required,
-          sortOrder: props.nextSortOrder,
+          // api.md §10: <= 0 is numbered onto the end of the chosen category.
+          sortOrder: 0,
+          categoryId,
           choices: needsChoices ? toRequestChoices(choices) : undefined,
           unit: allowsUnit && trimmedUnit ? trimmedUnit : undefined,
         });
@@ -225,11 +270,15 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
         });
       }
 
+      // Last, because the move renumbers `sortOrder` to the end of the new
+      // category — the policy PATCH above must not write the old slot back.
+      if (categoryChanged) {
+        await moveMutation.mutateAsync(categoryId);
+      }
+
       resetAndClose();
     } catch (error) {
-      setFormError(
-        isConflict(error) ? CONFLICT_MESSAGE : GENERIC_ERROR_MESSAGE
-      );
+      setFormError(saveErrorMessage(error));
     }
   }
 
@@ -242,9 +291,7 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
       await statusMutation.mutateAsync(!question.enabled);
       resetAndClose();
     } catch (error) {
-      setFormError(
-        isConflict(error) ? CONFLICT_MESSAGE : GENERIC_ERROR_MESSAGE
-      );
+      setFormError(saveErrorMessage(error));
     }
   }
 
@@ -264,6 +311,41 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
       className='slcn-inspection-question-modal'
     >
       <div className='slcn-inspection-question-form'>
+        <div className='slcn-field'>
+          <label htmlFor={categoryInputId} className='slcn-field__label'>
+            <span>분류</span>
+            <span aria-hidden='true'> *</span>
+          </label>
+          <div className='slcn-field__control'>
+            <select
+              id={categoryInputId}
+              className='slcn-field__input'
+              value={categoryId}
+              required
+              onChange={(event) => setCategoryId(event.target.value)}
+            >
+              {selectableCategories.map((category) => (
+                <option
+                  key={category.categoryId}
+                  value={category.categoryId}
+                  disabled={!category.enabled}
+                >
+                  {category.enabled
+                    ? category.name
+                    : `${category.name} (미사용)`}
+                </option>
+              ))}
+            </select>
+          </div>
+          {categoryChanged && selectedCategory ? (
+            <p className='slcn-field__message' data-kind='hint'>
+              저장하면 &lsquo;{selectedCategory.name}&rsquo; 분류의 맨 뒤로
+              옮겨집니다. 옮겨도 버전은 바뀌지 않고, 이미 저장된 매물의 분류
+              표시도 그대로입니다.
+            </p>
+          ) : null}
+        </div>
+
         <TextField
           id={contentInputId}
           label='질문'

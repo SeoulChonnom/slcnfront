@@ -4,6 +4,8 @@ import {
   parseInspectionAreaDetailResponse,
   parseInspectionAreaListResponse,
   parseInspectionAreaResponse,
+  parseInspectionQuestionCategoryListResponse,
+  parseInspectionQuestionCategoryResponse,
   parseInspectionQuestionListResponse,
   parseInspectionQuestionResponse,
   parseInspectionQuestionVersionListResponse,
@@ -16,6 +18,7 @@ import {
   mapAreaViewedPropertyDto,
   mapInspectionAreaDto,
   mapInspectionAreaListResponse,
+  mapInspectionQuestionCategoryDto,
   mapInspectionQuestionDto,
   mapInspectionQuestionVersionDto,
   mapInspectionTagDto,
@@ -34,6 +37,7 @@ import type {
   InspectionAreaListResult,
   InspectionAreaUdo,
   InspectionQuestion,
+  InspectionQuestionCategory,
   InspectionQuestionCdo,
   InspectionQuestionContentUdo,
   InspectionQuestionPolicyUdo,
@@ -454,6 +458,84 @@ function createInspectionApi(client: ApiClientLike = apiClient) {
         path: '/inspection-questions/order',
         body: items.map((item) => ({
           questionId: item.id,
+          sortOrder: item.sortOrder,
+        })),
+        responseType: 'void',
+      });
+    },
+
+    /** api.md §10 — moves the question to the END of `categoryId`; no new version. */
+    async moveQuestionCategory(
+      questionId: string,
+      categoryId: string
+    ): Promise<InspectionQuestion> {
+      const response = await client.patch<unknown>({
+        path: `/inspection-questions/${encodeURIComponent(questionId)}/category`,
+        body: { categoryId },
+      });
+      return mapInspectionQuestionDto(
+        parseInspectionQuestionResponse(response, 'category')
+      );
+    },
+
+    // ── Question categories (admin writes, api.md §9) ───────────────────────
+
+    async getQuestionCategories(
+      params: { includeDisabled?: boolean } = {}
+    ): Promise<InspectionQuestionCategory[]> {
+      const response = await client.get<unknown>({
+        path: '/inspection-question-categories',
+        query: { includeDisabled: params.includeDisabled },
+      });
+      return parseInspectionQuestionCategoryListResponse(response).map(
+        mapInspectionQuestionCategoryDto
+      );
+    },
+
+    async createQuestionCategory(payload: {
+      name: string;
+      sortOrder: number;
+    }): Promise<InspectionQuestionCategory> {
+      const response = await client.post<unknown>({
+        path: '/inspection-question-categories',
+        body: payload,
+      });
+      return mapInspectionQuestionCategoryDto(
+        parseInspectionQuestionCategoryResponse(response, 'create')
+      );
+    },
+
+    async renameQuestionCategory(
+      categoryId: string,
+      name: string
+    ): Promise<InspectionQuestionCategory> {
+      const response = await client.put<unknown>({
+        path: `/inspection-question-categories/${encodeURIComponent(categoryId)}`,
+        body: { name },
+      });
+      return mapInspectionQuestionCategoryDto(
+        parseInspectionQuestionCategoryResponse(response, 'rename')
+      );
+    },
+
+    async updateQuestionCategoryStatus(
+      categoryId: string,
+      enabled: boolean
+    ): Promise<InspectionQuestionCategory> {
+      const response = await client.patch<unknown>({
+        path: `/inspection-question-categories/${encodeURIComponent(categoryId)}/status`,
+        body: { enabled },
+      });
+      return mapInspectionQuestionCategoryDto(
+        parseInspectionQuestionCategoryResponse(response, 'status')
+      );
+    },
+
+    async reorderQuestionCategories(items: OrderItem[]): Promise<void> {
+      await client.put<void>({
+        path: '/inspection-question-categories/order',
+        body: items.map((item) => ({
+          categoryId: item.id,
           sortOrder: item.sortOrder,
         })),
         responseType: 'void',

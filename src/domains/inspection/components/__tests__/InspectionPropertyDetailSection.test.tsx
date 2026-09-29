@@ -53,6 +53,9 @@ function answer(overrides: Partial<PropertyAnswer>): PropertyAnswer {
     selectedCodes: [],
     isCurrentVersion: true,
     questionEnabled: true,
+    categoryId: 'cat-1',
+    categoryName: '채광·환기',
+    categorySortOrder: 1,
     ...overrides,
   };
 }
@@ -372,6 +375,49 @@ describe('InspectionPropertyDetailSection', () => {
     expect(
       screen.getByText(/임장 시점의 질문 구성으로 저장되어 있습니다/)
     ).toBeTruthy();
+  });
+
+  it('groups answers under their snapshot category heading in category order', () => {
+    useInspectionPropertyMock.mockReturnValue({
+      data: property({
+        answers: [
+          answer({
+            questionId: 'q-noise',
+            question: '밤에 조용한가?',
+            sortOrder: 1,
+            categoryId: 'cat-noise',
+            categoryName: '소음·주변',
+            categorySortOrder: 2,
+          }),
+          answer({
+            questionId: 'q-light',
+            question: '남향인가?',
+            sortOrder: 1,
+          }),
+        ],
+      }),
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    useInspectionAreaPropertiesMock.mockReturnValue({
+      data: [areaProp({})],
+      isPending: false,
+      isError: false,
+    });
+    useDeleteInspectionPropertyMock.mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+    });
+
+    renderAt();
+
+    const headings = screen
+      .getAllByRole('heading', { level: 3 })
+      .map((heading) => heading.textContent);
+    expect(headings).toEqual(['채광·환기', '소음·주변']);
+    const noise = screen.getByRole('region', { name: '소음·주변' });
+    expect(within(noise).getByText('밤에 조용한가?')).toBeTruthy();
   });
 
   it('shows prev/next links when present, and falls back to the property list when there is no previous property', () => {

@@ -58,7 +58,15 @@ const unansweredQuestionSchema = z.object({
   questionId: z.string(),
   question: z.string(),
   sortOrder: z.number().int(),
+  categoryName: z.string(),
 });
+
+/** api.md §4/§10 — always filled (never `null`) on questions and answers. */
+const categorySnapshotShape = {
+  categoryId: z.string(),
+  categoryName: z.string(),
+  categorySortOrder: z.number().int(),
+};
 
 /**
  * One shared shape for `incompleteSummary` at every level (area/visit/property).
@@ -172,6 +180,7 @@ const propertyAnswerSchema = z.object({
   selectedCodes: z.array(z.string()).default([]),
   isCurrentVersion: z.boolean(),
   questionEnabled: z.boolean(),
+  ...categorySnapshotShape,
 });
 
 const viewedPropertyDetailSchema = z.object({
@@ -249,6 +258,15 @@ const inspectionQuestionSchema = z.object({
   choices: z.array(questionChoiceSchema).default([]),
   unit: nullableString,
   answerCount: nullableNumber,
+  ...categorySnapshotShape,
+});
+
+const inspectionQuestionCategorySchema = z.object({
+  categoryId: z.string(),
+  name: z.string(),
+  sortOrder: z.number().int(),
+  enabled: z.boolean(),
+  enabledQuestionCount: z.number().int(),
 });
 
 const inspectionQuestionVersionSchema = z.object({
@@ -293,6 +311,10 @@ const inspectionTagListSchema = z.array(inspectionTagSchema);
 
 const inspectionQuestionListSchema = z.array(inspectionQuestionSchema);
 
+const inspectionQuestionCategoryListSchema = z.array(
+  inspectionQuestionCategorySchema
+);
+
 const inspectionQuestionVersionListSchema = z.array(
   inspectionQuestionVersionSchema
 );
@@ -323,6 +345,9 @@ export type InspectionVisitListResponseDto = z.infer<
 >;
 export type InspectionTagDto = z.infer<typeof inspectionTagSchema>;
 export type InspectionQuestionDto = z.infer<typeof inspectionQuestionSchema>;
+export type InspectionQuestionCategoryDto = z.infer<
+  typeof inspectionQuestionCategorySchema
+>;
 export type InspectionQuestionVersionDto = z.infer<
   typeof inspectionQuestionVersionSchema
 >;
@@ -440,5 +465,26 @@ export function parseInspectionQuestionVersionListResponse(
     inspectionQuestionVersionListSchema,
     payload,
     'Inspection question version list'
+  );
+}
+
+export function parseInspectionQuestionCategoryListResponse(
+  payload: unknown
+): InspectionQuestionCategoryDto[] {
+  return parseOrThrow(
+    inspectionQuestionCategoryListSchema,
+    payload,
+    'Inspection question category list'
+  );
+}
+
+export function parseInspectionQuestionCategoryResponse(
+  payload: unknown,
+  context: string
+): InspectionQuestionCategoryDto {
+  return parseOrThrow(
+    inspectionQuestionCategorySchema,
+    payload,
+    `Inspection question category ${context}`
   );
 }

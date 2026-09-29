@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { QuestionVersionHistory } from '@/domains/inspection/components/questions/QuestionVersionHistory';
-import { ANSWER_TYPE_LABELS } from '@/domains/inspection/components/questions/question-copy';
+import {
+  ANSWER_TYPE_LABELS,
+  questionErrorMessage,
+} from '@/domains/inspection/components/questions/question-copy';
 import { useUpdateInspectionQuestionStatus } from '@/domains/inspection/hooks/inspection-queries';
 import type { InspectionQuestion } from '@/domains/inspection/types';
 import { AppError } from '@/lib/api/errors';
@@ -58,9 +61,10 @@ export function QuestionRow({
       await statusMutation.mutateAsync(!question.enabled);
     } catch (error) {
       setToggleError(
-        error instanceof AppError && error.status === 409
-          ? CONFLICT_MESSAGE
-          : '변경하지 못했습니다. 다시 시도해 주세요.'
+        (error instanceof AppError && questionErrorMessage(error.apiCode)) ||
+          (error instanceof AppError && error.status === 409
+            ? CONFLICT_MESSAGE
+            : '변경하지 못했습니다. 다시 시도해 주세요.')
       );
     }
   }
