@@ -380,12 +380,6 @@ a.slcn-inspection-lineage__row:hover {
   color: var(--color-warning);
 }
 
-.slcn-inspection-qa__answer[data-empty="true"] svg {
-  width: 1rem;
-  height: 1rem;
-  flex: none;
-}
-
 .slcn-inspection-qa__bool {
   display: inline-flex;
   align-items: center;
@@ -396,6 +390,14 @@ a.slcn-inspection-lineage__row:hover {
   width: 1.125rem;
   height: 1.125rem;
   color: var(--color-body-muted);
+}
+
+/* Kept after .slcn-inspection-qa__bool svg at the same specificity so the
+   empty-answer icon size wins by source order. */
+.slcn-inspection-qa__answer:where([data-empty="true"]) svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
 }
 
 .slcn-inspection-qa__chip {

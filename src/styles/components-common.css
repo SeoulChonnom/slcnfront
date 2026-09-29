@@ -508,7 +508,7 @@ input[type="number"]::-webkit-inner-spin-button {
   padding: 0;
 }
 
-.slcn-modal[data-align="left"] .slcn-modal__description {
+.slcn-modal:where([data-align="left"]) .slcn-modal__description {
   text-align: left;
 }
 
@@ -733,14 +733,6 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   opacity: 1;
 }
 
-.slcn-calendar-surface .fc-day-other .fc-daygrid-day-number,
-.slcn-calendar-surface .fc-day-other.fc-day-sun .fc-daygrid-day-number,
-.slcn-calendar-surface .fc-day-other.fc-day-sat .fc-daygrid-day-number {
-  /* Adjacent-month days drop the weekend colour too, so the month boundary
-     still reads now that the dimming opacity is gone. */
-  color: var(--color-body-muted);
-}
-
 .slcn-calendar-surface .fc-day-sun .fc-col-header-cell-cushion,
 .slcn-calendar-surface .fc-day-sun .fc-daygrid-day-number,
 .slcn-calendar-surface .fc-day-sun .fc-timegrid-axis-cushion {
@@ -751,6 +743,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 .slcn-calendar-surface .fc-day-sat .fc-daygrid-day-number,
 .slcn-calendar-surface .fc-day-sat .fc-timegrid-axis-cushion {
   color: var(--color-weekend-sat);
+}
+
+/* Adjacent-month days drop the weekend colour too, so the month boundary
+   still reads now that the dimming opacity is gone. Same specificity as the
+   weekend rules above, so it wins by coming after them; today (below) wins
+   over it the same way. */
+.slcn-calendar-surface .fc-day-other .fc-daygrid-day-number {
+  color: var(--color-body-muted);
 }
 
 .slcn-calendar-surface .fc-day-today .fc-daygrid-day-number {
@@ -1141,7 +1141,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
   font-weight: var(--weight-body);
 }
 
-.slcn-calendar-manage-modal__toggle--sub:has(input:disabled) span {
+.slcn-calendar-manage-modal__toggle--sub:where(:has(input:disabled)) span {
   color: var(--color-ink-muted);
 }
 
@@ -2323,10 +2323,10 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 /* The focusable control is the native file input, but it is visually
    clipped to 1px (see .slcn-file-dropzone__input) so the global
    :focus-visible ring has nothing visible to draw around. Redraw it on the
-   visible drop target instead. Three classes in this selector outrank the
-   wizard's two-class override above without needing !important or another
-   noDescendingSpecificity suppression. */
-.slcn-file-dropzone:has(> .slcn-file-dropzone__input:focus-visible)
+   visible drop target instead. Only the outline is set here and no other
+   dropzone rule touches it, so :where() keeps the specificity at two classes
+   and later label overrides (the register wizard's) never descend from it. */
+.slcn-file-dropzone:where(:has(> .slcn-file-dropzone__input:focus-visible))
 .slcn-file-dropzone__label {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
@@ -3699,14 +3699,14 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .slcn-home__recent-link:hover .slcn-home__recent-image,
-  .slcn-home-archive__link:hover .slcn-home-archive__thumb img {
-    transform: scale(1.02);
-  }
-
   .slcn-home__recent-image,
   .slcn-home-archive__thumb img {
     transition: transform var(--duration-default) var(--easing-standard);
+  }
+
+  .slcn-home__recent-link:hover .slcn-home__recent-image,
+  .slcn-home-archive__link:hover .slcn-home-archive__thumb img {
+    transform: scale(1.02);
   }
 
   .slcn-home__recent-link:hover .slcn-home__recent-action,

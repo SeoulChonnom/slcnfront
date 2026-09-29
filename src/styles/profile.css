@@ -270,7 +270,11 @@
   background: color-mix(in srgb, var(--color-error) 10%, transparent);
 }
 
-.slcn-profile-popover__item--logout .slcn-profile-popover__item-icon svg {
+/* :where() keeps this at the base icon rule's specificity; source order
+   (after .slcn-profile-popover__item-icon svg) makes it win. */
+:where(.slcn-profile-popover__item--logout)
+  .slcn-profile-popover__item-icon
+  svg {
   stroke: var(--color-error);
 }
 
@@ -490,7 +494,7 @@
   color: var(--color-body-muted);
 }
 
-.slcn-profile-password-field > button svg {
+.slcn-profile-password-field > :where(button) svg {
   width: 18px;
   height: 18px;
   fill: none;

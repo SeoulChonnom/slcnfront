@@ -83,7 +83,11 @@
   outline-offset: 2px;
 }
 
-.slcn-inspection-register__step-indicator > li[data-state="current"] button {
+/* :where() keeps this at the base step button's specificity; it wins by
+   coming after it. */
+.slcn-inspection-register__step-indicator
+  > :where(li[data-state="current"])
+  button {
   color: var(--color-ink);
   font-weight: var(--weight-strong);
 }
