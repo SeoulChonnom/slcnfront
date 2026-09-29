@@ -2,6 +2,7 @@ import type {
   AreaViewedPropertyDto,
   InspectionAreaListResponseDto,
   InspectionAreaRdoDto,
+  InspectionQuestionCategoryDto,
   InspectionQuestionDto,
   InspectionQuestionVersionDto,
   InspectionTagDto,
@@ -17,6 +18,7 @@ import type {
   InspectionArea,
   InspectionAreaListResult,
   InspectionQuestion,
+  InspectionQuestionCategory,
   InspectionQuestionVersion,
   InspectionTag,
   InspectionVisitDetail,
@@ -69,6 +71,7 @@ function mapIncompleteSummary(dto: {
     questionId: string;
     question: string;
     sortOrder: number;
+    categoryName: string;
   }[];
   missingFields: string[];
   draftPropertyCount: number;
@@ -270,6 +273,9 @@ function mapPropertyAnswerDto(
     selectedCodes: dto.selectedCodes,
     isCurrentVersion: dto.isCurrentVersion,
     questionEnabled: dto.questionEnabled,
+    categoryId: dto.categoryId,
+    categoryName: dto.categoryName,
+    categorySortOrder: dto.categorySortOrder,
   };
 }
 
@@ -349,6 +355,21 @@ export function mapInspectionQuestionDto(
     choices: dto.choices,
     unit: dto.unit,
     answerCount: dto.answerCount,
+    categoryId: dto.categoryId,
+    categoryName: dto.categoryName,
+    categorySortOrder: dto.categorySortOrder,
+  };
+}
+
+export function mapInspectionQuestionCategoryDto(
+  dto: InspectionQuestionCategoryDto
+): InspectionQuestionCategory {
+  return {
+    categoryId: dto.categoryId,
+    name: dto.name,
+    sortOrder: dto.sortOrder,
+    enabled: dto.enabled,
+    enabledQuestionCount: dto.enabledQuestionCount,
   };
 }
 

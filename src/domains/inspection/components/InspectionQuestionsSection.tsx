@@ -1,16 +1,23 @@
-import type { DragEvent } from 'react';
 import { useState } from 'react';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button } from '@/components/ui/Button';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { ChevronIcon } from '@/domains/inspection/components/area-detail/icons';
+import { CategoryCreateForm } from '@/domains/inspection/components/questions/CategoryCreateForm';
+import { CategoryOrderList } from '@/domains/inspection/components/questions/CategoryOrderList';
+import { QuestionCategorySection } from '@/domains/inspection/components/questions/QuestionCategorySection';
 import { QuestionFormModal } from '@/domains/inspection/components/questions/QuestionFormModal';
 import { QuestionListSkeleton } from '@/domains/inspection/components/questions/QuestionListSkeleton';
-import { QuestionRow } from '@/domains/inspection/components/questions/QuestionRow';
 import {
+  useInspectionQuestionCategories,
   useInspectionQuestions,
-  useReorderInspectionQuestions,
+  useReorderInspectionQuestionCategories,
 } from '@/domains/inspection/hooks/inspection-queries';
 import type { InspectionQuestion } from '@/domains/inspection/types';
+import {
+  groupQuestionsByCategory,
+  type QuestionCategoryGroup,
+} from '@/domains/inspection/utils/question-categories';
 import { AppError } from '@/lib/api/errors';
 
 type InspectionQuestionsSectionProps = {
@@ -18,12 +25,16 @@ type InspectionQuestionsSectionProps = {
 };
 
 type FormModalState =
-  | { mode: 'create' }
+  | { mode: 'create'; categoryId: string | null }
   | { mode: 'edit'; question: InspectionQuestion }
   | null;
 
-const REORDER_CONFLICT_MESSAGE =
-  '순서를 저장하지 못했습니다. 새로고침 후 다시 시도하세요.';
+/** What currently owns the page's edit focus — only one at a time. */
+type EditFocus =
+  | { kind: 'questions'; categoryId: string }
+  | { kind: 'categories' }
+  | { kind: 'create-category' }
+  | null;
 
 function moveItem<T>(items: T[], from: number, to: number): T[] {
   if (from === to || from < 0 || to < 0 || to >= items.length) {
@@ -39,102 +50,102 @@ function moveItem<T>(items: T[], from: number, to: number): T[] {
 }
 
 /**
- * screen_design.md §5.5 — the admin question-management screen. Route entry
- * is already gated to `admin` by `RequireRole`
- * (fe_implementation_decisions.md §2); this component assumes that only an
- * admin ever mounts it.
+ * screen_design.md §5.5 + api.md §9–§10 — the admin question-management
+ * screen, grouped by category. Every question belongs to exactly one
+ * category; question order is edited inside a category, category order in
+ * its own mode, and moving a question between categories is a field in the
+ * question form. Route entry is already gated to `admin` by `RequireRole`
+ * (fe_implementation_decisions.md §2).
  */
 export function InspectionQuestionsSection({
   device,
 }: InspectionQuestionsSectionProps) {
-  const {
-    data: questions,
-    isPending,
-    isError,
-    refetch,
-  } = useInspectionQuestions({ includeDisabled: true, withAnswerCount: true });
-
-  const reorderMutation = useReorderInspectionQuestions();
+  const questionsQuery = useInspectionQuestions({
+    includeDisabled: true,
+    withAnswerCount: true,
+  });
+  const categoriesQuery = useInspectionQuestionCategories({
+    includeDisabled: true,
+  });
+  const reorderCategoriesMutation = useReorderInspectionQuestionCategories();
 
   const [formModal, setFormModal] = useState<FormModalState>(null);
-  const [isReordering, setIsReordering] = useState(false);
-  const [draftOrder, setDraftOrder] = useState<InspectionQuestion[]>([]);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [reorderError, setReorderError] = useState<string | null>(null);
+  const [focus, setFocus] = useState<EditFocus>(null);
+  const [categoryDraft, setCategoryDraft] = useState<QuestionCategoryGroup[]>(
+    []
+  );
+  const [categoryOrderError, setCategoryOrderError] = useState<string | null>(
+    null
+  );
 
-  const sortedQuestions = (questions ?? [])
-    .slice()
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const categories = categoriesQuery.data ?? [];
+  const groups = groupQuestionsByCategory(
+    categories,
+    questionsQuery.data ?? []
+  );
+  const enabledGroups = groups.filter((group) => group.category.enabled);
+  const disabledGroups = groups.filter((group) => !group.category.enabled);
+  const enabledCategories = enabledGroups.map((group) => group.category);
 
-  const visibleRows = isReordering ? draftOrder : sortedQuestions;
-  const nextSortOrder =
-    sortedQuestions.reduce(
-      (max, question) => Math.max(max, question.sortOrder),
-      0
-    ) + 1;
+  const isPending = questionsQuery.isPending || categoriesQuery.isPending;
+  const isError = questionsQuery.isError || categoriesQuery.isError;
+  const isOrderingCategories = focus?.kind === 'categories';
 
-  function startReorder() {
-    setReorderError(null);
-    setDraftOrder(sortedQuestions);
-    setIsReordering(true);
+  function retry() {
+    void questionsQuery.refetch();
+    void categoriesQuery.refetch();
   }
 
-  function cancelReorder() {
-    setReorderError(null);
-    setIsReordering(false);
-    setDraftOrder([]);
+  function startCategoryOrder() {
+    setCategoryOrderError(null);
+    setCategoryDraft(enabledGroups);
+    setFocus({ kind: 'categories' });
   }
 
-  async function saveReorder() {
-    setReorderError(null);
+  function cancelCategoryOrder() {
+    setCategoryOrderError(null);
+    setCategoryDraft([]);
+    setFocus(null);
+  }
+
+  async function saveCategoryOrder() {
+    setCategoryOrderError(null);
     try {
-      await reorderMutation.mutateAsync(
-        draftOrder.map((question, index) => ({
-          id: question.questionId,
+      await reorderCategoriesMutation.mutateAsync(
+        categoryDraft.map((group, index) => ({
+          id: group.category.categoryId,
           sortOrder: index + 1,
         }))
       );
-      setIsReordering(false);
-      setDraftOrder([]);
+      setCategoryDraft([]);
+      setFocus(null);
     } catch (error) {
-      setReorderError(
+      setCategoryOrderError(
         error instanceof AppError && error.status === 409
-          ? REORDER_CONFLICT_MESSAGE
+          ? '순서를 저장하지 못했습니다. 새로고침 후 다시 시도하세요.'
           : '순서를 저장하지 못했습니다. 다시 시도해 주세요.'
       );
     }
   }
 
-  function handleDragStart(index: number) {
-    return (event: DragEvent<HTMLDivElement>) => {
-      setDraggedIndex(index);
-      event.dataTransfer.effectAllowed = 'move';
-    };
-  }
-
-  function handleDragOver(index: number) {
-    return (event: DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      if (draggedIndex === null || draggedIndex === index) {
-        return;
-      }
-      setDraftOrder((prev) => moveItem(prev, draggedIndex, index));
-      setDraggedIndex(index);
-    };
-  }
-
-  function handleDrop(_index: number) {
-    return (event: DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-    };
-  }
-
-  function handleDragEnd() {
-    setDraggedIndex(null);
-  }
-
-  function handleMove(index: number, direction: -1 | 1) {
-    setDraftOrder((prev) => moveItem(prev, index, index + direction));
+  function renderSection(group: QuestionCategoryGroup) {
+    const { categoryId } = group.category;
+    const ownsFocus =
+      focus?.kind === 'questions' && focus.categoryId === categoryId;
+    return (
+      <QuestionCategorySection
+        key={categoryId}
+        category={group.category}
+        questions={group.questions}
+        allCategories={categories}
+        isReordering={ownsFocus}
+        isLocked={focus !== null && !ownsFocus}
+        onStartReorder={() => setFocus({ kind: 'questions', categoryId })}
+        onEndReorder={() => setFocus(null)}
+        onAddQuestion={() => setFormModal({ mode: 'create', categoryId })}
+        onEditQuestion={(question) => setFormModal({ mode: 'edit', question })}
+      />
+    );
   }
 
   return (
@@ -147,26 +158,27 @@ export function InspectionQuestionsSection({
           <p className='slcn-inspection-questions-section__subtitle'>
             매물마다 묻는 질문입니다. 여기서 바꾼 내용은{' '}
             <b>앞으로 만드는 매물</b>부터 적용되고, 이미 저장된 답변은 그대로
-            남습니다.
+            남습니다. 질문은 분류별로 묶여 매물 문답 화면에 이 순서대로
+            나옵니다.
           </p>
         </div>
         <div className='slcn-inspection-questions-section__actions'>
-          {isReordering ? (
+          {isOrderingCategories ? (
             <>
               <Button
                 type='button'
                 variant='secondary'
-                onClick={cancelReorder}
-                disabled={reorderMutation.isPending}
+                onClick={cancelCategoryOrder}
+                disabled={reorderCategoriesMutation.isPending}
               >
                 취소
               </Button>
               <Button
                 type='button'
-                onClick={() => void saveReorder()}
-                loading={reorderMutation.isPending}
+                onClick={() => void saveCategoryOrder()}
+                loading={reorderCategoriesMutation.isPending}
               >
-                순서 저장
+                분류 순서 저장
               </Button>
             </>
           ) : (
@@ -174,14 +186,28 @@ export function InspectionQuestionsSection({
               <Button
                 type='button'
                 variant='secondary'
-                onClick={startReorder}
-                disabled={!questions || questions.length < 2}
+                onClick={startCategoryOrder}
+                disabled={focus !== null || enabledGroups.length < 2}
               >
-                순서 변경
+                분류 순서 변경
               </Button>
               <Button
                 type='button'
-                onClick={() => setFormModal({ mode: 'create' })}
+                variant='secondary'
+                onClick={() => setFocus({ kind: 'create-category' })}
+                disabled={focus !== null || isPending || isError}
+              >
+                + 분류 추가
+              </Button>
+              <Button
+                type='button'
+                onClick={() =>
+                  setFormModal({
+                    mode: 'create',
+                    categoryId: enabledCategories[0]?.categoryId ?? null,
+                  })
+                }
+                disabled={focus !== null || enabledCategories.length === 0}
               >
                 + 질문 추가
               </Button>
@@ -190,9 +216,9 @@ export function InspectionQuestionsSection({
         </div>
       </div>
 
-      {reorderError ? (
+      {categoryOrderError ? (
         <p className='slcn-inspection-questions-section__error' role='alert'>
-          {reorderError}
+          {categoryOrderError}
         </p>
       ) : null}
 
@@ -202,52 +228,76 @@ export function InspectionQuestionsSection({
         <ErrorState
           title='질문 목록을 불러오지 못했습니다'
           description='네트워크 상태를 확인한 뒤 다시 시도해 주세요.'
-          onRetry={() => void refetch()}
+          onRetry={retry}
         />
-      ) : visibleRows.length === 0 ? (
-        <p className='slcn-inspection-questions-section__empty'>
-          아직 등록된 질문이 없습니다. [+ 질문 추가]로 첫 질문을 만들어 보세요.
-        </p>
+      ) : isOrderingCategories ? (
+        <>
+          <p className='slcn-inspection-questions-section__hint'>
+            위에 있는 분류부터 매물 문답 화면에 나옵니다. 미사용 분류는 순서에
+            포함되지 않습니다.
+          </p>
+          <CategoryOrderList
+            groups={categoryDraft}
+            onMove={(index, direction) =>
+              setCategoryDraft((prev) =>
+                moveItem(prev, index, index + direction)
+              )
+            }
+          />
+        </>
       ) : (
         <>
-          <div
-            className='slcn-inspection-qhead'
-            aria-hidden='true'
-            data-hidden-in-reorder={isReordering || undefined}
-          >
-            <span />
-            <span>질문</span>
-            <span>타입</span>
-            <span>필수</span>
-            <span>사용</span>
-            <span />
-          </div>
-          <ul className='slcn-inspection-qlist'>
-            {visibleRows.map((question, index) => (
-              <li key={question.questionId}>
-                <QuestionRow
-                  question={question}
-                  reorderMode={isReordering}
-                  isFirst={index === 0}
-                  isLast={index === visibleRows.length - 1}
-                  onMoveUp={() => handleMove(index, -1)}
-                  onMoveDown={() => handleMove(index, 1)}
-                  onEdit={() => setFormModal({ mode: 'edit', question })}
-                  draggableProps={
-                    isReordering
-                      ? {
-                          onDragStart: handleDragStart(index),
-                          onDragOver: handleDragOver(index),
-                          onDrop: handleDrop(index),
-                          onDragEnd: handleDragEnd,
-                          isDragging: draggedIndex === index,
-                        }
-                      : undefined
-                  }
-                />
-              </li>
-            ))}
-          </ul>
+          {enabledGroups.length === 0 && focus?.kind !== 'create-category' ? (
+            <div className='slcn-inspection-questions-section__empty'>
+              <p>
+                질문은 분류 안에 만듭니다. 먼저 &lsquo;채광·환기&rsquo;처럼 묶을
+                분류를 하나 만들어 주세요.
+              </p>
+              <Button
+                type='button'
+                onClick={() => setFocus({ kind: 'create-category' })}
+              >
+                + 분류 추가
+              </Button>
+            </div>
+          ) : null}
+
+          {enabledGroups.length > 0 ? (
+            <div
+              className='slcn-inspection-qhead'
+              aria-hidden='true'
+              data-hidden-in-reorder={focus?.kind === 'questions' || undefined}
+            >
+              <span />
+              <span>질문</span>
+              <span>타입</span>
+              <span>필수</span>
+              <span>사용</span>
+              <span />
+            </div>
+          ) : null}
+
+          {enabledGroups.map(renderSection)}
+
+          {focus?.kind === 'create-category' ? (
+            <CategoryCreateForm
+              categories={categories}
+              onDone={() => setFocus(null)}
+            />
+          ) : null}
+
+          {disabledGroups.length > 0 ? (
+            <details className='slcn-inspection-qcat-archive'>
+              <summary className='slcn-inspection-qcat-archive__summary'>
+                <ChevronIcon className='slcn-inspection-qcat-archive__chev' />
+                미사용 분류 {disabledGroups.length}개
+                <span className='slcn-inspection-qcat-archive__hint'>
+                  매물 문답에 나오지 않습니다
+                </span>
+              </summary>
+              {disabledGroups.map(renderSection)}
+            </details>
+          ) : null}
         </>
       )}
 
@@ -255,7 +305,8 @@ export function InspectionQuestionsSection({
         <QuestionFormModal
           mode='create'
           isOpen
-          nextSortOrder={nextSortOrder}
+          categories={enabledCategories}
+          defaultCategoryId={formModal.categoryId}
           onClose={() => setFormModal(null)}
         />
       ) : null}
@@ -263,6 +314,7 @@ export function InspectionQuestionsSection({
         <QuestionFormModal
           mode='edit'
           isOpen
+          categories={categories}
           question={formModal.question}
           onClose={() => setFormModal(null)}
         />

@@ -149,6 +149,17 @@ export function useInspectionQuestions(
   });
 }
 
+export function useInspectionQuestionCategories(
+  params: { includeDisabled?: boolean } = {}
+) {
+  return useQuery({
+    queryKey: inspectionQueryKeys.questionCategories(
+      params.includeDisabled ?? false
+    ),
+    queryFn: () => inspectionApi.getQuestionCategories(params),
+  });
+}
+
 export function useInspectionQuestionVersions(questionId: string | undefined) {
   return useQuery({
     queryKey: inspectionQueryKeys.questionVersions(questionId ?? ''),
@@ -329,6 +340,52 @@ export function useReorderInspectionQuestions() {
   const invalidate = useInvalidateInspection();
   return useMutation({
     mutationFn: (items: OrderItem[]) => inspectionApi.reorderQuestions(items),
+    onSuccess: () => invalidate(),
+  });
+}
+
+export function useMoveInspectionQuestionCategory(questionId: string) {
+  const invalidate = useInvalidateInspection();
+  return useMutation({
+    mutationFn: (categoryId: string) =>
+      inspectionApi.moveQuestionCategory(questionId, categoryId),
+    onSuccess: () => invalidate(),
+  });
+}
+
+export function useCreateInspectionQuestionCategory() {
+  const invalidate = useInvalidateInspection();
+  return useMutation({
+    mutationFn: (name: string) =>
+      // api.md §9: `sortOrder` <= 0 is numbered onto the end by the server.
+      inspectionApi.createQuestionCategory({ name, sortOrder: 0 }),
+    onSuccess: () => invalidate(),
+  });
+}
+
+export function useRenameInspectionQuestionCategory(categoryId: string) {
+  const invalidate = useInvalidateInspection();
+  return useMutation({
+    mutationFn: (name: string) =>
+      inspectionApi.renameQuestionCategory(categoryId, name),
+    onSuccess: () => invalidate(),
+  });
+}
+
+export function useUpdateInspectionQuestionCategoryStatus(categoryId: string) {
+  const invalidate = useInvalidateInspection();
+  return useMutation({
+    mutationFn: (enabled: boolean) =>
+      inspectionApi.updateQuestionCategoryStatus(categoryId, enabled),
+    onSuccess: () => invalidate(),
+  });
+}
+
+export function useReorderInspectionQuestionCategories() {
+  const invalidate = useInvalidateInspection();
+  return useMutation({
+    mutationFn: (items: OrderItem[]) =>
+      inspectionApi.reorderQuestionCategories(items),
     onSuccess: () => invalidate(),
   });
 }

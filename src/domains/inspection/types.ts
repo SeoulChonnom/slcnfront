@@ -54,6 +54,8 @@ type UnansweredQuestion = {
   questionId: string;
   question: string;
   sortOrder: number;
+  /** Snapshot of the category when the property was created (api.md §4). */
+  categoryName: string;
 };
 
 export type IncompleteSummary = {
@@ -182,6 +184,13 @@ export type PropertyAnswer = {
   isCurrentVersion: boolean;
   /** Badge-only — never branches rendering on this. */
   questionEnabled: boolean;
+  /**
+   * Category snapshot copied when the property was created — later renames or
+   * moves never reach an existing property (api.md §4). Always present.
+   */
+  categoryId: string;
+  categoryName: string;
+  categorySortOrder: number;
 };
 
 type InspectionAreaBrief = {
@@ -272,6 +281,19 @@ export type InspectionQuestion = {
   unit: string | null;
   /** `null` unless the list call passed `withAnswerCount=true`. */
   answerCount: number | null;
+  categoryId: string;
+  categoryName: string;
+  categorySortOrder: number;
+};
+
+/** api.md §9 — the admin-managed group every question belongs to. */
+export type InspectionQuestionCategory = {
+  categoryId: string;
+  name: string;
+  sortOrder: number;
+  enabled: boolean;
+  /** Active questions in this category; disabling is allowed only at 0. */
+  enabledQuestionCount: number;
 };
 
 export type InspectionQuestionVersion = {
@@ -388,6 +410,7 @@ export type InspectionQuestionCdo = {
   sortOrder: number;
   choices?: QuestionChoiceInput[];
   unit?: string;
+  categoryId: string;
 };
 
 export type InspectionQuestionContentUdo = {

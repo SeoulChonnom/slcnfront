@@ -3,6 +3,7 @@ import type {
   PropertyAnswer,
   PropertyAnswerInput,
 } from '@/domains/inspection/types';
+import { groupAnswersByCategory } from '@/domains/inspection/utils/question-categories';
 import { cn } from '@/lib/utils/cn';
 
 type PropertyAnswerFieldsProps = {
@@ -14,55 +15,102 @@ type PropertyAnswerFieldsProps = {
  * Renders one control per answer type, from the response snapshot only —
  * `isCurrentVersion`/`questionEnabled` are badge-only and never gate what's
  * rendered here (fe_implementation_decisions.md §3-⑨).
+ *
+ * api.md §4 — answers are grouped under their snapshot category. Every
+ * category stays open; its heading line says how many required answers are
+ * still missing so an unfinished section can be found while scrolling.
  */
 export function PropertyAnswerFields({
   answers,
   onAnswerChange,
 }: PropertyAnswerFieldsProps) {
-  const sorted = [...answers].sort((a, b) => a.sortOrder - b.sortOrder);
+  const groups = groupAnswersByCategory(answers);
 
   return (
     <div className='slcn-inspection-register-answers'>
-      {sorted.map((answer) => (
-        <div
-          key={answer.questionId}
-          className='slcn-inspection-register-answer'
-        >
-          <label
-            className='slcn-field__label'
-            htmlFor={`answer-${answer.questionId}`}
+      {groups.map((group) => {
+        const headingId = `answer-group-${group.categoryId}`;
+        const requiredTotal = group.answers.filter((a) => a.required).length;
+        const missing = group.answers.filter(
+          (a) => a.required && !a.answered
+        ).length;
+
+        return (
+          <section
+            key={group.categoryId}
+            className='slcn-inspection-answer-group'
+            aria-labelledby={headingId}
           >
-            <span>{answer.question}</span>
-            {answer.required ? <span aria-hidden='true'> *</span> : null}
-            {!answer.isCurrentVersion ? (
-              <span className='slcn-inspection-register-answer__badge'>
-                이전 버전 문항
-              </span>
-            ) : null}
-            {!answer.questionEnabled ? (
-              <span className='slcn-inspection-register-answer__badge'>
-                비활성 질문
-              </span>
-            ) : null}
-          </label>
-          {answer.description ? (
-            <p className='slcn-inspection-register-answer__description'>
-              {answer.description}
-            </p>
-          ) : null}
+            <div className='slcn-inspection-answer-group__head'>
+              <h2
+                id={headingId}
+                className='slcn-inspection-answer-group__title'
+              >
+                {group.categoryName}
+              </h2>
+              {requiredTotal > 0 ? (
+                <span
+                  className='slcn-inspection-answer-group__status'
+                  data-state={missing > 0 ? 'missing' : 'done'}
+                >
+                  {missing > 0 ? `필수 ${missing}개 남음` : '필수 모두 답함'}
+                </span>
+              ) : null}
+            </div>
 
-          <AnswerControl answer={answer} onChange={onAnswerChange} />
+            {group.answers.map((answer) => (
+              <AnswerItem
+                key={answer.questionId}
+                answer={answer}
+                onAnswerChange={onAnswerChange}
+              />
+            ))}
+          </section>
+        );
+      })}
+    </div>
+  );
+}
 
-          {answer.required && !answer.answered ? (
-            <p
-              className='slcn-inspection-register-answer__warning'
-              role='alert'
-            >
-              이 질문은 꼭 답해야 매물을 완료할 수 있어요.
-            </p>
-          ) : null}
-        </div>
-      ))}
+function AnswerItem({
+  answer,
+  onAnswerChange,
+}: {
+  answer: PropertyAnswer;
+  onAnswerChange: (questionId: string, input: PropertyAnswerInput) => void;
+}) {
+  return (
+    <div className='slcn-inspection-register-answer'>
+      <label
+        className='slcn-field__label'
+        htmlFor={`answer-${answer.questionId}`}
+      >
+        <span>{answer.question}</span>
+        {answer.required ? <span aria-hidden='true'> *</span> : null}
+        {!answer.isCurrentVersion ? (
+          <span className='slcn-inspection-register-answer__badge'>
+            이전 버전 문항
+          </span>
+        ) : null}
+        {!answer.questionEnabled ? (
+          <span className='slcn-inspection-register-answer__badge'>
+            비활성 질문
+          </span>
+        ) : null}
+      </label>
+      {answer.description ? (
+        <p className='slcn-inspection-register-answer__description'>
+          {answer.description}
+        </p>
+      ) : null}
+
+      <AnswerControl answer={answer} onChange={onAnswerChange} />
+
+      {answer.required && !answer.answered ? (
+        <p className='slcn-inspection-register-answer__warning' role='alert'>
+          이 질문은 꼭 답해야 매물을 완료할 수 있어요.
+        </p>
+      ) : null}
     </div>
   );
 }

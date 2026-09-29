@@ -31,8 +31,18 @@ describe('buildPropertyDraftReason', () => {
       summary({
         unansweredRequiredCount: 2,
         unansweredRequiredQuestions: [
-          { questionId: 'q1', question: '관리비 수준', sortOrder: 1 },
-          { questionId: 'q2', question: '주차 대수', sortOrder: 2 },
+          {
+            questionId: 'q1',
+            question: '관리비 수준',
+            sortOrder: 1,
+            categoryName: '관리',
+          },
+          {
+            questionId: 'q2',
+            question: '주차 대수',
+            sortOrder: 2,
+            categoryName: '관리',
+          },
         ],
       })
     );
@@ -46,7 +56,12 @@ describe('buildPropertyDraftReason', () => {
         missingFields: ['interestLevel'],
         unansweredRequiredCount: 5,
         unansweredRequiredQuestions: [
-          { questionId: 'q1', question: 'a', sortOrder: 1 },
+          {
+            questionId: 'q1',
+            question: 'a',
+            sortOrder: 1,
+            categoryName: '관리',
+          },
         ],
       })
     );
