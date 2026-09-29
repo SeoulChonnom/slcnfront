@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { StrictMode, useEffect, useRef, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AUTOSAVE_DELAY_MS,
@@ -96,5 +97,29 @@ describe('useAutosave', () => {
     act(() => result.current.cancel());
     act(() => vi.advanceTimersByTime(AUTOSAVE_DELAY_MS));
     expect(onSave).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not save hydrated data under StrictMode when the data is ready on the first render', () => {
+    // Mirrors the register wizard resuming a cached `?draft=` visit: state
+    // starts empty, and the hydration effect runs in the very first commit.
+    const onSave = vi.fn();
+    const loaded = { text: 'loaded' };
+    renderHook(
+      () => {
+        const [text, setText] = useState('');
+        const hydrated = useRef(false);
+        const autosave = useAutosave({ snapshot: { text }, onSave });
+        useEffect(() => {
+          if (hydrated.current) return;
+          hydrated.current = true;
+          autosave.markClean(loaded);
+          setText(loaded.text);
+        }, [autosave.markClean]);
+      },
+      { wrapper: StrictMode }
+    );
+
+    act(() => vi.advanceTimersByTime(AUTOSAVE_DELAY_MS * 2));
+    expect(onSave).not.toHaveBeenCalled();
   });
 });

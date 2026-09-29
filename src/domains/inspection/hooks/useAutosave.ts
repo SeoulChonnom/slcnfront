@@ -13,11 +13,15 @@ type UseAutosaveOptions<T> = {
 /**
  * Debounced autosave shared by the inspection edit screens.
  *
- * - A save is scheduled only when the JSON of `snapshot` differs from the
- *   last one seen. Call `markClean` with the loaded values when hydrating
- *   from the server so opening a screen does not write (there is no
- *   optimistic locking, fe_implementation_decisions.md §3-⑥, so a no-op
- *   PUT can overwrite a concurrent edit).
+ * - Any change to `snapshot` (compared as JSON) restarts the delay. When it
+ *   elapses, the LATEST snapshot is saved — but only if it differs from the
+ *   last one saved or marked clean. Deciding at send time, not at schedule
+ *   time, keeps a stale schedule (e.g. StrictMode re-running mount effects
+ *   with the pre-hydration snapshot) from re-sending unchanged data.
+ * - Call `markClean` with the loaded values when hydrating from the server so
+ *   opening a screen does not write. There is no optimistic locking
+ *   (fe_implementation_decisions.md §3-⑥), so a no-op PUT can overwrite a
+ *   concurrent edit.
  * - A save still pending when the screen unmounts is sent right away rather
  *   than dropped, so leaving inside the delay window keeps the edit.
  */
@@ -26,13 +30,25 @@ export function useAutosave<T>({
   onSave,
   delayMs = AUTOSAVE_DELAY_MS,
 }: UseAutosaveOptions<T>) {
-  const lastKeyRef = useRef<string | null>(null);
-  const pendingRef = useRef<T | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const key = snapshot === null ? null : JSON.stringify(snapshot);
+
+  const latestRef = useRef<{ key: string | null; snapshot: T | null }>({
+    key,
+    snapshot,
+  });
+  latestRef.current = { key, snapshot };
   const onSaveRef = useRef(onSave);
   onSaveRef.current = onSave;
 
-  const key = snapshot === null ? null : JSON.stringify(snapshot);
+  /**
+   * Last snapshot sent or marked clean — what the server already has. The
+   * first-render snapshot (an empty form, or `null` while loading) is the
+   * starting point and never needs saving.
+   */
+  const savedKeyRef = useRef<string | null>(key);
+  /** Last snapshot a timer was started for. */
+  const scheduledKeyRef = useRef<string | null>(key);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -41,64 +57,69 @@ export function useAutosave<T>({
     }
   }, []);
 
-  useEffect(() => {
-    if (key === null || snapshot === null || key === lastKeyRef.current) {
+  const saveLatestIfChanged = useCallback(async () => {
+    clearTimer();
+    const latest = latestRef.current;
+    if (
+      latest.key === null ||
+      latest.snapshot === null ||
+      latest.key === savedKeyRef.current
+    ) {
       return;
     }
+    savedKeyRef.current = latest.key;
+    await onSaveRef.current(latest.snapshot);
+  }, [clearTimer]);
 
-    lastKeyRef.current = key;
-    pendingRef.current = snapshot;
+  useEffect(() => {
+    if (key === null || key === scheduledKeyRef.current) {
+      return;
+    }
+    scheduledKeyRef.current = key;
     clearTimer();
     timerRef.current = setTimeout(() => {
       timerRef.current = null;
-      const pending = pendingRef.current;
-      pendingRef.current = null;
-      if (pending !== null) {
-        void onSaveRef.current(pending);
-      }
+      void saveLatestIfChanged();
     }, delayMs);
-  }, [key, delayMs, clearTimer]);
+  }, [key, delayMs, clearTimer, saveLatestIfChanged]);
 
+  // Only a save still waiting on its timer is flushed on unmount, and only if
+  // the latest state has unsaved changes — StrictMode's simulated unmount on
+  // mount therefore sends nothing.
   useEffect(
     () => () => {
-      clearTimer();
-      const pending = pendingRef.current;
-      pendingRef.current = null;
-      if (pending !== null) {
-        void onSaveRef.current(pending);
+      if (timerRef.current) {
+        void saveLatestIfChanged();
       }
+    },
+    [saveLatestIfChanged]
+  );
+
+  /**
+   * Records `value` as already saved: it will not trigger a save, and a
+   * save scheduled for an earlier (pre-hydration) snapshot is dropped.
+   */
+  const markClean = useCallback(
+    (value: T) => {
+      const cleanKey = JSON.stringify(value);
+      savedKeyRef.current = cleanKey;
+      scheduledKeyRef.current = cleanKey;
+      clearTimer();
     },
     [clearTimer]
   );
 
   /**
-   * Records `value` as already saved: it will not trigger a save, and any
-   * save scheduled for an earlier (pre-hydration) snapshot is dropped.
+   * Drops the pending save — for callers about to save explicitly. The
+   * current snapshot is treated as saved.
    */
-  const markClean = useCallback(
-    (value: T) => {
-      lastKeyRef.current = JSON.stringify(value);
-      clearTimer();
-      pendingRef.current = null;
-    },
-    [clearTimer]
-  );
-
-  /** Drops the pending save — for callers about to save explicitly. */
   const cancel = useCallback(() => {
     clearTimer();
-    pendingRef.current = null;
+    savedKeyRef.current = latestRef.current.key;
   }, [clearTimer]);
 
-  /** Sends the pending save now, if there is one. */
-  const flush = useCallback(async () => {
-    clearTimer();
-    const pending = pendingRef.current;
-    pendingRef.current = null;
-    if (pending !== null) {
-      await onSaveRef.current(pending);
-    }
-  }, [clearTimer]);
+  /** Sends the latest snapshot now, if it has unsaved changes. */
+  const flush = useCallback(() => saveLatestIfChanged(), [saveLatestIfChanged]);
 
   return { markClean, cancel, flush };
 }
