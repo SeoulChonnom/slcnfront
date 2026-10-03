@@ -5,6 +5,7 @@ import {
   useUpdateInspectionVisit,
   useUpdateInspectionVisitStatus,
 } from '@/domains/inspection/hooks/inspection-queries';
+import { useAutosave } from '@/domains/inspection/hooks/useAutosave';
 import type {
   FileBoxItem,
   InspectionFileBoxItemUdo,
@@ -102,8 +103,6 @@ function splitVisitedAt(visitedAt: string): { date: string; time: string } {
   return { date: match[1], time: match[2] };
 }
 
-const AUTOSAVE_DEBOUNCE_MS = 900;
-
 type UseInspectionRegisterWizardOptions = {
   draftVisitId: string | null;
 };
@@ -130,8 +129,6 @@ export function useInspectionRegisterWizard({
 
   const hydratedRef = useRef(false);
   const savingRef = useRef(false);
-  const pendingSnapshotRef = useRef<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const draftVisitQuery = useInspectionVisitForEdit(draftVisitId ?? undefined);
   const createVisitMutation = useCreateInspectionVisit();
@@ -139,6 +136,18 @@ export function useInspectionRegisterWizard({
   const updateVisitStatusMutation = useUpdateInspectionVisitStatus(
     visitId ?? ''
   );
+
+  const visitedAt = combineVisitedAt(
+    basicValues.visitedAtDate,
+    basicValues.visitedAtTime
+  );
+
+  // `flush` reads the latest state itself, so the snapshot only decides
+  // *when* to save. Before visitedAt/area exist `flush` sends nothing (§5).
+  const autosave = useAutosave({
+    snapshot: { visitedAt, areaChoice, basicValues, photos },
+    onSave: () => flush(),
+  });
 
   // Hydrate once from a `?draft=` visit — never again, so autosave edits are
   // never clobbered by a background refetch of the same query.
@@ -152,13 +161,12 @@ export function useInspectionRegisterWizard({
     const detail = draftVisitQuery.data;
     const { date, time } = splitVisitedAt(detail.visitedAt);
 
-    setAreaChoice({
+    const initialAreaChoice: AreaChoice = {
       kind: 'existing',
       areaId: detail.area.areaId,
       name: detail.area.name,
-    });
-    setVisitId(detail.visitId);
-    setBasicValues({
+    };
+    const initialBasicValues: VisitBasicFormValues = {
       visitedAtDate: date,
       visitedAtTime: time,
       revisitIntent: detail.revisitIntent,
@@ -167,16 +175,22 @@ export function useInspectionRegisterWizard({
       pros: detail.pros ?? '',
       cons: detail.cons ?? '',
       tags: detail.tags,
+    };
+    const initialPhotos = detail.photos.map(fileBoxItemToLocalPhoto);
+    // The resumed draft is already saved — resuming must not PUT.
+    autosave.markClean({
+      visitedAt: combineVisitedAt(date, time),
+      areaChoice: initialAreaChoice,
+      basicValues: initialBasicValues,
+      photos: initialPhotos,
     });
-    setPhotos(detail.photos.map(fileBoxItemToLocalPhoto));
+    setAreaChoice(initialAreaChoice);
+    setVisitId(detail.visitId);
+    setBasicValues(initialBasicValues);
+    setPhotos(initialPhotos);
     setLastSavedAt(new Date());
     setStep(3);
-  }, [draftVisitQuery.data]);
-
-  const visitedAt = combineVisitedAt(
-    basicValues.visitedAtDate,
-    basicValues.visitedAtTime
-  );
+  }, [draftVisitQuery.data, autosave.markClean]);
   const hasStartedSaving = visitId !== null || lastSavedAt !== null;
 
   const flush = useCallback(async () => {
@@ -256,37 +270,6 @@ export function useInspectionRegisterWizard({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitedAt, areaChoice, visitId, basicValues, photos]);
-
-  // Debounced autosave: any change to the snapshot below schedules a save.
-  useEffect(() => {
-    const snapshot = JSON.stringify({
-      visitedAt,
-      areaChoice,
-      basicValues,
-      photos,
-    });
-
-    if (pendingSnapshotRef.current === snapshot) {
-      return;
-    }
-
-    pendingSnapshotRef.current = snapshot;
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      void flush();
-    }, AUTOSAVE_DEBOUNCE_MS);
-
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visitedAt, areaChoice, basicValues, photos]);
 
   function updateBasicField<Key extends keyof VisitBasicFormValues>(
     key: Key,
@@ -428,6 +411,7 @@ export function useInspectionRegisterWizard({
   async function attemptComplete(): Promise<
     { ok: true } | { ok: false; message: string }
   > {
+    autosave.cancel();
     await flush();
 
     if (!visitId) {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button } from '@/components/ui/Button';
@@ -18,6 +18,10 @@ import {
   useUpdateInspectionProperty,
   useUpdateInspectionPropertyStatus,
 } from '@/domains/inspection/hooks/inspection-queries';
+import {
+  AUTOSAVE_DELAY_MS,
+  useAutosave,
+} from '@/domains/inspection/hooks/useAutosave';
 import { useInspectionPhotoUploader } from '@/domains/inspection/hooks/useInspectionPhotoUploader';
 import {
   buildVisitFilesPayload,
@@ -27,6 +31,7 @@ import { buildPropertyAnswerPayload } from '@/domains/inspection/mappers/inspect
 import type {
   PropertyAnswer,
   PropertyAnswerInput,
+  PropertyAnswerPayload,
 } from '@/domains/inspection/types';
 import { formatVisitedAt } from '@/domains/inspection/utils/inspection-format';
 import { AppError } from '@/lib/api/errors';
@@ -88,13 +93,18 @@ export function InspectionPropertyEditSection({
 
   const detail = propertyQuery.data;
 
+  const autosave = useAutosave({
+    snapshot: fields ? { fields, photos } : null,
+    onSave: (snapshot) => save(snapshot.fields, snapshot.photos),
+  });
+
   useEffect(() => {
     if (hydratedRef.current || !detail) {
       return;
     }
 
     hydratedRef.current = true;
-    setFields({
+    const initialFields: BasicFields = {
       complexName: detail.complexName,
       name: detail.name,
       interestLevel: detail.interestLevel,
@@ -103,49 +113,19 @@ export function InspectionPropertyEditSection({
       pros: detail.pros ?? '',
       cons: detail.cons ?? '',
       tags: detail.tags,
-    });
-    setPhotos(
-      detail.photos.map((photo) => ({
-        key: photo.id,
-        id: photo.id,
-        fileAssetId: photo.fileAssetId,
-        caption: photo.caption ?? '',
-      }))
-    );
-    setAnswers(detail.answers);
-  }, [detail]);
-
-  const pendingSnapshotRef = useRef<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (!fields) {
-      return;
-    }
-
-    const snapshot = JSON.stringify({ fields, photos });
-
-    if (pendingSnapshotRef.current === snapshot) {
-      return;
-    }
-
-    pendingSnapshotRef.current = snapshot;
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      void save(fields, photos);
-    }, 800);
-
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fields, photos]);
+    const initialPhotos: LocalPhotoItem[] = detail.photos.map((photo) => ({
+      key: photo.id,
+      id: photo.id,
+      fileAssetId: photo.fileAssetId,
+      caption: photo.caption ?? '',
+    }));
+    // What was just loaded is already saved — opening must not PUT.
+    autosave.markClean({ fields: initialFields, photos: initialPhotos });
+    setFields(initialFields);
+    setPhotos(initialPhotos);
+    setAnswers(detail.answers);
+  }, [detail, autosave.markClean]);
 
   async function save(next: BasicFields, nextPhotos: LocalPhotoItem[]) {
     setSaveError(null);
@@ -181,8 +161,32 @@ export function InspectionPropertyEditSection({
     }
   }
 
-  const answerTimersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>(
-    {}
+  // Answers go to their own endpoint. Every answer input — typing or a
+  // choice click — waits AUTOSAVE_DELAY_MS after the last one; the latest
+  // payload per question is then sent in one request.
+  const pendingAnswersRef = useRef<Record<string, PropertyAnswerPayload>>({});
+  const answerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const answersMutateRef = useRef(answersMutation.mutateAsync);
+  answersMutateRef.current = answersMutation.mutateAsync;
+
+  const flushAnswers = useCallback(async () => {
+    if (answerTimerRef.current) {
+      clearTimeout(answerTimerRef.current);
+      answerTimerRef.current = null;
+    }
+    const payloads = Object.values(pendingAnswersRef.current);
+    pendingAnswersRef.current = {};
+    if (payloads.length > 0) {
+      await answersMutateRef.current(payloads);
+    }
+  }, []);
+
+  // Leaving inside the delay window still saves what was answered.
+  useEffect(
+    () => () => {
+      void flushAnswers().catch(() => undefined);
+    },
+    [flushAnswers]
   );
 
   function handleAnswerChange(questionId: string, input: PropertyAnswerInput) {
@@ -216,23 +220,18 @@ export function InspectionPropertyEditSection({
       })
     );
 
-    const payload = buildPropertyAnswerPayload(questionId, input);
-    const immediate =
-      input.answerType !== 'TEXT' && input.answerType !== 'LONG_TEXT';
+    pendingAnswersRef.current[questionId] = buildPropertyAnswerPayload(
+      questionId,
+      input
+    );
 
-    if (answerTimersRef.current[questionId]) {
-      clearTimeout(answerTimersRef.current[questionId]);
+    if (answerTimerRef.current) {
+      clearTimeout(answerTimerRef.current);
     }
 
-    if (immediate) {
-      answersMutation.mutate([payload]);
-
-      return;
-    }
-
-    answerTimersRef.current[questionId] = setTimeout(() => {
-      answersMutation.mutate([payload]);
-    }, 700);
+    answerTimerRef.current = setTimeout(() => {
+      void flushAnswers().catch(() => undefined);
+    }, AUTOSAVE_DELAY_MS);
   }
 
   const canComplete = useMemo(() => {
@@ -274,9 +273,11 @@ export function InspectionPropertyEditSection({
   }
 
   async function handleSaveAsDraft() {
+    autosave.cancel();
     if (fields) {
       await save(fields, photos);
     }
+    await flushAnswers();
 
     if (detail?.status === 'COMPLETED') {
       await statusMutation.mutateAsync('DRAFT');
@@ -286,11 +287,15 @@ export function InspectionPropertyEditSection({
   async function handleComplete() {
     setCompleteError(null);
 
+    // Send anything still waiting out the autosave delay first — the server
+    // checks required answers when completing.
+    autosave.cancel();
     if (fields) {
       await save(fields, photos);
     }
 
     try {
+      await flushAnswers();
       await statusMutation.mutateAsync('COMPLETED');
       backToRegister();
     } catch (error) {
