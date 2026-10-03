@@ -1,7 +1,10 @@
 import type { DragEvent, SubmitEvent } from 'react';
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { PlusIcon } from '@/domains/inspection/components/area-detail/icons';
+import {
+  ChevronIcon,
+  PlusIcon,
+} from '@/domains/inspection/components/area-detail/icons';
 import { QuestionRow } from '@/domains/inspection/components/questions/QuestionRow';
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -27,6 +30,9 @@ type QuestionCategorySectionProps = {
   isReordering: boolean;
   /** Another section (or the category order mode) owns the edit focus. */
   isLocked: boolean;
+  /** Questions are folded away under the heading. */
+  isCollapsed: boolean;
+  onToggleCollapsed: () => void;
   onStartReorder: () => void;
   onEndReorder: () => void;
   onAddQuestion: () => void;
@@ -64,6 +70,8 @@ export function QuestionCategorySection({
   allCategories,
   isReordering,
   isLocked,
+  isCollapsed,
+  onToggleCollapsed,
   onStartReorder,
   onEndReorder,
   onAddQuestion,
@@ -71,6 +79,7 @@ export function QuestionCategorySection({
 }: QuestionCategorySectionProps) {
   const headingId = useId();
   const renameInputId = useId();
+  const bodyId = useId();
 
   const renameMutation = useRenameInspectionQuestionCategory(
     category.categoryId
@@ -93,6 +102,8 @@ export function QuestionCategorySection({
     (question) => question.enabled && question.required
   ).length;
   const busy = isLocked || isReordering || isRenaming;
+  // Reordering needs the rows on screen, so it always unfolds the section.
+  const isExpanded = !isCollapsed || isReordering;
 
   function startRename() {
     setNameDraft(category.name);
@@ -221,6 +232,7 @@ export function QuestionCategorySection({
       aria-labelledby={headingId}
       data-disabled={!category.enabled || undefined}
       data-reordering={isReordering || undefined}
+      data-collapsed={!isExpanded || undefined}
     >
       <header className='slcn-inspection-qcat__head'>
         {isRenaming ? (
@@ -278,7 +290,17 @@ export function QuestionCategorySection({
           <>
             <div className='slcn-inspection-qcat__title-block'>
               <h2 id={headingId} className='slcn-inspection-qcat__title'>
-                {category.name}
+                <button
+                  type='button'
+                  className='slcn-inspection-qcat__toggle'
+                  aria-expanded={isExpanded}
+                  aria-controls={bodyId}
+                  onClick={onToggleCollapsed}
+                  disabled={isReordering}
+                >
+                  <ChevronIcon className='slcn-inspection-qcat__chev' />
+                  {category.name}
+                </button>
               </h2>
               <p className='slcn-inspection-qcat__meta'>
                 {category.enabled ? (
@@ -374,61 +396,63 @@ export function QuestionCategorySection({
           {reorderError}
         </p>
       ) : null}
-      {isReordering ? (
-        <p className='slcn-inspection-qcat__note'>
-          끌어서 옮기거나 위·아래 버튼으로 순서를 바꾸세요. 다른 분류로 옮기려면
-          질문의 [수정]에서 분류를 바꿉니다.
-        </p>
-      ) : null}
-
-      {rows.length === 0 ? (
-        <div className='slcn-inspection-qcat__empty'>
-          <p>
-            {category.enabled
-              ? '아직 이 분류에 질문이 없습니다.'
-              : '이 분류에는 질문이 없습니다.'}
+      <div id={bodyId} hidden={!isExpanded}>
+        {isReordering ? (
+          <p className='slcn-inspection-qcat__note'>
+            끌어서 옮기거나 위·아래 버튼으로 순서를 바꾸세요. 다른 분류로
+            옮기려면 질문의 [수정]에서 분류를 바꿉니다.
           </p>
-        </div>
-      ) : (
-        <ul className='slcn-inspection-qlist'>
-          {rows.map((question, index) => (
-            <li key={question.questionId}>
-              <QuestionRow
-                question={question}
-                reorderMode={isReordering}
-                isFirst={index === 0}
-                isLast={index === rows.length - 1}
-                onMoveUp={() => handleMove(index, -1)}
-                onMoveDown={() => handleMove(index, 1)}
-                onEdit={() => onEditQuestion(question)}
-                draggableProps={
-                  isReordering
-                    ? {
-                        onDragStart: handleDragStart(index),
-                        onDragOver: handleDragOver(index),
-                        onDrop: (event) => event.preventDefault(),
-                        onDragEnd: () => setDraggedIndex(null),
-                        isDragging: draggedIndex === index,
-                      }
-                    : undefined
-                }
-              />
-            </li>
-          ))}
-        </ul>
-      )}
+        ) : null}
 
-      {category.enabled && !isReordering ? (
-        <button
-          type='button'
-          className='slcn-inspection-qcat__add'
-          onClick={onAddQuestion}
-          disabled={isLocked}
-        >
-          <PlusIcon />
-          {category.name}에 질문 추가
-        </button>
-      ) : null}
+        {rows.length === 0 ? (
+          <div className='slcn-inspection-qcat__empty'>
+            <p>
+              {category.enabled
+                ? '아직 이 분류에 질문이 없습니다.'
+                : '이 분류에는 질문이 없습니다.'}
+            </p>
+          </div>
+        ) : (
+          <ul className='slcn-inspection-qlist'>
+            {rows.map((question, index) => (
+              <li key={question.questionId}>
+                <QuestionRow
+                  question={question}
+                  reorderMode={isReordering}
+                  isFirst={index === 0}
+                  isLast={index === rows.length - 1}
+                  onMoveUp={() => handleMove(index, -1)}
+                  onMoveDown={() => handleMove(index, 1)}
+                  onEdit={() => onEditQuestion(question)}
+                  draggableProps={
+                    isReordering
+                      ? {
+                          onDragStart: handleDragStart(index),
+                          onDragOver: handleDragOver(index),
+                          onDrop: (event) => event.preventDefault(),
+                          onDragEnd: () => setDraggedIndex(null),
+                          isDragging: draggedIndex === index,
+                        }
+                      : undefined
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {category.enabled && !isReordering ? (
+          <button
+            type='button'
+            className='slcn-inspection-qcat__add'
+            onClick={onAddQuestion}
+            disabled={isLocked}
+          >
+            <PlusIcon />
+            {category.name}에 질문 추가
+          </button>
+        ) : null}
+      </div>
     </section>
   );
 }

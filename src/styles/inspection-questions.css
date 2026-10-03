@@ -97,6 +97,47 @@
   word-break: keep-all;
 }
 
+.slcn-inspection-qcat__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  margin-left: calc(var(--space-1) * -1);
+  padding: 0 var(--space-1);
+  border: none;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.slcn-inspection-qcat__toggle:disabled {
+  cursor: default;
+}
+
+.slcn-inspection-qcat__chev {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-body-muted);
+  transform: rotate(90deg);
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slcn-inspection-qcat__toggle[aria-expanded="false"]
+  .slcn-inspection-qcat__chev {
+  transform: rotate(0deg);
+}
+
+.slcn-inspection-questions-section__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: var(--space-6) 0 var(--space-1);
+}
+
 .slcn-inspection-qcat[data-disabled] .slcn-inspection-qcat__title {
   color: var(--color-body-muted);
   font-weight: var(--weight-body);
@@ -144,6 +185,7 @@
 }
 
 .slcn-inspection-qcat__link:focus-visible,
+.slcn-inspection-qcat__toggle:focus-visible,
 .slcn-inspection-qcat__add:focus-visible,
 .slcn-inspection-qcat-order__move:focus-visible,
 .slcn-inspection-qcat-archive__summary:focus-visible {
@@ -381,6 +423,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .slcn-inspection-qcat__chev,
   .slcn-inspection-qcat-archive__chev {
     transition: none;
   }
@@ -404,6 +447,11 @@
 /* The column header already sits right above the first category rule. */
 .slcn-inspection-qhead + .slcn-inspection-qcat {
   margin-top: 0;
+}
+
+/* Folded sections stack like a table of contents. */
+.slcn-inspection-qcat[data-collapsed] + .slcn-inspection-qcat {
+  margin-top: var(--space-2);
 }
 
 .slcn-inspection-qlist {

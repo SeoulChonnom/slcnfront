@@ -116,6 +116,11 @@ function givenData(
   });
 }
 
+/** Folded rows stay mounted under a `hidden` wrapper. */
+function isFolded(text: string) {
+  return screen.getByText(text).closest('[hidden]') !== null;
+}
+
 describe('InspectionQuestionsSection', () => {
   const createQuestion = idleMutation();
   const moveCategory = idleMutation();
@@ -319,8 +324,89 @@ describe('InspectionQuestionsSection', () => {
     await user.click(within(dialog).getByRole('button', { name: '질문 추가' }));
 
     expect(createQuestion.mutateAsync).toHaveBeenCalledWith(
-      expect.objectContaining({ categoryId: NOISE.categoryId, sortOrder: 0 })
+      expect.objectContaining({
+        categoryId: NOISE.categoryId,
+        sortOrder: 0,
+        answerType: 'TEXT',
+      })
     );
+  });
+
+  it('defaults the answer type of a new question to 한 줄 글', async () => {
+    givenData([question({})]);
+
+    const { user } = renderWithProviders(
+      <InspectionQuestionsSection device='main' />
+    );
+
+    await user.click(screen.getByRole('button', { name: '+ 질문 추가' }));
+    const dialog = screen.getByRole('dialog', { name: '질문 추가' });
+    const typeSelect = within(dialog).getByLabelText('타입', {
+      exact: false,
+    }) as HTMLSelectElement;
+    expect(typeSelect.value).toBe('TEXT');
+    expect(typeSelect.options[0]?.value).toBe('TEXT');
+  });
+
+  it('folds and unfolds the questions of one category from its heading', async () => {
+    givenData([
+      question({ questionId: 'q-light', content: '남향인가?' }),
+      question({
+        questionId: 'q-noise',
+        content: '밤에 조용한가?',
+        categoryId: NOISE.categoryId,
+        categoryName: NOISE.name,
+        categorySortOrder: 2,
+      }),
+    ]);
+
+    const { user } = renderWithProviders(
+      <InspectionQuestionsSection device='main' />
+    );
+
+    const toggle = screen.getByRole('button', { name: '채광·환기' });
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+    await user.click(toggle);
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(isFolded('남향인가?')).toBe(true);
+    expect(
+      screen.queryByRole('button', { name: '채광·환기에 질문 추가' })
+    ).toBeNull();
+    expect(screen.getByText('밤에 조용한가?')).toBeTruthy();
+
+    await user.click(toggle);
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('남향인가?')).toBeTruthy();
+  });
+
+  it('folds and unfolds every category at once', async () => {
+    givenData([
+      question({ questionId: 'q-light', content: '남향인가?' }),
+      question({
+        questionId: 'q-noise',
+        content: '밤에 조용한가?',
+        categoryId: NOISE.categoryId,
+        categoryName: NOISE.name,
+        categorySortOrder: 2,
+      }),
+    ]);
+
+    const { user } = renderWithProviders(
+      <InspectionQuestionsSection device='main' />
+    );
+
+    await user.click(screen.getByRole('button', { name: '모두 접기' }));
+
+    expect(isFolded('남향인가?')).toBe(true);
+    expect(isFolded('밤에 조용한가?')).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: '모두 펼치기' }));
+
+    expect(screen.getByText('남향인가?')).toBeTruthy();
+    expect(screen.getByText('밤에 조용한가?')).toBeTruthy();
   });
 
   it('moves a question to another category without minting a version', async () => {

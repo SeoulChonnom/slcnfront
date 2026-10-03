@@ -77,6 +77,9 @@ export function InspectionQuestionsSection({
   const [categoryOrderError, setCategoryOrderError] = useState<string | null>(
     null
   );
+  const [collapsedIds, setCollapsedIds] = useState<ReadonlySet<string>>(
+    () => new Set()
+  );
 
   const categories = categoriesQuery.data ?? [];
   const groups = groupQuestionsByCategory(
@@ -90,6 +93,29 @@ export function InspectionQuestionsSection({
   const isPending = questionsQuery.isPending || categoriesQuery.isPending;
   const isError = questionsQuery.isError || categoriesQuery.isError;
   const isOrderingCategories = focus?.kind === 'categories';
+  const isAllCollapsed =
+    enabledGroups.length > 0 &&
+    enabledGroups.every((group) => collapsedIds.has(group.category.categoryId));
+
+  function toggleCollapsed(categoryId: string) {
+    setCollapsedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) {
+        next.delete(categoryId);
+      } else {
+        next.add(categoryId);
+      }
+      return next;
+    });
+  }
+
+  function toggleAllCollapsed() {
+    setCollapsedIds(
+      isAllCollapsed
+        ? new Set()
+        : new Set(groups.map((group) => group.category.categoryId))
+    );
+  }
 
   function retry() {
     void questionsQuery.refetch();
@@ -140,6 +166,8 @@ export function InspectionQuestionsSection({
         allCategories={categories}
         isReordering={ownsFocus}
         isLocked={focus !== null && !ownsFocus}
+        isCollapsed={collapsedIds.has(categoryId)}
+        onToggleCollapsed={() => toggleCollapsed(categoryId)}
         onStartReorder={() => setFocus({ kind: 'questions', categoryId })}
         onEndReorder={() => setFocus(null)}
         onAddQuestion={() => setFormModal({ mode: 'create', categoryId })}
@@ -259,6 +287,18 @@ export function InspectionQuestionsSection({
               >
                 + 분류 추가
               </Button>
+            </div>
+          ) : null}
+
+          {enabledGroups.length > 1 ? (
+            <div className='slcn-inspection-questions-section__toolbar'>
+              <button
+                type='button'
+                className='slcn-inspection-qcat__link'
+                onClick={toggleAllCollapsed}
+              >
+                {isAllCollapsed ? '모두 펼치기' : '모두 접기'}
+              </button>
             </div>
           ) : null}
 
