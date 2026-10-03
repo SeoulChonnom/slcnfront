@@ -55,6 +55,9 @@ function answer(overrides: Partial<PropertyAnswer>): PropertyAnswer {
     selectedCodes: [],
     isCurrentVersion: true,
     questionEnabled: true,
+    categoryId: 'cat-1',
+    categoryName: '채광·환기',
+    categorySortOrder: 1,
     ...overrides,
   };
 }
