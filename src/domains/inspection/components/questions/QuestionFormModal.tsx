@@ -121,13 +121,13 @@ export function QuestionFormModal(props: QuestionFormModalProps) {
   const [content, setContent] = useState(question?.content ?? '');
   const [description, setDescription] = useState(question?.description ?? '');
   const [answerType, setAnswerType] = useState<AnswerType>(
-    question?.answerType ?? 'LONG_TEXT'
+    question?.answerType ?? 'TEXT'
   );
   const [required, setRequired] = useState(question?.required ?? true);
   const [choices, setChoices] = useState<QuestionChoiceInput[]>(
     question?.choices?.length
       ? question.choices.map((choice) => ({ ...choice }))
-      : answerTypeNeedsChoices(question?.answerType ?? 'LONG_TEXT')
+      : answerTypeNeedsChoices(question?.answerType ?? 'TEXT')
         ? [{ code: '', label: '', sortOrder: 1 }]
         : []
   );

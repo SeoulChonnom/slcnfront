@@ -17,8 +17,8 @@ export const ANSWER_TYPE_LABELS: Record<AnswerType, string> = {
 
 /** Order shown in the "타입" select when creating a question. */
 export const CREATABLE_ANSWER_TYPES: AnswerType[] = [
-  'LONG_TEXT',
   'TEXT',
+  'LONG_TEXT',
   'NUMBER',
   'BOOLEAN',
   'SINGLE_SELECT',
