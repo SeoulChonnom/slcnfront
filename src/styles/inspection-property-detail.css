@@ -334,6 +334,19 @@ a.slcn-inspection-lineage__row:hover {
   border-top: 1px solid var(--color-border);
 }
 
+/* Category groups (api.md §4) — a quiet label over each run of answers. */
+.slcn-inspection-qa-group + .slcn-inspection-qa-group {
+  margin-top: var(--space-8);
+}
+
+.slcn-inspection-qa-group__title {
+  margin-bottom: var(--space-2);
+  color: var(--color-accent-muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-strong);
+  word-break: keep-all;
+}
+
 .slcn-inspection-qa__item {
   display: grid;
   grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);

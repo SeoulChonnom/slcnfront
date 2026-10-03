@@ -5,6 +5,7 @@ import {
   YesIcon,
 } from '@/domains/inspection/components/property-detail/icons';
 import type { AnswerType, PropertyAnswer } from '@/domains/inspection/types';
+import { groupAnswersByCategory } from '@/domains/inspection/utils/question-categories';
 import { cn } from '@/lib/utils/cn';
 
 type PropertyAnswerListProps = {
@@ -26,18 +27,40 @@ const TYPE_LABELS: Partial<Record<AnswerType, string>> = {
  * line, never to change which value field is shown or how.
  */
 export function PropertyAnswerList({ answers }: PropertyAnswerListProps) {
+  // api.md §4 — grouped by the category snapshot taken when this property
+  // was created, so a later rename never relabels an old record.
+  const groups = groupAnswersByCategory(answers);
+
   return (
-    <div className='slcn-inspection-qa'>
-      {answers.map((answer) => (
-        <div key={answer.questionId} className='slcn-inspection-qa__item'>
-          <div>
-            <p className='slcn-inspection-qa__question'>{answer.question}</p>
-            <p className='slcn-inspection-qa__flags'>
-              <AnswerFlags answer={answer} />
-            </p>
+    <div className='slcn-inspection-qa-groups'>
+      {groups.map((group) => (
+        <section
+          key={group.categoryId}
+          className='slcn-inspection-qa-group'
+          aria-labelledby={`qa-group-${group.categoryId}`}
+        >
+          <h3
+            id={`qa-group-${group.categoryId}`}
+            className='slcn-inspection-qa-group__title'
+          >
+            {group.categoryName}
+          </h3>
+          <div className='slcn-inspection-qa'>
+            {group.answers.map((answer) => (
+              <div key={answer.questionId} className='slcn-inspection-qa__item'>
+                <div>
+                  <p className='slcn-inspection-qa__question'>
+                    {answer.question}
+                  </p>
+                  <p className='slcn-inspection-qa__flags'>
+                    <AnswerFlags answer={answer} />
+                  </p>
+                </div>
+                <AnswerValue answer={answer} />
+              </div>
+            ))}
           </div>
-          <AnswerValue answer={answer} />
-        </div>
+        </section>
       ))}
     </div>
   );

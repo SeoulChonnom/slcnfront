@@ -76,6 +76,12 @@ export const inspectionQueryKeys = {
       includeDisabled,
       withAnswerCount,
     ] as const,
+  questionCategories: (includeDisabled: boolean) =>
+    [
+      ...inspectionQueryKeys.all,
+      'question-categories',
+      includeDisabled,
+    ] as const,
   questionVersions: (questionId: string) =>
     [...inspectionQueryKeys.all, 'question-versions', questionId] as const,
 };

@@ -404,6 +404,9 @@ describe('parseViewedPropertyDetailResponse', () => {
           selectedCodes: [],
           isCurrentVersion: true,
           questionEnabled: true,
+          categoryId: 'INSPECTION_QUESTION_CATEGORY-0001',
+          categoryName: '채광·환기',
+          categorySortOrder: 1,
         },
         {
           questionId: 'INSPECTION_QUESTION-0003',
@@ -426,6 +429,9 @@ describe('parseViewedPropertyDetailResponse', () => {
           selectedCodes: ['SOUTH'],
           isCurrentVersion: true,
           questionEnabled: true,
+          categoryId: 'INSPECTION_QUESTION_CATEGORY-0001',
+          categoryName: '채광·환기',
+          categorySortOrder: 1,
         },
       ],
       incompleteSummary: {

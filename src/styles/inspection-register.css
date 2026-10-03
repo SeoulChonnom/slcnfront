@@ -589,9 +589,50 @@
 .slcn-inspection-register-answers {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-10);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-hairline);
+}
+
+/* One category of answers (api.md §4). Every group stays open; the status
+   on the heading line is what lets an unfinished group be found. */
+.slcn-inspection-answer-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.slcn-inspection-answer-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-ink);
+}
+
+.slcn-inspection-answer-group__title {
+  color: var(--color-ink);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+
+.slcn-inspection-answer-group__status {
+  font-size: var(--text-fine);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.slcn-inspection-answer-group__status[data-state="missing"] {
+  color: var(--color-warning);
+}
+
+.slcn-inspection-answer-group__status[data-state="done"] {
+  color: var(--color-success);
 }
 
 .slcn-inspection-register-answer {
