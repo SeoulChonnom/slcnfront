@@ -24,6 +24,12 @@
   min-width: 0;
 }
 
+.slcn-inspection-area-list__head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
 .slcn-inspection-area-list__title {
   font-size: var(--text-display-lg);
   font-weight: var(--weight-strong);
@@ -444,6 +450,13 @@
 
   .slcn-inspection-area-list__register {
     display: none;
+  }
+
+  /* 질문 관리 has no FAB counterpart, so it stays visible under the title. */
+  .slcn-inspection-area-list__head-actions:has(
+    .slcn-inspection-area-list__questions
+  ) {
+    margin-top: var(--space-4);
   }
 
   /* The FAB replaces it. 56px keeps it above the 44px touch minimum, and it

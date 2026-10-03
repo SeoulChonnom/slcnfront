@@ -1,5 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
+import type { Role } from '@/domains/auth/types';
 import { InspectionAreaListSection } from '@/domains/inspection/components/InspectionAreaListSection';
 import type {
   InspectionArea,
@@ -81,9 +83,39 @@ function mockQueryResult(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function signInAs(roleList: Role[]) {
+  useAuthStore.setState({
+    accessToken: 'access-token',
+    userInfo: { name: '테스트', userName: 'string', roleList },
+    hydrated: true,
+    restoreState: 'success',
+  });
+}
+
 describe('InspectionAreaListSection', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    useAuthStore.setState({ accessToken: null, userInfo: null });
+  });
+
+  it('shows a 질문 관리 link to the questions route for an admin', () => {
+    signInAs(['user', 'admin']);
+    useInspectionAreaListMock.mockReturnValue(mockQueryResult());
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(
+      screen.getByRole('link', { name: '질문 관리' }).getAttribute('href')
+    ).toBe('/main/inspection/questions');
+  });
+
+  it('hides the 질문 관리 link from a non-admin user', () => {
+    signInAs(['user']);
+    useInspectionAreaListMock.mockReturnValue(mockQueryResult());
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.queryByRole('link', { name: '질문 관리' })).toBeNull();
   });
 
   it('renders the header summary sentence from `totals`, not the filtered items', () => {

@@ -2,6 +2,7 @@ import type { DeviceType } from '@/app/router/route-constants';
 import { LinkButton } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { useAuthStore } from '@/domains/auth/store/auth-store';
 import { AreaListNoResults } from '@/domains/inspection/components/area-list/AreaListNoResults';
 import { AreaListRow } from '@/domains/inspection/components/area-list/AreaListRow';
 import { AreaListSkeleton } from '@/domains/inspection/components/area-list/AreaListSkeleton';
@@ -12,7 +13,10 @@ import {
 import { useInspectionAreaList } from '@/domains/inspection/hooks/inspection-queries';
 import type { AreaSort, RevisitIntent } from '@/domains/inspection/types';
 import { REVISIT_INTENT_META } from '@/domains/inspection/utils/inspection-format';
-import { buildDeviceInspectionRegisterPath } from '@/lib/routing/route-builders';
+import {
+  buildDeviceInspectionQuestionsPath,
+  buildDeviceInspectionRegisterPath,
+} from '@/lib/routing/route-builders';
 
 type InspectionAreaListSectionProps = {
   device: DeviceType;
@@ -39,6 +43,9 @@ export function InspectionAreaListSection({
     sort,
     setSort,
   } = useAreaListFilters();
+  const isAdmin = useAuthStore(
+    (state) => state.userInfo?.roleList.includes('admin') ?? false
+  );
 
   const { data, isPending, isError, refetch } = useInspectionAreaList({
     keyword: q || undefined,
@@ -68,12 +75,25 @@ export function InspectionAreaListSection({
             </p>
           ) : null}
         </div>
-        <LinkButton
-          to={buildDeviceInspectionRegisterPath(device)}
-          className='slcn-inspection-area-list__register'
-        >
-          + 임장 기록하기
-        </LinkButton>
+        <div className='slcn-inspection-area-list__head-actions'>
+          {/* The questions route is admin-gated by `RequireRole` and has no
+              menu entry (screen_design.md §10-4), so this is its only way in. */}
+          {isAdmin ? (
+            <LinkButton
+              to={buildDeviceInspectionQuestionsPath(device)}
+              variant='secondary'
+              className='slcn-inspection-area-list__questions'
+            >
+              질문 관리
+            </LinkButton>
+          ) : null}
+          <LinkButton
+            to={buildDeviceInspectionRegisterPath(device)}
+            className='slcn-inspection-area-list__register'
+          >
+            + 임장 기록하기
+          </LinkButton>
+        </div>
       </div>
 
       {/* Mobile only. The header button is hidden below 833px, so without this
