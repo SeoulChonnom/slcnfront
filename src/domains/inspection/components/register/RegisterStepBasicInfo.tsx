@@ -9,14 +9,14 @@ import type {
   VisitBasicFormValues,
 } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
 import type { RevisitIntent } from '@/domains/inspection/types';
-import { REVISIT_INTENT_META } from '@/domains/inspection/utils/inspection-format';
 
-const REVISIT_INTENT_OPTIONS: { label: string; value: RevisitIntent }[] = (
-  ['YES', 'MAYBE', 'NO'] as const
-).map((intent) => ({
-  value: intent,
-  label: `${REVISIT_INTENT_META[intent].icon} ${REVISIT_INTENT_META[intent].label}`,
-}));
+// 입력 폼 전용 짧은 문구 — 모바일에서도 세 개가 한 줄에 들어가야 한다.
+// 목록·상세 표시는 REVISIT_INTENT_META의 긴 문구를 그대로 쓴다.
+const REVISIT_INTENT_OPTIONS: { label: string; value: RevisitIntent }[] = [
+  { value: 'YES', label: '살고싶어' },
+  { value: 'MAYBE', label: '고민' },
+  { value: 'NO', label: '안살아' },
+];
 
 type RegisterStepBasicInfoProps = {
   values: VisitBasicFormValues;
