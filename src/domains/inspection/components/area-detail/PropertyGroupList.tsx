@@ -1,9 +1,8 @@
 import type { DeviceType } from '@/app/router/route-constants';
-import { LinkButton } from '@/components/ui/Button';
-import { PlusIcon } from '@/domains/inspection/components/area-detail/icons';
+import { AddPropertyForm } from '@/domains/inspection/components/AddPropertyForm';
 import { PropertyRow } from '@/domains/inspection/components/area-detail/PropertyRow';
 import type { ViewedPropertyDetail } from '@/domains/inspection/types';
-import { buildDeviceInspectionPropertyEditPath } from '@/lib/routing/route-builders';
+import { PROPERTY_EDIT_FROM_AREA_SEARCH } from '@/domains/inspection/utils/property-edit-return';
 
 type PropertyGroupListProps = {
   device: DeviceType;
@@ -52,18 +51,33 @@ export function PropertyGroupList({
   visitId,
   properties,
 }: PropertyGroupListProps) {
+  const addPropertyForm = (
+    <div className='slcn-inspection-area-detail-properties__add'>
+      <AddPropertyForm
+        device={device}
+        areaId={areaId}
+        visitId={visitId}
+        editSearch={PROPERTY_EDIT_FROM_AREA_SEARCH}
+        triggerClassName='slcn-inspection-area-detail-properties__add-trigger'
+      />
+    </div>
+  );
+
   if (properties.length === 0) {
     // §36 / fe_implementation_decisions.md §4: a zero-property visit is not
     // a defect — it's a completed "neighborhood-only" record.
     return (
-      <div className='slcn-inspection-area-detail-empty-properties'>
-        <p className='slcn-inspection-area-detail-empty-properties__title'>
-          이 날은 매물을 보지 않았습니다
-        </p>
-        <p className='slcn-inspection-area-detail-empty-properties__body'>
-          동네만 확인한 임장입니다. 이 상태로도 완료된 기록입니다.
-        </p>
-      </div>
+      <>
+        <div className='slcn-inspection-area-detail-empty-properties'>
+          <p className='slcn-inspection-area-detail-empty-properties__title'>
+            이 날은 매물을 보지 않았습니다
+          </p>
+          <p className='slcn-inspection-area-detail-empty-properties__body'>
+            동네만 확인한 임장입니다. 이 상태로도 완료된 기록입니다.
+          </p>
+        </div>
+        {addPropertyForm}
+      </>
     );
   }
 
@@ -79,19 +93,6 @@ export function PropertyGroupList({
         <span className='slcn-inspection-area-detail-properties__count'>
           단지 {complexCount}곳 · 매물 {properties.length}건
         </span>
-        <LinkButton
-          to={buildDeviceInspectionPropertyEditPath(
-            device,
-            areaId,
-            visitId,
-            'new'
-          )}
-          variant='secondary'
-          size='sm'
-          className='slcn-inspection-area-detail-properties__add'
-        >
-          <PlusIcon /> 매물 추가
-        </LinkButton>
       </div>
 
       {groups.map((group) => (
@@ -119,6 +120,8 @@ export function PropertyGroupList({
           </div>
         </div>
       ))}
+
+      {addPropertyForm}
     </div>
   );
 }

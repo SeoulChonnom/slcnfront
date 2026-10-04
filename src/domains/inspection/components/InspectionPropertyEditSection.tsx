@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -34,6 +34,7 @@ import type {
   PropertyAnswerPayload,
 } from '@/domains/inspection/types';
 import { formatVisitedAt } from '@/domains/inspection/utils/inspection-format';
+import { isPropertyEditFromArea } from '@/domains/inspection/utils/property-edit-return';
 import { AppError } from '@/lib/api/errors';
 import {
   buildDeviceInspectionAreaDetailPath,
@@ -74,6 +75,8 @@ export function InspectionPropertyEditSection({
   propertyId,
 }: InspectionPropertyEditSectionProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFromArea = isPropertyEditFromArea(searchParams);
   const propertyQuery = useInspectionVisitProperty(visitId, propertyId);
   const updateMutation = useUpdateInspectionProperty(visitId, propertyId);
   const statusMutation = useUpdateInspectionPropertyStatus(visitId, propertyId);
@@ -268,8 +271,12 @@ export function InspectionPropertyEditSection({
     setFields({ ...fields, tags: fields.tags.filter((tag) => tag !== name) });
   }
 
-  function backToRegister() {
-    navigate(`${buildDeviceInspectionRegisterPath(device)}?draft=${visitId}`);
+  function goBack() {
+    navigate(
+      isFromArea
+        ? `${buildDeviceInspectionAreaDetailPath(device, areaId)}?visit=${encodeURIComponent(visitId)}`
+        : `${buildDeviceInspectionRegisterPath(device)}?draft=${visitId}`
+    );
   }
 
   async function handleSaveAsDraft() {
@@ -297,7 +304,7 @@ export function InspectionPropertyEditSection({
     try {
       await flushAnswers();
       await statusMutation.mutateAsync('COMPLETED');
-      backToRegister();
+      goBack();
     } catch (error) {
       setCompleteError(
         error instanceof AppError
@@ -310,7 +317,7 @@ export function InspectionPropertyEditSection({
   async function handleDelete() {
     await deleteMutation.mutateAsync(propertyId);
     setIsDeleteConfirmOpen(false);
-    backToRegister();
+    goBack();
   }
 
   if (propertyQuery.isLoading || !fields) {

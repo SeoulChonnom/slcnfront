@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { InspectionAreaDetailSection } from '@/domains/inspection/components/InspectionAreaDetailSection';
 import type {
@@ -17,6 +18,7 @@ const useInspectionVisitListMock = vi.fn();
 const useInspectionAreaPropertiesMock = vi.fn();
 const updateAreaMutateAsyncMock = vi.fn();
 const deleteVisitMutateAsyncMock = vi.fn();
+const createPropertyMutateAsyncMock = vi.fn();
 
 vi.mock('@/domains/inspection/hooks/inspection-queries', () => ({
   useInspectionAreaDetail: (areaId: string, params: { visitId?: string }) =>
@@ -36,7 +38,22 @@ vi.mock('@/domains/inspection/hooks/inspection-queries', () => ({
     mutateAsync: deleteVisitMutateAsyncMock,
     isPending: false,
   }),
+  useCreateInspectionProperty: () => ({
+    mutateAsync: createPropertyMutateAsyncMock,
+    isPending: false,
+  }),
+  useInspectionComplexNames: () => ({ data: ['트리마제'] }),
 }));
+
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <output data-testid='location'>
+      {location.pathname}
+      {location.search}
+    </output>
+  );
+}
 
 // ── Fixtures ──────────────────────────────────────────────────────────────
 
@@ -181,7 +198,10 @@ function setup(detail: InspectionAreaDetail = makeDetail()) {
   mockDetailFor({ default: detail });
   useInspectionAreaPropertiesMock.mockReturnValue({ data: [] });
   return renderWithProviders(
-    <InspectionAreaDetailSection device='main' areaId='area-1' />
+    <>
+      <InspectionAreaDetailSection device='main' areaId='area-1' />
+      <LocationProbe />
+    </>
   );
 }
 
@@ -348,6 +368,61 @@ describe('InspectionAreaDetailSection', () => {
     expect(screen.getByText('이 날은 매물을 보지 않았습니다')).toBeTruthy();
     expect(screen.getByText(/이 상태로도 완료된 기록입니다/)).toBeTruthy();
     expect(screen.queryByText('확인 매물')).toBeNull();
+  });
+
+  it('places 매물 추가 below the last complex, and creating a property opens its editor flagged to return here', async () => {
+    createPropertyMutateAsyncMock.mockResolvedValue(
+      makeProperty({ propertyId: 'p-new' })
+    );
+    const { user } = setup();
+
+    const list = screen
+      .getByText('확인 매물')
+      .closest('.slcn-inspection-area-detail-properties') as HTMLElement;
+    const addButton = within(list).getByRole('button', { name: '+ 매물 추가' });
+    const lastComplex = within(list).getByText('트리마제');
+    expect(
+      lastComplex.compareDocumentPosition(addButton) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+
+    await user.click(addButton);
+    await user.type(screen.getByLabelText(/단지\/건물명/), ' 트리마제 ');
+    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.click(
+      screen.getByRole('button', { name: '추가하고 계속 쓰기' })
+    );
+
+    expect(createPropertyMutateAsyncMock).toHaveBeenCalledWith({
+      complexName: '트리마제',
+      name: '103동 902호',
+    });
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/area-1/visit/visit-3/property/p-new/edit?from=area'
+      )
+    );
+  });
+
+  it('asks for both names before creating a property', async () => {
+    const { user } = setup();
+
+    await user.click(screen.getByRole('button', { name: '+ 매물 추가' }));
+    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.click(
+      screen.getByRole('button', { name: '추가하고 계속 쓰기' })
+    );
+
+    expect(screen.getByRole('alert').textContent).toBe(
+      '단지명과 매물명을 모두 입력해 주세요.'
+    );
+    expect(createPropertyMutateAsyncMock).not.toHaveBeenCalled();
+  });
+
+  it('offers 매물 추가 under the empty state of a zero-property visit', () => {
+    setup(makeDetail({ selectedVisit: makeVisit({ properties: [] }) }));
+
+    expect(screen.getByRole('button', { name: '+ 매물 추가' })).toBeTruthy();
   });
 
   it('shows the DRAFT badge on the panel header for a draft visit, and nothing for a completed one', () => {

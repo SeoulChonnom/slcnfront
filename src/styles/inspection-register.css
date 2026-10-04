@@ -285,9 +285,20 @@
   gap: var(--space-3);
 }
 
-.slcn-inspection-register-revisit-group .slcn-radio-group {
-  display: flex;
+/* RadioGroup은 className을 .slcn-radio-group 자신에 붙이므로 복합 선택자로 잡는다.
+   데스크톱·모바일 모두 3열 균등 — 문구가 짧아 390px에서도 한 줄에 들어간다. */
+.slcn-radio-group.slcn-inspection-register-revisit-group {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
+}
+
+.slcn-inspection-register-revisit-group .slcn-radio-group__option {
+  align-items: center;
+}
+
+.slcn-inspection-register-revisit-group .slcn-radio-group__option input {
+  flex-shrink: 0;
+  margin-top: 0;
 }
 
 .slcn-inspection-register-tags__input-row {
@@ -720,9 +731,17 @@
     grid-template-columns: 1fr;
   }
 
-  /* 라벨이 긴 라디오 묶음은 모바일에서 세로로 쌓는다. */
-  .slcn-inspection-register-revisit-group .slcn-radio-group {
+  /* 3열은 유지하되 옵션 안에서 라디오를 문구 위로 올린다 — 옆에 두면
+     390px에서 "살고싶어"가 글자 단위로 줄바꿈된다. */
+  .slcn-inspection-register-revisit-group .slcn-radio-group__option {
     flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-2);
+    text-align: center;
+  }
+
+  .slcn-inspection-register-revisit-group .slcn-radio-group__label {
+    word-break: keep-all;
   }
 
   .slcn-inspection-register-pros-cons {

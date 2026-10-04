@@ -1,4 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
+import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InspectionPropertyEditSection } from '@/domains/inspection/components/InspectionPropertyEditSection';
 import { AUTOSAVE_DELAY_MS } from '@/domains/inspection/hooks/useAutosave';
@@ -105,14 +106,28 @@ function property(): ViewedPropertyDetail {
   };
 }
 
-function renderEdit() {
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <output data-testid='location'>
+      {location.pathname}
+      {location.search}
+    </output>
+  );
+}
+
+function renderEdit(route?: string) {
   return renderWithProviders(
-    <InspectionPropertyEditSection
-      device='main'
-      areaId='area-1'
-      visitId='visit-1'
-      propertyId='prop-1'
-    />
+    <>
+      <InspectionPropertyEditSection
+        device='main'
+        areaId='area-1'
+        visitId='visit-1'
+        propertyId='prop-1'
+      />
+      <LocationProbe />
+    </>,
+    { route }
   );
 }
 
@@ -217,6 +232,52 @@ describe('InspectionPropertyEditSection autosave', () => {
       expect(answersMutateAsync).toHaveBeenCalledWith([
         { questionId: 'q-dir', selectedCodes: ['SOUTH'] },
       ])
+    );
+  });
+});
+
+describe('InspectionPropertyEditSection return target', () => {
+  beforeEach(() => {
+    updateMutateAsync.mockResolvedValue(property());
+    statusMutateAsync.mockResolvedValue(undefined);
+    useInspectionVisitPropertyMock.mockReturnValue({
+      data: property(),
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  async function completeProperty(user: ReturnType<typeof renderEdit>['user']) {
+    await user.type(screen.getByLabelText(/채광 상태는 어떤가/), '밝다');
+    await user.click(screen.getByRole('button', { name: '매물 완료' }));
+  }
+
+  it('returns to the register wizard by default', async () => {
+    const { user } = renderEdit();
+
+    await completeProperty(user);
+
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/register?draft=visit-1'
+      )
+    );
+  });
+
+  it('returns to the area detail on the same visit when opened from there', async () => {
+    const { user } = renderEdit('/?from=area');
+
+    await completeProperty(user);
+
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/area-1?visit=visit-1'
+      )
     );
   });
 });

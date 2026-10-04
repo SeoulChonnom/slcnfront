@@ -1,15 +1,12 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TextField } from '@/components/ui/TextField';
+import { AddPropertyForm } from '@/domains/inspection/components/AddPropertyForm';
 import { DraftBadge } from '@/domains/inspection/components/DraftBadge';
 import { InterestStars } from '@/domains/inspection/components/InterestStars';
 import { buildPropertyDraftReason } from '@/domains/inspection/components/register/build-draft-reason';
 import {
-  useCreateInspectionProperty,
-  useInspectionComplexNames,
   useInspectionVisit,
   useReorderInspectionVisitProperties,
 } from '@/domains/inspection/hooks/inspection-queries';
@@ -26,50 +23,13 @@ export function RegisterStepProperties({
 }: RegisterStepPropertiesProps) {
   const navigate = useNavigate();
   const visitQuery = useInspectionVisit(visitId);
-  const createPropertyMutation = useCreateInspectionProperty(visitId);
   const reorderMutation = useReorderInspectionVisitProperties(visitId);
-  const complexNamesQuery = useInspectionComplexNames(visitId, 'AREA');
-
-  const [isAdding, setIsAdding] = useState(false);
-  const [newComplexName, setNewComplexName] = useState('');
-  const [newName, setNewName] = useState('');
-  const [addError, setAddError] = useState<string | null>(null);
 
   const detail = visitQuery.data;
   const areaId = detail?.area.areaId;
   const properties = detail
     ? [...detail.properties].sort((a, b) => a.sortOrder - b.sortOrder)
     : [];
-
-  async function handleAddProperty() {
-    if (!newComplexName.trim() || !newName.trim()) {
-      setAddError('단지명과 매물명을 모두 입력해 주세요.');
-
-      return;
-    }
-
-    setAddError(null);
-
-    try {
-      const created = await createPropertyMutation.mutateAsync({
-        complexName: newComplexName.trim(),
-        name: newName.trim(),
-      });
-
-      if (areaId) {
-        navigate(
-          buildDeviceInspectionPropertyEditPath(
-            device,
-            areaId,
-            visitId,
-            created.propertyId
-          )
-        );
-      }
-    } catch {
-      setAddError('매물을 추가하지 못했어요. 잠시 뒤 다시 시도해 주세요.');
-    }
-  }
 
   function handleDragEnd(fromIndex: number, toIndex: number) {
     if (fromIndex === toIndex) {
@@ -181,55 +141,7 @@ export function RegisterStepProperties({
         </p>
       ) : null}
 
-      {!isAdding ? (
-        <Button variant='ghost' onClick={() => setIsAdding(true)}>
-          + 매물 추가
-        </Button>
-      ) : (
-        <div className='slcn-inspection-register-add-property'>
-          <TextField
-            label='단지/건물명'
-            required
-            list='register-complex-name-options'
-            value={newComplexName}
-            onChange={(event) => setNewComplexName(event.target.value)}
-            hint='같은 이름이어야 회차 간 매물이 연결됩니다.'
-          />
-          <datalist id='register-complex-name-options'>
-            {(complexNamesQuery.data ?? []).map((name) => (
-              <option key={name} value={name} />
-            ))}
-          </datalist>
-          <TextField
-            label='매물명'
-            required
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-          {addError ? (
-            <p className='slcn-inspection-register-step__error' role='alert'>
-              {addError}
-            </p>
-          ) : null}
-          <div className='slcn-inspection-register-add-property__actions'>
-            <Button
-              variant='ghost'
-              onClick={() => {
-                setIsAdding(false);
-                setAddError(null);
-              }}
-            >
-              취소
-            </Button>
-            <Button
-              loading={createPropertyMutation.isPending}
-              onClick={() => void handleAddProperty()}
-            >
-              추가하고 계속 쓰기
-            </Button>
-          </div>
-        </div>
-      )}
+      <AddPropertyForm device={device} areaId={areaId} visitId={visitId} />
     </div>
   );
 }
