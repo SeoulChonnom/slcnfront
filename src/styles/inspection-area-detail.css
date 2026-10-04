@@ -402,13 +402,17 @@
   font-size: var(--text-caption);
 }
 
+/* "매물 추가" sits under the last complex (or under the empty state),
+   reading as the next row to fill rather than a header action. */
 .slcn-inspection-area-detail-properties__add {
-  margin-inline-start: auto;
+  margin-top: var(--space-6);
 }
 
-.slcn-inspection-area-detail-properties__add svg {
-  width: 1rem;
-  height: 1rem;
+.slcn-inspection-area-detail-properties__add-trigger {
+  width: 100%;
+  justify-content: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
 }
 
 .slcn-inspection-area-detail-complex {
@@ -609,12 +613,6 @@
 
   .slcn-inspection-area-detail-properties__head {
     flex-wrap: wrap;
-  }
-
-  .slcn-inspection-area-detail-properties__add {
-    margin-inline-start: 0;
-    width: 100%;
-    justify-content: center;
   }
 
   /* §5.4③ / this screen's own mobile note: interest moves below the name,
