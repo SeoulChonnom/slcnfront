@@ -64,7 +64,10 @@ export type IncompleteSummary = {
   missingFields: string[];
   draftPropertyCount: number;
   visitMissingFields: string[];
+  /** 수정 중인 임장 수(계획 제외). */
   draftVisitCount: number;
+  /** 계획 임장 수 — 지역 행에서만 채워지고 나머지는 0. */
+  plannedVisitCount: number;
 };
 
 export type ViewedPropertyBrief = {
@@ -132,6 +135,12 @@ type InspectionAreaTotals = {
   propertyCount: number;
 };
 
+/** Normalized from the wire's `inspectionVisitId` — see fe_implementation_decisions.md §3-①. */
+export type PlannedVisit = {
+  visitId: string;
+  visitedAt: string;
+};
+
 export type InspectionArea = {
   areaId: string;
   name: string;
@@ -141,6 +150,8 @@ export type InspectionArea = {
   lastVisitedAt: string | null;
   totalPropertyCount: number;
   latestVisit: InspectionVisitSummary | null;
+  /** 가장 이른 계획 임장. 없으면 `null`. */
+  plannedVisit: PlannedVisit | null;
   topProperty: ViewedPropertyBrief | null;
   incompleteSummary: IncompleteSummary;
   thumbnails: FileBoxItem[];

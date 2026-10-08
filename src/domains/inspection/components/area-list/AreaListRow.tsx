@@ -3,6 +3,7 @@ import type { DeviceType } from '@/app/router/route-constants';
 import {
   formatDraftReason,
   formatFirstVisitedAt,
+  formatPlannedVisitMetaline,
   formatVisitedAtWeekday,
   pickTopPropertyView,
 } from '@/domains/inspection/components/area-list/format-area-row';
@@ -157,6 +158,7 @@ type AreaListRowProps = {
 export function AreaListRow({ area, device }: AreaListRowProps) {
   const latestPhase = area.latestVisit ? getVisitPhase(area.latestVisit) : null;
   const lastVisitMetaline = formatLastVisitMetaline(area);
+  const plannedMetaline = formatPlannedVisitMetaline(area, new Date());
 
   return (
     <Link
@@ -204,6 +206,11 @@ export function AreaListRow({ area, device }: AreaListRowProps) {
             임장 기록이 아직 없습니다
           </span>
         )}
+        {plannedMetaline ? (
+          <span className='slcn-inspection-area-row__metaline'>
+            {plannedMetaline}
+          </span>
+        ) : null}
         <AreaSecondMetaline area={area} />
       </div>
 

@@ -73,7 +73,7 @@ UI가 바뀌는 커밋은 Playwright로 1440px(`/main`)과 390px(`/mobile`)을 �
 |---|---|
 | `useInspectionRegisterWizard.ts` | `validateStep2`에서 재방문 의사 필수 제거(G1). `attemptComplete`를 마법사에서 뺀다 |
 | `RegisterStepBasicInfo.tsx` | 남기는 것: **예정일**("임장 일시" → "예정일"), 전체 메모, 태그. 숨기는 것: 재방문 의사, 한줄평, 장점 · 단점, 임장 사진. 안내: "다녀온 뒤 임장 수정 화면에서 결과를 쓰고 완료해요" |
-| `InspectionRegisterSection.tsx` | 3단계 끝 버튼 "임장 완료" → **"계획 저장"**(완료 전이 없이 지역 상세로 이동). `CompletionChecklist`는 임장 수정 화면에만 남는다 |
+| `InspectionRegisterSection.tsx` | 3단계 끝 버튼 "임장 완료" → **"계획 저장"**(완료 전이 없이 지역 상세로 이동). `CompletionChecklist`는 마법사에서만 쓰였으므로 삭제한다(임장 수정 화면은 자체 완료 안내를 쓴다) |
 | `api/inspection-schemas.ts` | 지역 행 `plannedVisit`, 요약 `plannedVisitCount` |
 | `area-list/format-area-row.ts` | `formatPlannedVisit(plannedVisit, today)` → "예정 10.12" / "미완료 10.05" + 테스트(오늘 경계 포함). `today`는 인자로 받는다 |
 | `AreaListRow.tsx` | `visitCount: 0`, `latestVisit: null`인 지역(계획만 있음) 행 표시. `plannedVisitCount > 1`이면 "외 N건" |

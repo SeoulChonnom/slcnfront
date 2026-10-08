@@ -21,6 +21,7 @@ const emptySummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 function setupVisit(completedAt: string | null) {

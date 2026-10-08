@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type {
+  InspectionAreaRdoDto,
   InspectionVisitDetailDto,
   InspectionVisitListItemDto,
   ViewedPropertyDetailDto,
@@ -7,6 +8,7 @@ import type {
 import {
   buildPropertyAnswerPayload,
   computeRevisitIntentCounts,
+  mapInspectionAreaDto,
   mapInspectionVisitDetailDto,
   mapInspectionVisitListItemDto,
   mapViewedPropertyDetailDto,
@@ -19,6 +21,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 describe('§3-① visitId normalization', () => {
@@ -134,6 +137,45 @@ describe('§3-① visitId normalization', () => {
     expect(result.visitId).toBe('VISIT-09');
     expect(result.completedAt).toBeNull();
     expect(result).not.toHaveProperty('inspectionVisitId');
+  });
+});
+
+describe('area row plannedVisit', () => {
+  const row = (plannedVisit: InspectionAreaRdoDto['plannedVisit']) =>
+    ({
+      areaId: 'AREA-09',
+      name: '송파',
+      description: null,
+      visitCount: 0,
+      firstVisitedAt: null,
+      lastVisitedAt: null,
+      totalPropertyCount: 0,
+      latestVisit: null,
+      plannedVisit,
+      topProperty: null,
+      incompleteSummary: { ...baseIncompleteSummary, plannedVisitCount: 1 },
+      thumbnails: [],
+      totalImageCount: 0,
+      matchedProperty: null,
+    }) satisfies InspectionAreaRdoDto;
+
+  it('normalizes the wire `inspectionVisitId` to `visitId`', () => {
+    const result = mapInspectionAreaDto(
+      row({ inspectionVisitId: 'VISIT-20', visitedAt: '2026-10-12T14:00' })
+    );
+
+    expect(result.plannedVisit).toEqual({
+      visitId: 'VISIT-20',
+      visitedAt: '2026-10-12T14:00',
+    });
+    expect(result.incompleteSummary.plannedVisitCount).toBe(1);
+  });
+
+  it('keeps a plan-only area free of visit data', () => {
+    const result = mapInspectionAreaDto(row(null));
+
+    expect(result.plannedVisit).toBeNull();
+    expect(result.latestVisit).toBeNull();
   });
 });
 

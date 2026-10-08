@@ -64,6 +64,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 function makeProperty(
@@ -128,6 +129,7 @@ function makeArea(overrides: Partial<InspectionArea>): InspectionArea {
     lastVisitedAt: '2026-09-17T14:00',
     totalPropertyCount: 4,
     latestVisit: null,
+    plannedVisit: null,
     topProperty: null,
     incompleteSummary: baseIncompleteSummary,
     thumbnails: [],
@@ -281,6 +283,35 @@ describe('InspectionAreaDetailSection', () => {
 
     // Zero-property visit reads "매물 없음", not "매물 0".
     expect(within(tabs[2]).getByText(/매물 없음/)).toBeTruthy();
+  });
+
+  it('highlights selectedVisit, not the first row, when a future planned visit leads the rail', () => {
+    const base = makeDetail();
+    const planned = {
+      ...base.visits[0],
+      visitId: 'visit-planned',
+      visitedAt: '2026-12-01T10:00',
+      status: 'DRAFT' as const,
+      completedAt: null,
+    };
+    // BE opens the latest completed visit (visit-2) even though the rail is
+    // sorted by visitedAt desc, which puts the future plan first.
+    setup(
+      makeDetail({
+        visits: [planned, ...base.visits],
+        selectedVisit: makeVisit({ visitId: 'visit-2' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+
+    expect(tabs).toHaveLength(4);
+    expect(tabs[0].getAttribute('aria-selected')).toBe('false');
+    expect(tabs[1].getAttribute('aria-selected')).toBe('false');
+    expect(tabs[2].getAttribute('aria-selected')).toBe('true');
+    expect(tabs[3].getAttribute('aria-selected')).toBe('false');
   });
 
   it('switches the panel content when a different rail tab is clicked, keyed by visitId', () => {

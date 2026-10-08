@@ -81,6 +81,8 @@ const incompleteSummarySchema = z.object({
   draftPropertyCount: z.number().int(),
   visitMissingFields: z.array(z.string()).default([]),
   draftVisitCount: z.number().int(),
+  /** Only area rows fill it; other summaries send 0 (api.md). Defaults to 0 when absent. */
+  plannedVisitCount: z.number().int().default(0),
 });
 
 const viewedPropertyBriefSchema = z.object({
@@ -124,6 +126,12 @@ const inspectionVisitSummarySchema = z.object({
   cover: fileBoxItemSchema.nullish().transform((v) => v ?? null),
 });
 
+/** The earliest planned (not yet completed) visit of an area row — wire id is `inspectionVisitId`. */
+const plannedVisitSchema = z.object({
+  inspectionVisitId: z.string(),
+  visitedAt: z.string(),
+});
+
 const inspectionAreaSchema = z.object({
   areaId: z.string(),
   name: z.string(),
@@ -135,6 +143,7 @@ const inspectionAreaSchema = z.object({
   latestVisit: inspectionVisitSummarySchema
     .nullish()
     .transform((v) => v ?? null),
+  plannedVisit: plannedVisitSchema.nullish().transform((v) => v ?? null),
   topProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
   incompleteSummary: incompleteSummarySchema,
   thumbnails: z.array(fileBoxItemSchema).default([]),

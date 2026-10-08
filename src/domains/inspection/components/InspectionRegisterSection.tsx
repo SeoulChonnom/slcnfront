@@ -5,21 +5,13 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { inspectionApi } from '@/domains/inspection/api/inspection-api';
-import { CompletionChecklist } from '@/domains/inspection/components/register/CompletionChecklist';
 import { RegisterStepArea } from '@/domains/inspection/components/register/RegisterStepArea';
 import { RegisterStepBasicInfo } from '@/domains/inspection/components/register/RegisterStepBasicInfo';
 import { RegisterStepProperties } from '@/domains/inspection/components/register/RegisterStepProperties';
 import {
-  useInspectionVisit,
-  useReorderInspectionVisitImages,
-} from '@/domains/inspection/hooks/inspection-queries';
-import { useInspectionPhotoUploader } from '@/domains/inspection/hooks/useInspectionPhotoUploader';
-import {
   type RegisterWizardStep,
   useInspectionRegisterWizard,
 } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
-import { ReviewDraftError } from '@/domains/inspection/utils/review-draft';
 import {
   buildDeviceInspectionAreaDetailPath,
   buildDeviceInspectionAreaListPath,
@@ -47,7 +39,8 @@ function formatSavedAtLabel(date: Date | null): string {
 }
 
 /**
- * 3단계 마법사(①지역 → ②기본 정보 → ③확인 매물) + ④완료 검증.
+ * 3단계 계획 마법사(①지역 → ②예정일 → ③확인 매물). 결과 작성과 완료는
+ * 임장 수정 화면에서 한다(field_research_map/06 FD3).
  * screen_design.md §5.4 / fe_implementation_decisions.md §5.
  */
 export function InspectionRegisterSection({
@@ -56,62 +49,9 @@ export function InspectionRegisterSection({
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const draftVisitId = searchParams.get('draft');
-  const [completionResult, setCompletionResult] = useState<{
-    message: string | null;
-  } | null>(null);
+  const [isSavingPlan, setIsSavingPlan] = useState(false);
 
   const wizard = useInspectionRegisterWizard({ draftVisitId });
-  const photoUploader = useInspectionPhotoUploader(wizard.setPhotos);
-  const visitDetailQuery = useInspectionVisit(wizard.visitId ?? undefined);
-  const reorderImagesMutation = useReorderInspectionVisitImages(
-    wizard.visitId ?? ''
-  );
-
-  /**
-   * Pure drag-reorder goes through the dedicated endpoint (cheaper than a
-   * full visit PUT) once every photo has a persisted FileBoxItem id; before
-   * that (still local-only, or mid-upload) it just reorders in memory and
-   * the next autosave PUT carries the new order.
-   */
-  function handleReorderPhotos(next: typeof wizard.photos) {
-    photoUploader.reorder(next);
-
-    const canPersistOrderDirectly =
-      wizard.visitId && next.every((photo) => photo.id);
-
-    if (canPersistOrderDirectly) {
-      reorderImagesMutation.mutate(
-        next.map((photo, index) => ({
-          id: photo.id as string,
-          sortOrder: index,
-        }))
-      );
-    }
-  }
-
-  /**
-   * The suggestion endpoint needs a visit id, so the draft visit is saved
-   * first (same click) when it does not exist yet.
-   */
-  async function requestReviewDraft() {
-    const result = await wizard.ensureSavedVisitId();
-
-    if (result.status === 'needs-visited-at') {
-      throw new ReviewDraftError(
-        '방문 날짜와 시각을 먼저 입력해 주세요. 임시저장한 뒤 초안을 만들 수 있어요.'
-      );
-    }
-
-    if (result.status === 'failed') {
-      throw new ReviewDraftError(
-        '임시저장에 실패해 초안을 만들 수 없어요. 잠시 뒤 다시 시도해 주세요.'
-      );
-    }
-
-    return inspectionApi.suggestVisitReview(result.visitId, {
-      memo: wizard.basicValues.memo,
-    });
-  }
 
   if (wizard.isDraftLoading) {
     return (
@@ -133,27 +73,25 @@ export function InspectionRegisterSection({
     );
   }
 
-  async function handleAttemptComplete() {
-    const result = await wizard.attemptComplete();
+  async function handleSavePlan() {
+    setIsSavingPlan(true);
 
-    if (result.ok) {
-      const areaId = visitDetailQuery.data?.area.areaId;
+    try {
+      const result = await wizard.savePlan();
+
+      if (!result) {
+        return;
+      }
 
       navigate(
-        areaId
-          ? buildDeviceInspectionAreaDetailPath(device, areaId)
+        result.areaId
+          ? `${buildDeviceInspectionAreaDetailPath(device, result.areaId)}?visit=${encodeURIComponent(result.visitId)}`
           : buildDeviceInspectionAreaListPath(device)
       );
-
-      return;
+    } finally {
+      setIsSavingPlan(false);
     }
-
-    setCompletionResult({ message: result.message });
   }
-
-  const draftProperties = (visitDetailQuery.data?.properties ?? []).filter(
-    (property) => property.status === 'DRAFT'
-  );
 
   return (
     <section data-device={device} className='slcn-inspection-register'>
@@ -204,20 +142,11 @@ export function InspectionRegisterSection({
 
         {wizard.step === 2 ? (
           <RegisterStepBasicInfo
+            mode='plan'
             values={wizard.basicValues}
             onFieldChange={wizard.updateBasicField}
-            photos={wizard.photos}
-            onAddPhotoFiles={(files) => void photoUploader.addFiles(files)}
-            onCaptionChange={photoUploader.updateCaption}
-            onRemovePhoto={(key) =>
-              photoUploader.removeFile(key, wizard.photos)
-            }
-            onReorderPhotos={handleReorderPhotos}
-            photoUploadProgress={photoUploader.progress}
-            photoUploadError={photoUploader.error}
             savedAtLabel={formatSavedAtLabel(wizard.lastSavedAt)}
             errors={wizard.stepErrors}
-            reviewDraft={{ requestDraft: requestReviewDraft }}
           />
         ) : null}
 
@@ -259,31 +188,14 @@ export function InspectionRegisterSection({
             </span>
           ) : (
             <Button
-              loading={wizard.isCompleting}
-              onClick={() => void handleAttemptComplete()}
+              loading={isSavingPlan}
+              onClick={() => void handleSavePlan()}
             >
-              임장 완료
+              계획 저장
             </Button>
           )}
         </div>
       </Card>
-
-      {completionResult ? (
-        <CompletionChecklist
-          device={device}
-          areaId={visitDetailQuery.data?.area.areaId ?? ''}
-          visitId={wizard.visitId ?? ''}
-          areaName={wizard.areaName}
-          visitedAt={
-            visitDetailQuery.data?.visitedAt ??
-            `${wizard.basicValues.visitedAtDate}T${wizard.basicValues.visitedAtTime}`
-          }
-          revisitIntent={wizard.basicValues.revisitIntent}
-          draftProperties={draftProperties}
-          serverMessage={completionResult.message}
-          onDismiss={() => setCompletionResult(null)}
-        />
-      ) : null}
     </section>
   );
 }

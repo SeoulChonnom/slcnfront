@@ -77,6 +77,7 @@ function mapIncompleteSummary(dto: {
   draftPropertyCount: number;
   visitMissingFields: string[];
   draftVisitCount: number;
+  plannedVisitCount: number;
 }): IncompleteSummary {
   return {
     unansweredRequiredCount: dto.unansweredRequiredCount,
@@ -85,6 +86,7 @@ function mapIncompleteSummary(dto: {
     draftPropertyCount: dto.draftPropertyCount,
     visitMissingFields: dto.visitMissingFields,
     draftVisitCount: dto.draftVisitCount,
+    plannedVisitCount: dto.plannedVisitCount,
   };
 }
 
@@ -160,6 +162,13 @@ export function mapInspectionAreaDto(
     totalPropertyCount: dto.totalPropertyCount,
     latestVisit: dto.latestVisit
       ? mapInspectionVisitSummaryDto(dto.latestVisit)
+      : null,
+    plannedVisit: dto.plannedVisit
+      ? {
+          // §3-①: wire field is `inspectionVisitId` here — normalized to `visitId`.
+          visitId: dto.plannedVisit.inspectionVisitId,
+          visitedAt: dto.plannedVisit.visitedAt,
+        }
       : null,
     topProperty: dto.topProperty
       ? mapViewedPropertyBrief(dto.topProperty)

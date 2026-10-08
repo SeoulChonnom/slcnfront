@@ -1,6 +1,7 @@
 import type {
   InspectionArea,
   MatchedProperty,
+  PlannedVisit,
   ViewedPropertyBrief,
 } from '@/domains/inspection/types';
 import { formatVisitedAtDate } from '@/domains/inspection/utils/inspection-format';
@@ -20,6 +21,42 @@ export function formatVisitedAtWeekday(visitedAt: string): string {
     Date.UTC(Number(year), Number(month) - 1, Number(day))
   );
   return WEEKDAY_LABELS[utcDate.getUTCDay()];
+}
+
+/**
+ * "예정 10.12" — 예정일이 오늘이거나 이후. "미완료 10.05" — 예정일이 지났는데
+ * 아직 완료하지 않은 계획. 날짜만 로컬 시간 기준으로 비교한다(`visitedAt`은
+ * 시간대 없는 로컬 문자열이라 `new Date(iso)`를 거치지 않는다).
+ */
+export function formatPlannedVisit(
+  plannedVisit: PlannedVisit,
+  today: Date
+): string {
+  const match = VISITED_AT_DATE_PATTERN.exec(plannedVisit.visitedAt);
+  if (!match) return '';
+
+  const [, year, month, day] = match;
+  const plannedKey = Number(year) * 10000 + Number(month) * 100 + Number(day);
+  const todayKey =
+    today.getFullYear() * 10000 +
+    (today.getMonth() + 1) * 100 +
+    today.getDate();
+
+  return `${plannedKey >= todayKey ? '예정' : '미완료'} ${month}.${day}`;
+}
+
+/** 지역 행의 계획 표시. 계획이 2건 이상이면 "예정 10.12 외 1건". */
+export function formatPlannedVisitMetaline(
+  area: InspectionArea,
+  today: Date
+): string | null {
+  if (!area.plannedVisit) return null;
+
+  const label = formatPlannedVisit(area.plannedVisit, today);
+  if (!label) return null;
+
+  const extra = area.incompleteSummary.plannedVisitCount - 1;
+  return extra > 0 ? `${label} 외 ${extra}건` : label;
 }
 
 /**

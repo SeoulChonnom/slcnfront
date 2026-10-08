@@ -100,6 +100,7 @@ function property(): ViewedPropertyDetail {
       draftPropertyCount: 0,
       visitMissingFields: [],
       draftVisitCount: 0,
+      plannedVisitCount: 0,
     },
     prevProperty: null,
     nextProperty: null,

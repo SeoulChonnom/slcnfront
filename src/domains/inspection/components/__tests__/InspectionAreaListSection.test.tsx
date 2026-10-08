@@ -24,6 +24,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 function area(overrides: Partial<InspectionArea>): InspectionArea {
@@ -47,6 +48,7 @@ function area(overrides: Partial<InspectionArea>): InspectionArea {
       incompleteSummary: baseIncompleteSummary,
       cover: null,
     },
+    plannedVisit: null,
     topProperty: {
       propertyId: 'prop-1',
       complexName: '트리마제',
@@ -125,6 +127,7 @@ describe('InspectionAreaListSection', () => {
         data: listResult({
           items: [
             area({
+              plannedVisit: null,
               topProperty: {
                 propertyId: 'prop-1',
                 complexName: '트리마제',
@@ -179,6 +182,66 @@ describe('InspectionAreaListSection', () => {
     expect(screen.getByText('다시 임장하고 싶음')).toBeTruthy();
     expect(screen.getByText('트리마제')).toBeTruthy();
     expect(screen.getByText('101동 1203호 / 84A')).toBeTruthy();
+  });
+
+  it('renders a plan-only area without 최근 임장 artifacts and shows the planned date', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              visitCount: 0,
+              firstVisitedAt: null,
+              lastVisitedAt: null,
+              latestVisit: null,
+              totalPropertyCount: 0,
+              plannedVisit: {
+                visitId: 'visit-9',
+                visitedAt: '2099-01-02T10:00',
+              },
+              incompleteSummary: {
+                ...baseIncompleteSummary,
+                plannedVisitCount: 1,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('예정 01.02')).toBeTruthy();
+    expect(screen.queryByText(/^최근 임장 \d/)).toBeNull();
+    expect(
+      document.querySelector('.slcn-inspection-area-row__visits-last')
+    ).toBeNull();
+    expect(screen.getByText('임장 기록이 아직 없습니다')).toBeTruthy();
+  });
+
+  it('labels an overdue plan 미완료 and appends 외 N건 for extra plans', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              plannedVisit: {
+                visitId: 'visit-9',
+                visitedAt: '2000-01-02T10:00',
+              },
+              incompleteSummary: {
+                ...baseIncompleteSummary,
+                plannedVisitCount: 3,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('미완료 01.02 외 2건')).toBeTruthy();
   });
 
   it('shows a "계획" badge and the incomplete reason for a never-completed DRAFT latest visit', () => {
@@ -401,6 +464,7 @@ describe('InspectionAreaListSection', () => {
               areaId: 'area-2',
               name: '광교',
               totalPropertyCount: 0,
+              plannedVisit: null,
               topProperty: null,
             }),
           ],
