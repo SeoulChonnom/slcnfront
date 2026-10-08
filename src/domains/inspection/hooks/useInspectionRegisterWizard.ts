@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import {
   useCreateInspectionVisit,
   useInspectionVisitForEdit,
@@ -103,6 +104,11 @@ function splitVisitedAt(visitedAt: string): { date: string; time: string } {
   return { date: match[1], time: match[2] };
 }
 
+export type EnsureVisitIdResult =
+  | { status: 'saved'; visitId: string }
+  | { status: 'needs-visited-at' }
+  | { status: 'failed' };
+
 type UseInspectionRegisterWizardOptions = {
   draftVisitId: string | null;
 };
@@ -129,6 +135,10 @@ export function useInspectionRegisterWizard({
 
   const hydratedRef = useRef(false);
   const savingRef = useRef(false);
+  // The in-flight save and the id it created, readable inside the same click
+  // that triggered it (state would still be stale there).
+  const savePromiseRef = useRef<Promise<string | null> | null>(null);
+  const visitIdRef = useRef<string | null>(null);
 
   const draftVisitQuery = useInspectionVisitForEdit(draftVisitId ?? undefined);
   const createVisitMutation = useCreateInspectionVisit();
@@ -185,6 +195,7 @@ export function useInspectionRegisterWizard({
       photos: initialPhotos,
     });
     setAreaChoice(initialAreaChoice);
+    visitIdRef.current = detail.visitId;
     setVisitId(detail.visitId);
     setBasicValues(initialBasicValues);
     setPhotos(initialPhotos);
@@ -193,20 +204,21 @@ export function useInspectionRegisterWizard({
   }, [draftVisitQuery.data, autosave.markClean]);
   const hasStartedSaving = visitId !== null || lastSavedAt !== null;
 
-  const flush = useCallback(async () => {
+  /** Saves the current snapshot; resolves to the visit id, or null when nothing was saved. */
+  const saveNow = useCallback(async (): Promise<string | null> => {
     if (!visitedAt) {
       // §5: nothing is sent to the server until visitedAt is filled in.
-      return;
+      return null;
     }
 
     if (savingRef.current) {
-      // A save is already in flight — it will pick up the latest snapshot
-      // once `pendingSnapshotRef` is re-checked by the caller's own retry.
-      return;
+      // A save is already in flight — autosave simply skips; the next
+      // snapshot change schedules another one.
+      return null;
     }
 
     if (!areaChoice) {
-      return;
+      return null;
     }
 
     savingRef.current = true;
@@ -223,53 +235,110 @@ export function useInspectionRegisterWizard({
       files: buildVisitFilesPayload(photos),
     };
 
-    try {
-      let detail: InspectionVisitDetail;
+    const run = (async () => {
+      try {
+        let detail: InspectionVisitDetail;
 
-      if (!visitId) {
-        const payload: InspectionVisitCdo = {
-          ...(areaChoice.kind === 'existing'
-            ? { areaId: areaChoice.areaId }
-            : {
-                area: {
-                  name: areaChoice.name,
-                  description: areaChoice.description.trim() || undefined,
-                },
-              }),
-          ...commonFields,
-        };
+        if (!(visitId ?? visitIdRef.current)) {
+          const payload: InspectionVisitCdo = {
+            ...(areaChoice.kind === 'existing'
+              ? { areaId: areaChoice.areaId }
+              : {
+                  area: {
+                    name: areaChoice.name,
+                    description: areaChoice.description.trim() || undefined,
+                  },
+                }),
+            ...commonFields,
+          };
 
-        detail = await createVisitMutation.mutateAsync(payload);
-        setVisitId(detail.visitId);
-      } else {
-        const payload: InspectionVisitUdo = commonFields;
+          detail = await createVisitMutation.mutateAsync(payload);
+          visitIdRef.current = detail.visitId;
+          setVisitId(detail.visitId);
+        } else {
+          const payload: InspectionVisitUdo = commonFields;
 
-        detail = await updateVisitMutation.mutateAsync(payload);
+          // The mutation hook is bound to the `visitId` state; right after a
+          // create it is still null, so address the ref'd id directly.
+          detail = visitId
+            ? await updateVisitMutation.mutateAsync(payload)
+            : await inspectionApi.updateVisit(
+                visitIdRef.current as string,
+                payload
+              );
+        }
+
+        // Adopt server-assigned file ids so later saves send `id` and don't
+        // create duplicate FileBoxItem rows.
+        setPhotos((current) =>
+          current.map((photo) => {
+            const matched = detail.photos.find(
+              (item) => item.fileAssetId === photo.fileAssetId
+            );
+
+            return matched ? { ...photo, id: matched.id } : photo;
+          })
+        );
+        setLastSavedAt(new Date());
+
+        return detail.visitId;
+      } catch (error) {
+        setSaveErrorMessage(
+          error instanceof AppError
+            ? error.message
+            : '자동 저장에 실패했어요. 잠시 뒤 다시 시도해 주세요.'
+        );
+
+        return null;
+      } finally {
+        savingRef.current = false;
+        savePromiseRef.current = null;
       }
+    })();
 
-      // Adopt server-assigned file ids so later saves send `id` and don't
-      // create duplicate FileBoxItem rows.
-      setPhotos((current) =>
-        current.map((photo) => {
-          const matched = detail.photos.find(
-            (item) => item.fileAssetId === photo.fileAssetId
-          );
+    savePromiseRef.current = run;
 
-          return matched ? { ...photo, id: matched.id } : photo;
-        })
-      );
-      setLastSavedAt(new Date());
-    } catch (error) {
-      setSaveErrorMessage(
-        error instanceof AppError
-          ? error.message
-          : '자동 저장에 실패했어요. 잠시 뒤 다시 시도해 주세요.'
-      );
-    } finally {
-      savingRef.current = false;
-    }
+    return run;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitedAt, areaChoice, visitId, basicValues, photos]);
+
+  const flush = useCallback(async () => {
+    await saveNow();
+  }, [saveNow]);
+
+  /**
+   * For actions that need a server-side visit id right now (AI draft).
+   * Creates the draft visit if it does not exist yet and resolves with its id
+   * in the same click; waits out an in-flight autosave instead of skipping.
+   */
+  const ensureSavedVisitId =
+    useCallback(async (): Promise<EnsureVisitIdResult> => {
+      if (visitId ?? visitIdRef.current) {
+        return {
+          status: 'saved',
+          visitId: (visitId ?? visitIdRef.current) as string,
+        };
+      }
+
+      if (!visitedAt || !areaChoice) {
+        return { status: 'needs-visited-at' };
+      }
+
+      if (savePromiseRef.current) {
+        await savePromiseRef.current.catch(() => null);
+
+        if (visitIdRef.current) {
+          return { status: 'saved', visitId: visitIdRef.current };
+        }
+      }
+
+      autosave.cancel();
+      const savedVisitId = await saveNow();
+
+      return savedVisitId
+        ? { status: 'saved', visitId: savedVisitId }
+        : { status: 'failed' };
+    }, [visitId, visitedAt, areaChoice, saveNow, autosave.cancel]);
 
   function updateBasicField<Key extends keyof VisitBasicFormValues>(
     key: Key,
@@ -461,5 +530,6 @@ export function useInspectionRegisterWizard({
     isDraftLoading: Boolean(draftVisitId) && draftVisitQuery.isLoading,
     draftLoadError: draftVisitQuery.isError,
     flushNow: flush,
+    ensureSavedVisitId,
   };
 }

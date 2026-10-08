@@ -114,3 +114,11 @@ export function NoIcon(props: IconProps) {
     </BaseIcon>
   );
 }
+
+export function SparkleIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d='M12 3c.7 5.4 3.6 8.3 9 9-5.4.7-8.3 3.6-9 9-.7-5.4-3.6-8.3-9-9 5.4-.7 8.3-3.6 9-9z' />
+    </BaseIcon>
+  );
+}

@@ -12,6 +12,7 @@ import {
   parseInspectionTagListResponse,
   parseInspectionVisitDetailResponse,
   parseInspectionVisitListResponse,
+  parseReviewSuggestionResponse,
   parseViewedPropertyDetailResponse,
 } from '@/domains/inspection/api/inspection-schemas';
 import {
@@ -51,6 +52,8 @@ import type {
   InspectionVisitUdo,
   OrderItem,
   PropertyAnswerPayload,
+  ReviewSuggestion,
+  ReviewSuggestionRequest,
   TagScope,
   ViewedPropertyCdo,
   ViewedPropertyDetail,
@@ -353,6 +356,29 @@ function createInspectionApi(client: ApiClientLike = apiClient) {
       return mapInspectionVisitDetailDto(
         parseInspectionVisitDetailResponse(response, 'status')
       );
+    },
+
+    async suggestVisitReview(
+      visitId: string,
+      payload: ReviewSuggestionRequest
+    ): Promise<ReviewSuggestion> {
+      const response = await client.post<unknown>({
+        path: `/inspection-visits/${encodeURIComponent(visitId)}/review-suggestion`,
+        body: payload,
+      });
+      return parseReviewSuggestionResponse(response);
+    },
+
+    async suggestPropertyReview(
+      visitId: string,
+      propertyId: string,
+      payload: ReviewSuggestionRequest
+    ): Promise<ReviewSuggestion> {
+      const response = await client.post<unknown>({
+        path: `/inspection-visits/${encodeURIComponent(visitId)}/properties/${encodeURIComponent(propertyId)}/review-suggestion`,
+        body: payload,
+      });
+      return parseReviewSuggestionResponse(response);
     },
 
     async deleteVisit(visitId: string): Promise<void> {

@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import { buildVisitDraftReason } from '@/domains/inspection/components/register/build-draft-reason';
 import { RegisterStepBasicInfo } from '@/domains/inspection/components/register/RegisterStepBasicInfo';
 import {
@@ -243,6 +244,10 @@ export function InspectionVisitEditSection({
           photoUploadError={photoUploader.error}
           savedAtLabel={formatSavedAtLabel(lastSavedAt)}
           errors={{}}
+          reviewDraft={{
+            requestDraft: () =>
+              inspectionApi.suggestVisitReview(visitId, { memo: values.memo }),
+          }}
         />
 
         {saveError ? (

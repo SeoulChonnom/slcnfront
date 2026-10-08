@@ -1,14 +1,24 @@
 import { useState } from 'react';
 import { RadioGroup } from '@/components/ui/RadioGroup';
 import { TextField } from '@/components/ui/TextField';
+import { ReviewDraftAction } from '@/domains/inspection/components/ReviewDraftAction';
 import type { PhotoUploadProgress } from '@/domains/inspection/components/register/PhotoManager';
 import { PhotoManager } from '@/domains/inspection/components/register/PhotoManager';
 import { useInspectionTags } from '@/domains/inspection/hooks/inspection-queries';
+import { useDraftedFields } from '@/domains/inspection/hooks/useDraftedFields';
 import type {
   LocalPhotoItem,
   VisitBasicFormValues,
 } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
-import type { RevisitIntent } from '@/domains/inspection/types';
+import type {
+  ReviewSuggestion,
+  RevisitIntent,
+} from '@/domains/inspection/types';
+import {
+  getSuggestedFields,
+  hasExistingReviewContent,
+  REVIEW_DRAFT_MEMO_MAX_LENGTH,
+} from '@/domains/inspection/utils/review-draft';
 
 // 입력 폼 전용 짧은 문구 — 모바일에서도 세 개가 한 줄에 들어가야 한다.
 // 목록·상세 표시는 REVISIT_INTENT_META의 긴 문구를 그대로 쓴다.
@@ -33,6 +43,8 @@ type RegisterStepBasicInfoProps = {
   photoUploadError?: string | null;
   savedAtLabel: string;
   errors: Record<string, string>;
+  /** Omit to hide the AI draft action. */
+  reviewDraft?: { requestDraft: () => Promise<ReviewSuggestion> };
 };
 
 export function RegisterStepBasicInfo({
@@ -47,8 +59,11 @@ export function RegisterStepBasicInfo({
   photoUploadError = null,
   savedAtLabel,
   errors,
+  reviewDraft,
 }: RegisterStepBasicInfoProps) {
   const [tagInput, setTagInput] = useState('');
+  const [isDrafting, setIsDrafting] = useState(false);
+  const { drafted, markDrafted } = useDraftedFields();
   const suggestedTagsQuery = useInspectionTags('', 'VISIT');
   const suggestedTags = (suggestedTagsQuery.data ?? [])
     .filter((tag) => !values.tags.includes(tag.name))
@@ -69,6 +84,20 @@ export function RegisterStepBasicInfo({
       'tags',
       values.tags.filter((tag) => tag !== name)
     );
+  }
+
+  function applyDraft(suggestion: ReviewSuggestion) {
+    const fields = getSuggestedFields(suggestion);
+
+    for (const field of fields) {
+      if (field === 'tags') {
+        onFieldChange('tags', suggestion.tags);
+      } else {
+        onFieldChange(field, suggestion[field]);
+      }
+    }
+
+    markDrafted(fields);
   }
 
   return (
@@ -121,22 +150,36 @@ export function RegisterStepBasicInfo({
         className='slcn-inspection-register-revisit-group'
       />
 
-      <TextField
-        label='한줄평'
-        hint='선택 입력'
-        maxLength={300}
-        value={values.oneLineReview}
-        onChange={(event) => onFieldChange('oneLineReview', event.target.value)}
-      />
-
       <label className='slcn-field'>
         <span className='slcn-field__label'>전체 메모</span>
         <textarea
           className='slcn-field__textarea slcn-inspection-register-textarea'
           value={values.memo}
+          maxLength={REVIEW_DRAFT_MEMO_MAX_LENGTH}
+          readOnly={isDrafting}
           onChange={(event) => onFieldChange('memo', event.target.value)}
         />
       </label>
+
+      {reviewDraft ? (
+        <ReviewDraftAction
+          memo={values.memo}
+          hasExistingReview={hasExistingReviewContent(values)}
+          requestDraft={reviewDraft.requestDraft}
+          onApply={applyDraft}
+          onBusyChange={setIsDrafting}
+        />
+      ) : null}
+
+      <TextField
+        label='한줄평'
+        hint='선택 입력'
+        maxLength={300}
+        value={values.oneLineReview}
+        readOnly={isDrafting}
+        data-drafted={drafted.has('oneLineReview') || undefined}
+        onChange={(event) => onFieldChange('oneLineReview', event.target.value)}
+      />
 
       <div className='slcn-inspection-register-pros-cons'>
         <label className='slcn-field'>
@@ -144,6 +187,8 @@ export function RegisterStepBasicInfo({
           <textarea
             className='slcn-field__textarea slcn-inspection-register-textarea'
             value={values.pros}
+            readOnly={isDrafting}
+            data-drafted={drafted.has('pros') || undefined}
             onChange={(event) => onFieldChange('pros', event.target.value)}
           />
         </label>
@@ -152,16 +197,22 @@ export function RegisterStepBasicInfo({
           <textarea
             className='slcn-field__textarea slcn-inspection-register-textarea'
             value={values.cons}
+            readOnly={isDrafting}
+            data-drafted={drafted.has('cons') || undefined}
             onChange={(event) => onFieldChange('cons', event.target.value)}
           />
         </label>
       </div>
 
-      <div className='slcn-inspection-register-tags'>
+      <div
+        className='slcn-inspection-register-tags'
+        data-drafted={drafted.has('tags') || undefined}
+      >
         <span className='slcn-field__label'>태그</span>
         <div className='slcn-inspection-register-tags__input-row'>
           <TextField
             value={tagInput}
+            readOnly={isDrafting}
             placeholder='태그를 입력하고 Enter'
             onChange={(event) => setTagInput(event.target.value)}
             onKeyDown={(event) => {
@@ -181,6 +232,7 @@ export function RegisterStepBasicInfo({
                   type='button'
                   className='slcn-inspection-tag-chip'
                   onClick={() => removeTag(tag)}
+                  disabled={isDrafting}
                   aria-label={`태그 ${tag} 지우기`}
                 >
                   {tag} ×

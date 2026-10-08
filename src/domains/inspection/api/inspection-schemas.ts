@@ -246,6 +246,25 @@ const inspectionTagSchema = z.object({
   usageCount: z.number().int(),
 });
 
+const reviewSuggestionSchema = z.object({
+  oneLineReview: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  pros: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  cons: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  tags: z
+    .array(z.string())
+    .nullish()
+    .transform((v) => v ?? []),
+});
+
 const inspectionQuestionSchema = z.object({
   questionId: z.string(),
   answerType: answerTypeSchema,
@@ -435,6 +454,10 @@ export function parseInspectionTagListResponse(
   payload: unknown
 ): InspectionTagDto[] {
   return parseOrThrow(inspectionTagListSchema, payload, 'Inspection tag list');
+}
+
+export function parseReviewSuggestionResponse(payload: unknown) {
+  return parseOrThrow(reviewSuggestionSchema, payload, 'Review suggestion');
 }
 
 export function parseInspectionQuestionListResponse(
