@@ -74,6 +74,18 @@ export function VisitPanel({
         </span>
       </div>
 
+      {visit.memo ? (
+        <div className='slcn-inspection-area-detail-panel__memo'>
+          {visit.memo
+            .split('\n')
+            .map((paragraph, index) =>
+              paragraph.trim() ? (
+                <p key={`memo-paragraph-${index}`}>{paragraph}</p>
+              ) : null
+            )}
+        </div>
+      ) : null}
+
       {visit.oneLineReview ? (
         <p className='slcn-inspection-area-detail-panel__quote'>
           “{visit.oneLineReview}”
@@ -86,18 +98,6 @@ export function VisitPanel({
           max={visit.tags.length}
           className='slcn-inspection-area-detail-panel__tags'
         />
-      ) : null}
-
-      {visit.memo ? (
-        <div className='slcn-inspection-area-detail-panel__memo'>
-          {visit.memo
-            .split('\n')
-            .map((paragraph, index) =>
-              paragraph.trim() ? (
-                <p key={`memo-paragraph-${index}`}>{paragraph}</p>
-              ) : null
-            )}
-        </div>
       ) : null}
 
       <VisitProsCons pros={visit.pros} cons={visit.cons} />

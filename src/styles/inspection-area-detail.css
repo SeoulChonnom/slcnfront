@@ -10,6 +10,9 @@
   margin-inline: auto;
   padding-inline: var(--space-6);
   padding-block: var(--space-8);
+  /* 한글을 어절 단위로 줄바꿈하되, 긴 URL 등은 넘치지 않게 끊는다. */
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 /* ---- Breadcrumb ---- */
