@@ -118,6 +118,29 @@ describe('InspectionAreaListSection', () => {
     expect(screen.queryByRole('link', { name: '질문 관리' })).toBeNull();
   });
 
+  it('shows "동·호수 미정" for the top property when its name is null', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              topProperty: {
+                propertyId: 'prop-1',
+                complexName: '트리마제',
+                name: null,
+                interestLevel: 5,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('동·호수 미정')).toBeTruthy();
+  });
+
   it('renders the header summary sentence from `totals`, not the filtered items', () => {
     useInspectionAreaListMock.mockReturnValue(mockQueryResult());
 

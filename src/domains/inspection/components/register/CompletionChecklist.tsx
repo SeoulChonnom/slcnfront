@@ -7,7 +7,10 @@ import type {
   RevisitIntent,
   ViewedPropertyDetail,
 } from '@/domains/inspection/types';
-import { formatVisitedAt } from '@/domains/inspection/utils/inspection-format';
+import {
+  formatPropertyName,
+  formatVisitedAt,
+} from '@/domains/inspection/utils/inspection-format';
 import { buildDeviceInspectionPropertyEditPath } from '@/lib/routing/route-builders';
 
 type CompletionChecklistProps = {
@@ -76,8 +79,8 @@ export function CompletionChecklist({
               {draftProperties.map((property) => (
                 <li key={property.propertyId}>
                   <span>
-                    {property.complexName} · {property.name} —{' '}
-                    {buildPropertyDraftReason(property.incompleteSummary)}
+                    {property.complexName} · {formatPropertyName(property.name)}{' '}
+                    — {buildPropertyDraftReason(property.incompleteSummary)}
                   </span>
                   <Button
                     variant='ghost'

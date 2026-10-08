@@ -12,6 +12,7 @@ import { RevisitIntentMark } from '@/domains/inspection/components/RevisitIntent
 import { TagChips } from '@/domains/inspection/components/TagChips';
 import type { InspectionArea } from '@/domains/inspection/types';
 import {
+  formatPropertyName,
   formatVisitedAtDate,
   formatVisitedAtTime,
 } from '@/domains/inspection/utils/inspection-format';
@@ -90,7 +91,9 @@ function AreaTopProperty({ area }: { area: InspectionArea }) {
           <span className='slcn-inspection-area-row__top-complex'>
             {top.complexName}
           </span>
-          <span className='slcn-inspection-area-row__top-name'>{top.name}</span>
+          <span className='slcn-inspection-area-row__top-name'>
+            {formatPropertyName(top.name)}
+          </span>
           <InterestStars
             level={top.interestLevel}
             className='slcn-inspection-area-row__top-rating'

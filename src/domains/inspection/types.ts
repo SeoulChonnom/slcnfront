@@ -70,7 +70,7 @@ export type IncompleteSummary = {
 export type ViewedPropertyBrief = {
   propertyId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 };
 
@@ -79,7 +79,7 @@ export type MatchedProperty = {
   propertyId: string;
   visitId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 };
 
@@ -89,7 +89,7 @@ export type AreaViewedProperty = {
   visitId: string;
   visitedAt: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
   status: InspectionStatus;
 };
@@ -206,7 +206,7 @@ export type ViewedPropertyDetail = {
   areaName: string;
   visitedAt: string;
   complexName: string;
-  name: string;
+  name: string | null;
   memo: string | null;
   oneLineReview: string | null;
   pros: string | null;
@@ -372,7 +372,8 @@ export type InspectionVisitUdo = InspectionVisitFields & {
 
 type ViewedPropertyFields = {
   complexName: string;
-  name: string;
+  /** 동·호수. 계획 단계에서는 생략할 수 있고, 생략하면 `null`로 저장된다(api.md §6). */
+  name?: string;
   memo?: string;
   oneLineReview?: string;
   pros?: string;

@@ -86,7 +86,7 @@ const incompleteSummarySchema = z.object({
 const viewedPropertyBriefSchema = z.object({
   propertyId: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
 });
 
@@ -94,7 +94,7 @@ const matchedPropertySchema = z.object({
   propertyId: z.string(),
   visitId: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
 });
 
@@ -103,7 +103,7 @@ const areaViewedPropertySchema = z.object({
   visitId: z.string(),
   visitedAt: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
   status: inspectionStatusSchema,
 });
@@ -190,7 +190,7 @@ const viewedPropertyDetailSchema = z.object({
   areaName: z.string(),
   visitedAt: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   memo: nullableString,
   oneLineReview: nullableString,
   pros: nullableString,

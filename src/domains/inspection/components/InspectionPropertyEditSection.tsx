@@ -121,7 +121,7 @@ export function InspectionPropertyEditSection({
     hydratedRef.current = true;
     const initialFields: BasicFields = {
       complexName: detail.complexName,
-      name: detail.name,
+      name: detail.name ?? '',
       interestLevel: detail.interestLevel,
       oneLineReview: detail.oneLineReview ?? '',
       memo: detail.memo ?? '',
@@ -148,7 +148,7 @@ export function InspectionPropertyEditSection({
     try {
       const response = await updateMutation.mutateAsync({
         complexName: next.complexName.trim(),
-        name: next.name.trim(),
+        name: next.name.trim() || undefined,
         interestLevel: next.interestLevel ?? undefined,
         oneLineReview: next.oneLineReview.trim() || undefined,
         memo: next.memo.trim() || undefined,
@@ -418,8 +418,9 @@ export function InspectionPropertyEditSection({
         </datalist>
 
         <TextField
-          label='매물명'
+          label='동·호수'
           required
+          hint='임장 전에는 비워 둘 수 있지만, 작성을 마치려면 입력해야 합니다.'
           value={fields.name}
           onChange={(event) =>
             setFields({ ...fields, name: event.target.value })

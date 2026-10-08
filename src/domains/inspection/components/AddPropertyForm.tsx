@@ -20,9 +20,9 @@ type AddPropertyFormProps = {
 };
 
 /**
- * A property can only be created with its complexName + name (the CDO
- * requires both), so "매물 추가" collects just those two inline, creates the
- * property, and hands off to ③-1 매물 편집 for everything else.
+ * A property can be created with just its complexName (name = 동·호수 is
+ * optional until it is completed), so "매물 추가" collects those two inline,
+ * creates the property, and hands off to ③-1 매물 편집 for everything else.
  */
 export function AddPropertyForm({
   device,
@@ -46,8 +46,8 @@ export function AddPropertyForm({
   const [addError, setAddError] = useState<string | null>(null);
 
   async function handleAddProperty() {
-    if (!newComplexName.trim() || !newName.trim()) {
-      setAddError('단지명과 매물명을 모두 입력해 주세요.');
+    if (!newComplexName.trim()) {
+      setAddError('단지명을 입력해 주세요.');
 
       return;
     }
@@ -57,7 +57,7 @@ export function AddPropertyForm({
     try {
       const created = await createPropertyMutation.mutateAsync({
         complexName: newComplexName.trim(),
-        name: newName.trim(),
+        name: newName.trim() || undefined,
       });
 
       if (areaId) {
@@ -103,8 +103,8 @@ export function AddPropertyForm({
         ))}
       </datalist>
       <TextField
-        label='매물명'
-        required
+        label='동·호수'
+        hint='임장 전이라면 비워 둘 수 있어요.'
         value={newName}
         onChange={(event) => setNewName(event.target.value)}
       />

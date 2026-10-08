@@ -388,7 +388,7 @@ describe('InspectionAreaDetailSection', () => {
 
     await user.click(addButton);
     await user.type(screen.getByLabelText(/단지\/건물명/), ' 트리마제 ');
-    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.type(screen.getByLabelText(/동·호수/), '103동 902호');
     await user.click(
       screen.getByRole('button', { name: '추가하고 계속 쓰기' })
     );
@@ -404,19 +404,49 @@ describe('InspectionAreaDetailSection', () => {
     );
   });
 
-  it('asks for both names before creating a property', async () => {
+  it('requires only the complex name before creating a property', async () => {
     const { user } = setup();
 
     await user.click(screen.getByRole('button', { name: '+ 매물 추가' }));
-    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.type(screen.getByLabelText(/동·호수/), '103동 902호');
     await user.click(
       screen.getByRole('button', { name: '추가하고 계속 쓰기' })
     );
 
     expect(screen.getByRole('alert').textContent).toBe(
-      '단지명과 매물명을 모두 입력해 주세요.'
+      '단지명을 입력해 주세요.'
     );
     expect(createPropertyMutateAsyncMock).not.toHaveBeenCalled();
+  });
+
+  it('omits name from the create request when 동·호수 is left blank', async () => {
+    createPropertyMutateAsyncMock.mockResolvedValue(
+      makeProperty({ propertyId: 'p-new' })
+    );
+    const { user } = setup();
+
+    await user.click(screen.getByRole('button', { name: '+ 매물 추가' }));
+    await user.type(screen.getByLabelText(/단지\/건물명/), '트리마제');
+    await user.click(
+      screen.getByRole('button', { name: '추가하고 계속 쓰기' })
+    );
+
+    expect(createPropertyMutateAsyncMock).toHaveBeenCalledWith({
+      complexName: '트리마제',
+      name: undefined,
+    });
+  });
+
+  it('shows "동·호수 미정" for a property with no name', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          properties: [makeProperty({ name: null })],
+        }),
+      })
+    );
+
+    expect(screen.getAllByText('동·호수 미정').length).toBeGreaterThan(0);
   });
 
   it('offers 매물 추가 under the empty state of a zero-property visit', () => {

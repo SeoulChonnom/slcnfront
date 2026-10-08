@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  parseAreaViewedPropertyListResponse,
   parseInspectionAreaDetailResponse,
   parseInspectionAreaListResponse,
   parseInspectionVisitDetailResponse,
@@ -450,5 +451,95 @@ describe('parseViewedPropertyDetailResponse', () => {
 
     expect(dto.answers[0]?.textValue).toBe('밝다');
     expect(dto.answers[1]?.selectedCodes).toEqual(['SOUTH']);
+  });
+});
+
+describe('null property name (동·호수 미정)', () => {
+  const incompleteSummary = {
+    unansweredRequiredCount: 0,
+    unansweredRequiredQuestions: [],
+    missingFields: ['name'],
+    draftPropertyCount: 1,
+    visitMissingFields: [],
+    draftVisitCount: 0,
+  };
+  const brief = {
+    propertyId: 'PROP-09',
+    complexName: '트리마제',
+    name: null,
+    interestLevel: null,
+  };
+
+  it('accepts name: null in brief, matched, area-viewed and detail schemas', () => {
+    const list = parseInspectionAreaListResponse({
+      items: [
+        {
+          areaId: 'AREA-01',
+          name: '성수동',
+          description: null,
+          visitCount: 1,
+          firstVisitedAt: null,
+          lastVisitedAt: null,
+          totalPropertyCount: 1,
+          latestVisit: null,
+          topProperty: brief,
+          incompleteSummary,
+          thumbnails: [],
+          totalImageCount: 0,
+          matchedProperty: { ...brief, visitId: 'VISIT-01' },
+        },
+      ],
+      totalCount: 1,
+      hasNext: false,
+      revisitIntentCounts: { total: 1, YES: 0, MAYBE: 0, NO: 0 },
+      totals: { areaCount: 1, visitCount: 1, propertyCount: 1 },
+    });
+
+    expect(list.items[0]?.topProperty?.name).toBeNull();
+    expect(list.items[0]?.matchedProperty?.name).toBeNull();
+
+    const areaProps = parseAreaViewedPropertyListResponse([
+      {
+        propertyId: 'PROP-09',
+        visitId: 'VISIT-01',
+        visitedAt: '2026-09-17T14:00',
+        complexName: '트리마제',
+        name: null,
+        interestLevel: null,
+        status: 'DRAFT',
+      },
+    ]);
+
+    expect(areaProps[0]?.name).toBeNull();
+
+    const detail = parseViewedPropertyDetailResponse(
+      {
+        propertyId: 'PROP-09',
+        inspectionVisitId: 'VISIT-01',
+        areaId: 'AREA-01',
+        areaName: '성수동',
+        visitedAt: '2026-09-17T14:00',
+        complexName: '트리마제',
+        name: null,
+        memo: null,
+        oneLineReview: null,
+        pros: null,
+        cons: null,
+        interestLevel: null,
+        status: 'DRAFT',
+        sortOrder: 1,
+        tags: [],
+        cover: null,
+        photos: [],
+        answers: [],
+        incompleteSummary,
+        prevProperty: brief,
+        nextProperty: null,
+      },
+      'detail'
+    );
+
+    expect(detail.name).toBeNull();
+    expect(detail.prevProperty?.name).toBeNull();
   });
 });

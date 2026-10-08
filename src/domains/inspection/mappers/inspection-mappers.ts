@@ -91,7 +91,7 @@ function mapIncompleteSummary(dto: {
 function mapViewedPropertyBrief(dto: {
   propertyId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 }): ViewedPropertyBrief {
   return {
@@ -106,7 +106,7 @@ function mapMatchedProperty(dto: {
   propertyId: string;
   visitId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 }): MatchedProperty {
   return {

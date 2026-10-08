@@ -10,6 +10,7 @@ import {
   useInspectionVisit,
   useReorderInspectionVisitProperties,
 } from '@/domains/inspection/hooks/inspection-queries';
+import { formatPropertyName } from '@/domains/inspection/utils/inspection-format';
 import { buildDeviceInspectionPropertyEditPath } from '@/lib/routing/route-builders';
 
 type RegisterStepPropertiesProps = {
@@ -100,7 +101,7 @@ export function RegisterStepProperties({
                 </span>
                 <div className='slcn-inspection-register-property-row__main'>
                   <span className='slcn-inspection-register-property-row__name'>
-                    {property.complexName} · {property.name}
+                    {property.complexName} · {formatPropertyName(property.name)}
                   </span>
                   {property.status === 'DRAFT' ? (
                     <span className='slcn-inspection-register-property-row__reason'>

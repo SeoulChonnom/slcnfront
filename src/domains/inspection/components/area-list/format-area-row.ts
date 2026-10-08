@@ -44,7 +44,7 @@ export function formatDraftReason(area: InspectionArea): string {
 
 export type AreaTopPropertyView = {
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 };
 

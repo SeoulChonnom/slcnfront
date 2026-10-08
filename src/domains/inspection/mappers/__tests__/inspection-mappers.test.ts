@@ -53,6 +53,40 @@ describe('§3-① visitId normalization', () => {
     expect(result).not.toHaveProperty('inspectionVisitId');
   });
 
+  it('mapViewedPropertyDetailDto keeps a null name (no coercion to empty string)', () => {
+    const result = mapViewedPropertyDetailDto({
+      propertyId: 'PROP-09',
+      inspectionVisitId: 'VISIT-03',
+      areaId: 'AREA-01',
+      areaName: '성수동',
+      visitedAt: '2026-09-17T14:00',
+      complexName: '트리마제',
+      name: null,
+      memo: null,
+      oneLineReview: null,
+      pros: null,
+      cons: null,
+      interestLevel: null,
+      status: 'DRAFT',
+      sortOrder: 1,
+      tags: [],
+      cover: null,
+      photos: [],
+      answers: [],
+      incompleteSummary: baseIncompleteSummary,
+      prevProperty: {
+        propertyId: 'PROP-08',
+        complexName: '트리마제',
+        name: null,
+        interestLevel: null,
+      },
+      nextProperty: null,
+    });
+
+    expect(result.name).toBeNull();
+    expect(result.prevProperty?.name).toBeNull();
+  });
+
   it('mapInspectionVisitDetailDto renames the wire `inspectionVisitId` to `visitId`', () => {
     const dto: InspectionVisitDetailDto = {
       inspectionVisitId: 'VISIT-03',
