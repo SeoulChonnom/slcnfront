@@ -262,6 +262,18 @@ export type InspectionVisitListResult = {
   hasNext: boolean;
 };
 
+/** AI review draft (api.md §8-1) — suggestion only, the server stores nothing. */
+export type ReviewSuggestion = {
+  oneLineReview: string;
+  pros: string;
+  cons: string;
+  tags: string[];
+};
+
+export type ReviewSuggestionRequest = {
+  memo: string;
+};
+
 export type InspectionTag = {
   tagId: string;
   name: string;

@@ -155,6 +155,10 @@ export function InspectionPropertyDetailSection({
         currentPropertyId={propertyId}
       />
 
+      {data.memo ? (
+        <p className='slcn-inspection-property-detail__prose'>{data.memo}</p>
+      ) : null}
+
       {data.oneLineReview ? (
         <p className='slcn-inspection-property-detail__quote'>
           “{data.oneLineReview}”
@@ -163,10 +167,6 @@ export function InspectionPropertyDetailSection({
 
       {data.tags.length > 0 ? (
         <TagChips tags={data.tags} max={data.tags.length} />
-      ) : null}
-
-      {data.memo ? (
-        <p className='slcn-inspection-property-detail__prose'>{data.memo}</p>
       ) : null}
 
       {pros.length > 0 || cons.length > 0 ? (

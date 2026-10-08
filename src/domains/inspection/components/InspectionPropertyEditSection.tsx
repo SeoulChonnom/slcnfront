@@ -7,7 +7,9 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { TextField } from '@/components/ui/TextField';
+import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import { InterestStarsInput } from '@/domains/inspection/components/InterestStars';
+import { ReviewDraftAction } from '@/domains/inspection/components/ReviewDraftAction';
 import { PhotoManager } from '@/domains/inspection/components/register/PhotoManager';
 import { PropertyAnswerFields } from '@/domains/inspection/components/register/PropertyAnswerFields';
 import {
@@ -22,6 +24,7 @@ import {
   AUTOSAVE_DELAY_MS,
   useAutosave,
 } from '@/domains/inspection/hooks/useAutosave';
+import { useDraftedFields } from '@/domains/inspection/hooks/useDraftedFields';
 import { useInspectionPhotoUploader } from '@/domains/inspection/hooks/useInspectionPhotoUploader';
 import {
   buildVisitFilesPayload,
@@ -32,9 +35,16 @@ import type {
   PropertyAnswer,
   PropertyAnswerInput,
   PropertyAnswerPayload,
+  ReviewSuggestion,
 } from '@/domains/inspection/types';
 import { formatVisitedAt } from '@/domains/inspection/utils/inspection-format';
 import { isPropertyEditFromArea } from '@/domains/inspection/utils/property-edit-return';
+import {
+  getSuggestedFields,
+  hasExistingReviewContent,
+  REVIEW_DRAFT_MEMO_MAX_LENGTH,
+  ReviewDraftError,
+} from '@/domains/inspection/utils/review-draft';
 import { AppError } from '@/lib/api/errors';
 import {
   buildDeviceInspectionAreaDetailPath,
@@ -93,6 +103,8 @@ export function InspectionPropertyEditSection({
   const [completeError, setCompleteError] = useState<string | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const photoUploader = useInspectionPhotoUploader(setPhotos);
+  const [isDrafting, setIsDrafting] = useState(false);
+  const { drafted, markDrafted } = useDraftedFields();
 
   const detail = propertyQuery.data;
 
@@ -253,6 +265,44 @@ export function InspectionPropertyEditSection({
     return requiredOk && answersOk;
   }, [fields, answers]);
 
+  // The suggestion also reads the saved answers, so send pending ones first.
+  async function requestReviewDraft() {
+    try {
+      await flushAnswers();
+    } catch {
+      throw new ReviewDraftError(
+        '문답을 저장하지 못해 초안을 만들 수 없어요. 잠시 뒤 다시 시도해 주세요.'
+      );
+    }
+
+    return inspectionApi.suggestPropertyReview(visitId, propertyId, {
+      memo: fields?.memo ?? '',
+    });
+  }
+
+  function applyDraft(suggestion: ReviewSuggestion) {
+    const suggested = getSuggestedFields(suggestion);
+
+    setFields((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const next = { ...current };
+
+      for (const field of suggested) {
+        if (field === 'tags') {
+          next.tags = suggestion.tags;
+        } else {
+          next[field] = suggestion[field];
+        }
+      }
+
+      return next;
+    });
+    markDrafted(suggested);
+  }
+
   function addTag(nameRaw: string) {
     const name = nameRaw.trim();
 
@@ -386,25 +436,37 @@ export function InspectionPropertyEditSection({
           />
         </div>
 
-        <TextField
-          label='한줄평'
-          hint='선택 입력'
-          value={fields.oneLineReview}
-          onChange={(event) =>
-            setFields({ ...fields, oneLineReview: event.target.value })
-          }
-        />
-
         <label className='slcn-field'>
           <span className='slcn-field__label'>메모</span>
           <textarea
             className='slcn-field__textarea slcn-inspection-register-textarea'
             value={fields.memo}
+            maxLength={REVIEW_DRAFT_MEMO_MAX_LENGTH}
+            readOnly={isDrafting}
             onChange={(event) =>
               setFields({ ...fields, memo: event.target.value })
             }
           />
         </label>
+
+        <ReviewDraftAction
+          memo={fields.memo}
+          hasExistingReview={hasExistingReviewContent(fields)}
+          requestDraft={requestReviewDraft}
+          onApply={applyDraft}
+          onBusyChange={setIsDrafting}
+        />
+
+        <TextField
+          label='한줄평'
+          hint='선택 입력'
+          value={fields.oneLineReview}
+          readOnly={isDrafting}
+          data-drafted={drafted.has('oneLineReview') || undefined}
+          onChange={(event) =>
+            setFields({ ...fields, oneLineReview: event.target.value })
+          }
+        />
 
         <div className='slcn-inspection-register-pros-cons'>
           <label className='slcn-field'>
@@ -412,6 +474,8 @@ export function InspectionPropertyEditSection({
             <textarea
               className='slcn-field__textarea slcn-inspection-register-textarea'
               value={fields.pros}
+              readOnly={isDrafting}
+              data-drafted={drafted.has('pros') || undefined}
               onChange={(event) =>
                 setFields({ ...fields, pros: event.target.value })
               }
@@ -422,6 +486,8 @@ export function InspectionPropertyEditSection({
             <textarea
               className='slcn-field__textarea slcn-inspection-register-textarea'
               value={fields.cons}
+              readOnly={isDrafting}
+              data-drafted={drafted.has('cons') || undefined}
               onChange={(event) =>
                 setFields({ ...fields, cons: event.target.value })
               }
@@ -429,10 +495,14 @@ export function InspectionPropertyEditSection({
           </label>
         </div>
 
-        <div className='slcn-inspection-register-tags'>
+        <div
+          className='slcn-inspection-register-tags'
+          data-drafted={drafted.has('tags') || undefined}
+        >
           <span className='slcn-field__label'>태그</span>
           <TextField
             value={tagInput}
+            readOnly={isDrafting}
             placeholder='태그를 입력하고 Enter'
             onChange={(event) => setTagInput(event.target.value)}
             onKeyDown={(event) => {
@@ -451,6 +521,7 @@ export function InspectionPropertyEditSection({
                     type='button'
                     className='slcn-inspection-tag-chip'
                     onClick={() => removeTag(tag)}
+                    disabled={isDrafting}
                   >
                     {tag} ×
                   </button>

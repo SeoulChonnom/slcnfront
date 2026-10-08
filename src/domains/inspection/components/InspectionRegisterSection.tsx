@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import { CompletionChecklist } from '@/domains/inspection/components/register/CompletionChecklist';
 import { RegisterStepArea } from '@/domains/inspection/components/register/RegisterStepArea';
 import { RegisterStepBasicInfo } from '@/domains/inspection/components/register/RegisterStepBasicInfo';
@@ -18,6 +19,7 @@ import {
   type RegisterWizardStep,
   useInspectionRegisterWizard,
 } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
+import { ReviewDraftError } from '@/domains/inspection/utils/review-draft';
 import {
   buildDeviceInspectionAreaDetailPath,
   buildDeviceInspectionAreaListPath,
@@ -85,6 +87,30 @@ export function InspectionRegisterSection({
         }))
       );
     }
+  }
+
+  /**
+   * The suggestion endpoint needs a visit id, so the draft visit is saved
+   * first (same click) when it does not exist yet.
+   */
+  async function requestReviewDraft() {
+    const result = await wizard.ensureSavedVisitId();
+
+    if (result.status === 'needs-visited-at') {
+      throw new ReviewDraftError(
+        '방문 날짜와 시각을 먼저 입력해 주세요. 임시저장한 뒤 초안을 만들 수 있어요.'
+      );
+    }
+
+    if (result.status === 'failed') {
+      throw new ReviewDraftError(
+        '임시저장에 실패해 초안을 만들 수 없어요. 잠시 뒤 다시 시도해 주세요.'
+      );
+    }
+
+    return inspectionApi.suggestVisitReview(result.visitId, {
+      memo: wizard.basicValues.memo,
+    });
   }
 
   if (wizard.isDraftLoading) {
@@ -191,6 +217,7 @@ export function InspectionRegisterSection({
             photoUploadError={photoUploader.error}
             savedAtLabel={formatSavedAtLabel(wizard.lastSavedAt)}
             errors={wizard.stepErrors}
+            reviewDraft={{ requestDraft: requestReviewDraft }}
           />
         ) : null}
 

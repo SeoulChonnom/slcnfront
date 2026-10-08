@@ -6,6 +6,9 @@
   max-width: 60rem;
   margin-inline: auto;
   padding-block: var(--fr-block);
+  /* 한글을 어절 단위로 줄바꿈하되, 긴 URL 등은 넘치지 않게 끊는다. */
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 .slcn-num {

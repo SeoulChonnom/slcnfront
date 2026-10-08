@@ -301,13 +301,21 @@
   margin-top: 0;
 }
 
+/* 라벨→입력은 .slcn-field와 같은 간격(space-2), 입력→칩 / 칩→추천은 12px(space-3). */
+.slcn-inspection-register-tags {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
 .slcn-inspection-register-tags__input-row {
   max-width: 20rem;
 }
 
 .slcn-inspection-register-tags__list {
   list-style: none;
-  margin: 0;
+  margin: var(--space-1) 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
@@ -328,6 +336,7 @@
 }
 
 .slcn-inspection-register-tags__suggestions {
+  margin-top: var(--space-1);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -715,6 +724,69 @@
 /* ============================================================
    모바일 (< 833px) — screen_design.md §8 실측 치수
    ============================================================ */
+
+/* ── AI 후기 초안 ───────────────────────────────────────────────────── */
+
+.slcn-inspection-review-draft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slcn-inspection-review-draft__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.slcn-inspection-review-draft__icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.slcn-inspection-review-draft__status {
+  margin: 0;
+  color: var(--color-body-muted);
+  font-size: var(--text-fine);
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.slcn-inspection-review-draft__alert {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-error-surface);
+  color: var(--color-error);
+  font-size: var(--text-caption);
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* 초안이 적용된 필드만, 적용 순간에 한 번 — surface-soft에서 제자리로. */
+@keyframes slcn-inspection-review-drafted {
+  from {
+    background-color: var(--color-surface-soft);
+  }
+}
+
+.slcn-field__input[data-drafted="true"],
+.slcn-field__textarea[data-drafted="true"],
+.slcn-inspection-register-tags[data-drafted="true"] {
+  border-radius: var(--radius-sm);
+  animation: slcn-inspection-review-drafted 900ms var(--easing-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slcn-field__input[data-drafted="true"],
+  .slcn-field__textarea[data-drafted="true"],
+  .slcn-inspection-register-tags[data-drafted="true"] {
+    animation: none;
+  }
+}
 
 @media (max-width: 832px) {
   .slcn-inspection-register,
