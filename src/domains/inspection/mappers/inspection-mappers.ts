@@ -125,6 +125,7 @@ export function mapInspectionVisitSummaryDto(dto: {
   oneLineReview: string | null;
   revisitIntent: InspectionVisitSummary['revisitIntent'];
   status: InspectionVisitSummary['status'];
+  completedAt: string | null;
   tags: string[];
   propertyCount: number | null;
   incompleteSummary: Parameters<typeof mapIncompleteSummary>[0] | null;
@@ -136,6 +137,7 @@ export function mapInspectionVisitSummaryDto(dto: {
     oneLineReview: dto.oneLineReview,
     revisitIntent: dto.revisitIntent,
     status: dto.status,
+    completedAt: dto.completedAt,
     tags: dto.tags,
     propertyCount: dto.propertyCount,
     incompleteSummary: dto.incompleteSummary
@@ -293,6 +295,7 @@ export function mapInspectionVisitDetailDto(
     pros: dto.pros,
     cons: dto.cons,
     status: dto.status,
+    completedAt: dto.completedAt,
     tags: dto.tags,
     properties: dto.properties.map(mapViewedPropertyDetailDto),
     cover: dto.cover ? mapFileBoxItem(dto.cover) : null,
@@ -312,6 +315,7 @@ export function mapInspectionVisitListItemDto(
     oneLineReview: dto.oneLineReview,
     revisitIntent: dto.revisitIntent,
     status: dto.status,
+    completedAt: dto.completedAt,
     propertyCount: dto.propertyCount,
     topInterestProperty: dto.topInterestProperty
       ? mapViewedPropertyBrief(dto.topInterestProperty)

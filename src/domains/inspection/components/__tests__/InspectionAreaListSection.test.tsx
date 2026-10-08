@@ -41,6 +41,7 @@ function area(overrides: Partial<InspectionArea>): InspectionArea {
       oneLineReview: '직주근접과 분위기는 좋지만 가격이 부담된다.',
       revisitIntent: 'YES',
       status: 'COMPLETED',
+      completedAt: '2026-09-17T18:30',
       tags: ['서울숲', '한강', '직주근접', '가격부담'],
       propertyCount: 4,
       incompleteSummary: baseIncompleteSummary,
@@ -180,7 +181,7 @@ describe('InspectionAreaListSection', () => {
     expect(screen.getByText('101동 1203호 / 84A')).toBeTruthy();
   });
 
-  it('shows a "작성 중" badge and the incomplete reason for a DRAFT latest visit', () => {
+  it('shows a "계획" badge and the incomplete reason for a never-completed DRAFT latest visit', () => {
     useInspectionAreaListMock.mockReturnValue(
       mockQueryResult({
         data: listResult({
@@ -192,6 +193,7 @@ describe('InspectionAreaListSection', () => {
                 oneLineReview: null,
                 revisitIntent: null,
                 status: 'DRAFT',
+                completedAt: null,
                 tags: ['학군'],
                 propertyCount: 2,
                 incompleteSummary: {
@@ -212,7 +214,7 @@ describe('InspectionAreaListSection', () => {
 
     renderWithProviders(<InspectionAreaListSection device='main' />);
 
-    expect(screen.getByText('작성 중')).toBeTruthy();
+    expect(screen.getByText('계획')).toBeTruthy();
     expect(screen.getByText('한줄평을 아직 쓰지 않았습니다.')).toBeTruthy();
     // The reason text sits next to a `<strong>` count, so the default
     // text matcher (which reads only an element's own direct text nodes)
@@ -224,6 +226,36 @@ describe('InspectionAreaListSection', () => {
       )
     ).toBeTruthy();
     expect(screen.getByText('미정')).toBeTruthy();
+  });
+
+  it('shows a "수정 중" badge for a DRAFT latest visit that was completed once', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              latestVisit: {
+                visitId: 'visit-2',
+                visitedAt: '2026-09-20T13:00',
+                oneLineReview: null,
+                revisitIntent: null,
+                status: 'DRAFT',
+                completedAt: '2026-09-20T18:00',
+                tags: [],
+                propertyCount: 2,
+                incompleteSummary: baseIncompleteSummary,
+                cover: null,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('수정 중')).toBeTruthy();
+    expect(screen.queryByText('계획')).toBeNull();
   });
 
   it('shows the loading skeleton (same grid, no spinner) while pending', () => {

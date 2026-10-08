@@ -543,3 +543,75 @@ describe('null property name (동·호수 미정)', () => {
     expect(detail.prevProperty?.name).toBeNull();
   });
 });
+
+describe('completedAt', () => {
+  const detailPayload = (completedAt?: string | null) => ({
+    inspectionVisitId: 'VISIT-03',
+    area: { areaId: 'AREA-01', name: '성수동' },
+    visitedAt: '2026-09-17T14:00',
+    memo: null,
+    revisitIntent: 'YES',
+    oneLineReview: null,
+    pros: null,
+    cons: null,
+    status: 'DRAFT',
+    ...(completedAt === undefined ? {} : { completedAt }),
+    tags: [],
+    properties: [],
+    cover: null,
+    photos: [],
+    incompleteSummary: {
+      unansweredRequiredCount: 0,
+      unansweredRequiredQuestions: [],
+      missingFields: [],
+      draftPropertyCount: 0,
+      visitMissingFields: [],
+      draftVisitCount: 0,
+    },
+  });
+
+  it.each(['2026-09-17T18:30', '2026-09-23T09:28:52'])(
+    'keeps a visit detail completedAt of %s as-is',
+    (completedAt) => {
+      const dto = parseInspectionVisitDetailResponse(
+        detailPayload(completedAt),
+        'detail'
+      );
+      expect(dto.completedAt).toBe(completedAt);
+    }
+  );
+
+  it('normalizes null and missing completedAt to null', () => {
+    expect(
+      parseInspectionVisitDetailResponse(detailPayload(null), 'detail')
+        .completedAt
+    ).toBeNull();
+    expect(
+      parseInspectionVisitDetailResponse(detailPayload(), 'detail').completedAt
+    ).toBeNull();
+  });
+
+  it('parses completedAt on visit list items', () => {
+    const result = parseInspectionVisitListResponse({
+      items: [
+        {
+          inspectionVisitId: 'VISIT-09',
+          area: { areaId: 'AREA-06', name: '분당' },
+          visitedAt: '2026-09-20T15:00',
+          oneLineReview: null,
+          revisitIntent: null,
+          status: 'COMPLETED',
+          completedAt: '2026-09-23T09:28:52',
+          propertyCount: 0,
+          topInterestProperty: null,
+          tags: [],
+          cover: null,
+          incompleteSummary: detailPayload().incompleteSummary,
+        },
+      ],
+      totalCount: 1,
+      hasNext: false,
+    });
+    expect(result.items[0]?.completedAt).toBe('2026-09-23T09:28:52');
+  });
+});

@@ -107,6 +107,8 @@ export type InspectionVisitSummary = {
   oneLineReview: string | null;
   revisitIntent: RevisitIntent | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   tags: string[];
   /** `null` when this summary came from an area row's `latestVisit` (area detail's `visits[]` always fills it). */
   propertyCount: number | null;
@@ -234,6 +236,8 @@ export type InspectionVisitDetail = {
   pros: string | null;
   cons: string | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   tags: string[];
   properties: ViewedPropertyDetail[];
   cover: FileBoxItem | null;
@@ -249,6 +253,8 @@ export type InspectionVisitListItem = {
   oneLineReview: string | null;
   revisitIntent: RevisitIntent | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   propertyCount: number;
   topInterestProperty: ViewedPropertyBrief | null;
   tags: string[];

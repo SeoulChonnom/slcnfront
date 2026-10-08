@@ -98,6 +98,7 @@ describe('§3-① visitId normalization', () => {
       pros: null,
       cons: null,
       status: 'DRAFT',
+      completedAt: '2026-09-23T09:28:52',
       tags: [],
       properties: [],
       cover: null,
@@ -108,6 +109,7 @@ describe('§3-① visitId normalization', () => {
     const result = mapInspectionVisitDetailDto(dto);
 
     expect(result.visitId).toBe('VISIT-03');
+    expect(result.completedAt).toBe('2026-09-23T09:28:52');
     expect(result).not.toHaveProperty('inspectionVisitId');
   });
 
@@ -119,6 +121,7 @@ describe('§3-① visitId normalization', () => {
       oneLineReview: null,
       revisitIntent: 'YES',
       status: 'COMPLETED',
+      completedAt: null,
       propertyCount: 1,
       topInterestProperty: null,
       tags: [],
@@ -129,6 +132,7 @@ describe('§3-① visitId normalization', () => {
     const result = mapInspectionVisitListItemDto(dto);
 
     expect(result.visitId).toBe('VISIT-09');
+    expect(result.completedAt).toBeNull();
     expect(result).not.toHaveProperty('inspectionVisitId');
   });
 });

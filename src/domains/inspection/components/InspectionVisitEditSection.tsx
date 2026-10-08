@@ -279,7 +279,7 @@ export function InspectionVisitEditSection({
             onClick={() => void handleToggleStatus()}
           >
             {detail.status === 'COMPLETED'
-              ? '작성 중으로 되돌리기'
+              ? '완료 해제하고 수정'
               : '지금 상태로 완료 시도'}
           </Button>
         </div>

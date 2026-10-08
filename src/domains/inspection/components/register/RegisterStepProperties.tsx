@@ -11,6 +11,7 @@ import {
   useReorderInspectionVisitProperties,
 } from '@/domains/inspection/hooks/inspection-queries';
 import { formatPropertyName } from '@/domains/inspection/utils/inspection-format';
+import { getVisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { buildDeviceInspectionPropertyEditPath } from '@/lib/routing/route-builders';
 
 type RegisterStepPropertiesProps = {
@@ -27,6 +28,9 @@ export function RegisterStepProperties({
   const reorderMutation = useReorderInspectionVisitProperties(visitId);
 
   const detail = visitQuery.data;
+  const showPropertyDrafts = detail
+    ? getVisitPhase(detail) === 'REVISING'
+    : false;
   const areaId = detail?.area.areaId;
   const properties = detail
     ? [...detail.properties].sort((a, b) => a.sortOrder - b.sortOrder)
@@ -72,7 +76,7 @@ export function RegisterStepProperties({
         <ul className='slcn-inspection-register-property-list'>
           {properties.map((property, index) => {
             const reason =
-              property.status === 'DRAFT'
+              property.status === 'DRAFT' && showPropertyDrafts
                 ? buildPropertyDraftReason(property.incompleteSummary)
                 : null;
 
@@ -103,7 +107,7 @@ export function RegisterStepProperties({
                   <span className='slcn-inspection-register-property-row__name'>
                     {property.complexName} · {formatPropertyName(property.name)}
                   </span>
-                  {property.status === 'DRAFT' ? (
+                  {property.status === 'DRAFT' && showPropertyDrafts ? (
                     <span className='slcn-inspection-register-property-row__reason'>
                       <DraftBadge reason={reason || undefined} />
                     </span>

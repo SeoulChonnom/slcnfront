@@ -12,12 +12,15 @@ import { TagChips } from '@/domains/inspection/components/TagChips';
 import { useInspectionAreaProperties } from '@/domains/inspection/hooks/inspection-queries';
 import type { ViewedPropertyDetail } from '@/domains/inspection/types';
 import { formatPropertyName } from '@/domains/inspection/utils/inspection-format';
+import type { VisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { buildDeviceInspectionPropertyDetailPath } from '@/lib/routing/route-builders';
 
 type PropertyRowProps = {
   device: DeviceType;
   areaId: string;
   property: ViewedPropertyDetail;
+  /** FD2: the "작성 중" badge is hidden unless the parent visit is `REVISING`. */
+  visitPhase: VisitPhase;
 };
 
 /**
@@ -105,7 +108,12 @@ function buildDraftReason(
   return undefined;
 }
 
-export function PropertyRow({ device, areaId, property }: PropertyRowProps) {
+export function PropertyRow({
+  device,
+  areaId,
+  property,
+  visitPhase,
+}: PropertyRowProps) {
   return (
     <Link
       to={buildDeviceInspectionPropertyDetailPath(
@@ -126,7 +134,7 @@ export function PropertyRow({ device, areaId, property }: PropertyRowProps) {
         ) : null}
         <span className='slcn-inspection-area-detail-prop__meta'>
           <TagChips tags={property.tags} />
-          {property.status === 'DRAFT' ? (
+          {property.status === 'DRAFT' && visitPhase === 'REVISING' ? (
             <DraftBadge reason={buildDraftReason(property.incompleteSummary)} />
           ) : null}
         </span>

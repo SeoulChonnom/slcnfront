@@ -115,6 +115,7 @@ const inspectionVisitSummarySchema = z.object({
   oneLineReview: nullableString,
   revisitIntent: revisitIntentSchema.nullish().transform((v) => v ?? null),
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   tags: z.array(z.string()).default([]),
   propertyCount: nullableNumber,
   incompleteSummary: incompleteSummarySchema
@@ -217,6 +218,7 @@ const inspectionVisitDetailSchema = z.object({
   pros: nullableString,
   cons: nullableString,
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   tags: z.array(z.string()).default([]),
   properties: z.array(viewedPropertyDetailSchema).default([]),
   cover: fileBoxItemSchema.nullish().transform((v) => v ?? null),
@@ -231,6 +233,7 @@ const inspectionVisitListItemSchema = z.object({
   oneLineReview: nullableString,
   revisitIntent: revisitIntentSchema.nullish().transform((v) => v ?? null),
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   propertyCount: z.number().int(),
   topInterestProperty: viewedPropertyBriefSchema
     .nullish()

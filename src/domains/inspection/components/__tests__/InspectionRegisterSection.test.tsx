@@ -99,6 +99,7 @@ function visitDetail(
     pros: null,
     cons: null,
     status: 'DRAFT',
+    completedAt: null,
     tags: [],
     properties: [],
     cover: null,

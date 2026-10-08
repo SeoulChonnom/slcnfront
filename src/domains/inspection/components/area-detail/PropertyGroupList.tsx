@@ -3,12 +3,15 @@ import { AddPropertyForm } from '@/domains/inspection/components/AddPropertyForm
 import { PropertyRow } from '@/domains/inspection/components/area-detail/PropertyRow';
 import type { ViewedPropertyDetail } from '@/domains/inspection/types';
 import { PROPERTY_EDIT_FROM_AREA_SEARCH } from '@/domains/inspection/utils/property-edit-return';
+import type { VisitPhase } from '@/domains/inspection/utils/visit-phase';
 
 type PropertyGroupListProps = {
   device: DeviceType;
   areaId: string;
   visitId: string;
   properties: ViewedPropertyDetail[];
+  /** Property draft badges only show while the parent visit is being revised. */
+  visitPhase: VisitPhase;
 };
 
 type ComplexGroup = {
@@ -50,6 +53,7 @@ export function PropertyGroupList({
   areaId,
   visitId,
   properties,
+  visitPhase,
 }: PropertyGroupListProps) {
   const addPropertyForm = (
     <div className='slcn-inspection-area-detail-properties__add'>
@@ -115,6 +119,7 @@ export function PropertyGroupList({
                 device={device}
                 areaId={areaId}
                 property={property}
+                visitPhase={visitPhase}
               />
             ))}
           </div>

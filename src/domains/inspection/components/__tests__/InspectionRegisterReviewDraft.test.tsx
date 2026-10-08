@@ -62,6 +62,7 @@ function detail(): InspectionVisitDetail {
     pros: null,
     cons: null,
     status: 'DRAFT',
+    completedAt: null,
     tags: [],
     properties: [],
     cover: null,

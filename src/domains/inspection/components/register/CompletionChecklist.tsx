@@ -74,7 +74,7 @@ export function CompletionChecklist({
         {draftProperties.length > 0 ? (
           <li data-state='blocked'>
             <span aria-hidden='true'>⚠</span> 매물 {draftProperties.length}건이
-            아직 작성 중입니다
+            아직 완료 조건이 남았습니다
             <ul className='slcn-inspection-register-completion__property-list'>
               {draftProperties.map((property) => (
                 <li key={property.propertyId}>

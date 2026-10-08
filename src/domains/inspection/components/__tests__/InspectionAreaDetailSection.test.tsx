@@ -108,6 +108,7 @@ function makeVisit(
     pros: '2호선·수인분당선 모두 도보권\n서울숲이 실질적인 앞마당',
     cons: '가격대가 예산을 크게 넘음',
     status: 'COMPLETED',
+    completedAt: '2026-09-17T18:30',
     tags: ['서울숲', '한강', '직주근접', '카페상권', '가격부담'],
     properties: [makeProperty({})],
     cover: null,
@@ -149,6 +150,7 @@ function makeDetail(
         oneLineReview: '직주근접과 분위기는 좋지만 가격이 부담된다.',
         revisitIntent: 'YES',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 3,
         incompleteSummary: baseIncompleteSummary,
@@ -160,6 +162,7 @@ function makeDetail(
         oneLineReview: '장마철이라 누수만 봤다.',
         revisitIntent: 'MAYBE',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 1,
         incompleteSummary: baseIncompleteSummary,
@@ -171,6 +174,7 @@ function makeDetail(
         oneLineReview: '일단 동네가 마음에 든다.',
         revisitIntent: 'YES',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 0,
         incompleteSummary: baseIncompleteSummary,
@@ -455,17 +459,59 @@ describe('InspectionAreaDetailSection', () => {
     expect(screen.getByRole('button', { name: '+ 매물 추가' })).toBeTruthy();
   });
 
-  it('shows the DRAFT badge on the panel header for a draft visit, and nothing for a completed one', () => {
-    const draftDetail = makeDetail({
-      selectedVisit: makeVisit({ status: 'DRAFT' }),
-    });
-    setup(draftDetail);
-    expect(screen.getByText('작성 중')).toBeTruthy();
+  it('shows "계획" on the panel header for a never-completed draft visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({ status: 'DRAFT', completedAt: null }),
+      })
+    );
+    expect(screen.getByText('계획')).toBeTruthy();
+    expect(screen.queryByText('수정 중')).toBeNull();
   });
 
-  it('renders no DRAFT badge for a completed visit', () => {
+  it('shows "수정 중" for a draft visit that was completed once', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: '2026-09-17T18:30',
+        }),
+      })
+    );
+    expect(screen.getByText('수정 중')).toBeTruthy();
+    expect(screen.queryByText('계획')).toBeNull();
+  });
+
+  it('renders no phase badge for a completed visit', () => {
     setup();
+    expect(screen.queryByText('계획')).toBeNull();
+    expect(screen.queryByText('수정 중')).toBeNull();
+  });
+
+  it('hides the property "작성 중" badge in a planned visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: null,
+          properties: [makeProperty({ status: 'DRAFT' })],
+        }),
+      })
+    );
     expect(screen.queryByText('작성 중')).toBeNull();
+  });
+
+  it('shows the property "작성 중" badge in a revising visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: '2026-09-17T18:30',
+          properties: [makeProperty({ status: 'DRAFT' })],
+        }),
+      })
+    );
+    expect(screen.getByText('작성 중')).toBeTruthy();
   });
 
   it('shows the cross-visit interest delta note when the linked property list has an earlier, different-level entry', () => {
