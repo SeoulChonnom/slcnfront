@@ -127,8 +127,22 @@ describe('RegisterStepProperties ordering', () => {
       <RegisterStepProperties device='main' visitId='visit-1' />
     );
 
-    await screen.findAllByLabelText('위로 이동');
+    await screen.findAllByLabelText(/위로 이동$/);
     expect(rowOrder()).toEqual(['트리마제', '자이', '래미안']);
+  });
+
+  it('labels each move button with the property title', async () => {
+    getVisit.mockResolvedValue(makeVisit(null, properties()));
+    renderWithProviders(
+      <RegisterStepProperties device='main' visitId='visit-1' />
+    );
+
+    expect(
+      await screen.findByLabelText('자이 · 동·호수 미정 위로 이동')
+    ).toBeTruthy();
+    expect(
+      screen.getByLabelText('트리마제 · 동·호수 미정 아래로 이동')
+    ).toBeTruthy();
   });
 
   it('sends only the two swapped rows with swapped sortOrder values, optimistically', async () => {
@@ -143,7 +157,7 @@ describe('RegisterStepProperties ordering', () => {
       <RegisterStepProperties device='main' visitId='visit-1' />
     );
 
-    const down = await screen.findAllByLabelText('아래로 이동');
+    const down = await screen.findAllByLabelText(/아래로 이동$/);
     await user.click(down[0]);
 
     expect(reorderVisitProperties).toHaveBeenCalledWith('visit-1', [
@@ -164,7 +178,7 @@ describe('RegisterStepProperties ordering', () => {
       <RegisterStepProperties device='main' visitId='visit-1' />
     );
 
-    const up = await screen.findAllByLabelText('위로 이동');
+    const up = await screen.findAllByLabelText(/위로 이동$/);
     await user.click(up[1]);
 
     expect(await screen.findByRole('alert')).toBeTruthy();
@@ -186,7 +200,7 @@ describe('RegisterStepProperties ordering', () => {
       <RegisterStepProperties device='main' visitId='visit-1' />
     );
 
-    const down = await screen.findAllByLabelText('아래로 이동');
+    const down = await screen.findAllByLabelText(/아래로 이동$/);
     await user.click(down[0]);
 
     expect(reorderVisitProperties).toHaveBeenCalledWith('visit-1', [

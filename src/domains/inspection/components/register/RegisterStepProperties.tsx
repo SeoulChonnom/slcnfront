@@ -7,6 +7,7 @@ import { VisitRouteSection } from '@/domains/geo/components/VisitRouteSection';
 import { AddPropertyForm } from '@/domains/inspection/components/AddPropertyForm';
 import { DraftBadge } from '@/domains/inspection/components/DraftBadge';
 import { InterestStars } from '@/domains/inspection/components/InterestStars';
+import { RecommendOrderPanel } from '@/domains/inspection/components/RecommendOrderPanel';
 import { buildPropertyDraftReason } from '@/domains/inspection/components/register/build-draft-reason';
 import {
   useInspectionVisit,
@@ -123,6 +124,14 @@ export function RegisterStepProperties({
         />
       ) : null}
 
+      {detail && properties.length > 0 ? (
+        <RecommendOrderPanel
+          visitId={visitId}
+          phase={getVisitPhase(detail)}
+          properties={properties}
+        />
+      ) : null}
+
       {reorderMutation.isError ? (
         <p className='slcn-inspection-register-step__hint' role='alert'>
           순서를 바꾸지 못했어요. 원래 순서로 되돌렸어요. 잠시 뒤 다시 시도해
@@ -178,7 +187,7 @@ export function RegisterStepProperties({
                   <span className='slcn-inspection-register-property-row__move'>
                     <button
                       type='button'
-                      aria-label='위로 이동'
+                      aria-label={`${property.complexName} · ${formatPropertyName(property.name)} 위로 이동`}
                       disabled={index === 0}
                       onClick={() => handleMove(index, -1)}
                     >
@@ -186,7 +195,7 @@ export function RegisterStepProperties({
                     </button>
                     <button
                       type='button'
-                      aria-label='아래로 이동'
+                      aria-label={`${property.complexName} · ${formatPropertyName(property.name)} 아래로 이동`}
                       disabled={index === properties.length - 1}
                       onClick={() => handleMove(index, 1)}
                     >

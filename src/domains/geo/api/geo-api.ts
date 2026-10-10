@@ -1,6 +1,9 @@
 import {
   type AddressSearchResult,
+  type CoordKey,
+  type GeoPointResponse,
   parseAddressSearchResponse,
+  parseGeoPointResponse,
   parseWalkingRouteResponse,
   type WalkingRoute,
 } from '@/domains/geo/api/geo-schemas';
@@ -38,6 +41,19 @@ function createGeoApi(client: ApiClientLike = apiClient) {
       });
       return parseWalkingRouteResponse(response);
     },
+
+    /**
+     * api.md §8-4 — resolves a picked address to coordinates. The server stores
+     * nothing and the caller must not either (04 §4: current location is
+     * never persisted), so this is deliberately not a query or a mutation.
+     */
+    async fetchCurrentLocation(coordKey: CoordKey): Promise<GeoPointResponse> {
+      const response = await client.post<unknown>({
+        path: '/geo/current-location',
+        body: { coordKey },
+      });
+      return parseGeoPointResponse(response);
+    },
   };
 }
 
@@ -49,4 +65,8 @@ export function searchAddresses(params: AddressSearchParams) {
 
 export function fetchWalkingRoute(visitId: string) {
   return geoApi.fetchWalkingRoute(visitId);
+}
+
+export function fetchCurrentLocation(coordKey: CoordKey) {
+  return geoApi.fetchCurrentLocation(coordKey);
 }

@@ -7,6 +7,7 @@ import { PropertyGroupList } from '@/domains/inspection/components/area-detail/P
 import { VisitGallery } from '@/domains/inspection/components/area-detail/VisitGallery';
 import { VisitProsCons } from '@/domains/inspection/components/area-detail/VisitProsCons';
 import { formatVisitDateTimeLine } from '@/domains/inspection/components/area-detail/visit-datetime';
+import { RecommendOrderPanel } from '@/domains/inspection/components/RecommendOrderPanel';
 import { RevisitIntentMark } from '@/domains/inspection/components/RevisitIntentMark';
 import { TagChips } from '@/domains/inspection/components/TagChips';
 import { VisitPhaseBadge } from '@/domains/inspection/components/VisitPhaseBadge';
@@ -122,6 +123,14 @@ export function VisitPanel({
           visitId={visit.visitId}
           isCompleted={phase === 'COMPLETED'}
           properties={routeProperties}
+        />
+      ) : null}
+
+      {visit.properties.length > 0 ? (
+        <RecommendOrderPanel
+          visitId={visit.visitId}
+          phase={phase}
+          properties={visit.properties}
         />
       ) : null}
 

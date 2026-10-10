@@ -75,3 +75,14 @@ export type WalkingRoute = z.infer<typeof walkingRouteSchema>;
 export function parseWalkingRouteResponse(payload: unknown): WalkingRoute {
   return parseOrThrow(walkingRouteSchema, payload, 'Walking route');
 }
+
+const geoPointSchema = z.object({
+  latitude: z.number(),
+  longitude: z.number(),
+});
+
+export type GeoPointResponse = z.infer<typeof geoPointSchema>;
+
+export function parseGeoPointResponse(payload: unknown): GeoPointResponse {
+  return parseOrThrow(geoPointSchema, payload, 'Current location');
+}
