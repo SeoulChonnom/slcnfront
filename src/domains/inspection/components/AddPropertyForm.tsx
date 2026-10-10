@@ -1,12 +1,19 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
+import type { AddressCandidate } from '@/domains/geo/api/geo-schemas';
+import { AddressSearchField } from '@/domains/geo/components/AddressSearchField';
+import {
+  classifyLocationError,
+  describeLocationError,
+} from '@/domains/geo/utils/location-error';
 import {
   useCreateInspectionProperty,
   useInspectionComplexNames,
 } from '@/domains/inspection/hooks/inspection-queries';
+import type { PropertyLocationInput } from '@/domains/inspection/types';
 import { buildDeviceInspectionPropertyEditPath } from '@/lib/routing/route-builders';
 
 type AddPropertyFormProps = {
@@ -44,8 +51,34 @@ export function AddPropertyForm({
   const [newComplexName, setNewComplexName] = useState('');
   const [newName, setNewName] = useState('');
   const [addError, setAddError] = useState<string | null>(null);
+  const [location, setLocation] = useState<PropertyLocationInput | null>(null);
+  // Set after a location failure: the POST was refused, so ask before
+  // dropping the chosen address (06-fe-plan §4.2).
+  const [locationFailure, setLocationFailure] = useState<string | null>(null);
+  const [isAddressDisabled, setIsAddressDisabled] = useState(false);
+  const addressInputRef = useRef<HTMLInputElement>(null);
+  const [focusAddressRequested, setFocusAddressRequested] = useState(false);
 
-  async function handleAddProperty() {
+  useEffect(() => {
+    if (focusAddressRequested && !location) {
+      addressInputRef.current?.focus();
+      setFocusAddressRequested(false);
+    }
+  }, [focusAddressRequested, location]);
+
+  function handleSelectAddress(candidate: AddressCandidate) {
+    setLocationFailure(null);
+    setLocation({
+      bdMgtSn: candidate.bdMgtSn,
+      roadAddress: candidate.roadAddress ?? candidate.jibunAddress ?? '',
+      coordKey: candidate.coordKey,
+    });
+    if (!newComplexName.trim() && candidate.buildingName) {
+      setNewComplexName(candidate.buildingName);
+    }
+  }
+
+  async function handleAddProperty(withLocation: PropertyLocationInput | null) {
     if (!newComplexName.trim()) {
       setAddError('단지명을 입력해 주세요.');
 
@@ -53,11 +86,13 @@ export function AddPropertyForm({
     }
 
     setAddError(null);
+    setLocationFailure(null);
 
     try {
       const created = await createPropertyMutation.mutateAsync({
         complexName: newComplexName.trim(),
         name: newName.trim() || undefined,
+        ...(withLocation ? { location: withLocation } : {}),
       });
 
       if (areaId) {
@@ -70,7 +105,21 @@ export function AddPropertyForm({
           )}${editSearch}`
         );
       }
-    } catch {
+    } catch (error) {
+      const kind = classifyLocationError(error, {
+        requestHadNewLocation: Boolean(withLocation),
+      });
+
+      if (withLocation && (kind === 'location' || kind === 'unavailable')) {
+        // Never retried automatically; inputs stay as they are.
+        setLocationFailure(describeLocationError(error));
+        if (kind === 'unavailable') {
+          setIsAddressDisabled(true);
+        }
+
+        return;
+      }
+
       setAddError('매물을 추가하지 못했어요. 잠시 뒤 다시 시도해 주세요.');
     }
   }
@@ -108,6 +157,43 @@ export function AddPropertyForm({
         value={newName}
         onChange={(event) => setNewName(event.target.value)}
       />
+      <AddressSearchField
+        ref={addressInputRef}
+        label='주소 (선택)'
+        value={location}
+        disabled={isAddressDisabled}
+        onSelect={handleSelectAddress}
+        onClear={() => {
+          setLocation(null);
+          setLocationFailure(null);
+        }}
+      />
+      {locationFailure ? (
+        <div role='alert' className='slcn-inspection-register-step__error'>
+          <p>주소를 저장하지 못했습니다. 위치 없이 등록할까요?</p>
+          <p>{locationFailure}</p>
+          <p>위치는 나중에 매물 수정 화면에서 다시 넣을 수 있어요.</p>
+          <div className='slcn-inspection-register-add-property__actions'>
+            <Button
+              variant='secondary'
+              loading={createPropertyMutation.isPending}
+              onClick={() => void handleAddProperty(null)}
+            >
+              위치 없이 등록
+            </Button>
+            <Button
+              variant='ghost'
+              onClick={() => {
+                setLocation(null);
+                setLocationFailure(null);
+                setFocusAddressRequested(true);
+              }}
+            >
+              다른 주소 고르기
+            </Button>
+          </div>
+        </div>
+      ) : null}
       {addError ? (
         <p className='slcn-inspection-register-step__error' role='alert'>
           {addError}
@@ -119,13 +205,15 @@ export function AddPropertyForm({
           onClick={() => {
             setIsAdding(false);
             setAddError(null);
+            setLocation(null);
+            setLocationFailure(null);
           }}
         >
           취소
         </Button>
         <Button
           loading={createPropertyMutation.isPending}
-          onClick={() => void handleAddProperty()}
+          onClick={() => void handleAddProperty(location)}
         >
           추가하고 계속 쓰기
         </Button>

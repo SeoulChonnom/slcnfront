@@ -82,7 +82,12 @@ export function InspectionVisitEditSection({
 
   const autosave = useAutosave({
     snapshot: values ? { values, photos } : null,
-    onSave: (snapshot) => save(snapshot.values, snapshot.photos),
+    onSave: async (snapshot) => {
+      // useAutosave's failure contract: throw so the snapshot is retried.
+      if (!(await save(snapshot.values, snapshot.photos))) {
+        throw new Error('Visit autosave failed');
+      }
+    },
   });
 
   useEffect(() => {
@@ -118,11 +123,11 @@ export function InspectionVisitEditSection({
   async function save(
     next: VisitBasicFormValues,
     nextPhotos: LocalPhotoItem[]
-  ) {
+  ): Promise<boolean> {
     const visitedAt = combineVisitedAt(next.visitedAtDate, next.visitedAtTime);
 
     if (!visitedAt) {
-      return;
+      return true;
     }
 
     setSaveError(null);
@@ -149,12 +154,14 @@ export function InspectionVisitEditSection({
         })
       );
       setLastSavedAt(new Date());
+      return true;
     } catch (error) {
       setSaveError(
         error instanceof AppError
           ? error.message
           : '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.'
       );
+      return false;
     }
   }
 

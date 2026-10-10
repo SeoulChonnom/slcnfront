@@ -116,6 +116,11 @@ export function InspectionPropertyDetailSection({
           <h1 className='slcn-inspection-property-detail__title'>
             {formatPropertyName(data.name)}
           </h1>
+          {data.location?.roadAddress ? (
+            <p className='slcn-inspection-property-detail__address'>
+              {data.location.roadAddress}
+            </p>
+          ) : null}
           <div className='slcn-inspection-property-detail__rating'>
             <InterestStars level={data.interestLevel} />
             {interestSummary ? (

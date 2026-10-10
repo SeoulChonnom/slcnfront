@@ -193,6 +193,14 @@ const propertyAnswerSchema = z.object({
   ...categorySnapshotShape,
 });
 
+/** api.md §8-2 — saved property location. Raw UTM-K is never sent. */
+const propertyLocationSchema = z.object({
+  bdMgtSn: z.string(),
+  roadAddress: nullableString,
+  latitude: z.number(),
+  longitude: z.number(),
+});
+
 const viewedPropertyDetailSchema = z.object({
   propertyId: z.string(),
   inspectionVisitId: z.string(),
@@ -215,6 +223,7 @@ const viewedPropertyDetailSchema = z.object({
   incompleteSummary: incompleteSummarySchema,
   prevProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
   nextProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
+  location: propertyLocationSchema.nullish().transform((v) => v ?? null),
 });
 
 const inspectionVisitDetailSchema = z.object({

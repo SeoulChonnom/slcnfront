@@ -48,6 +48,7 @@ describe('§3-① visitId normalization', () => {
       incompleteSummary: baseIncompleteSummary,
       prevProperty: null,
       nextProperty: null,
+      location: null,
     };
 
     const result = mapViewedPropertyDetailDto(dto);
@@ -84,6 +85,7 @@ describe('§3-① visitId normalization', () => {
         interestLevel: null,
       },
       nextProperty: null,
+      location: null,
     });
 
     expect(result.name).toBeNull();

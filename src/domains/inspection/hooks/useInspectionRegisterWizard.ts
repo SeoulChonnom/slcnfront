@@ -132,6 +132,9 @@ export function useInspectionRegisterWizard({
 
   const hydratedRef = useRef(false);
   const savingRef = useRef(false);
+  // Set by the last `saveNow` that actually failed — autosave needs to know,
+  // since `saveNow` itself swallows the error into `saveErrorMessage`.
+  const lastSaveFailedRef = useRef(false);
   // The in-flight save and the id it created, readable inside the same click
   // that triggered it (state would still be stale there).
   const savePromiseRef = useRef<Promise<string | null> | null>(null);
@@ -151,7 +154,13 @@ export function useInspectionRegisterWizard({
   // *when* to save. Before visitedAt/area exist `flush` sends nothing (§5).
   const autosave = useAutosave({
     snapshot: { visitedAt, areaChoice, basicValues, photos },
-    onSave: () => flush(),
+    onSave: async () => {
+      await flush();
+      if (lastSaveFailedRef.current) {
+        // useAutosave's failure contract: throw so the snapshot is retried.
+        throw new Error('Visit autosave failed');
+      }
+    },
   });
 
   // Hydrate once from a `?draft=` visit — never again, so autosave edits are
@@ -218,6 +227,7 @@ export function useInspectionRegisterWizard({
     }
 
     savingRef.current = true;
+    lastSaveFailedRef.current = false;
     setSaveErrorMessage(null);
 
     const commonFields = {
@@ -280,6 +290,7 @@ export function useInspectionRegisterWizard({
 
         return detail.visitId;
       } catch (error) {
+        lastSaveFailedRef.current = true;
         setSaveErrorMessage(
           error instanceof AppError
             ? error.message

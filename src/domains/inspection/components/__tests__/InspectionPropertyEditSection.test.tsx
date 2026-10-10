@@ -1,4 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
+import { HttpResponse, http } from 'msw';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InspectionPropertyEditSection } from '@/domains/inspection/components/InspectionPropertyEditSection';
@@ -7,7 +8,9 @@ import type {
   PropertyAnswer,
   ViewedPropertyDetail,
 } from '@/domains/inspection/types';
+import { AppError } from '@/lib/api/errors';
 import { renderWithProviders } from '@/test/helpers/render';
+import { server } from '@/test/helpers/server';
 
 const useInspectionVisitPropertyMock = vi.fn();
 const calls: string[] = [];
@@ -104,6 +107,7 @@ function property(): ViewedPropertyDetail {
     },
     prevProperty: null,
     nextProperty: null,
+    location: null,
   };
 }
 
@@ -280,5 +284,183 @@ describe('InspectionPropertyEditSection return target', () => {
         '/main/inspection/area-1?visit=visit-1'
       )
     );
+  });
+});
+
+describe('InspectionPropertyEditSection location', () => {
+  const savedLocation = {
+    bdMgtSn: 'B-SAVED',
+    roadAddress: '서울특별시 성동구 용답토방길 135',
+    latitude: 37.5,
+    longitude: 127.0,
+  };
+  const candidate = {
+    roadAddress: '서울특별시 성동구 새길 1',
+    jibunAddress: null,
+    buildingName: '새건물',
+    bdMgtSn: 'B-NEW',
+    zipNo: null,
+    coordKey: {
+      admCd: '1',
+      rnMgtSn: '2',
+      udrtYn: '0',
+      buldMnnm: '1',
+      buldSlno: '0',
+    },
+  };
+
+  function mockProperty(location: ViewedPropertyDetail['location']) {
+    const detail = { ...property(), location };
+    useInspectionVisitPropertyMock.mockReturnValue({
+      data: detail,
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    updateMutateAsync.mockResolvedValue(detail);
+
+    return detail;
+  }
+
+  function mockSearch() {
+    server.use(
+      http.get('*/geo/addresses', () =>
+        HttpResponse.json({ totalCount: 1, items: [candidate] })
+      )
+    );
+  }
+
+  function httpError(status: number, apiCode: string) {
+    return new AppError({
+      code: 'HTTP_ERROR',
+      message: `서버: ${apiCode}`,
+      status,
+      apiCode,
+    });
+  }
+
+  async function pickCandidate(user: ReturnType<typeof renderEdit>['user']) {
+    await user.type(screen.getByLabelText('주소'), '새건물');
+    await user.click(await screen.findByRole('option'));
+  }
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('keeps the saved location in every PUT (location key is always present)', async () => {
+    mockProperty(savedLocation);
+    const { user } = renderEdit();
+
+    await user.type(screen.getByLabelText('한줄평'), '메모만 수정');
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+
+    expect(updateMutateAsync.mock.calls[0][0].location).toEqual({
+      bdMgtSn: 'B-SAVED',
+      roadAddress: '서울특별시 성동구 용답토방길 135',
+    });
+  });
+
+  it('sends location: null explicitly when the property has none', async () => {
+    mockProperty(null);
+    const { user } = renderEdit();
+
+    await user.type(screen.getByLabelText('한줄평'), '위치 없음');
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+
+    const body = updateMutateAsync.mock.calls[0][0];
+    expect('location' in body).toBe(true);
+    expect(body.location).toBeNull();
+  });
+
+  it('saves a picked address right away, with its coordKey', async () => {
+    mockProperty(null);
+    mockSearch();
+    const { user } = renderEdit();
+
+    await pickCandidate(user);
+
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(1), {
+      timeout: 1000,
+    });
+    expect(updateMutateAsync.mock.calls[0][0].location).toEqual({
+      bdMgtSn: 'B-NEW',
+      roadAddress: '서울특별시 성동구 새길 1',
+      coordKey: candidate.coordKey,
+    });
+  });
+
+  it('clears the location right away with location: null', async () => {
+    mockProperty(savedLocation);
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '위치 지우기' }));
+
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(1), {
+      timeout: 1000,
+    });
+    expect(updateMutateAsync.mock.calls[0][0].location).toBeNull();
+  });
+
+  it('on a location error reverts to the confirmed location, resends once, and explains', async () => {
+    mockProperty(savedLocation);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
+      .mockResolvedValue({ ...property(), location: savedLocation });
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '변경' }));
+    await pickCandidate(user);
+
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    expect(updateMutateAsync.mock.calls[0][0].location.bdMgtSn).toBe('B-NEW');
+    expect(updateMutateAsync.mock.calls[1][0].location).toEqual({
+      bdMgtSn: 'B-SAVED',
+      roadAddress: '서울특별시 성동구 용답토방길 135',
+    });
+
+    const message = await screen.findByText(/주소는 저장하지 못했습니다/);
+    expect(message.textContent).toContain(
+      '가까운 다른 건물을 고르거나 위치 없이 두세요'
+    );
+    // The form shows the confirmed address again.
+    expect(screen.getByText('서울특별시 성동구 용답토방길 135')).toBeTruthy();
+  });
+
+  it('on 503 resends with the confirmed location and disables the address field', async () => {
+    mockProperty(null);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(503, 'ADDRESS_LOOKUP_UNAVAILABLE'))
+      .mockResolvedValue({ ...property(), location: null });
+    const { user } = renderEdit();
+
+    await pickCandidate(user);
+
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    expect(updateMutateAsync.mock.calls[1][0].location).toBeNull();
+    expect(await screen.findByText(/지금은 주소를 쓸 수 없어요/)).toBeTruthy();
+    expect((screen.getByLabelText('주소') as HTMLInputElement).disabled).toBe(
+      true
+    );
+  });
+
+  it('falls back to the normal save error when the resend fails too', async () => {
+    mockProperty(null);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(502, 'ADDRESS_LOOKUP_FAILED'))
+      .mockRejectedValueOnce(httpError(500, 'INTERNAL'));
+    const { user } = renderEdit();
+
+    await pickCandidate(user);
+
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText('서버: INTERNAL')).toBeTruthy();
   });
 });

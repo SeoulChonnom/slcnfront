@@ -1,3 +1,5 @@
+import type { CoordKey } from '@/domains/geo/api/geo-schemas';
+
 // ── Shared enums ──────────────────────────────────────────────────────────────
 
 export type RevisitIntent = 'YES' | 'MAYBE' | 'NO';
@@ -211,6 +213,25 @@ type InspectionAreaBrief = {
   name: string;
 };
 
+/** Saved location as the server returns it (WGS84 degrees). */
+type PropertyLocation = {
+  bdMgtSn: string;
+  roadAddress: string | null;
+  latitude: number;
+  longitude: number;
+};
+
+/**
+ * Location as sent on POST/PUT. `coordKey` is required only when the
+ * building differs from the saved one; the same `bdMgtSn` keeps the saved
+ * coordinates without a lookup. Coordinates are never sent.
+ */
+export type PropertyLocationInput = {
+  bdMgtSn: string;
+  roadAddress: string;
+  coordKey?: CoordKey;
+};
+
 export type ViewedPropertyDetail = {
   propertyId: string;
   /** Normalized from the wire's `inspectionVisitId` — see fe_implementation_decisions.md §3-①. */
@@ -234,6 +255,7 @@ export type ViewedPropertyDetail = {
   incompleteSummary: IncompleteSummary;
   prevProperty: ViewedPropertyBrief | null;
   nextProperty: ViewedPropertyBrief | null;
+  location: PropertyLocation | null;
 };
 
 export type InspectionVisitDetail = {
@@ -401,10 +423,17 @@ type ViewedPropertyFields = {
 
 export type ViewedPropertyCdo = ViewedPropertyFields & {
   files?: InspectionFileBoxItemCdo[];
+  /** Optional on create — omitted means "register without a location". */
+  location?: PropertyLocationInput | null;
 };
 
 export type ViewedPropertyUdo = ViewedPropertyFields & {
   files?: InspectionFileBoxItemUdo[];
+  /**
+   * REQUIRED key (D9): PUT is a full replace, so omitting the location
+   * silently clears it. Send the confirmed one to keep it, `null` to clear.
+   */
+  location: PropertyLocationInput | null;
 };
 
 /**

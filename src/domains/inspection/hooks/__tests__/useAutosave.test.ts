@@ -99,6 +99,119 @@ describe('useAutosave', () => {
     expect(onSave).toHaveBeenCalledTimes(1);
   });
 
+  it('treats a rejected onSave as failed and retries the same snapshot on flush', async () => {
+    const onSave = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('network'))
+      .mockResolvedValue(undefined);
+    const { result, rerender } = renderHook(
+      ({ snapshot }: Props) => useAutosave({ snapshot, onSave }),
+      { initialProps: { snapshot: null } as Props }
+    );
+    act(() => result.current.markClean({ text: 'loaded' }));
+    rerender({ snapshot: { text: 'edited' } });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+    });
+    expect(onSave).toHaveBeenCalledTimes(1);
+
+    // Same snapshot, no new input: flush sends it again.
+    let ok = true;
+    await act(async () => {
+      ok = await result.current.flush();
+    });
+    expect(ok).toBe(true);
+    expect(onSave).toHaveBeenCalledTimes(2);
+    expect(onSave).toHaveBeenLastCalledWith({ text: 'edited' });
+
+    // Now saved — nothing more to send.
+    await act(async () => {
+      await result.current.flush();
+    });
+    expect(onSave).toHaveBeenCalledTimes(2);
+  });
+
+  it('flush resolves false when the save failed, and a synchronous throw counts too', async () => {
+    const onSave = vi.fn(() => {
+      throw new Error('sync boom');
+    });
+    const { result, rerender } = renderHook(
+      ({ snapshot }: Props) => useAutosave({ snapshot, onSave }),
+      { initialProps: { snapshot: null } as Props }
+    );
+    act(() => result.current.markClean({ text: 'loaded' }));
+    rerender({ snapshot: { text: 'edited' } });
+
+    let ok = true;
+    await act(async () => {
+      ok = await result.current.flush();
+    });
+    expect(ok).toBe(false);
+  });
+
+  it('retries a failed snapshot when the screen unmounts', async () => {
+    const onSave = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('network'))
+      .mockResolvedValue(undefined);
+    const { result, rerender, unmount } = renderHook(
+      ({ snapshot }: Props) => useAutosave({ snapshot, onSave }),
+      { initialProps: { snapshot: null } as Props }
+    );
+    act(() => result.current.markClean({ text: 'loaded' }));
+    rerender({ snapshot: { text: 'edited' } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+    });
+    expect(onSave).toHaveBeenCalledTimes(1);
+
+    // The failure left no timer; unmount only flushes a pending timer, so a
+    // change made right before leaving is what triggers the second send.
+    rerender({ snapshot: { text: 'edited more' } });
+    unmount();
+    expect(onSave).toHaveBeenCalledTimes(2);
+    expect(onSave).toHaveBeenLastCalledWith({ text: 'edited more' });
+  });
+
+  it('does not overlap saves: a flush during an in-flight save waits for it', async () => {
+    let release: () => void = () => undefined;
+    const onSave = vi
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            release = resolve;
+          })
+      )
+      .mockResolvedValue(undefined);
+    const { result, rerender } = renderHook(
+      ({ snapshot }: Props) => useAutosave({ snapshot, onSave }),
+      { initialProps: { snapshot: null } as Props }
+    );
+    act(() => result.current.markClean({ text: 'loaded' }));
+
+    rerender({ snapshot: { text: 'one' } });
+    let first: Promise<boolean> = Promise.resolve(true);
+    act(() => {
+      first = result.current.flush();
+    });
+    rerender({ snapshot: { text: 'two' } });
+    let second: Promise<boolean> = Promise.resolve(true);
+    act(() => {
+      second = result.current.flush();
+    });
+    expect(onSave).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      release();
+      await first;
+      await second;
+    });
+    expect(onSave).toHaveBeenCalledTimes(2);
+    expect(onSave).toHaveBeenLastCalledWith({ text: 'two' });
+  });
+
   it('does not save hydrated data under StrictMode when the data is ready on the first render', () => {
     // Mirrors the register wizard resuming a cached `?draft=` visit: state
     // starts empty, and the hydration effect runs in the very first commit.

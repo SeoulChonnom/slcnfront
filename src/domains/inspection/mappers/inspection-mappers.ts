@@ -260,6 +260,7 @@ export function mapViewedPropertyDetailDto(
     nextProperty: dto.nextProperty
       ? mapViewedPropertyBrief(dto.nextProperty)
       : null,
+    location: dto.location,
   };
 }
 

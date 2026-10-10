@@ -92,6 +92,7 @@ function makeProperty(
     incompleteSummary: baseIncompleteSummary,
     prevProperty: null,
     nextProperty: null,
+    location: null,
     ...overrides,
   };
 }
