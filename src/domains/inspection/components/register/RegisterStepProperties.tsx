@@ -61,7 +61,8 @@ export function RegisterStepProperties({
     <div className='slcn-inspection-register-step'>
       <h2 className='slcn-inspection-register-step__title'>확인 매물</h2>
       <p className='slcn-inspection-register-step__lead'>
-        매물 없이도 완료할 수 있어요. 나중에 다시 들어와 이어서 쓸 수 있어요.
+        매물 없이도 계획을 저장할 수 있어요. 나중에 다시 들어와 이어서 쓸 수
+        있어요.
       </p>
       <p className='slcn-inspection-register-step__hint'>
         매물마다 그 매물을 만든 시점에 활성화된 질문 구성으로 문답이 고정됩니다.

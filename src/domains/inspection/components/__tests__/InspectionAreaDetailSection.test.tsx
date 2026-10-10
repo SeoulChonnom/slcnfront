@@ -314,6 +314,103 @@ describe('InspectionAreaDetailSection', () => {
     expect(tabs[3].getAttribute('aria-selected')).toBe('false');
   });
 
+  it('labels a plan-only area with a single 계획 tab and no ordinal', () => {
+    const base = makeDetail();
+    const planned = {
+      ...base.visits[0],
+      visitId: 'visit-planned',
+      status: 'DRAFT' as const,
+      completedAt: null,
+    };
+    setup(
+      makeDetail({
+        area: makeArea({ visitCount: 0 }),
+        visits: [planned],
+        selectedVisit: makeVisit({ visitId: 'visit-planned' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    expect(tabs).toHaveLength(1);
+    expect(within(tabs[0]).getByText('계획')).toBeTruthy();
+    expect(screen.queryByText(/0차/)).toBeNull();
+    expect(screen.queryByText(/가장 최근/)).toBeNull();
+  });
+
+  it('numbers only completed visits when future plans lead the rail', () => {
+    const base = makeDetail();
+    const plan = (id: string, at: string) => ({
+      ...base.visits[0],
+      visitId: id,
+      visitedAt: at,
+      status: 'DRAFT' as const,
+      completedAt: null,
+    });
+    setup(
+      makeDetail({
+        visits: [
+          plan('plan-b', '2026-12-10T10:00'),
+          plan('plan-a', '2026-12-01T10:00'),
+          ...base.visits,
+        ],
+        selectedVisit: makeVisit({ visitId: 'visit-3' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    const ords = tabs.map(
+      (tab) =>
+        tab.querySelector('.slcn-inspection-area-detail-rail__ord')?.textContent
+    );
+    expect(ords).toEqual([
+      '계획',
+      '계획',
+      '3차 · 가장 최근',
+      '2차',
+      '1차 · 처음',
+    ]);
+  });
+
+  it('keeps ordinals correct after loading older pages', () => {
+    const base = makeDetail();
+    const [first, second] = base.visits;
+    useInspectionVisitListMock.mockReturnValue({
+      data: {
+        items: [
+          {
+            ...base.visits[2],
+            area: { areaId: 'area-1', name: '성수동' },
+            propertyCount: 0,
+          },
+        ],
+        hasNext: false,
+      },
+      isPending: false,
+      isError: false,
+    });
+    setup(
+      makeDetail({
+        visits: [first, second],
+        hasMoreVisits: true,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '이전 회차 더 보기' }));
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    const ords = tabs.map(
+      (tab) =>
+        tab.querySelector('.slcn-inspection-area-detail-rail__ord')?.textContent
+    );
+    expect(ords).toEqual(['3차 · 가장 최근', '2차', '1차 · 처음']);
+  });
+
   it('switches the panel content when a different rail tab is clicked, keyed by visitId', () => {
     const detail = makeDetail();
     mockDetailFor({

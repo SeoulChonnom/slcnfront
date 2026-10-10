@@ -97,6 +97,7 @@ export function InspectionAreaDetailSection({
     visitedAt: visit.visitedAt,
     revisitIntent: visit.revisitIntent,
     status: visit.status,
+    completedAt: visit.completedAt,
     propertyCount: visit.propertyCount,
   }));
 
@@ -157,7 +158,7 @@ export function InspectionAreaDetailSection({
             device={device}
             areaId={areaId}
             visit={selectedVisit}
-            isOnlyVisit={area.visitCount <= 1}
+            isOnlyVisit={visits.length <= 1 && !hasMoreVisits}
             onDeleted={handleVisitDeleted}
           />
         </>
