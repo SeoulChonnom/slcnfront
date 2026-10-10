@@ -61,7 +61,7 @@ export function RouteMap({ maps, stops, segments, origin }: RouteMapProps) {
     for (const segment of segments) {
       add(
         new maps.Polyline({
-          path: [toLatLng(segment.from), toLatLng(segment.to)],
+          path: (segment.path ?? [segment.from, segment.to]).map(toLatLng),
           strokeWeight: 4,
           strokeColor: LINE_COLOR,
           strokeOpacity: 0.85,

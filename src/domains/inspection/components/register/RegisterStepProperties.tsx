@@ -116,7 +116,11 @@ export function RegisterStepProperties({
       ) : null}
 
       {properties.length > 0 ? (
-        <VisitRouteSection properties={routeProperties} />
+        <VisitRouteSection
+          visitId={visitId}
+          isCompleted={detail ? getVisitPhase(detail) === 'COMPLETED' : false}
+          properties={routeProperties}
+        />
       ) : null}
 
       {reorderMutation.isError ? (

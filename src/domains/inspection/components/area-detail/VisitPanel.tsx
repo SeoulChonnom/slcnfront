@@ -118,7 +118,11 @@ export function VisitPanel({
       <VisitGallery photos={visit.photos} />
 
       {visit.properties.length > 0 ? (
-        <VisitRouteSection properties={routeProperties} />
+        <VisitRouteSection
+          visitId={visit.visitId}
+          isCompleted={phase === 'COMPLETED'}
+          properties={routeProperties}
+        />
       ) : null}
 
       <PropertyGroupList

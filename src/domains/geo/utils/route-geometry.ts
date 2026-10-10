@@ -25,6 +25,8 @@ export type RouteSegment = {
   to: RouteStop;
   meters: number;
   walkMinutes: number;
+  /** Walking-route geometry. Absent for straight lines (drawn from -> to). */
+  path?: GeoPoint[];
 };
 
 const EARTH_RADIUS_METERS = 6_371_000;

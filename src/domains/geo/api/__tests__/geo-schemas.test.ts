@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { parseAddressSearchResponse } from '@/domains/geo/api/geo-schemas';
+import {
+  parseAddressSearchResponse,
+  parseWalkingRouteResponse,
+} from '@/domains/geo/api/geo-schemas';
 
 const coordKey = {
   admCd: '1120011500',
@@ -57,6 +60,71 @@ describe('parseAddressSearchResponse', () => {
       parseAddressSearchResponse({
         totalCount: 1,
         items: [{ bdMgtSn: 'B1', roadAddress: 'x' }],
+      })
+    ).toThrow();
+  });
+});
+
+describe('parseWalkingRouteResponse', () => {
+  it('parses stops, legs and [lng, lat] paths', () => {
+    const result = parseWalkingRouteResponse({
+      totalDistance: 1280,
+      totalTime: 960,
+      stops: [
+        { index: 0, propertyIds: ['a', 'b'], latitude: 37.5, longitude: 127.0 },
+        { index: 1, propertyIds: ['c'], latitude: 37.6, longitude: 127.1 },
+      ],
+      legs: [
+        {
+          fromStopIndex: 0,
+          toStopIndex: 1,
+          distance: 1280,
+          time: 960,
+          path: [
+            [127.0, 37.5],
+            [127.1, 37.6],
+          ],
+        },
+      ],
+    });
+
+    expect(result.legs[0].path[0]).toEqual([127.0, 37.5]);
+    expect(result.stops[0].propertyIds).toEqual(['a', 'b']);
+  });
+
+  it('accepts an empty route and a missing path', () => {
+    expect(
+      parseWalkingRouteResponse({
+        totalDistance: 0,
+        totalTime: 0,
+        stops: [],
+        legs: [],
+      }).stops
+    ).toEqual([]);
+    const result = parseWalkingRouteResponse({
+      totalDistance: 1,
+      totalTime: 1,
+      stops: [],
+      legs: [{ fromStopIndex: 0, toStopIndex: 1, distance: 1, time: 1 }],
+    });
+    expect(result.legs[0].path).toEqual([]);
+  });
+
+  it('rejects a malformed path point', () => {
+    expect(() =>
+      parseWalkingRouteResponse({
+        totalDistance: 1,
+        totalTime: 1,
+        stops: [],
+        legs: [
+          {
+            fromStopIndex: 0,
+            toStopIndex: 1,
+            distance: 1,
+            time: 1,
+            path: [[1]],
+          },
+        ],
       })
     ).toThrow();
   });

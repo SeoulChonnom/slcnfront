@@ -38,3 +38,40 @@ export function parseAddressSearchResponse(
 ): AddressSearchResult {
   return parseOrThrow(addressSearchSchema, payload, 'Address search');
 }
+
+const lngLatSchema = z.tuple([z.number(), z.number()]);
+
+const walkingRouteSchema = z.object({
+  /** meters */
+  totalDistance: z.number(),
+  /** seconds */
+  totalTime: z.number(),
+  stops: z
+    .array(
+      z.object({
+        index: z.number().int(),
+        propertyIds: z.array(z.string()),
+        latitude: z.number(),
+        longitude: z.number(),
+      })
+    )
+    .default([]),
+  legs: z
+    .array(
+      z.object({
+        fromStopIndex: z.number().int(),
+        toStopIndex: z.number().int(),
+        distance: z.number(),
+        time: z.number(),
+        /** `[longitude, latitude]` pairs (GeoJSON order). May be empty. */
+        path: z.array(lngLatSchema).default([]),
+      })
+    )
+    .default([]),
+});
+
+export type WalkingRoute = z.infer<typeof walkingRouteSchema>;
+
+export function parseWalkingRouteResponse(payload: unknown): WalkingRoute {
+  return parseOrThrow(walkingRouteSchema, payload, 'Walking route');
+}
