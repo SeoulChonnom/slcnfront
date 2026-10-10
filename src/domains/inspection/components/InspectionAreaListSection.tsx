@@ -91,7 +91,7 @@ export function InspectionAreaListSection({
             to={buildDeviceInspectionRegisterPath(device)}
             className='slcn-inspection-area-list__register'
           >
-            + 임장 기록하기
+            + 임장 계획하기
           </LinkButton>
         </div>
       </div>
@@ -102,7 +102,7 @@ export function InspectionAreaListSection({
       <LinkButton
         to={buildDeviceInspectionRegisterPath(device)}
         className='slcn-inspection-area-list__fab'
-        aria-label='임장 기록하기'
+        aria-label='임장 계획하기'
       >
         <span aria-hidden='true'>+</span>
       </LinkButton>
@@ -204,7 +204,7 @@ export function InspectionAreaListSection({
           headingLevel={2}
           title='아직 임장 기록이 없습니다'
           description='지역을 하나 정해 걸어 보고, 돌아와서 그날의 인상과 본 매물을 남겨 두세요. 매물을 하나도 보지 않은 날도 기록할 수 있습니다.'
-          actionLabel='첫 임장 기록하기'
+          actionLabel='첫 임장 계획하기'
           actionTo={buildDeviceInspectionRegisterPath(device)}
         />
       ) : null}

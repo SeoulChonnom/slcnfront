@@ -96,15 +96,15 @@ export function InspectionRegisterSection({
   return (
     <section data-device={device} className='slcn-inspection-register'>
       {device === 'main' ? (
-        <h1 className='slcn-inspection-register__title'>임장 기록하기</h1>
+        <h1 className='slcn-inspection-register__title'>임장 계획하기</h1>
       ) : (
-        <h1 className='slcn-visually-hidden'>임장 기록하기</h1>
+        <h1 className='slcn-visually-hidden'>임장 계획하기</h1>
       )}
 
       <Card className='slcn-inspection-register__card'>
         <ol
           className='slcn-inspection-register__step-indicator'
-          aria-label='임장 기록 단계'
+          aria-label='임장 계획 단계'
         >
           {STEP_LABELS.map(({ step, label }) => {
             const state =

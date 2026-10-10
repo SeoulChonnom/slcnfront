@@ -447,12 +447,12 @@ describe('InspectionAreaListSection', () => {
     vi.useRealTimers();
   });
 
-  it('hides the top "임장 기록하기" link visually on mobile via CSS, but keeps it in the DOM', () => {
+  it('hides the top "임장 계획하기" link visually on mobile via CSS, but keeps it in the DOM', () => {
     useInspectionAreaListMock.mockReturnValue(mockQueryResult());
 
     renderWithProviders(<InspectionAreaListSection device='mobile' />);
 
-    expect(screen.getByRole('link', { name: '+ 임장 기록하기' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: '+ 임장 계획하기' })).toBeTruthy();
   });
 
   it('omits the property-detail thumbnails/complex line and shows "아직 없음" when there is no property yet', () => {

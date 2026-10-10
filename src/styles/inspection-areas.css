@@ -430,7 +430,7 @@
 }
 
 /* ── Mobile (≤833px) — collapse to a 2-column rail + stacked body,
-   hide the top "임장 기록하기" button (a bottom FAB owns that action once
+   hide the top "임장 계획하기" button (a bottom FAB owns that action once
    the FAB is added), single-row horizontal-scroll filter chips. ───────── */
 
 @media (max-width: 833px) {
