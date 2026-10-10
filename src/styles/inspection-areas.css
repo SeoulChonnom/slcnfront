@@ -47,6 +47,8 @@
 
 .slcn-inspection-area-list__toolbar {
   display: grid;
+  /* 암묵적 auto 트랙은 칩 행의 max-content까지 늘어나므로 0 하한을 준다. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-bottom: var(--space-6);
 }

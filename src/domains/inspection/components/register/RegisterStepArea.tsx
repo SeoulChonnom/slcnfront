@@ -40,7 +40,7 @@ export function RegisterStepArea({
   return (
     <div className='slcn-inspection-register-step'>
       <h2 className='slcn-inspection-register-step__title'>
-        어느 지역을 임장했나요?
+        어느 지역을 임장할까요?
       </h2>
       <p className='slcn-inspection-register-step__lead'>
         먼저 임장할 지역을 고르거나 새로 만들어 주세요.
