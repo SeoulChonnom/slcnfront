@@ -161,7 +161,7 @@
   background: var(--color-surface-pearl);
   color: var(--color-ink);
   font: inherit;
-  font-size: 0.625rem;
+  font-size: var(--text-fine);
   line-height: 1;
   cursor: pointer;
 }
