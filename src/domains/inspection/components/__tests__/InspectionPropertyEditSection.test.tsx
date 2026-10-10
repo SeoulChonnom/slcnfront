@@ -450,6 +450,35 @@ describe('InspectionPropertyEditSection location', () => {
     );
   });
 
+  it('keeps "위치 지우기" enabled after a 503 disabled the address field', async () => {
+    mockProperty(savedLocation);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(503, 'ADDRESS_LOOKUP_UNAVAILABLE'))
+      .mockResolvedValue({ ...property(), location: savedLocation });
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '변경' }));
+    await pickCandidate(user);
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    await screen.findByText(/지금은 주소를 쓸 수 없어요/);
+
+    expect(
+      (screen.getByRole('button', { name: '변경' }) as HTMLButtonElement)
+        .disabled
+    ).toBe(true);
+    const clear = screen.getByRole('button', {
+      name: '위치 지우기',
+    }) as HTMLButtonElement;
+    expect(clear.disabled).toBe(false);
+
+    await user.click(clear);
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(3), {
+      timeout: 1000,
+    });
+    expect(updateMutateAsync.mock.calls[2][0].location).toBeNull();
+  });
+
   it('falls back to the normal save error when the resend fails too', async () => {
     mockProperty(null);
     mockSearch();

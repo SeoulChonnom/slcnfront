@@ -492,6 +492,24 @@ describe('InspectionAreaDetailSection', () => {
     );
   });
 
+  it('groups only consecutive rows of the same complexName (A, B, A is three groups)', () => {
+    const detail = makeDetail({
+      selectedVisit: makeVisit({
+        properties: [
+          makeProperty({ propertyId: 'p1', complexName: '트리마제' }),
+          makeProperty({ propertyId: 'p2', complexName: '서울숲리버뷰자이' }),
+          makeProperty({ propertyId: 'p3', complexName: '트리마제' }),
+        ],
+      }),
+    });
+    setup(detail);
+
+    expect(screen.getAllByRole('heading', { name: '트리마제' })).toHaveLength(
+      2
+    );
+    expect(screen.getAllByText('매물 1건')).toHaveLength(3);
+  });
+
   it('shows the quiet dashed empty state for a zero-property visit and calls it a completed record', () => {
     const detail = makeDetail({
       selectedVisit: makeVisit({ properties: [] }),

@@ -106,12 +106,7 @@ export const AddressSearchField = forwardRef<
             >
               변경
             </Button>
-            <Button
-              variant='ghost'
-              size='sm'
-              disabled={disabled}
-              onClick={onClear}
-            >
+            <Button variant='ghost' size='sm' onClick={onClear}>
               위치 지우기
             </Button>
           </div>
