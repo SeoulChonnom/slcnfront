@@ -151,7 +151,10 @@ async function parseResponse<T>(
 }
 
 export function createApiClient(config: ApiClientConfig = {}) {
-  const fetchFn = config.fetchFn ?? fetch;
+  // Resolve `fetch` per call, not once at module load: msw (tests) patches
+  // `globalThis.fetch` after this module was imported.
+  const fetchFn: typeof fetch =
+    config.fetchFn ?? ((...args) => globalThis.fetch(...args));
   const resolveAccessToken = config.getAccessToken ?? getAccessToken;
   const getBaseUrl = config.getBaseUrl ?? (() => getAppEnv().apiUrl);
 

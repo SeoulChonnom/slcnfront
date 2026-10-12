@@ -84,6 +84,9 @@
 }
 
 .slcn-inspection-area-detail-rail {
+  /* 포함 블록이 되어, 시각적으로 숨긴(position: absolute) 라벨이 레일의
+     overflow 클리핑을 빠져나가 문서 가로 스크롤을 만들지 않게 한다. */
+  position: relative;
   display: flex;
   overflow-x: auto;
   scrollbar-width: thin;

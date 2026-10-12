@@ -4,7 +4,6 @@ import {
   useCreateInspectionVisit,
   useInspectionVisitForEdit,
   useUpdateInspectionVisit,
-  useUpdateInspectionVisitStatus,
 } from '@/domains/inspection/hooks/inspection-queries';
 import { useAutosave } from '@/domains/inspection/hooks/useAutosave';
 import type {
@@ -104,20 +103,18 @@ function splitVisitedAt(visitedAt: string): { date: string; time: string } {
   return { date: match[1], time: match[2] };
 }
 
-export type EnsureVisitIdResult =
-  | { status: 'saved'; visitId: string }
-  | { status: 'needs-visited-at' }
-  | { status: 'failed' };
-
 type UseInspectionRegisterWizardOptions = {
   draftVisitId: string | null;
 };
 
+export type SavePlanResult = { visitId: string; areaId: string | null };
+
 /**
- * Owns the whole register-flow state machine: ①지역 선택(로컬) → ②기본 정보
+ * Owns the register-flow state machine: ①지역 선택(로컬) → ②기본 정보
  * (visitedAt이 채워지기 전까지는 로컬 초안만 유지 — fe_implementation_decisions.md
- * §5) → ③확인 매물(뒤에서 서버 데이터를 직접 구독). 완료 검증(④)은 이 훅이
- * 노출하는 `attemptComplete`가 그대로 서버에 물어보고 결과를 돌려준다.
+ * §5) → ③확인 매물(뒤에서 서버 데이터를 직접 구독). 마법사는 계획 수립 전용이라
+ * 완료 전이는 없다 — `savePlan`이 대기 중인 자동 저장만 마무리한다. 결과 작성과
+ * 완료는 임장 수정 화면에서 한다.
  */
 export function useInspectionRegisterWizard({
   draftVisitId,
@@ -135,17 +132,18 @@ export function useInspectionRegisterWizard({
 
   const hydratedRef = useRef(false);
   const savingRef = useRef(false);
+  // Set by the last `saveNow` that actually failed — autosave needs to know,
+  // since `saveNow` itself swallows the error into `saveErrorMessage`.
+  const lastSaveFailedRef = useRef(false);
   // The in-flight save and the id it created, readable inside the same click
   // that triggered it (state would still be stale there).
   const savePromiseRef = useRef<Promise<string | null> | null>(null);
   const visitIdRef = useRef<string | null>(null);
+  const areaIdRef = useRef<string | null>(null);
 
   const draftVisitQuery = useInspectionVisitForEdit(draftVisitId ?? undefined);
   const createVisitMutation = useCreateInspectionVisit();
   const updateVisitMutation = useUpdateInspectionVisit(visitId ?? '');
-  const updateVisitStatusMutation = useUpdateInspectionVisitStatus(
-    visitId ?? ''
-  );
 
   const visitedAt = combineVisitedAt(
     basicValues.visitedAtDate,
@@ -156,7 +154,13 @@ export function useInspectionRegisterWizard({
   // *when* to save. Before visitedAt/area exist `flush` sends nothing (§5).
   const autosave = useAutosave({
     snapshot: { visitedAt, areaChoice, basicValues, photos },
-    onSave: () => flush(),
+    onSave: async () => {
+      await flush();
+      if (lastSaveFailedRef.current) {
+        // useAutosave's failure contract: throw so the snapshot is retried.
+        throw new Error('Visit autosave failed');
+      }
+    },
   });
 
   // Hydrate once from a `?draft=` visit — never again, so autosave edits are
@@ -196,6 +200,7 @@ export function useInspectionRegisterWizard({
     });
     setAreaChoice(initialAreaChoice);
     visitIdRef.current = detail.visitId;
+    areaIdRef.current = detail.area.areaId;
     setVisitId(detail.visitId);
     setBasicValues(initialBasicValues);
     setPhotos(initialPhotos);
@@ -222,6 +227,7 @@ export function useInspectionRegisterWizard({
     }
 
     savingRef.current = true;
+    lastSaveFailedRef.current = false;
     setSaveErrorMessage(null);
 
     const commonFields = {
@@ -254,6 +260,7 @@ export function useInspectionRegisterWizard({
 
           detail = await createVisitMutation.mutateAsync(payload);
           visitIdRef.current = detail.visitId;
+          areaIdRef.current = detail.area.areaId;
           setVisitId(detail.visitId);
         } else {
           const payload: InspectionVisitUdo = commonFields;
@@ -283,6 +290,7 @@ export function useInspectionRegisterWizard({
 
         return detail.visitId;
       } catch (error) {
+        lastSaveFailedRef.current = true;
         setSaveErrorMessage(
           error instanceof AppError
             ? error.message
@@ -307,38 +315,24 @@ export function useInspectionRegisterWizard({
   }, [saveNow]);
 
   /**
-   * For actions that need a server-side visit id right now (AI draft).
-   * Creates the draft visit if it does not exist yet and resolves with its id
-   * in the same click; waits out an in-flight autosave instead of skipping.
+   * "계획 저장": 대기 중인 자동 저장을 마무리하고 지역 상세로 갈 id를 돌려준다.
+   * 진행 중인 저장이 있으면 건너뛰지 않고 기다린다. 상태 전이는 하지 않는다.
    */
-  const ensureSavedVisitId =
-    useCallback(async (): Promise<EnsureVisitIdResult> => {
-      if (visitId ?? visitIdRef.current) {
-        return {
-          status: 'saved',
-          visitId: (visitId ?? visitIdRef.current) as string,
-        };
-      }
+  const savePlan = useCallback(async (): Promise<SavePlanResult | null> => {
+    autosave.cancel();
 
-      if (!visitedAt || !areaChoice) {
-        return { status: 'needs-visited-at' };
-      }
+    if (savePromiseRef.current) {
+      await savePromiseRef.current.catch(() => null);
+    }
 
-      if (savePromiseRef.current) {
-        await savePromiseRef.current.catch(() => null);
+    await flush();
 
-        if (visitIdRef.current) {
-          return { status: 'saved', visitId: visitIdRef.current };
-        }
-      }
+    if (!visitIdRef.current) {
+      return null;
+    }
 
-      autosave.cancel();
-      const savedVisitId = await saveNow();
-
-      return savedVisitId
-        ? { status: 'saved', visitId: savedVisitId }
-        : { status: 'failed' };
-    }, [visitId, visitedAt, areaChoice, saveNow, autosave.cancel]);
+    return { visitId: visitIdRef.current, areaId: areaIdRef.current };
+  }, [autosave.cancel, flush]);
 
   function updateBasicField<Key extends keyof VisitBasicFormValues>(
     key: Key,
@@ -379,11 +373,7 @@ export function useInspectionRegisterWizard({
     const errors: Record<string, string> = {};
 
     if (!visitedAt) {
-      errors.visitedAt = '임장 일시를 입력해 주세요.';
-    }
-
-    if (!basicValues.revisitIntent) {
-      errors.revisitIntent = '재방문 의사를 선택해 주세요.';
+      errors.visitedAt = '예정일과 시각을 입력해 주세요.';
     }
 
     setStepErrors(errors);
@@ -432,8 +422,7 @@ export function useInspectionRegisterWizard({
 
   /**
    * §5.4 ①: "다음" stays disabled — with a one-line reason — until an area
-   * is chosen; ②'s two required fields gate the same way so a user can't
-   * carry an incomplete record into ③.
+   * is chosen; ②의 예정일·시각도 같은 방식으로 막는다 — 계획에는 이것만 필요하다.
    */
   const advanceGate = useMemo((): {
     canAdvance: boolean;
@@ -452,14 +441,7 @@ export function useInspectionRegisterWizard({
       if (!visitedAt) {
         return {
           canAdvance: false,
-          reason: '임장 일시를 입력해야 다음으로 갈 수 있어요.',
-        };
-      }
-
-      if (!basicValues.revisitIntent) {
-        return {
-          canAdvance: false,
-          reason: '재방문 의사를 선택해야 다음으로 갈 수 있어요.',
+          reason: '예정일과 시각을 입력해야 다음으로 갈 수 있어요.',
         };
       }
 
@@ -467,43 +449,7 @@ export function useInspectionRegisterWizard({
     }
 
     return { canAdvance: true, reason: null };
-  }, [step, areaChoice, visitedAt, basicValues.revisitIntent]);
-
-  const completionChecks = useMemo(() => {
-    return {
-      areaOk: Boolean(areaChoice),
-      visitedAtOk: Boolean(visitedAt),
-      revisitIntentOk: Boolean(basicValues.revisitIntent),
-    };
-  }, [areaChoice, visitedAt, basicValues.revisitIntent]);
-
-  async function attemptComplete(): Promise<
-    { ok: true } | { ok: false; message: string }
-  > {
-    autosave.cancel();
-    await flush();
-
-    if (!visitId) {
-      return {
-        ok: false,
-        message: '임장 일시를 먼저 입력해서 저장을 시작해 주세요.',
-      };
-    }
-
-    try {
-      await updateVisitStatusMutation.mutateAsync('COMPLETED');
-
-      return { ok: true };
-    } catch (error) {
-      return {
-        ok: false,
-        message:
-          error instanceof AppError
-            ? error.message
-            : '완료할 수 없어요. 잠시 뒤 다시 시도해 주세요.',
-      };
-    }
-  }
+  }, [step, areaChoice, visitedAt]);
 
   return {
     step,
@@ -516,20 +462,15 @@ export function useInspectionRegisterWizard({
     visitId,
     basicValues,
     updateBasicField,
-    photos,
-    setPhotos,
     lastSavedAt,
     hasStartedSaving,
     saveErrorMessage,
     stepErrors,
     canAdvance: advanceGate.canAdvance,
     advanceBlockedReason: advanceGate.reason,
-    completionChecks,
-    attemptComplete,
-    isCompleting: updateVisitStatusMutation.isPending,
+    savePlan,
     isDraftLoading: Boolean(draftVisitId) && draftVisitQuery.isLoading,
     draftLoadError: draftVisitQuery.isError,
     flushNow: flush,
-    ensureSavedVisitId,
   };
 }
