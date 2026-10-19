@@ -40,10 +40,10 @@ export function RegisterStepArea({
   return (
     <div className='slcn-inspection-register-step'>
       <h2 className='slcn-inspection-register-step__title'>
-        어느 지역을 임장했나요?
+        어느 지역을 임장할까요?
       </h2>
       <p className='slcn-inspection-register-step__lead'>
-        먼저 기록할 지역을 고르거나 새로 만들어 주세요.
+        먼저 임장할 지역을 고르거나 새로 만들어 주세요.
       </p>
 
       {value ? (
@@ -99,7 +99,7 @@ export function RegisterStepArea({
                     : ''}
                 </span>
                 <span className='slcn-inspection-register-area-result__chip'>
-                  {area.visitCount + 1}번째 회차로 기록
+                  이 지역에 임장 계획 추가
                 </span>
               </button>
             </li>

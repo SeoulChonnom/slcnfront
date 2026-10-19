@@ -5,10 +5,11 @@ import { profileQueryKeys } from '@/lib/api/query-keys';
 
 export function useProfile() {
   const username = useAuthStore((state) => state.userInfo?.userName ?? null);
+  const hasAccessToken = useAuthStore((state) => state.accessToken !== null);
 
   return useQuery({
     queryKey: profileQueryKeys.detail(username),
     queryFn: ({ signal }) => profileApi.getProfile({ signal }),
-    enabled: username !== null,
+    enabled: username !== null && hasAccessToken,
   });
 }

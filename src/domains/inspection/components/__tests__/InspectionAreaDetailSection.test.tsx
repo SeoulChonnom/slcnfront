@@ -64,6 +64,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 function makeProperty(
@@ -91,6 +92,7 @@ function makeProperty(
     incompleteSummary: baseIncompleteSummary,
     prevProperty: null,
     nextProperty: null,
+    location: null,
     ...overrides,
   };
 }
@@ -108,6 +110,7 @@ function makeVisit(
     pros: '2호선·수인분당선 모두 도보권\n서울숲이 실질적인 앞마당',
     cons: '가격대가 예산을 크게 넘음',
     status: 'COMPLETED',
+    completedAt: '2026-09-17T18:30',
     tags: ['서울숲', '한강', '직주근접', '카페상권', '가격부담'],
     properties: [makeProperty({})],
     cover: null,
@@ -127,6 +130,7 @@ function makeArea(overrides: Partial<InspectionArea>): InspectionArea {
     lastVisitedAt: '2026-09-17T14:00',
     totalPropertyCount: 4,
     latestVisit: null,
+    plannedVisit: null,
     topProperty: null,
     incompleteSummary: baseIncompleteSummary,
     thumbnails: [],
@@ -149,6 +153,7 @@ function makeDetail(
         oneLineReview: '직주근접과 분위기는 좋지만 가격이 부담된다.',
         revisitIntent: 'YES',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 3,
         incompleteSummary: baseIncompleteSummary,
@@ -160,6 +165,7 @@ function makeDetail(
         oneLineReview: '장마철이라 누수만 봤다.',
         revisitIntent: 'MAYBE',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 1,
         incompleteSummary: baseIncompleteSummary,
@@ -171,6 +177,7 @@ function makeDetail(
         oneLineReview: '일단 동네가 마음에 든다.',
         revisitIntent: 'YES',
         status: 'COMPLETED',
+        completedAt: '2026-09-17T18:30',
         tags: [],
         propertyCount: 0,
         incompleteSummary: baseIncompleteSummary,
@@ -279,6 +286,132 @@ describe('InspectionAreaDetailSection', () => {
     expect(within(tabs[2]).getByText(/매물 없음/)).toBeTruthy();
   });
 
+  it('highlights selectedVisit, not the first row, when a future planned visit leads the rail', () => {
+    const base = makeDetail();
+    const planned = {
+      ...base.visits[0],
+      visitId: 'visit-planned',
+      visitedAt: '2026-12-01T10:00',
+      status: 'DRAFT' as const,
+      completedAt: null,
+    };
+    // BE opens the latest completed visit (visit-2) even though the rail is
+    // sorted by visitedAt desc, which puts the future plan first.
+    setup(
+      makeDetail({
+        visits: [planned, ...base.visits],
+        selectedVisit: makeVisit({ visitId: 'visit-2' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+
+    expect(tabs).toHaveLength(4);
+    expect(tabs[0].getAttribute('aria-selected')).toBe('false');
+    expect(tabs[1].getAttribute('aria-selected')).toBe('false');
+    expect(tabs[2].getAttribute('aria-selected')).toBe('true');
+    expect(tabs[3].getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('labels a plan-only area with a single 계획 tab and no ordinal', () => {
+    const base = makeDetail();
+    const planned = {
+      ...base.visits[0],
+      visitId: 'visit-planned',
+      status: 'DRAFT' as const,
+      completedAt: null,
+    };
+    setup(
+      makeDetail({
+        area: makeArea({ visitCount: 0 }),
+        visits: [planned],
+        selectedVisit: makeVisit({ visitId: 'visit-planned' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    expect(tabs).toHaveLength(1);
+    expect(within(tabs[0]).getByText('계획')).toBeTruthy();
+    expect(screen.queryByText(/0차/)).toBeNull();
+    expect(screen.queryByText(/가장 최근/)).toBeNull();
+  });
+
+  it('numbers only completed visits when future plans lead the rail', () => {
+    const base = makeDetail();
+    const plan = (id: string, at: string) => ({
+      ...base.visits[0],
+      visitId: id,
+      visitedAt: at,
+      status: 'DRAFT' as const,
+      completedAt: null,
+    });
+    setup(
+      makeDetail({
+        visits: [
+          plan('plan-b', '2026-12-10T10:00'),
+          plan('plan-a', '2026-12-01T10:00'),
+          ...base.visits,
+        ],
+        selectedVisit: makeVisit({ visitId: 'visit-3' }),
+      })
+    );
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    const ords = tabs.map(
+      (tab) =>
+        tab.querySelector('.slcn-inspection-area-detail-rail__ord')?.textContent
+    );
+    expect(ords).toEqual([
+      '계획',
+      '계획',
+      '3차 · 가장 최근',
+      '2차',
+      '1차 · 처음',
+    ]);
+  });
+
+  it('keeps ordinals correct after loading older pages', () => {
+    const base = makeDetail();
+    const [first, second] = base.visits;
+    useInspectionVisitListMock.mockReturnValue({
+      data: {
+        items: [
+          {
+            ...base.visits[2],
+            area: { areaId: 'area-1', name: '성수동' },
+            propertyCount: 0,
+          },
+        ],
+        hasNext: false,
+      },
+      isPending: false,
+      isError: false,
+    });
+    setup(
+      makeDetail({
+        visits: [first, second],
+        hasMoreVisits: true,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '이전 회차 더 보기' }));
+
+    const tabs = within(
+      screen.getByRole('tablist', { name: '임장 회차' })
+    ).getAllByRole('tab');
+    const ords = tabs.map(
+      (tab) =>
+        tab.querySelector('.slcn-inspection-area-detail-rail__ord')?.textContent
+    );
+    expect(ords).toEqual(['3차 · 가장 최근', '2차', '1차 · 처음']);
+  });
+
   it('switches the panel content when a different rail tab is clicked, keyed by visitId', () => {
     const detail = makeDetail();
     mockDetailFor({
@@ -359,6 +492,24 @@ describe('InspectionAreaDetailSection', () => {
     );
   });
 
+  it('groups only consecutive rows of the same complexName (A, B, A is three groups)', () => {
+    const detail = makeDetail({
+      selectedVisit: makeVisit({
+        properties: [
+          makeProperty({ propertyId: 'p1', complexName: '트리마제' }),
+          makeProperty({ propertyId: 'p2', complexName: '서울숲리버뷰자이' }),
+          makeProperty({ propertyId: 'p3', complexName: '트리마제' }),
+        ],
+      }),
+    });
+    setup(detail);
+
+    expect(screen.getAllByRole('heading', { name: '트리마제' })).toHaveLength(
+      2
+    );
+    expect(screen.getAllByText('매물 1건')).toHaveLength(3);
+  });
+
   it('shows the quiet dashed empty state for a zero-property visit and calls it a completed record', () => {
     const detail = makeDetail({
       selectedVisit: makeVisit({ properties: [] }),
@@ -388,7 +539,7 @@ describe('InspectionAreaDetailSection', () => {
 
     await user.click(addButton);
     await user.type(screen.getByLabelText(/단지\/건물명/), ' 트리마제 ');
-    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.type(screen.getByLabelText(/동·호수/), '103동 902호');
     await user.click(
       screen.getByRole('button', { name: '추가하고 계속 쓰기' })
     );
@@ -404,19 +555,49 @@ describe('InspectionAreaDetailSection', () => {
     );
   });
 
-  it('asks for both names before creating a property', async () => {
+  it('requires only the complex name before creating a property', async () => {
     const { user } = setup();
 
     await user.click(screen.getByRole('button', { name: '+ 매물 추가' }));
-    await user.type(screen.getByLabelText(/매물명/), '103동 902호');
+    await user.type(screen.getByLabelText(/동·호수/), '103동 902호');
     await user.click(
       screen.getByRole('button', { name: '추가하고 계속 쓰기' })
     );
 
     expect(screen.getByRole('alert').textContent).toBe(
-      '단지명과 매물명을 모두 입력해 주세요.'
+      '단지명을 입력해 주세요.'
     );
     expect(createPropertyMutateAsyncMock).not.toHaveBeenCalled();
+  });
+
+  it('omits name from the create request when 동·호수 is left blank', async () => {
+    createPropertyMutateAsyncMock.mockResolvedValue(
+      makeProperty({ propertyId: 'p-new' })
+    );
+    const { user } = setup();
+
+    await user.click(screen.getByRole('button', { name: '+ 매물 추가' }));
+    await user.type(screen.getByLabelText(/단지\/건물명/), '트리마제');
+    await user.click(
+      screen.getByRole('button', { name: '추가하고 계속 쓰기' })
+    );
+
+    expect(createPropertyMutateAsyncMock).toHaveBeenCalledWith({
+      complexName: '트리마제',
+      name: undefined,
+    });
+  });
+
+  it('shows "동·호수 미정" for a property with no name', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          properties: [makeProperty({ name: null })],
+        }),
+      })
+    );
+
+    expect(screen.getAllByText('동·호수 미정').length).toBeGreaterThan(0);
   });
 
   it('offers 매물 추가 under the empty state of a zero-property visit', () => {
@@ -425,17 +606,59 @@ describe('InspectionAreaDetailSection', () => {
     expect(screen.getByRole('button', { name: '+ 매물 추가' })).toBeTruthy();
   });
 
-  it('shows the DRAFT badge on the panel header for a draft visit, and nothing for a completed one', () => {
-    const draftDetail = makeDetail({
-      selectedVisit: makeVisit({ status: 'DRAFT' }),
-    });
-    setup(draftDetail);
-    expect(screen.getByText('작성 중')).toBeTruthy();
+  it('shows "계획" on the panel header for a never-completed draft visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({ status: 'DRAFT', completedAt: null }),
+      })
+    );
+    expect(screen.getByText('계획')).toBeTruthy();
+    expect(screen.queryByText('수정 중')).toBeNull();
   });
 
-  it('renders no DRAFT badge for a completed visit', () => {
+  it('shows "수정 중" for a draft visit that was completed once', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: '2026-09-17T18:30',
+        }),
+      })
+    );
+    expect(screen.getByText('수정 중')).toBeTruthy();
+    expect(screen.queryByText('계획')).toBeNull();
+  });
+
+  it('renders no phase badge for a completed visit', () => {
     setup();
+    expect(screen.queryByText('계획')).toBeNull();
+    expect(screen.queryByText('수정 중')).toBeNull();
+  });
+
+  it('hides the property "작성 중" badge in a planned visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: null,
+          properties: [makeProperty({ status: 'DRAFT' })],
+        }),
+      })
+    );
     expect(screen.queryByText('작성 중')).toBeNull();
+  });
+
+  it('shows the property "작성 중" badge in a revising visit', () => {
+    setup(
+      makeDetail({
+        selectedVisit: makeVisit({
+          status: 'DRAFT',
+          completedAt: '2026-09-17T18:30',
+          properties: [makeProperty({ status: 'DRAFT' })],
+        }),
+      })
+    );
+    expect(screen.getByText('작성 중')).toBeTruthy();
   });
 
   it('shows the cross-visit interest delta note when the linked property list has an earlier, different-level entry', () => {

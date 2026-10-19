@@ -3,18 +3,21 @@ import type { DeviceType } from '@/app/router/route-constants';
 import {
   formatDraftReason,
   formatFirstVisitedAt,
+  formatPlannedVisitMetaline,
   formatVisitedAtWeekday,
   pickTopPropertyView,
 } from '@/domains/inspection/components/area-list/format-area-row';
-import { DraftBadge } from '@/domains/inspection/components/DraftBadge';
 import { InterestStars } from '@/domains/inspection/components/InterestStars';
 import { RevisitIntentMark } from '@/domains/inspection/components/RevisitIntentMark';
 import { TagChips } from '@/domains/inspection/components/TagChips';
+import { VisitPhaseBadge } from '@/domains/inspection/components/VisitPhaseBadge';
 import type { InspectionArea } from '@/domains/inspection/types';
 import {
+  formatPropertyName,
   formatVisitedAtDate,
   formatVisitedAtTime,
 } from '@/domains/inspection/utils/inspection-format';
+import { getVisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { buildAssetImageUrl } from '@/lib/api/asset-url';
 import { buildDeviceInspectionAreaDetailPath } from '@/lib/routing/route-builders';
 
@@ -90,7 +93,9 @@ function AreaTopProperty({ area }: { area: InspectionArea }) {
           <span className='slcn-inspection-area-row__top-complex'>
             {top.complexName}
           </span>
-          <span className='slcn-inspection-area-row__top-name'>{top.name}</span>
+          <span className='slcn-inspection-area-row__top-name'>
+            {formatPropertyName(top.name)}
+          </span>
           <InterestStars
             level={top.interestLevel}
             className='slcn-inspection-area-row__top-rating'
@@ -151,8 +156,9 @@ type AreaListRowProps = {
 };
 
 export function AreaListRow({ area, device }: AreaListRowProps) {
-  const isDraftArea = area.latestVisit?.status === 'DRAFT';
+  const latestPhase = area.latestVisit ? getVisitPhase(area.latestVisit) : null;
   const lastVisitMetaline = formatLastVisitMetaline(area);
+  const plannedMetaline = formatPlannedVisitMetaline(area, new Date());
 
   return (
     <Link
@@ -164,8 +170,11 @@ export function AreaListRow({ area, device }: AreaListRowProps) {
       <div className='slcn-inspection-area-row__main'>
         <h2 className='slcn-inspection-area-row__name'>
           {area.name}
-          {isDraftArea ? (
-            <DraftBadge className='slcn-inspection-area-row__draft-badge' />
+          {latestPhase ? (
+            <VisitPhaseBadge
+              phase={latestPhase}
+              className='slcn-inspection-area-row__draft-badge'
+            />
           ) : null}
         </h2>
         {area.description ? (
@@ -197,6 +206,11 @@ export function AreaListRow({ area, device }: AreaListRowProps) {
             임장 기록이 아직 없습니다
           </span>
         )}
+        {plannedMetaline ? (
+          <span className='slcn-inspection-area-row__metaline'>
+            {plannedMetaline}
+          </span>
+        ) : null}
         <AreaSecondMetaline area={area} />
       </div>
 
