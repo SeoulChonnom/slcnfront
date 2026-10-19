@@ -14,11 +14,11 @@
     "knip": "knip"
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.21",
-    "@fullcalendar/daygrid": "^6.1.21",
-    "@fullcalendar/interaction": "^6.1.21",
-    "@fullcalendar/react": "^6.1.21",
-    "@fullcalendar/timegrid": "^6.1.21",
+    "@fullcalendar/core": "^6.1.22",
+    "@fullcalendar/daygrid": "^6.1.22",
+    "@fullcalendar/interaction": "^6.1.22",
+    "@fullcalendar/react": "^6.1.22",
+    "@fullcalendar/timegrid": "^6.1.22",
     "@tanstack/react-query": "^5.104.3",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.23",
