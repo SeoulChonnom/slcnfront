@@ -338,8 +338,9 @@ f_k(P) = Cash - Reserve - cost(P) + \min(L_{DSR},\; LTV \times P,\; Cap_k) - P
 | 1. 수집 단위 준비 | 25개 구 × 최근 40개월(3년 전 3개월 창을 덮는 범위)의 (구, 계약년월) 행을 `house_collect_unit`에 보장 | — |
 | 2. 실거래 수집 | 아래 우선순위로 단위를 골라 수집, 일일 호출 상한(`slcn.house.daily-call-limit`, 기본 1,000)에 닿으면 멈춤 | 공공데이터포털 |
 | 3. 단지 보강 | 새 단지 또는 보강 실패(재시도 3회 미만) 단지의 좌표·건축물대장 조회. 매월 1일에는 전체 단지의 건축물대장 재조회 | 행안부, 공공데이터포털 |
-| 4. 참조 데이터 | `house_school`이 비었거나 마지막 갱신이 180일 지났으면 학교 갱신 + 단지별 최근접 학교 재계산. 정비사업도 같은 방식 | 공공데이터포털 등 |
-| 5. 통계 | 이상치 표시 → 단지·평형 통계 → 랭킹 4종. 통계·랭킹 테이블은 한 트랜잭션에서 통째로 교체 | — |
+| 4. 학교 동기화 | `SCHOOL_SYNC`의 마지막 SUCCESS가 없거나 180일 지났으면 학교 갱신 + 단지별 최근접 학교 재계산. 아니면 SKIPPED | 공공데이터포털 |
+| 5. 정비사업 동기화 | `REDEVELOPMENT_SYNC`의 마지막 SUCCESS가 없거나 30일 지났으면 정비사업 갱신 + 단지별 반경 500m 연결 재계산. 데이터셋 미확정(13장)이면 SKIPPED | 서울시 |
+| 6. 통계 | 이상치 표시 → 단지·평형 통계 → 랭킹 4종. 통계·랭킹 테이블은 한 트랜잭션에서 통째로 교체 | — |
 
 **실거래 수집 우선순위** (한 실행 안에서 위에서부터):
 
@@ -421,8 +422,20 @@ f_k(P) = Cash - Reserve - cost(P) + \min(L_{DSR},\; LTV \times P,\; Cap_k) - P
 | `house_redevelopment` | `source_key`, `name`, `project_type`, `stage`, `latitude`, `longitude`, `source_url`, `synced_date` | UK `source_key` |
 | `house_complex_redevelopment` | PK (`complex_id`, `redevelopment_id`), `distance_m` | — |
 | `house_budget_policy` (`HouseBudgetPolicyJpo`) | `effective_from`, `dsr_ratio`, `stress_rate_pp`, `term_years`, `default_reserve_manwon`, `ltv_first_time`, `ltv_non_first`, `price_caps`(JSON), `cost_rates`(JSON), `source_note` | UK `effective_from` |
-| `house_batch_run` | `run_date`, `step`, `status`(SUCCESS\|PARTIAL\|FAILED\|SKIPPED), `api_calls`, `detail`(JSON), `started_time`, `finished_time`, `error` | IDX `run_date` |
+| `house_batch_run` | `run_date`, `step`(아래 목록), `status`(SUCCESS\|PARTIAL\|FAILED\|SKIPPED), `api_calls`, `detail`(JSON), `started_time`, `finished_time`, `error` | IDX (`step`, `status`, `run_date`) |
 
+- `house_batch_run.step` 값 (7장 야간 배치 단계와 1:1, 한 실행에서 단계마다 1행):
+
+  | step | 7장 단계 | 이 기록을 읽는 곳 |
+  | --- | --- | --- |
+  | `COLLECT_UNIT_PREPARE` | 1. 수집 단위 준비 | — |
+  | `TRADE_COLLECT` | 2. 실거래 수집 | `/house/meta`의 `dataAsOf` |
+  | `COMPLEX_ENRICH` | 3. 단지 보강 | — |
+  | `SCHOOL_SYNC` | 4. 학교 동기화 | 다음 갱신 시점(180일) 판단 |
+  | `REDEVELOPMENT_SYNC` | 5. 정비사업 동기화 | 다음 갱신 시점(30일) 판단, 비교표 `redevelopments` null/[] 판단 |
+  | `STATS_BUILD` | 6. 통계 | `/house/meta`의 `statsComputedDate` |
+
+  SKIPPED(갱신 시점 전, 키 없음, 데이터셋 미확정)는 SUCCESS로 치지 않는다. 그래서 정비사업을 한 번도 받지 않았으면 계속 `null`이다.
 - 지도 영역 조회는 위경도 B-tree 인덱스로 충분하다(서울 아파트 단지 수천 개). PostGIS는 쓰지 않는다.
 - `house_complex_area_stat.avg_3m`은 최근 실거래가가 3개월 창일 때 `recent_price_manwon`과 같은 값이다. 비교표 1행과 8행 "최근"이 서로 다르게 보이지 않는다.
 - 쿼리는 단위 테스트로 검증되지 않는다(DB 통합 테스트 없음). 통계·랭킹 SQL은 로컬 DB에 백필 데이터를 넣고 직접 실행해 결과를 확인한다.
@@ -641,7 +654,7 @@ VALUES
 - 열 순서는 요청 `items` 순서를 따른다(없는 단지는 건너뜀). 값이 없는 필드는 null이고, FE가 "정보 없음"으로 표시한다.
 - `missingIds`: 요청했지만 없는 `complexId` 목록. 없으면 `[]`. 전부 없으면 `columns: []`. 비교표는 이 경우에도 200이다.
 - `redevelopments`: 정비사업 데이터가 아직 적재되지 않았으면 `null`, 적재됐는데 반경 500m 안에 없으면 `[]`.
-  - "적재됨"은 `house_batch_run`에 정비사업 동기화 단계의 SUCCESS 기록이 한 번이라도 있는지로 판단한다. 테이블이 비었는지로 판단하지 않는다. 그러면 동기화는 성공했는데 사업이 0건인 경우와 미적재를 구분할 수 없다.
+  - "적재됨"은 `house_batch_run`에 `step = REDEVELOPMENT_SYNC`, `status = SUCCESS` 기록이 한 번이라도 있는지로 판단한다(9장 step 목록). 테이블이 비었는지로 판단하지 않는다. 그러면 동기화는 성공했는데 사업이 0건인 경우와 미적재를 구분할 수 없다.
 - `complexId`에는 `:`와 `,`가 들어가지 않는다(`items`·`cmp` 구분자).
 
 ### 랭킹
@@ -834,27 +847,27 @@ src/lib/api/query-keys.ts   houseQueryKeys 추가
 
 - [ ] BE: `MolitTradeGateway`, `TradeCollector`, `house_collect_unit` 우선순위, dedup·해제·원천 삭제 처리
 - [ ] BE: 행안부 좌표, 건축물대장 보강, 관리자 보강 목록·주소 보정 API
-- [ ] BE: `HouseNightlyScheduler` 단계 1\~3, `house_batch_run` 기록
+- [ ] BE: `HouseNightlyScheduler` 단계 1\~3(`COLLECT_UNIT_PREPARE`, `TRADE_COLLECT`, `COMPLEX_ENRICH`), `house_batch_run` 기록
 
 * 완료 기준: 40개월 백필 완료(`house_collect_unit` 전부 DONE), 최근 12개월 거래 기준 좌표 보강률 95% 이상, 해제·원천 삭제 거래 통계 제외 확인
 
 ### 3단계 — 지도 탐색
 
-- [ ] BE: 이상치 판정, `AreaStatBuilder`(최근 실거래가), `GET /house/complexes`(영역·`lawdCd`), `GET /house/complexes/summary`, `GET /house/complexes/{complexId}`, `GET /house/meta`
+- [ ] BE: 배치 단계 6(`STATS_BUILD`) — 이상치 판정, `AreaStatBuilder`(최근 실거래가), `GET /house/complexes`(영역·`lawdCd`), `GET /house/complexes/summary`, `GET /house/complexes/{complexId}`, `GET /house/meta`
 - [ ] FE: 카카오 로더(`src/lib/kakao`), 구·동 묶음 / 단지 레이어 전환, 묶음 클릭 확대, 가격 오버레이, 평형 토글, 후보 리스트, 정보 카드, 지도 없는 모드, 레이어 level 실측
 
 * 완료 기준: 예산 결과 변경 시 1초 안에 마커 갱신, 후보 300개에서 지도 이동이 끊기지 않음, 기간 라벨 표시, 1920px 화면에서도 단지 조회 400 오류 없음
 
 ### 4단계 — 단지 비교
 
-- [ ] BE: 학교 데이터 적재 + 단지별 최근접 거리, (데이터셋 확정 시) 정비사업 적재 + 단지 연결, `GET /house/compare`, `GET /house/complexes/search`
+- [ ] BE: 배치 단계 4(`SCHOOL_SYNC`) 학교 데이터 적재 + 단지별 최근접 거리, 배치 단계 5(`REDEVELOPMENT_SYNC`) 정비사업 적재 + 단지 연결(데이터셋 미확정이면 SKIPPED까지만), `GET /house/compare`, `GET /house/complexes/search`
 - [ ] FE: 비교 트레이, 단지 검색, 9개 지표 표, 낮은 표본 배지, `cmp` URL
 
 * 완료 기준: 3개 단지 비교표가 공유 URL로 동일하게 복원(로그인 후), 비로그인 접근 시 로그인 화면으로 이동
 
 ### 5단계 — 랭킹과 마무리
 
-- [ ] BE: `RankingBuilder` LEADER·RISE·FALL·VOLUME, 동률 정렬, `GET /house/rankings`
+- [ ] BE: 배치 단계 6(`STATS_BUILD`)에 `RankingBuilder` LEADER·RISE·FALL·VOLUME 추가, 동률 정렬, `GET /house/rankings`
 - [ ] FE: 랭킹 탭, 지도 연동, 면책·기준일 표기, 모바일 레이아웃, 홈 허브 진입
 
 * 완료 기준: 구별 대장 항상 25행, 상승·하락 최대 20행(부족하면 있는 만큼), 야간 배치 후 기준일 갱신
@@ -879,7 +892,7 @@ src/lib/api/query-keys.ts   houseQueryKeys 추가
 - 직거래: 통계에 포함하고 이상치 판정으로 저가 직거래를 제외, `dealing_type`은 저장
 - 관리자 보강: 1차는 API만 (Swagger로 사용), FE 화면 없음
 - 축소 지도: 구별 대장 대신 구·동별 예산 내 후보 수 묶음, 클릭 시 확대. 구별 대장은 랭킹 탭에만
-- FE 리뷰 추가 API (BE 합의 완료): 구·동 묶음 API(`/house/complexes/summary`, 구 중심은 고정 좌표), `/house/complexes?lawdCd=`, 비교표 `missingIds`·`districtName`·`umdName`, `redevelopments` null/[] 구분(동기화 SUCCESS 기록 기준), 영역 폭 초과 시 상위 묶음으로 전환(0.2도 → 동, 1.0도 → 구)
+- FE 리뷰 추가 API (BE 합의 완료): 구·동 묶음 API(`/house/complexes/summary`, 구 중심은 고정 좌표), `/house/complexes?lawdCd=`, 비교표 `missingIds`·`districtName`·`umdName`, `redevelopments` null/[] 구분(`REDEVELOPMENT_SYNC` SUCCESS 기록 기준, 학교와 단계 분리), 영역 폭 초과 시 상위 묶음으로 전환(0.2도 → 동, 1.0도 → 구)
 - 평형 토글: 페이지에 하나, 지도·리스트·랭킹 공유. 비교함 항목은 담을 때 평형 고정 + 항목별 전환
 - 비교함: 같은 단지 59·84 동시 담기 허용(각 1칸), 같은 평형 중복 불가
 - 금액 표기: 반올림, 소수 자리 고정(15.00억), 등락은 부호 표기(+2,000만, -1.20억)
