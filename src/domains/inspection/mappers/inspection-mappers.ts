@@ -77,6 +77,7 @@ function mapIncompleteSummary(dto: {
   draftPropertyCount: number;
   visitMissingFields: string[];
   draftVisitCount: number;
+  plannedVisitCount: number;
 }): IncompleteSummary {
   return {
     unansweredRequiredCount: dto.unansweredRequiredCount,
@@ -85,13 +86,14 @@ function mapIncompleteSummary(dto: {
     draftPropertyCount: dto.draftPropertyCount,
     visitMissingFields: dto.visitMissingFields,
     draftVisitCount: dto.draftVisitCount,
+    plannedVisitCount: dto.plannedVisitCount,
   };
 }
 
 function mapViewedPropertyBrief(dto: {
   propertyId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 }): ViewedPropertyBrief {
   return {
@@ -106,7 +108,7 @@ function mapMatchedProperty(dto: {
   propertyId: string;
   visitId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 }): MatchedProperty {
   return {
@@ -125,6 +127,7 @@ export function mapInspectionVisitSummaryDto(dto: {
   oneLineReview: string | null;
   revisitIntent: InspectionVisitSummary['revisitIntent'];
   status: InspectionVisitSummary['status'];
+  completedAt: string | null;
   tags: string[];
   propertyCount: number | null;
   incompleteSummary: Parameters<typeof mapIncompleteSummary>[0] | null;
@@ -136,6 +139,7 @@ export function mapInspectionVisitSummaryDto(dto: {
     oneLineReview: dto.oneLineReview,
     revisitIntent: dto.revisitIntent,
     status: dto.status,
+    completedAt: dto.completedAt,
     tags: dto.tags,
     propertyCount: dto.propertyCount,
     incompleteSummary: dto.incompleteSummary
@@ -158,6 +162,13 @@ export function mapInspectionAreaDto(
     totalPropertyCount: dto.totalPropertyCount,
     latestVisit: dto.latestVisit
       ? mapInspectionVisitSummaryDto(dto.latestVisit)
+      : null,
+    plannedVisit: dto.plannedVisit
+      ? {
+          // §3-①: wire field is `inspectionVisitId` here — normalized to `visitId`.
+          visitId: dto.plannedVisit.inspectionVisitId,
+          visitedAt: dto.plannedVisit.visitedAt,
+        }
       : null,
     topProperty: dto.topProperty
       ? mapViewedPropertyBrief(dto.topProperty)
@@ -249,6 +260,7 @@ export function mapViewedPropertyDetailDto(
     nextProperty: dto.nextProperty
       ? mapViewedPropertyBrief(dto.nextProperty)
       : null,
+    location: dto.location,
   };
 }
 
@@ -293,6 +305,7 @@ export function mapInspectionVisitDetailDto(
     pros: dto.pros,
     cons: dto.cons,
     status: dto.status,
+    completedAt: dto.completedAt,
     tags: dto.tags,
     properties: dto.properties.map(mapViewedPropertyDetailDto),
     cover: dto.cover ? mapFileBoxItem(dto.cover) : null,
@@ -312,6 +325,7 @@ export function mapInspectionVisitListItemDto(
     oneLineReview: dto.oneLineReview,
     revisitIntent: dto.revisitIntent,
     status: dto.status,
+    completedAt: dto.completedAt,
     propertyCount: dto.propertyCount,
     topInterestProperty: dto.topInterestProperty
       ? mapViewedPropertyBrief(dto.topInterestProperty)

@@ -7,6 +7,12 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { TextField } from '@/components/ui/TextField';
+import type { AddressCandidate } from '@/domains/geo/api/geo-schemas';
+import { AddressSearchField } from '@/domains/geo/components/AddressSearchField';
+import {
+  classifyLocationError,
+  describeLocationError,
+} from '@/domains/geo/utils/location-error';
 import { inspectionApi } from '@/domains/inspection/api/inspection-api';
 import { InterestStarsInput } from '@/domains/inspection/components/InterestStars';
 import { ReviewDraftAction } from '@/domains/inspection/components/ReviewDraftAction';
@@ -35,7 +41,9 @@ import type {
   PropertyAnswer,
   PropertyAnswerInput,
   PropertyAnswerPayload,
+  PropertyLocationInput,
   ReviewSuggestion,
+  ViewedPropertyUdo,
 } from '@/domains/inspection/types';
 import { formatVisitedAt } from '@/domains/inspection/utils/inspection-format';
 import { isPropertyEditFromArea } from '@/domains/inspection/utils/property-edit-return';
@@ -67,7 +75,23 @@ type BasicFields = {
   pros: string;
   cons: string;
   tags: string[];
+  /** What the next PUT sends. `coordKey` is set only for a freshly chosen address. */
+  location: PropertyLocationInput | null;
 };
+
+function toLocationInput(
+  location: { bdMgtSn: string; roadAddress: string | null } | null,
+  fallback?: PropertyLocationInput | null
+): PropertyLocationInput | null {
+  if (!location) {
+    return null;
+  }
+
+  return {
+    bdMgtSn: location.bdMgtSn,
+    roadAddress: location.roadAddress ?? fallback?.roadAddress ?? '',
+  };
+}
 
 function isAnswerFilled(answer: PropertyAnswer): boolean {
   return answer.answered;
@@ -100,6 +124,13 @@ export function InspectionPropertyEditSection({
   const [answers, setAnswers] = useState<PropertyAnswer[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  // 503 ADDRESS_LOOKUP_UNAVAILABLE — the address field stays off for this session.
+  const [isAddressDisabled, setIsAddressDisabled] = useState(false);
+  // The location the server last returned; what a failed lookup reverts to.
+  const confirmedLocationRef = useRef<PropertyLocationInput | null>(null);
+  // Set when a pick/clear should be saved right after the state commits.
+  const flushAfterLocationChangeRef = useRef(false);
   const [completeError, setCompleteError] = useState<string | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const photoUploader = useInspectionPhotoUploader(setPhotos);
@@ -110,7 +141,12 @@ export function InspectionPropertyEditSection({
 
   const autosave = useAutosave({
     snapshot: fields ? { fields, photos } : null,
-    onSave: (snapshot) => save(snapshot.fields, snapshot.photos),
+    onSave: async (snapshot) => {
+      // useAutosave's failure contract: throw so the snapshot is retried.
+      if (!(await save(snapshot.fields, snapshot.photos))) {
+        throw new Error('Property autosave failed');
+      }
+    },
   });
 
   useEffect(() => {
@@ -121,14 +157,16 @@ export function InspectionPropertyEditSection({
     hydratedRef.current = true;
     const initialFields: BasicFields = {
       complexName: detail.complexName,
-      name: detail.name,
+      name: detail.name ?? '',
       interestLevel: detail.interestLevel,
       oneLineReview: detail.oneLineReview ?? '',
       memo: detail.memo ?? '',
       pros: detail.pros ?? '',
       cons: detail.cons ?? '',
       tags: detail.tags,
+      location: toLocationInput(detail.location),
     };
+    confirmedLocationRef.current = initialFields.location;
     const initialPhotos: LocalPhotoItem[] = detail.photos.map((photo) => ({
       key: photo.id,
       id: photo.id,
@@ -142,38 +180,153 @@ export function InspectionPropertyEditSection({
     setAnswers(detail.answers);
   }, [detail, autosave.markClean]);
 
-  async function save(next: BasicFields, nextPhotos: LocalPhotoItem[]) {
+  function buildUpdatePayload(
+    next: BasicFields,
+    nextPhotos: LocalPhotoItem[],
+    location: PropertyLocationInput | null
+  ): ViewedPropertyUdo {
+    return {
+      complexName: next.complexName.trim(),
+      name: next.name.trim() || undefined,
+      interestLevel: next.interestLevel ?? undefined,
+      oneLineReview: next.oneLineReview.trim() || undefined,
+      memo: next.memo.trim() || undefined,
+      pros: next.pros.trim() || undefined,
+      cons: next.cons.trim() || undefined,
+      tags: next.tags,
+      files: buildVisitFilesPayload(nextPhotos),
+      // PUT is a full replace — `location` is always sent (D9).
+      location,
+    };
+  }
+
+  function adoptResponse(
+    response: Awaited<ReturnType<typeof updateMutation.mutateAsync>>,
+    sent: PropertyLocationInput | null
+  ) {
+    confirmedLocationRef.current = toLocationInput(response.location, sent);
+    setPhotos((current) =>
+      current.map((photo) => {
+        const matched = response.photos.find(
+          (item) => item.fileAssetId === photo.fileAssetId
+        );
+
+        return matched ? { ...photo, id: matched.id } : photo;
+      })
+    );
+  }
+
+  /** Resolves `true` when the PUT went through; `false` after showing why not. */
+  async function save(
+    next: BasicFields,
+    nextPhotos: LocalPhotoItem[]
+  ): Promise<boolean> {
     setSaveError(null);
 
     try {
-      const response = await updateMutation.mutateAsync({
-        complexName: next.complexName.trim(),
-        name: next.name.trim(),
-        interestLevel: next.interestLevel ?? undefined,
-        oneLineReview: next.oneLineReview.trim() || undefined,
-        memo: next.memo.trim() || undefined,
-        pros: next.pros.trim() || undefined,
-        cons: next.cons.trim() || undefined,
-        tags: next.tags,
-        files: buildVisitFilesPayload(nextPhotos),
+      const response = await updateMutation.mutateAsync(
+        buildUpdatePayload(next, nextPhotos, next.location)
+      );
+      adoptResponse(response, next.location);
+      if (next.location) {
+        setLocationError(null);
+      }
+
+      return true;
+    } catch (error) {
+      const kind = classifyLocationError(error, {
+        requestHadNewLocation: Boolean(next.location?.coordKey),
       });
 
-      setPhotos((current) =>
-        current.map((photo) => {
-          const matched = response.photos.find(
-            (item) => item.fileAssetId === photo.fileAssetId
-          );
+      if (kind === 'location' || kind === 'unavailable') {
+        return resendWithConfirmedLocation(next, nextPhotos, error, kind);
+      }
 
-          return matched ? { ...photo, id: matched.id } : photo;
-        })
-      );
-    } catch (error) {
       setSaveError(
         error instanceof AppError
           ? error.message
           : '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.'
       );
+
+      return false;
     }
+  }
+
+  // 06-fe-plan §4.1 ③: the server rejects the whole PUT when the address
+  // lookup fails. Put the last confirmed location back and send the same PUT
+  // once more (same bdMgtSn → no lookup) so the other edits are not lost.
+  async function resendWithConfirmedLocation(
+    next: BasicFields,
+    nextPhotos: LocalPhotoItem[],
+    cause: unknown,
+    kind: 'location' | 'unavailable'
+  ): Promise<boolean> {
+    const confirmed = confirmedLocationRef.current;
+
+    setFields((current) =>
+      current ? { ...current, location: confirmed } : current
+    );
+    setLocationError(
+      `주소는 저장하지 못했습니다. ${describeLocationError(cause)}`
+    );
+    if (kind === 'unavailable') {
+      setIsAddressDisabled(true);
+    }
+
+    try {
+      const response = await updateMutation.mutateAsync(
+        buildUpdatePayload(next, nextPhotos, confirmed)
+      );
+      adoptResponse(response, confirmed);
+
+      return true;
+    } catch (retryError) {
+      setSaveError(
+        retryError instanceof AppError
+          ? retryError.message
+          : '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.'
+      );
+
+      return false;
+    }
+  }
+
+  // Pick / clear save right away instead of waiting out the 2s delay. This
+  // runs after the new `fields` rendered, so the flush sees the new location;
+  // `useAutosave` serializes saves, so the timer cannot send a second one
+  // while this is in flight.
+  const fieldsLocation = fields?.location;
+  useEffect(() => {
+    if (flushAfterLocationChangeRef.current) {
+      flushAfterLocationChangeRef.current = false;
+      void autosave.flush();
+    }
+  }, [fieldsLocation, autosave.flush]);
+
+  function handleSelectAddress(candidate: AddressCandidate) {
+    setLocationError(null);
+    flushAfterLocationChangeRef.current = true;
+    setFields((current) =>
+      current
+        ? {
+            ...current,
+            location: {
+              bdMgtSn: candidate.bdMgtSn,
+              roadAddress:
+                candidate.roadAddress ?? candidate.jibunAddress ?? '',
+              coordKey: candidate.coordKey,
+            },
+          }
+        : current
+    );
+  }
+
+  function handleClearAddress() {
+    setLocationError(null);
+    flushAfterLocationChangeRef.current = true;
+    setFields((current) =>
+      current ? { ...current, location: null } : current
+    );
   }
 
   // Answers go to their own endpoint. Every answer input — typing or a
@@ -418,12 +571,22 @@ export function InspectionPropertyEditSection({
         </datalist>
 
         <TextField
-          label='매물명'
+          label='동·호수'
           required
+          hint='임장 전에는 비워 둘 수 있지만, 작성을 마치려면 입력해야 합니다.'
           value={fields.name}
           onChange={(event) =>
             setFields({ ...fields, name: event.target.value })
           }
+        />
+
+        <AddressSearchField
+          label='주소'
+          value={fields.location}
+          disabled={isAddressDisabled}
+          error={locationError ?? undefined}
+          onSelect={handleSelectAddress}
+          onClear={handleClearAddress}
         />
 
         <div>

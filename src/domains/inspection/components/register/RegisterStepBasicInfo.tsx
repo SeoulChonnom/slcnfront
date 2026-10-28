@@ -28,12 +28,23 @@ const REVISIT_INTENT_OPTIONS: { label: string; value: RevisitIntent }[] = [
   { value: 'NO', label: '안살아' },
 ];
 
-type RegisterStepBasicInfoProps = {
+type RegisterStepBasicInfoCommonProps = {
   values: VisitBasicFormValues;
   onFieldChange: <Key extends keyof VisitBasicFormValues>(
     key: Key,
     value: VisitBasicFormValues[Key]
   ) => void;
+  savedAtLabel: string;
+  errors: Record<string, string>;
+};
+
+type RegisterStepBasicInfoPlanProps = RegisterStepBasicInfoCommonProps & {
+  /** 계획 수립 전용: 예정일 · 전체 메모 · 태그만 보인다(field_research_map/06 FD3). */
+  mode: 'plan';
+};
+
+type RegisterStepBasicInfoFullProps = RegisterStepBasicInfoCommonProps & {
+  mode?: 'full';
   photos: LocalPhotoItem[];
   onAddPhotoFiles: (files: File[]) => void;
   onCaptionChange: (key: string, caption: string) => void;
@@ -41,26 +52,17 @@ type RegisterStepBasicInfoProps = {
   onReorderPhotos: (next: LocalPhotoItem[]) => void;
   photoUploadProgress: PhotoUploadProgress | null;
   photoUploadError?: string | null;
-  savedAtLabel: string;
-  errors: Record<string, string>;
   /** Omit to hide the AI draft action. */
   reviewDraft?: { requestDraft: () => Promise<ReviewSuggestion> };
 };
 
-export function RegisterStepBasicInfo({
-  values,
-  onFieldChange,
-  photos,
-  onAddPhotoFiles,
-  onCaptionChange,
-  onRemovePhoto,
-  onReorderPhotos,
-  photoUploadProgress,
-  photoUploadError = null,
-  savedAtLabel,
-  errors,
-  reviewDraft,
-}: RegisterStepBasicInfoProps) {
+type RegisterStepBasicInfoProps =
+  | RegisterStepBasicInfoPlanProps
+  | RegisterStepBasicInfoFullProps;
+
+export function RegisterStepBasicInfo(props: RegisterStepBasicInfoProps) {
+  const { values, onFieldChange, savedAtLabel, errors } = props;
+  const isPlan = props.mode === 'plan';
   const [tagInput, setTagInput] = useState('');
   const [isDrafting, setIsDrafting] = useState(false);
   const { drafted, markDrafted } = useDraftedFields();
@@ -102,10 +104,19 @@ export function RegisterStepBasicInfo({
 
   return (
     <div className='slcn-inspection-register-step'>
-      <h2 className='slcn-inspection-register-step__title'>임장 기본 정보</h2>
+      <h2 className='slcn-inspection-register-step__title'>
+        {isPlan ? '임장 계획' : '임장 기본 정보'}
+      </h2>
       <p className='slcn-inspection-register-step__lead'>
-        임장 일시와 재방문 의사만 있으면 됩니다. 나머지는 나중에 채워도 돼요.
+        {isPlan
+          ? '예정일만 있으면 됩니다. 메모와 태그는 나중에 채워도 돼요.'
+          : '임장 일시와 재방문 의사만 있으면 됩니다. 나머지는 나중에 채워도 돼요.'}
       </p>
+      {isPlan ? (
+        <p className='slcn-inspection-register-step__lead'>
+          다녀온 뒤 임장 수정 화면에서 결과를 쓰고 완료해요
+        </p>
+      ) : null}
 
       <p
         className='slcn-inspection-register-autosave'
@@ -118,7 +129,7 @@ export function RegisterStepBasicInfo({
       <div className='slcn-inspection-register-datetime'>
         <TextField
           type='date'
-          label='임장 일시'
+          label={isPlan ? '예정일' : '임장 일시'}
           required
           value={values.visitedAtDate}
           onChange={(event) =>
@@ -128,7 +139,7 @@ export function RegisterStepBasicInfo({
         />
         <TextField
           type='time'
-          label='시각'
+          label={isPlan ? '예정 시각' : '시각'}
           required
           value={values.visitedAtTime}
           onChange={(event) =>
@@ -137,18 +148,20 @@ export function RegisterStepBasicInfo({
         />
       </div>
 
-      <RadioGroup
-        name='revisit-intent'
-        label='재방문 의사'
-        required
-        value={values.revisitIntent ?? undefined}
-        onChange={(next) =>
-          onFieldChange('revisitIntent', next as RevisitIntent)
-        }
-        options={REVISIT_INTENT_OPTIONS}
-        error={errors.revisitIntent}
-        className='slcn-inspection-register-revisit-group'
-      />
+      {isPlan ? null : (
+        <RadioGroup
+          name='revisit-intent'
+          label='재방문 의사'
+          required
+          value={values.revisitIntent ?? undefined}
+          onChange={(next) =>
+            onFieldChange('revisitIntent', next as RevisitIntent)
+          }
+          options={REVISIT_INTENT_OPTIONS}
+          error={errors.revisitIntent}
+          className='slcn-inspection-register-revisit-group'
+        />
+      )}
 
       <label className='slcn-field'>
         <span className='slcn-field__label'>전체 메모</span>
@@ -161,48 +174,54 @@ export function RegisterStepBasicInfo({
         />
       </label>
 
-      {reviewDraft ? (
+      {props.mode !== 'plan' && props.reviewDraft ? (
         <ReviewDraftAction
           memo={values.memo}
           hasExistingReview={hasExistingReviewContent(values)}
-          requestDraft={reviewDraft.requestDraft}
+          requestDraft={props.reviewDraft.requestDraft}
           onApply={applyDraft}
           onBusyChange={setIsDrafting}
         />
       ) : null}
 
-      <TextField
-        label='한줄평'
-        hint='선택 입력'
-        maxLength={300}
-        value={values.oneLineReview}
-        readOnly={isDrafting}
-        data-drafted={drafted.has('oneLineReview') || undefined}
-        onChange={(event) => onFieldChange('oneLineReview', event.target.value)}
-      />
+      {isPlan ? null : (
+        <>
+          <TextField
+            label='한줄평'
+            hint='선택 입력'
+            maxLength={300}
+            value={values.oneLineReview}
+            readOnly={isDrafting}
+            data-drafted={drafted.has('oneLineReview') || undefined}
+            onChange={(event) =>
+              onFieldChange('oneLineReview', event.target.value)
+            }
+          />
 
-      <div className='slcn-inspection-register-pros-cons'>
-        <label className='slcn-field'>
-          <span className='slcn-field__label'>장점</span>
-          <textarea
-            className='slcn-field__textarea slcn-inspection-register-textarea'
-            value={values.pros}
-            readOnly={isDrafting}
-            data-drafted={drafted.has('pros') || undefined}
-            onChange={(event) => onFieldChange('pros', event.target.value)}
-          />
-        </label>
-        <label className='slcn-field'>
-          <span className='slcn-field__label'>단점</span>
-          <textarea
-            className='slcn-field__textarea slcn-inspection-register-textarea'
-            value={values.cons}
-            readOnly={isDrafting}
-            data-drafted={drafted.has('cons') || undefined}
-            onChange={(event) => onFieldChange('cons', event.target.value)}
-          />
-        </label>
-      </div>
+          <div className='slcn-inspection-register-pros-cons'>
+            <label className='slcn-field'>
+              <span className='slcn-field__label'>장점</span>
+              <textarea
+                className='slcn-field__textarea slcn-inspection-register-textarea'
+                value={values.pros}
+                readOnly={isDrafting}
+                data-drafted={drafted.has('pros') || undefined}
+                onChange={(event) => onFieldChange('pros', event.target.value)}
+              />
+            </label>
+            <label className='slcn-field'>
+              <span className='slcn-field__label'>단점</span>
+              <textarea
+                className='slcn-field__textarea slcn-inspection-register-textarea'
+                value={values.cons}
+                readOnly={isDrafting}
+                data-drafted={drafted.has('cons') || undefined}
+                onChange={(event) => onFieldChange('cons', event.target.value)}
+              />
+            </label>
+          </div>
+        </>
+      )}
 
       <div
         className='slcn-inspection-register-tags'
@@ -258,16 +277,18 @@ export function RegisterStepBasicInfo({
         ) : null}
       </div>
 
-      <PhotoManager
-        label='임장 사진'
-        photos={photos}
-        onAddFiles={onAddPhotoFiles}
-        onCaptionChange={onCaptionChange}
-        onRemove={onRemovePhoto}
-        onReorder={onReorderPhotos}
-        uploadProgress={photoUploadProgress}
-        uploadError={photoUploadError}
-      />
+      {props.mode !== 'plan' ? (
+        <PhotoManager
+          label='임장 사진'
+          photos={props.photos}
+          onAddFiles={props.onAddPhotoFiles}
+          onCaptionChange={props.onCaptionChange}
+          onRemove={props.onRemovePhoto}
+          onReorder={props.onReorderPhotos}
+          uploadProgress={props.photoUploadProgress}
+          uploadError={props.photoUploadError ?? null}
+        />
+      ) : null}
     </div>
   );
 }

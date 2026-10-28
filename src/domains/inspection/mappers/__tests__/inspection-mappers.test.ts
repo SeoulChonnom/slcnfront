@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type {
+  InspectionAreaRdoDto,
   InspectionVisitDetailDto,
   InspectionVisitListItemDto,
   ViewedPropertyDetailDto,
@@ -7,6 +8,7 @@ import type {
 import {
   buildPropertyAnswerPayload,
   computeRevisitIntentCounts,
+  mapInspectionAreaDto,
   mapInspectionVisitDetailDto,
   mapInspectionVisitListItemDto,
   mapViewedPropertyDetailDto,
@@ -19,6 +21,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 describe('§3-① visitId normalization', () => {
@@ -45,12 +48,48 @@ describe('§3-① visitId normalization', () => {
       incompleteSummary: baseIncompleteSummary,
       prevProperty: null,
       nextProperty: null,
+      location: null,
     };
 
     const result = mapViewedPropertyDetailDto(dto);
 
     expect(result.visitId).toBe('VISIT-03');
     expect(result).not.toHaveProperty('inspectionVisitId');
+  });
+
+  it('mapViewedPropertyDetailDto keeps a null name (no coercion to empty string)', () => {
+    const result = mapViewedPropertyDetailDto({
+      propertyId: 'PROP-09',
+      inspectionVisitId: 'VISIT-03',
+      areaId: 'AREA-01',
+      areaName: '성수동',
+      visitedAt: '2026-09-17T14:00',
+      complexName: '트리마제',
+      name: null,
+      memo: null,
+      oneLineReview: null,
+      pros: null,
+      cons: null,
+      interestLevel: null,
+      status: 'DRAFT',
+      sortOrder: 1,
+      tags: [],
+      cover: null,
+      photos: [],
+      answers: [],
+      incompleteSummary: baseIncompleteSummary,
+      prevProperty: {
+        propertyId: 'PROP-08',
+        complexName: '트리마제',
+        name: null,
+        interestLevel: null,
+      },
+      nextProperty: null,
+      location: null,
+    });
+
+    expect(result.name).toBeNull();
+    expect(result.prevProperty?.name).toBeNull();
   });
 
   it('mapInspectionVisitDetailDto renames the wire `inspectionVisitId` to `visitId`', () => {
@@ -64,6 +103,7 @@ describe('§3-① visitId normalization', () => {
       pros: null,
       cons: null,
       status: 'DRAFT',
+      completedAt: '2026-09-23T09:28:52',
       tags: [],
       properties: [],
       cover: null,
@@ -74,6 +114,7 @@ describe('§3-① visitId normalization', () => {
     const result = mapInspectionVisitDetailDto(dto);
 
     expect(result.visitId).toBe('VISIT-03');
+    expect(result.completedAt).toBe('2026-09-23T09:28:52');
     expect(result).not.toHaveProperty('inspectionVisitId');
   });
 
@@ -85,6 +126,7 @@ describe('§3-① visitId normalization', () => {
       oneLineReview: null,
       revisitIntent: 'YES',
       status: 'COMPLETED',
+      completedAt: null,
       propertyCount: 1,
       topInterestProperty: null,
       tags: [],
@@ -95,7 +137,47 @@ describe('§3-① visitId normalization', () => {
     const result = mapInspectionVisitListItemDto(dto);
 
     expect(result.visitId).toBe('VISIT-09');
+    expect(result.completedAt).toBeNull();
     expect(result).not.toHaveProperty('inspectionVisitId');
+  });
+});
+
+describe('area row plannedVisit', () => {
+  const row = (plannedVisit: InspectionAreaRdoDto['plannedVisit']) =>
+    ({
+      areaId: 'AREA-09',
+      name: '송파',
+      description: null,
+      visitCount: 0,
+      firstVisitedAt: null,
+      lastVisitedAt: null,
+      totalPropertyCount: 0,
+      latestVisit: null,
+      plannedVisit,
+      topProperty: null,
+      incompleteSummary: { ...baseIncompleteSummary, plannedVisitCount: 1 },
+      thumbnails: [],
+      totalImageCount: 0,
+      matchedProperty: null,
+    }) satisfies InspectionAreaRdoDto;
+
+  it('normalizes the wire `inspectionVisitId` to `visitId`', () => {
+    const result = mapInspectionAreaDto(
+      row({ inspectionVisitId: 'VISIT-20', visitedAt: '2026-10-12T14:00' })
+    );
+
+    expect(result.plannedVisit).toEqual({
+      visitId: 'VISIT-20',
+      visitedAt: '2026-10-12T14:00',
+    });
+    expect(result.incompleteSummary.plannedVisitCount).toBe(1);
+  });
+
+  it('keeps a plan-only area free of visit data', () => {
+    const result = mapInspectionAreaDto(row(null));
+
+    expect(result.plannedVisit).toBeNull();
+    expect(result.latestVisit).toBeNull();
   });
 });
 

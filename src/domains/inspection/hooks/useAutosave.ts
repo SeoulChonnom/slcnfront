@@ -6,6 +6,12 @@ export const AUTOSAVE_DELAY_MS = 2000;
 type UseAutosaveOptions<T> = {
   /** `null` while the form is not ready (e.g. still loading). */
   snapshot: T | null;
+  /**
+   * Failure contract: if `onSave` throws or its promise rejects, the save
+   * counts as FAILED — the snapshot goes back to "unsaved" so the next
+   * schedule, `flush()` or unmount sends it again. The hook swallows the
+   * error (show it yourself before throwing); a resolved promise is success.
+   */
   onSave: (snapshot: T) => void | Promise<void>;
   delayMs?: number;
 };
@@ -24,6 +30,11 @@ type UseAutosaveOptions<T> = {
  *   concurrent edit.
  * - A save still pending when the screen unmounts is sent right away rather
  *   than dropped, so leaving inside the delay window keeps the edit.
+ * - Saves never overlap: one requested while another is in flight waits for
+ *   it, then re-checks against what is saved by then.
+ * - A failed save (see `onSave`) restores the previous saved key, so the same
+ *   snapshot is retried — there is no automatic retry loop, though; the retry
+ *   happens on the next change, `flush()` or unmount.
  */
 export function useAutosave<T>({
   snapshot,
@@ -57,18 +68,48 @@ export function useAutosave<T>({
     }
   }, []);
 
-  const saveLatestIfChanged = useCallback(async () => {
+  const inFlightRef = useRef<Promise<unknown> | null>(null);
+
+  /** Resolves `false` only when a save was attempted and failed. */
+  const saveLatestIfChanged = useCallback(async (): Promise<boolean> => {
     clearTimer();
+    while (inFlightRef.current) {
+      await inFlightRef.current;
+    }
     const latest = latestRef.current;
     if (
       latest.key === null ||
       latest.snapshot === null ||
       latest.key === savedKeyRef.current
     ) {
-      return;
+      return true;
     }
-    savedKeyRef.current = latest.key;
-    await onSaveRef.current(latest.snapshot);
+    const previousKey = savedKeyRef.current;
+    const attemptedKey = latest.key;
+    const snapshotToSave = latest.snapshot;
+    savedKeyRef.current = attemptedKey;
+
+    const attempt = (async () => {
+      try {
+        await onSaveRef.current(snapshotToSave);
+        return true;
+      } catch {
+        // Only undo our own mark: a markClean/cancel during the request has
+        // already replaced it with something newer.
+        if (savedKeyRef.current === attemptedKey) {
+          savedKeyRef.current = previousKey;
+        }
+        return false;
+      }
+    })();
+    inFlightRef.current = attempt;
+    try {
+      return await attempt;
+    } finally {
+      if (inFlightRef.current === attempt) {
+        inFlightRef.current = null;
+      }
+    }
   }, [clearTimer]);
 
   useEffect(() => {
@@ -118,7 +159,10 @@ export function useAutosave<T>({
     savedKeyRef.current = latestRef.current.key;
   }, [clearTimer]);
 
-  /** Sends the latest snapshot now, if it has unsaved changes. */
+  /**
+   * Sends the latest snapshot now, if it has unsaved changes. Waits for a save
+   * already in flight first. Resolves `false` if the save failed.
+   */
   const flush = useCallback(() => saveLatestIfChanged(), [saveLatestIfChanged]);
 
   return { markClean, cancel, flush };

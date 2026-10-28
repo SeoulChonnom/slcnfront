@@ -80,3 +80,8 @@ export function formatInterestAriaLabel(level: number): string {
 }
 
 export const INTEREST_LEVEL_EMPTY_LABEL = '관심도 미입력';
+
+/** 동·호수는 계획 단계에서 비어 있을 수 있다 — null/공백이면 "동·호수 미정". */
+export function formatPropertyName(name: string | null): string {
+  return name?.trim() ? name : '동·호수 미정';
+}
