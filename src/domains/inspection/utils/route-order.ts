@@ -218,6 +218,7 @@ export function recommendRouteOrder(input: RouteOrderInput): RouteOrderResult {
   const stopIndexByKey = new Map<string, number>();
   const stops: Array<{ location: Coordinate; ids: string[] }> = [];
   const unlocatedIds: string[] = [];
+  const currentOrder: number[] = [];
 
   for (const item of input.items) {
     if (!item.location) {
@@ -226,12 +227,15 @@ export function recommendRouteOrder(input: RouteOrderInput): RouteOrderResult {
     }
     const key = `${item.location.latitude},${item.location.longitude}`;
     const existing = stopIndexByKey.get(key);
+    const stopIndex = existing ?? stops.length;
     if (existing === undefined) {
-      stopIndexByKey.set(key, stops.length);
+      stopIndexByKey.set(key, stopIndex);
       stops.push({ location: item.location, ids: [item.id] });
     } else {
       stops[existing].ids.push(item.id);
     }
+    // 추천은 같은 지점을 묶지만 현재 거리는 재방문 구간도 모두 센다.
+    currentOrder.push(stopIndex);
   }
 
   const problem: Problem = {
@@ -244,7 +248,6 @@ export function recommendRouteOrder(input: RouteOrderInput): RouteOrderResult {
   };
 
   const order = solve(problem);
-  const currentOrder = stops.map((_, index) => index);
 
   return {
     orderedIds: [

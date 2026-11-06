@@ -208,6 +208,30 @@ describe('RecommendOrderPanel flow', () => {
     ).toBe(true);
   });
 
+  it('allows applying a shorter order when the current route revisits the same building', async () => {
+    mockGeo(() => HttpResponse.json({ latitude: 37.5, longitude: 127 }));
+    const { user } = renderPanel([
+      property('p-a1', '가단지 첫 매물', 0, 37.5),
+      property('p-b', '나단지', 1, 37.51),
+      property('p-a2', '가단지 재방문', 2, 37.5),
+    ]);
+    await pickOrigin(user);
+    await screen.findByText(/현재 순서 .+ → 추천/);
+
+    expect(screen.queryByText('지금 순서가 이미 가장 짧아요')).toBeNull();
+    const apply = screen.getByRole('button', { name: '적용' });
+    expect((apply as HTMLButtonElement).disabled).toBe(false);
+    await user.click(apply);
+
+    await waitFor(() =>
+      expect(reorderVisitProperties).toHaveBeenCalledWith('visit-1', [
+        { id: 'p-a1', sortOrder: 0 },
+        { id: 'p-a2', sortOrder: 1 },
+        { id: 'p-b', sortOrder: 2 },
+      ])
+    );
+  });
+
   it('notes unlocated properties placed last', async () => {
     mockGeo();
     const { user } = renderPanel([...LINE, property('p-x', '무위치', 3, null)]);

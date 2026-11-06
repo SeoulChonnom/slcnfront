@@ -192,10 +192,54 @@ describe('recommendRouteOrder', () => {
       6
     );
     expect(result.currentDistanceMeters).toBeCloseTo(
-      cost(origin, far) + cost(far, near),
+      tourCost(origin, [far, near, far, near]),
       6
     );
   });
+
+  it('counts a repeated stop in the current route before recommending a shorter order', () => {
+    const a = { latitude: 37.5, longitude: 127 };
+    const b = { latitude: 37.51, longitude: 127 };
+    const result = recommendRouteOrder({
+      origin: a,
+      items: [
+        { id: 'a1', location: a },
+        { id: 'b', location: b },
+        { id: 'a2', location: { ...a } },
+      ],
+    });
+
+    expect(result.orderedIds).toEqual(['a1', 'a2', 'b']);
+    expect(result.currentDistanceMeters).toBeCloseTo(cost(a, b) * 2, 6);
+    expect(result.distanceMeters).toBeCloseTo(cost(a, b), 6);
+  });
+
+  it.each([false, true])(
+    'preserves repeated visits and skips unlocated items in the current distance (return=%s)',
+    (returnToOrigin) => {
+      const a = { latitude: 37.46, longitude: 126.96 };
+      const b = { latitude: 37.48, longitude: 126.97 };
+      const result = recommendRouteOrder({
+        origin,
+        items: [
+          { id: 'u1', location: null },
+          { id: 'a1', location: a },
+          { id: 'b', location: b },
+          { id: 'u2', location: null },
+          { id: 'a2', location: { ...a } },
+          { id: 'u3', location: null },
+        ],
+        returnToOrigin,
+      });
+
+      expect(result.currentDistanceMeters).toBeCloseTo(
+        tourCost(origin, [a, b, a], returnToOrigin),
+        6
+      );
+      expect(result.unlocatedIds).toEqual(['u1', 'u2', 'u3']);
+      expect(result.orderedIds.slice(-3)).toEqual(['u1', 'u2', 'u3']);
+    }
+  );
 
   it('appends unlocated items at the end in their relative order', () => {
     const result = recommendRouteOrder({
