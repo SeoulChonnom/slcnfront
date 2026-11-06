@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InspectionRegisterSection } from '@/domains/inspection/components/InspectionRegisterSection';
@@ -9,6 +9,7 @@ import type {
   InspectionVisitDetail,
   InspectionVisitUdo,
 } from '@/domains/inspection/types';
+import { AppError } from '@/lib/api/errors';
 import { renderWithMinimalProviders } from '@/test/helpers/render';
 
 const {
@@ -134,6 +135,15 @@ function visitDetail(
     },
     ...overrides,
   };
+}
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+
+  return { promise, resolve };
 }
 
 describe('InspectionRegisterSection', () => {
@@ -277,5 +287,142 @@ describe('InspectionRegisterSection', () => {
     );
     expect(createVisit).toHaveBeenCalledTimes(1);
     expect(updateVisitStatus).not.toHaveBeenCalled();
+  });
+
+  it('keeps an edited draft after a failed plan save and navigates only after a successful retry', async () => {
+    const route = '/main/inspection/register?draft=visit-1';
+    getVisit.mockResolvedValue(visitDetail({ memo: '저장된 메모' }));
+    updateVisit.mockRejectedValueOnce(
+      new AppError({
+        code: 'HTTP_ERROR',
+        status: 500,
+        message: '계획을 저장하지 못했습니다',
+      })
+    );
+    const { user } = renderWithMinimalProviders(
+      <>
+        <InspectionRegisterSection device='main' />
+        <LocationProbe />
+      </>,
+      { route }
+    );
+    await screen.findByText('확인 매물 단계');
+    await user.click(screen.getByRole('button', { name: '기본 정보' }));
+    await user.clear(screen.getByLabelText('전체 메모'));
+    await user.type(screen.getByLabelText('전체 메모'), '보존할 새 메모');
+    await user.click(screen.getByRole('button', { name: '다음' }));
+    await user.click(screen.getByRole('button', { name: '계획 저장' }));
+
+    expect((await screen.findByRole('alert')).textContent).toBe(
+      '계획을 저장하지 못했습니다'
+    );
+    expect(screen.getByText('확인 매물 단계').closest('[inert]')).toBeNull();
+    expect(screen.getByTestId('location').textContent).toBe(route);
+    expect(updateVisit).toHaveBeenLastCalledWith(
+      'visit-1',
+      expect.objectContaining({ memo: '보존할 새 메모' })
+    );
+    await user.click(screen.getByRole('button', { name: '이전' }));
+    expect(
+      (screen.getByLabelText('전체 메모') as HTMLTextAreaElement).value
+    ).toBe('보존할 새 메모');
+
+    await user.click(screen.getByRole('button', { name: '다음' }));
+    await user.click(screen.getByRole('button', { name: '계획 저장' }));
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/area-1?visit=visit-1'
+      )
+    );
+    expect(updateVisit).toHaveBeenCalledTimes(2);
+    expect(updateVisit).toHaveBeenLastCalledWith(
+      'visit-1',
+      expect.objectContaining({ memo: '보존할 새 메모' })
+    );
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('waits for an in-flight autosave and saves the latest edits before navigating', async () => {
+    const route = '/main/inspection/register?draft=visit-1';
+    const autosave = deferred<InspectionVisitDetail>();
+    const finalSave = deferred<InspectionVisitDetail>();
+    updateVisit
+      .mockReturnValueOnce(autosave.promise)
+      .mockReturnValueOnce(finalSave.promise);
+    const { user } = renderWithMinimalProviders(
+      <>
+        <InspectionRegisterSection device='main' />
+        <LocationProbe />
+      </>,
+      { route }
+    );
+    await screen.findByText('확인 매물 단계');
+    await user.click(screen.getByRole('button', { name: '기본 정보' }));
+    await user.type(screen.getByLabelText('전체 메모'), '자동 저장 중 메모');
+    await waitFor(() => expect(updateVisit).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+    await user.clear(screen.getByLabelText('전체 메모'));
+    await user.type(screen.getByLabelText('전체 메모'), '저장할 최신 메모');
+    await user.click(screen.getByRole('button', { name: '다음' }));
+    await user.click(screen.getByRole('button', { name: '계획 저장' }));
+
+    expect(updateVisit).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('location').textContent).toBe(route);
+    await act(async () => {
+      autosave.resolve(visitDetail({ memo: '자동 저장 중 메모' }));
+    });
+    await waitFor(() => expect(updateVisit).toHaveBeenCalledTimes(2));
+    expect(updateVisit).toHaveBeenLastCalledWith(
+      'visit-1',
+      expect.objectContaining({ memo: '저장할 최신 메모' })
+    );
+    expect(screen.getByTestId('location').textContent).toBe(route);
+
+    await act(async () => {
+      finalSave.resolve(visitDetail({ memo: '저장할 최신 메모' }));
+    });
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/area-1?visit=visit-1'
+      )
+    );
+  });
+
+  it('prevents returning to editable fields while the final plan save is pending', async () => {
+    const route = '/main/inspection/register?draft=visit-1';
+    const finalSave = deferred<InspectionVisitDetail>();
+    getVisit.mockResolvedValue(visitDetail({ memo: '저장할 메모' }));
+    updateVisit.mockReturnValueOnce(finalSave.promise);
+    const { user } = renderWithMinimalProviders(
+      <>
+        <InspectionRegisterSection device='main' />
+        <LocationProbe />
+      </>,
+      { route }
+    );
+    await screen.findByText('확인 매물 단계');
+    await user.click(screen.getByRole('button', { name: '계획 저장' }));
+    await waitFor(() => expect(updateVisit).toHaveBeenCalledTimes(1));
+
+    expect(
+      screen.getByText('확인 매물 단계').closest('[inert]')
+    ).not.toBeNull();
+    for (const button of screen.getAllByRole('button')) {
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+    }
+    await user.click(screen.getByRole('button', { name: '기본 정보' }));
+    await user.click(screen.getByRole('button', { name: '이전' }));
+    expect(screen.queryByLabelText('전체 메모')).toBeNull();
+    expect(screen.getByTestId('location').textContent).toBe(route);
+
+    await act(async () => {
+      finalSave.resolve(visitDetail({ memo: '저장할 메모' }));
+    });
+    await waitFor(() =>
+      expect(screen.getByTestId('location').textContent).toBe(
+        '/main/inspection/area-1?visit=visit-1'
+      )
+    );
   });
 });

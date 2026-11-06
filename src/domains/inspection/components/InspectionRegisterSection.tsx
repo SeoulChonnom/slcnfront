@@ -94,14 +94,18 @@ export function InspectionRegisterSection({
   }
 
   return (
-    <section data-device={device} className='slcn-inspection-register'>
+    <section
+      data-device={device}
+      className='slcn-inspection-register'
+      aria-busy={isSavingPlan || undefined}
+    >
       {device === 'main' ? (
         <h1 className='slcn-inspection-register__title'>임장 계획하기</h1>
       ) : (
         <h1 className='slcn-visually-hidden'>임장 계획하기</h1>
       )}
 
-      <Card className='slcn-inspection-register__card'>
+      <Card className='slcn-inspection-register__card' inert={isSavingPlan}>
         <ol
           className='slcn-inspection-register__step-indicator'
           aria-label='임장 계획 단계'
@@ -122,7 +126,9 @@ export function InspectionRegisterSection({
               >
                 <button
                   type='button'
-                  disabled={state === 'upcoming' && !wizard.visitId}
+                  disabled={
+                    isSavingPlan || (state === 'upcoming' && !wizard.visitId)
+                  }
                   onClick={() => wizard.setStep(step)}
                 >
                   <span aria-hidden='true'>{step}</span> {label}
@@ -163,12 +169,17 @@ export function InspectionRegisterSection({
         <div className='slcn-inspection-register__actions'>
           <Button
             variant='ghost'
+            disabled={isSavingPlan}
             onClick={() => navigate(buildDeviceInspectionAreaListPath(device))}
           >
             나가기
           </Button>
           {wizard.step > 1 ? (
-            <Button variant='secondary' onClick={wizard.goPrev}>
+            <Button
+              variant='secondary'
+              disabled={isSavingPlan}
+              onClick={wizard.goPrev}
+            >
               이전
             </Button>
           ) : null}

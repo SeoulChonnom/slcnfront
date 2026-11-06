@@ -310,9 +310,7 @@ export function useInspectionRegisterWizard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitedAt, areaChoice, visitId, basicValues, photos]);
 
-  const flush = useCallback(async () => {
-    await saveNow();
-  }, [saveNow]);
+  const flush = useCallback(() => saveNow(), [saveNow]);
 
   /**
    * "계획 저장": 대기 중인 자동 저장을 마무리하고 지역 상세로 갈 id를 돌려준다.
@@ -325,13 +323,13 @@ export function useInspectionRegisterWizard({
       await savePromiseRef.current.catch(() => null);
     }
 
-    await flush();
+    const savedVisitId = await flush();
 
-    if (!visitIdRef.current) {
+    if (!savedVisitId) {
       return null;
     }
 
-    return { visitId: visitIdRef.current, areaId: areaIdRef.current };
+    return { visitId: savedVisitId, areaId: areaIdRef.current };
   }, [autosave.cancel, flush]);
 
   function updateBasicField<Key extends keyof VisitBasicFormValues>(
