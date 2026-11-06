@@ -228,7 +228,9 @@ export function InspectionPropertyEditSection({
         buildUpdatePayload(next, nextPhotos, next.location)
       );
       adoptResponse(response, next.location);
-      if (next.location) {
+      // Only a newly picked address (it carries a coordKey) resolves an
+      // earlier "주소는 저장하지 못했습니다"; other edits keep the notice.
+      if (next.location?.coordKey) {
         setLocationError(null);
       }
 
@@ -278,6 +280,12 @@ export function InspectionPropertyEditSection({
         buildUpdatePayload(next, nextPhotos, confirmed)
       );
       adoptResponse(response, confirmed);
+      // The server now has the reverted form; without this the autosave
+      // would see the revert as a new change and PUT it again.
+      autosave.markClean({
+        fields: { ...next, location: confirmed },
+        photos: nextPhotos,
+      });
 
       return true;
     } catch (retryError) {

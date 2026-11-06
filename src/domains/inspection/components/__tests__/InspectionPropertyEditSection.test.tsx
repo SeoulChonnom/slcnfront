@@ -432,6 +432,45 @@ describe('InspectionPropertyEditSection location', () => {
     expect(screen.getByText('서울특별시 성동구 용답토방길 135')).toBeTruthy();
   });
 
+  it('does not autosave again after the resend, so the notice stays', async () => {
+    mockProperty(savedLocation);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
+      .mockResolvedValue({ ...property(), location: savedLocation });
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '변경' }));
+    await pickCandidate(user);
+    await screen.findByText(/주소는 저장하지 못했습니다/);
+
+    await wait(AUTOSAVE_DELAY_MS + 300);
+
+    expect(updateMutateAsync).toHaveBeenCalledTimes(2);
+    expect(screen.getByText(/주소는 저장하지 못했습니다/)).toBeTruthy();
+  });
+
+  it('keeps the notice when a later edit saves without a new address', async () => {
+    mockProperty(savedLocation);
+    mockSearch();
+    updateMutateAsync
+      .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
+      .mockResolvedValue({ ...property(), location: savedLocation });
+    const { user } = renderEdit();
+
+    await user.click(screen.getByRole('button', { name: '변경' }));
+    await pickCandidate(user);
+    await screen.findByText(/주소는 저장하지 못했습니다/);
+
+    await user.type(screen.getByLabelText('한줄평'), '다른 수정');
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(3), {
+      timeout: 3000,
+    });
+
+    expect(updateMutateAsync.mock.calls[2][0].oneLineReview).toBe('다른 수정');
+    expect(screen.getByText(/주소는 저장하지 못했습니다/)).toBeTruthy();
+  });
+
   it('on 503 resends with the confirmed location and disables the address field', async () => {
     mockProperty(null);
     mockSearch();
