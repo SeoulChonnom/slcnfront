@@ -13,12 +13,13 @@ export function MainDesktopShell({
   className,
 }: MainDesktopShellProps) {
   const { pathname } = useLocation();
+  const isHouseRoute = /^\/main\/house\/?$/.test(pathname);
 
   return (
     <div className={cn('slcn-shell-desktop', className)}>
-      <DesktopHeader device='main' />
+      {!isHouseRoute && <DesktopHeader device='main' />}
       <main className='slcn-shell-desktop__main'>{children ?? <Outlet />}</main>
-      <Footer showFilmLink={pathname !== '/main'} />
+      {!isHouseRoute && <Footer showFilmLink={pathname !== '/main'} />}
     </div>
   );
 }

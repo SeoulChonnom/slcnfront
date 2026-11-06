@@ -20,6 +20,7 @@ export const RESERVED_SHOE_BRAND_SEGMENTS = [
   'shoesRecom',
   'travel',
   'inspection',
+  'house',
   'profile',
   'main',
   'mobile',
@@ -27,6 +28,7 @@ export const RESERVED_SHOE_BRAND_SEGMENTS = [
 
 export const MAIN_ROUTE_PATTERNS = {
   root: '/main',
+  house: '/main/house',
   login: '/main/login',
   tripList: '/main/map',
   tripRegister: '/main/map/register',
@@ -47,6 +49,7 @@ export const MAIN_ROUTE_PATTERNS = {
 
 export const MOBILE_ROUTE_PATTERNS = {
   root: '/mobile',
+  house: '/mobile/house',
   login: '/mobile/login',
   tripList: '/mobile/map',
   tripRegister: '/mobile/map/register',

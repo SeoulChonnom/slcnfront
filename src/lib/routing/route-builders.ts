@@ -31,6 +31,10 @@ export function buildDeviceRootPath(device: DeviceType) {
   return buildDevicePath(device);
 }
 
+export function buildDeviceHousePath(device: DeviceType) {
+  return buildDevicePath(device, 'house');
+}
+
 export function buildDeviceLoginPath(device: DeviceType) {
   return buildDevicePath(device, 'login');
 }

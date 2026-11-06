@@ -1,0 +1,838 @@
+:root {
+  /* Colors */
+  --color-primary: #fe9fc8;
+  --color-primary-focus: #ff7fb8;
+  --color-primary-on-dark: #fe9fc8;
+
+  --color-ink: #1b1b1b;
+  --color-body: #1b1b1b;
+  --color-body-muted: #6f666a;
+  /* Seoul Pink darkened until label text clears 4.5:1 on paper, pearl, and
+     soft-pink surfaces alike. Use this for accent TEXT; --color-primary stays
+     the fill/mark colour. */
+  --color-accent-muted: #a34f6d;
+  /* Focus ring colour. Neither --color-primary (1.82/1.91/1.64:1 on
+     canvas/white/soft-pink) nor --color-primary-focus (2.23/2.34/2.01:1)
+     clears the WCAG 1.4.11 non-text 3:1 minimum, so the ring cannot reuse
+     either brand pink. --color-accent-muted measures 5.14/5.39/4.63:1 on
+     the same three surfaces, so the ring borrows it instead. On dark
+     surfaces the ring uses --color-primary-on-dark instead (see the DARK
+     PALETTE block below) because accent-muted only reaches 2.76-3.20:1
+     there while plain Seoul Pink reaches 7.80-9.03:1. See DESIGN.md §8.5
+     and §13 for the source discussion. */
+  --color-focus-ring: var(--color-accent-muted);
+  --color-body-on-dark: #ffffff;
+  --color-body-muted-on-dark: #d8ced2;
+
+  --color-canvas: #fff8f8;
+  --color-canvas-pure: #ffffff;
+  --color-surface-pearl: #ffffff;
+  --color-surface-soft: #ffe8ef;
+  --color-surface-muted: #f8eef1;
+
+  --color-surface-dark-1: #1b1b1b;
+  --color-surface-dark-2: #242124;
+  --color-surface-dark-3: #2b2629;
+
+  --color-divider-soft: rgba(27, 27, 27, 0.08);
+  --color-hairline: rgba(27, 27, 27, 0.12);
+  --color-overlay: rgba(27, 27, 27, 0.42);
+  --color-focus-halo: rgb(254 159 200 / 20%);
+
+  --color-on-primary: #1b1b1b;
+  --color-on-dark: #ffffff;
+
+  /* Repeated authored surfaces, borders, and icon treatments. Two border
+     steps only: --color-border is the hairline every card, pill, and track
+     draws, --color-border-strong the one step darker used where a dashed or
+     load-bearing edge has to read on its own. An earlier pass had three
+     (#ead9df / #efe0e5 / #f1e3e8); the last two differ by 2-3 of 255 and
+     were indistinguishable at 1px, so they are one token now. */
+  --color-stripe-highlight: #fcf4f6;
+  --color-border: #efe0e5;
+  --color-border-strong: #ead9df;
+  --color-icon-soft: #d8a9bc;
+  --color-icon-muted: #c58ea3;
+
+  /* Disabled controls. This pair was pure neutral grey (#f5f5f5 on #a3a3a3),
+     which reads as a second design system nested inside the warm one. WCAG
+     1.4.3 exempts disabled controls, but 3.02:1 keeps the text legible
+     rather than merely present. */
+  --color-surface-disabled: var(--color-surface-muted);
+  --color-body-disabled: #9c9295;
+
+  /* Calendar weekday accents. Korean calendars mark Sunday red and Saturday
+     blue, so these are semantic, not decorative. Both are text and clear
+     4.5:1 on paper, pearl, and soft pink. Four values used to cover these
+     two meanings -- desktop #c93c3c/#2f66b4 against mobile
+     --color-error/#2563eb -- and two of them failed on soft pink (#c93c3c
+     4.30, #2563eb 4.44). Sunday now reuses the error red (4.70) instead of
+     carrying a fourth near-identical red. */
+  --color-weekend-sun: var(--color-error);
+  --color-weekend-sat: #2f66b4;
+
+  /* Warm shadow tints. The avatar stack casts pink-grey rather than the
+     ink-grey of --shadow-floating. */
+  --color-shadow-warm: rgb(150 110 130 / 18%);
+  --color-shadow-warm-strong: rgb(150 80 110 / 35%);
+
+  /* A lighter backdrop than --color-overlay, for dialogs that pair it with
+     a blur instead of relying on opacity alone. */
+  --color-overlay-soft: rgb(70 40 55 / 28%);
+
+  /* A true cast shadow: it models one surface occluding another, so it stays
+     black in both themes. Anything that instead tints a surface belongs to
+     --color-ink or --color-shadow-warm, which do flip. */
+  --color-cast: rgb(0 0 0 / 20%);
+
+  /* --color-cast family, continued: these were `color-mix(var(--color-ink)
+     N%, transparent)` before dark mode shipped, so they inherited ink's flip
+     to white and turned into white scrims/glows on dark surfaces. Each is
+     ink's LIGHT value (#1b1b1b = rgb(27 27 27)) frozen at the alpha the
+     component was already tuned to, so light mode is bit-for-bit unchanged
+     and dark mode stops re-theming a layer that sits on photo content, not
+     app chrome.
+
+     Two badges (trip card lock badge, travel card nights pill) sit on a
+     photo thumbnail and pair this with fixed-white --color-on-dark text;
+     the scrim has to stay dark enough for that pairing to hold on either
+     theme. */
+  --color-cast-scrim: rgb(27 27 27 / 78%);
+  /* Resting card shadow (login page card) -- a soft, wide-blur elevation cue
+     that must stay a shadow, not brighten into a halo once ink goes white. */
+  --color-cast-soft: rgb(27 27 27 / 7%);
+  /* Hover/focus-lifted card shadow (travel card) -- one step deeper than
+     --color-cast-soft because the card has physically lifted further. */
+  --color-cast-lifted: rgb(27 27 27 / 10%);
+  /* Cast shadow behind the liquid-glass profile dialog. Matches the specific
+     warm-mauve tone this dialog was tuned to (accent-muted mixed 39% into
+     ink's light value, R80/G47/B59) rather than --color-cast's neutral
+     black, but for the same reason: a dialog's drop shadow occludes the
+     backdrop behind it and must not turn into a pink glow when ink flips. */
+  --color-cast-glass: rgb(80 47 59 / 32%);
+
+  /* Backward compat aliases. --color-brand-pink and --color-brand-pink-strong
+     are safe to leave as literals: they mirror --color-primary and
+     --color-primary-focus, which are themselves theme-invariant (plain Seoul
+     Pink reads fine on both paper and ink), so no dark restatement is needed.
+
+     --color-brand-pink-soft is different: it is not decorative pastel, it is
+     the pink brand wash for .slcn-card[data-tone="pink"] (shoe catalog
+     intro, shoe detail hero, trip drive card) and the login clear-button
+     hover. Those want to stay visibly PINK-branded in dark mode, which is a
+     different job from --color-surface-soft (a generic soft panel used all
+     over travel/profile/calendar UI that intentionally goes theme-neutral
+     grey in dark, see the DARK THEME block). So this token keeps its own
+     identity rather than being repointed at --color-surface-soft, and gets
+     its own dark-mode value below. */
+  --color-brand-pink: #fe9fc8;
+  --color-brand-pink-strong: #ff7fb8;
+  --color-brand-pink-soft: #ffe8ef;
+  --color-surface: #ffffff;
+  --color-ink-muted: #6f666a;
+  --color-ink-soft: #6f666a;
+
+  /* Semantic. Each state is a verified fill + on-fill text + subtle
+     surface (light tint) + on-surface text triad, checked against WCAG
+     relative-luminance contrast (see DESIGN.md §3 for the full table).
+     Values were pushed darker than the original palette until white
+     on-fill text and fill-as-text-on-surface both clear 4.5:1; the fill
+     also clears 3:1 as a non-text indicator (e.g. border-left-color)
+     directly on white/canvas. */
+  --color-success: #15794f;
+  --color-success-on: #ffffff;
+  --color-success-surface: #eaf6f0;
+  --color-error: #c53030;
+  --color-error-on: #ffffff;
+  --color-error-surface: #fff1f1;
+  --color-warning: #955b0a;
+  --color-warning-on: #ffffff;
+  --color-warning-surface: #fbefe0;
+
+  /* The border member of each triad: a hairline drawn on the matching
+     *-surface tint. These are decoration beside already-coloured text, never
+     the sole indicator of the state, so they are not held to 3:1. The error
+     indicator ON A CONTROL is --color-error itself. */
+  --color-error-border: #f2caca;
+  --color-success-border: #bfe5cf;
+  --color-warning-border: #e8d08a;
+
+  /* Typography */
+  --font-stack:
+    Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+  --font-display: var(--font-stack);
+  --font-body: var(--font-stack);
+  --font-caption: var(--font-stack);
+
+  /* Type ramp. DESIGN.md section 4: body 400, everything emphatic 600,
+     and no intermediate 500. */
+  --weight-body: 400;
+  --weight-strong: 600;
+
+  /* Type sizes, one token per distinct step on the DESIGN.md section 4 ramp.
+     The ramp was documented there in prose but had no implementation: every
+     font-size in the app was a literal, 234 of them across seven
+     stylesheets. Named for the step's primary role, so steps that share a
+     size collapse to one token -- body and body-strong are both 15px and
+     differ only in --weight-*, as do caption, caption-strong and
+     button-utility at 14px.
+
+     Sizes are rem so they scale with the user's root font-size; the px
+     values below are what they resolve to at the 16px default and are the
+     numbers DESIGN.md quotes. --text-display-xl has no fixed-size consumer
+     today (it exists as the upper endpoint of the home hero's fluid clamp),
+     and is defined here so the ramp is complete rather than truncated at
+     its second step. */
+  --text-display-xl: 2.5rem; /* 40px */
+  --text-display-lg: 2.125rem; /* 34px */
+  --text-display-md: 1.75rem; /* 28px */
+  --text-display-sm: 1.5rem; /* 24px */
+  --text-tagline: 1.3125rem; /* 21px */
+  --text-lead: 1.125rem; /* 18px */
+  --text-body-lg: 1rem; /* 16px */
+  --text-body: 0.9375rem; /* 15px */
+  --text-caption: 0.875rem; /* 14px */
+  --text-nav: 0.8125rem; /* 13px */
+  --text-fine: 0.75rem; /* 12px */
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-section: 5rem;
+  --space-section-lg: 7rem;
+
+  /* Elevation */
+  --shadow-floating: 0 8px 30px rgba(27, 27, 27, 0.08);
+  --shadow-image: 3px 5px 30px rgba(27, 27, 27, 0.18);
+  --shadow-modal: 0 24px 80px rgba(27, 27, 27, 0.16);
+  --elevation-hairline: 0 0 0 1px rgba(27, 27, 27, 0.08);
+
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+  /* A radius nested inside a 1px border: the inner edge has to be the outer
+     radius minus the border width or the two curves do not stay concentric. */
+  --radius-sm-inner: calc(var(--radius-sm) - 1px);
+  --radius-full: 9999px;
+
+  /* Motion */
+  --duration-fast: 160ms;
+  --duration-default: 240ms;
+  --duration-page: 360ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --press-scale: 0.96;
+
+  /* Light is the authored default; every token above has its value here so
+     the dark block below only needs to state what differs. */
+  color-scheme: light;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   DARK THEME
+
+   Only the tokens whose VALUE differs are restated here; everything else is
+   inherited from :root above. Components never branch on theme -- they read
+   the same token names in both, which is why the earlier `--color-*-dark`
+   naming had to go: it would have forced every rule to carry a media query.
+
+   The theme is resolved in JS and stamped onto <html data-theme>, including
+   the "system" case (see src/lib/theme/theme.ts and the pre-paint script in
+   index.html). That is why there is one block here and not the usual pair of
+   a prefers-color-scheme query plus a [data-theme] override: with the
+   attribute always present, the media query would be dead weight that can
+   only disagree with the resolved value.
+
+   Contrast pairs below were checked with the same WCAG relative-luminance
+   formula as the light palette (DESIGN.md section 3). This is not a neutral
+   grey-black: the surfaces keep the warm cast of the paper identity.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Layered surfaces, parallel to canvas / canvas-pure / soft / muted. */
+  --color-canvas: #1b1b1b;
+  --color-canvas-pure: #242124;
+  --color-surface-pearl: #242124;
+  --color-surface-soft: #2b2629;
+  --color-surface-muted: #211d20;
+  --color-surface: #242124;
+
+  /* Text. Ink and paper trade places. */
+  --color-ink: #ffffff;
+  --color-body: #ffffff;
+  --color-body-muted: #d8ced2;
+  --color-ink-muted: #d8ced2;
+  --color-ink-soft: #d8ced2;
+  --color-on-dark: #ffffff;
+
+  /* Seoul Pink needs no darkening on ink: it measures 7.80/8.35/9.03:1 on
+     surface-dark-1/2/3. --color-accent-muted, the light-mode accent TEXT
+     colour, only reaches 2.76-3.20:1 there, so accent text reverts to plain
+     pink rather than staying muted. */
+  --color-accent-muted: #fe9fc8;
+  --color-focus-ring: #fe9fc8;
+
+  /* Hairlines invert: dark themes separate with light, not with darker ink. */
+  --color-divider-soft: rgba(255, 255, 255, 0.09);
+  --color-hairline: rgba(255, 255, 255, 0.14);
+  --color-border: #3a3438;
+  --color-border-strong: #4a4247;
+  --color-stripe-highlight: #262023;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-overlay-soft: rgba(0, 0, 0, 0.45);
+
+  /* Icons keep their pink cast but lose the light-surface darkening. */
+  --color-icon-soft: #8a6a76;
+  --color-icon-muted: #a3808e;
+
+  --color-surface-disabled: #2b2629;
+  --color-body-disabled: #7d7378;
+
+  /* Elevation reads as a lifted surface, not a cast shadow: on near-black,
+     a 8% ink shadow is invisible, so the shadows go opaque-black and deeper. */
+  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-image: 3px 5px 30px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.6);
+  --elevation-hairline: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --color-shadow-warm: rgb(0 0 0 / 45%);
+  --color-shadow-warm-strong: rgb(0 0 0 / 60%);
+  /* Travel card hover-lift shadow (light: 10% ink tint) -- opaque and deeper
+     like the rest of this block, not a soft tint that would vanish on ink. */
+  --color-cast-lifted: rgb(0 0 0 / 55%);
+
+  /* Semantic states. The light values were pushed DARK so white-on-fill and
+     fill-as-text-on-tint both cleared 4.5:1 on paper; on ink they have to go
+     the other way. Text-on-fill contrast against canvas / pearl / soft:
+       error   #ff6b6b  6.21 / 5.74 / 5.36
+       success #34d399  8.96 / 8.29 / 7.74
+       warning #f2a93b  8.62 / 7.98 / 7.45
+     The *-surface tints become low-alpha washes of the fill rather than the
+     pale pastels, which would glow on a dark ground. */
+  --color-error: #ff6b6b;
+  --color-error-on: #1b1b1b;
+  --color-error-surface: color-mix(in srgb, #ff6b6b 14%, transparent);
+  --color-error-border: color-mix(in srgb, #ff6b6b 32%, transparent);
+  --color-success: #34d399;
+  --color-success-on: #1b1b1b;
+  --color-success-surface: color-mix(in srgb, #34d399 14%, transparent);
+  --color-success-border: color-mix(in srgb, #34d399 32%, transparent);
+  --color-warning: #f2a93b;
+  --color-warning-on: #1b1b1b;
+  --color-warning-surface: color-mix(in srgb, #f2a93b 14%, transparent);
+  --color-warning-border: color-mix(in srgb, #f2a93b 32%, transparent);
+
+  /* Saturday blue at #2f66b4 measures 3.02/2.79/2.61/2.92 on the four dark
+     surfaces and fails 4.5:1 on all of them; lifted to a tint that measures
+     7.11/6.58/6.14/6.87 while staying unmistakably blue beside the Sunday
+     red. Sunday needs no entry: --color-weekend-sun resolves through
+     --color-error, so it follows that token into the dark theme by itself. */
+  --color-weekend-sat: #7aa9e8;
+
+  /* Pink brand wash. The pale pastel (#ffe8ef) glows on a dark ground the
+     same way the semantic *-surface pastels did, so it follows the same
+     fix: a low-alpha wash of the fill colour instead of a pastel. White ink
+     text sits on both consumers, and this wash stays close to the
+     surrounding dark surfaces (16% pink over #1b1b1b/#242124 resolves to
+     roughly rgb(63,48,55)/rgb(71,53,62)), so contrast is not close --
+     white-on-wash measures ~12-13:1, verified live on all three tone="pink"
+     surfaces (shoe catalog intro, shoe detail hero, trip drive card). */
+  --color-brand-pink-soft: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    transparent
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   내집찾기 시안 공통 스타일 (house.css)
+   위 토큰은 src/styles/tokens.css 원본 복사본이다. 새 색을 만들지 않는다.
+   파생색은 color-mix(토큰)만 쓴다. 모바일 규칙은 맨 아래 @media (max-width: 720px).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --house-up: var(--color-weekend-sat); /* 상승 파랑 (한국 금융 관례와 반대) */
+  --house-down: var(--color-error); /* 하락 빨강 */
+  --house-wrap: 80rem;
+  --house-gutter: 2rem;
+  --house-header-h: 64px;
+  --house-asof-h: 32px;
+  --house-river: color-mix(in srgb, var(--color-weekend-sat) 13%, var(--color-canvas));
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 112px; }
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-body);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+::selection { background: var(--color-primary); color: var(--color-on-primary); }
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--color-body-muted); }
+.fine { font-size: var(--text-fine); color: var(--color-body-muted); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.ico { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ico--fill { fill: currentColor; stroke: none; }
+
+.wrap { max-width: var(--house-wrap); margin: 0 auto; padding: 0 var(--house-gutter); }
+
+/* ── 헤더: 평평한 면, glass 없음 ───────────────────────────────────────── */
+.site-header {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
+}
+.site-header__bar {
+  display: flex; align-items: center; gap: var(--space-6);
+  min-height: var(--house-header-h);
+}
+.brand { display: inline-flex; align-items: center; min-height: 44px; }
+.brand img { height: 28px; width: auto; display: block; }
+.anchor-nav { display: flex; gap: var(--space-1); margin-right: auto; }
+.anchor-nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 var(--space-4); border-radius: var(--radius-pill);
+  color: var(--color-body); text-decoration: none;
+  font-size: var(--text-caption); font-weight: var(--weight-strong);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.anchor-nav a:hover { background: var(--color-surface-soft); }
+.anchor-nav a[aria-current="true"] { background: var(--color-surface-soft); color: var(--color-accent-muted); }
+.header-tools { display: flex; align-items: center; gap: var(--space-3); }
+.asof-strip { border-top: 1px solid var(--color-divider-soft); background: var(--color-surface-muted); }
+.asof-strip .wrap {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--house-asof-h); font-size: var(--text-fine); color: var(--color-body-muted);
+}
+.asof-strip strong { color: var(--color-body); font-weight: var(--weight-strong); }
+.asof-strip .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-body-muted); }
+
+/* ── 버튼 · 토글 · 칩 ─────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-5);
+  border-radius: var(--radius-pill); border: 1px solid transparent;
+  font-size: var(--text-caption); font-weight: var(--weight-strong); line-height: 1;
+  white-space: nowrap; text-decoration: none;
+  transition: background var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard);
+}
+.btn:active { transform: scale(var(--press-scale)); }
+.btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn--primary:hover { background: var(--color-primary-focus); }
+.btn--outline { background: transparent; border-color: var(--color-border-strong); color: var(--color-body); }
+.btn--outline:hover { background: var(--color-surface-soft); border-color: var(--color-primary); }
+.btn--text { background: transparent; color: var(--color-accent-muted); padding: 0 var(--space-3); }
+.btn--text:hover { background: var(--color-surface-soft); }
+.btn--sm { padding: 0 var(--space-4); }
+.btn[disabled], .btn[aria-disabled="true"] {
+  background: var(--color-surface-disabled); color: var(--color-body-disabled);
+  border-color: var(--color-border); cursor: not-allowed; transform: none;
+}
+.btn[aria-pressed="true"], .btn.is-added { background: var(--color-surface-soft); border-color: var(--color-primary); color: var(--color-accent-muted); }
+
+.seg {
+  display: inline-flex; padding: 3px; gap: 2px;
+  background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+}
+.seg__btn {
+  min-height: 44px; min-width: 56px; padding: 0 var(--space-4);
+  border: 0; border-radius: var(--radius-pill); background: transparent;
+  font-size: var(--text-caption); font-weight: var(--weight-strong); color: var(--color-body-muted);
+}
+.seg__btn[aria-pressed="true"] { background: var(--color-primary); color: var(--color-on-primary); }
+.seg__btn:not([aria-pressed="true"]):hover { color: var(--color-body); }
+.seg--sm .seg__btn { min-height: 44px; min-width: 48px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  min-height: 36px; padding: 0 var(--space-4);
+  border-radius: var(--radius-pill); border: 1px solid var(--color-border-strong);
+  background: var(--color-canvas-pure); font-size: var(--text-caption); font-weight: var(--weight-strong);
+}
+.chip--filter { border: 2px solid var(--color-primary); background: var(--color-surface-soft); }
+.chip__src { font-weight: var(--weight-body); color: var(--color-accent-muted); font-size: var(--text-fine); }
+
+.badge {
+  display: inline-flex; align-items: center; min-height: 20px; padding: 0 var(--space-2);
+  border-radius: var(--radius-pill); background: var(--color-warning-surface); color: var(--color-warning);
+  border: 1px solid var(--color-warning-border); font-size: var(--text-fine); font-weight: var(--weight-strong); line-height: 1; white-space: nowrap;
+}
+.badge--info { background: var(--color-surface-soft); color: var(--color-accent-muted); border-color: var(--color-border-strong); }
+
+/* ── 섹션 골격 ────────────────────────────────────────────────────────── */
+.section { padding: var(--space-8) 0 var(--space-10); }
+.section + .section { border-top: 1px solid var(--color-border); }
+.section__head { display: flex; align-items: baseline; gap: var(--space-4); margin-bottom: var(--space-5); flex-wrap: wrap; }
+.section__title { font-size: var(--text-display-sm); font-weight: var(--weight-strong); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
+.section__desc { font-size: var(--text-caption); color: var(--color-body-muted); }
+.section__head .spacer { margin-left: auto; }
+
+/* ── ① 내 예산: 입력 폼 ──────────────────────────────────────────────── */
+.budget-grid { display: grid; grid-template-columns: 5fr 7fr; gap: var(--space-10); align-items: start; }
+.budget-form { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4) var(--space-4); }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field--wide { grid-column: 1 / -1; }
+.field__label { font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.field__control {
+  display: flex; align-items: center; min-height: 44px; padding: 0 var(--space-4);
+  background: var(--color-canvas-pure); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm);
+  transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+}
+.field__control:hover { border-color: var(--color-icon-muted); }
+.field__control:focus-within { border-color: var(--color-focus-ring); box-shadow: 0 0 0 3px var(--color-focus-halo); }
+.field__control input {
+  flex: 1; min-width: 0; border: 0; background: transparent; outline: 0;
+  font-size: var(--text-body-lg); font-variant-numeric: tabular-nums; text-align: right; padding: 0;
+}
+.field__control input::placeholder { color: var(--color-body-muted); }
+.field__unit { margin-left: var(--space-2); font-size: var(--text-caption); color: var(--color-body-muted); white-space: nowrap; }
+.field__hint { font-size: var(--text-fine); color: var(--color-body-muted); }
+.field__error { font-size: var(--text-fine); color: var(--color-error); }
+.field.is-error .field__control { border-color: var(--color-error); }
+.check { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; font-size: var(--text-body); font-weight: var(--weight-strong); }
+.check input { width: 22px; height: 22px; accent-color: var(--color-accent-muted); margin: 0; }
+.form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-3); }
+.form-actions .fine { margin-left: auto; text-align: right; }
+
+/* ── ① 내 예산: 결과 ─────────────────────────────────────────────────── */
+.budget-result { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.result-hero { display: flex; align-items: flex-end; gap: var(--space-5); flex-wrap: wrap; padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+.result-hero__label { display: block; font-size: var(--text-caption); color: var(--color-body-muted); margin-bottom: 2px; }
+.result-hero__value { font-size: 4rem; line-height: 1; font-weight: var(--weight-strong); letter-spacing: -0.03em; }
+.result-hero__value small { font-size: 1.75rem; letter-spacing: -0.01em; margin-left: 2px; }
+.result-hero__note { margin-left: auto; font-size: var(--text-caption); color: var(--color-body-muted); max-width: 17rem; text-align: right; }
+.sub-title { font-size: var(--text-body); font-weight: var(--weight-strong); margin-bottom: var(--space-2); display: flex; align-items: baseline; gap: var(--space-3); }
+.sub-title .fine { font-weight: var(--weight-body); }
+
+.verdict th, .verdict td { padding: 0 var(--space-3); height: 48px; text-align: left; font-size: var(--text-body); font-weight: var(--weight-body); border-bottom: 1px solid var(--color-divider-soft); }
+.verdict td.num, .verdict th.num { text-align: right; }
+.verdict tbody th { color: var(--color-body); }
+.result-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap: var(--space-6); align-items: start; }
+.verdict .rule { display: block; color: var(--color-body-muted); font-size: var(--text-fine); line-height: 1.2; }
+.verdict tbody th { padding-top: 4px; padding-bottom: 4px; }
+.verdict tr.is-min td, .verdict tr.is-min th { background: var(--color-surface-soft); font-weight: var(--weight-strong); }
+.verdict tr.is-min td:first-child, .verdict tr.is-min th:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.verdict tr.is-min td:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.verdict tr.is-final th, .verdict tr.is-final td { border-bottom: 0; font-weight: var(--weight-strong); }
+.tag { display: inline-flex; align-items: center; height: 20px; padding: 0 var(--space-2); border-radius: var(--radius-pill); background: var(--color-primary); color: var(--color-on-primary); font-size: var(--text-fine); font-weight: var(--weight-strong); margin-left: var(--space-2); }
+
+.funds { display: grid; gap: 0; }
+.funds__row { display: flex; align-items: baseline; gap: var(--space-3); min-height: 34px; font-size: var(--text-body); border-bottom: 1px solid var(--color-divider-soft); padding: 4px var(--space-3); }
+.funds__op { width: 1.25rem; text-align: center; color: var(--color-body-muted); font-weight: var(--weight-strong); }
+.funds__name { flex: 1; }
+.funds__val { text-align: right; font-weight: var(--weight-strong); }
+.funds__row--total { border-bottom: 0; background: var(--color-surface-muted); border-radius: var(--radius-sm); font-weight: var(--weight-strong); }
+.funds details { flex: 1; }
+.funds summary { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 28px; cursor: pointer; list-style: none; }
+.funds summary::-webkit-details-marker { display: none; }
+.funds summary .fine { flex-basis: 100%; }
+.funds summary { flex-wrap: wrap; }
+.funds summary .ico { transition: transform var(--duration-fast) var(--easing-standard); color: var(--color-body-muted); }
+.funds details[open] summary .ico { transform: rotate(180deg); }
+.funds__breakdown { margin-top: 6px; padding: var(--space-2) var(--space-3); background: var(--color-surface-muted); border-radius: var(--radius-sm); font-size: var(--text-caption); display: grid; gap: 2px; }
+.funds__breakdown div { display: flex; justify-content: space-between; }
+.funds__breakdown dt { color: var(--color-body-muted); }
+.funds__breakdown dd { font-weight: var(--weight-strong); }
+.rate-note { font-size: var(--text-caption); color: var(--color-body-muted); }
+.rate-note strong { color: var(--color-body); }
+.policy-line { font-size: var(--text-fine); color: var(--color-body-muted); }
+
+/* ── 탐색 범위 띠 → 지도 필터로 이어지는 대표 순간 ─────────────────── */
+.range-band {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-8);
+  margin-top: var(--space-5); padding: var(--space-3) var(--space-6) var(--space-5);
+  background: var(--color-primary); color: var(--color-on-primary); border-radius: var(--radius-md);
+}
+.range-band__label { font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.range-band__value { font-size: var(--text-display-sm); font-weight: var(--weight-strong); line-height: 1.2; letter-spacing: -0.01em; }
+.range-band__track { position: relative; height: 8px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--color-on-primary) 18%, transparent); margin: 0 var(--space-2); }
+.range-band__fill { position: absolute; top: 0; bottom: 0; left: 20%; right: 0; border-radius: var(--radius-pill); background: var(--color-on-primary); }
+.range-band__tick { position: absolute; top: 14px; font-size: var(--text-fine); font-weight: var(--weight-strong); white-space: nowrap; }
+.range-band__tick--lo { left: 20%; transform: translateX(-50%); }
+.range-band__tick--hi { right: 0; transform: translateX(50%); }
+.range-band__to { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.flow-tail { position: relative; height: 28px; margin-left: 40px; width: 2px; background: var(--color-primary); }
+.flow-tail::after { content: ""; position: absolute; bottom: -1px; left: -5px; border: 6px solid transparent; border-top: 8px solid var(--color-primary); border-bottom: 0; }
+
+/* ── ② 집 찾기 ─────────────────────────────────────────────────────── */
+.map-toolbar { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); flex-wrap: wrap; }
+.map-toolbar .spacer { margin-left: auto; }
+.find-grid { display: grid; grid-template-columns: minmax(0, 1fr) 30rem; gap: var(--space-6); align-items: stretch; }
+
+.map {
+  position: relative; min-height: 640px; overflow: hidden;
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+.map__svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.map__land { fill: var(--color-canvas-pure); stroke: var(--color-border-strong); stroke-width: 1.5; }
+.map__gu { fill: var(--color-canvas); stroke: var(--color-border-strong); stroke-width: 1; stroke-dasharray: 5 4; }
+.map__gu--dim { fill: var(--color-surface-muted); }
+.map__river { fill: none; stroke: var(--house-river); stroke-linecap: round; stroke-linejoin: round; }
+.map__park { fill: var(--color-surface-soft); opacity: .6; }
+.map__road { fill: none; stroke: var(--color-border); stroke-width: 2; }
+
+.mk {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  border: 0; background: none; padding: 0; text-align: center;
+}
+.mk__dot {
+  display: grid; place-items: center; min-width: 44px; height: 44px; padding: 0 var(--space-2);
+  border-radius: var(--radius-pill); background: var(--color-canvas-pure);
+  border: 1.5px solid var(--color-ink); font-size: var(--text-body-lg); font-weight: var(--weight-strong); line-height: 1;
+  box-shadow: var(--shadow-floating);
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+.mk:hover .mk__dot { transform: scale(1.06); }
+.mk__name {
+  font-size: var(--text-fine); font-weight: var(--weight-strong); line-height: 1.2;
+  padding: 1px 6px; border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-canvas-pure) 88%, transparent);
+}
+.mk--selected .mk__dot { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-on-primary); }
+.mk--zero .mk__dot { background: var(--color-surface-disabled); color: var(--color-body-disabled); border: 1.5px dashed var(--color-border-strong); box-shadow: none; }
+.mk--zero .mk__name { color: var(--color-body-muted); }
+/* 구 묶음은 더 크게, 단지는 가격 라벨 */
+.mk--district .mk__dot { min-width: 56px; height: 56px; font-size: var(--text-lead); }
+.mk--price { flex-direction: row; }
+.mk--price .mk__dot { min-width: 0; height: 44px; padding: 0 var(--space-3); border-radius: var(--radius-sm); }
+.mk--compact .mk__dot { height: 30px; padding: 0 var(--space-2); font-size: var(--text-caption); border-radius: var(--radius-sm); }
+.mk--price.mk--nodeal .mk__dot { width: 14px; min-width: 14px; height: 14px; padding: 0; border-radius: 50%; background: var(--color-icon-soft); border: 0; box-shadow: none; }
+
+.map__ctrl { position: absolute; top: var(--space-4); right: var(--space-4); display: grid; background: var(--color-canvas-pure); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); overflow: hidden; }
+.map__ctrl button { width: 44px; height: 44px; border: 0; background: transparent; display: grid; place-items: center; }
+.map__ctrl button + button { border-top: 1px solid var(--color-border); }
+.map__ctrl button:hover { background: var(--color-surface-soft); }
+.map__layer { position: absolute; left: var(--space-4); top: var(--space-4); display: flex; align-items: center; gap: var(--space-2); padding: 6px var(--space-3); min-height: 36px; background: var(--color-canvas-pure); border: 1px solid var(--color-border-strong); border-radius: var(--radius-pill); font-size: var(--text-fine); font-weight: var(--weight-strong); }
+.map__layer span { color: var(--color-body-muted); font-weight: var(--weight-body); }
+.map__legend { position: absolute; left: var(--space-4); bottom: var(--space-4); display: flex; gap: var(--space-4); padding: 6px var(--space-3); background: color-mix(in srgb, var(--color-canvas-pure) 92%, transparent); border-radius: var(--radius-pill); font-size: var(--text-fine); }
+.map__legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 1.5px solid var(--color-ink); background: var(--color-canvas-pure); }
+.map__legend i.is-zero { border: 1.5px dashed var(--color-border-strong); background: var(--color-surface-disabled); }
+.map__legend i.is-sel { background: var(--color-primary); }
+.map__legend i.is-nodeal { border: 0; background: var(--color-icon-soft); }
+.map__hint { position: absolute; top: var(--space-4); left: 50%; transform: translateX(-50%); padding: 6px var(--space-3); min-height: 36px; display: flex; align-items: center; background: color-mix(in srgb, var(--color-canvas-pure) 92%, transparent); border-radius: var(--radius-pill); font-size: var(--text-fine); color: var(--color-body-muted); white-space: nowrap; }
+.map__block { fill: var(--color-canvas-pure); stroke: var(--color-divider-soft); stroke-width: 1; }
+.map__road--main { fill: none; stroke: var(--color-border-strong); stroke-width: 18; }
+.map__road--core { fill: none; stroke: var(--color-canvas-pure); stroke-width: 14; }
+.map__attr { position: absolute; right: var(--space-3); bottom: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); background: color-mix(in srgb, var(--color-canvas-pure) 80%, transparent); padding: 1px 6px; border-radius: var(--radius-xs); }
+
+/* 단지 정보 카드 (지도 위 겹침) */
+.info-card {
+  position: absolute; z-index: 5; width: 17.5rem; padding: var(--space-4);
+  background: var(--color-canvas-pure); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-floating); display: grid; gap: var(--space-2);
+}
+.info-card__title { font-size: var(--text-body-lg); font-weight: var(--weight-strong); }
+.info-card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-2); }
+.info-card__facts { display: grid; gap: 2px; font-size: var(--text-caption); }
+.info-card__facts div { display: flex; justify-content: space-between; }
+.info-card__facts dt { color: var(--color-body-muted); }
+.info-card__price { font-size: var(--text-display-sm); font-weight: var(--weight-strong); line-height: 1.1; }
+
+/* 후보 리스트 패널 */
+.cand-panel { display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-canvas-pure); overflow: hidden; }
+.cand-head { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-border); display: grid; gap: 2px; }
+.cand-head__count { font-size: var(--text-lead); font-weight: var(--weight-strong); }
+.cand-head__sub { font-size: var(--text-fine); color: var(--color-body-muted); }
+.cand-list { overflow-y: auto; flex: 1; max-height: 640px; }
+.cand-item { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--color-divider-soft); }
+.cand-item:hover { background: var(--color-stripe-highlight); }
+.cand-item.is-active { background: var(--color-surface-soft); }
+.cand-item__name { font-weight: var(--weight-strong); font-size: var(--text-body-lg); }
+.cand-item__gu { font-size: var(--text-caption); color: var(--color-body-muted); }
+.cand-item__price { text-align: right; font-weight: var(--weight-strong); font-size: var(--text-lead); }
+.cand-item__period { text-align: right; font-size: var(--text-fine); color: var(--color-body-muted); }
+.cand-item__meta { grid-column: 1 / -1; font-size: var(--text-caption); color: var(--color-body-muted); }
+.cand-item__act { grid-column: 1 / -1; display: flex; justify-content: flex-end; }
+.cand-item .btn { min-height: 44px; }
+
+/* 후보 리스트 조밀형: 2줄 고정 열 (이름·가격·버튼 / 기간·연식·세대수) */
+.cand-list--dense .cand-item { grid-template-columns: minmax(0, 1fr) 3.75rem 5rem; align-items: center; gap: 2px var(--space-3); padding: var(--space-2) var(--space-4); }
+.cand-list--dense .cand-item__id { grid-column: 1; grid-row: 1; display: flex; align-items: baseline; gap: var(--space-2); min-width: 0; white-space: nowrap; }
+.cand-list--dense .cand-item__name { font-size: var(--text-body); overflow: hidden; text-overflow: ellipsis; }
+.cand-list--dense .cand-item__gu { font-size: var(--text-fine); }
+.cand-list--dense .cand-item__price { grid-column: 2; grid-row: 1; font-size: var(--text-body-lg); }
+.cand-list--dense .cand-item__sub { grid-column: 1 / 3; grid-row: 2; display: flex; align-items: center; gap: 4px; font-size: var(--text-fine); color: var(--color-body-muted); white-space: nowrap; }
+.cand-list--dense .cand-item__sub .cand-item__period, .cand-list--dense .cand-item__sub .cand-item__meta { font-size: inherit; text-align: left; }
+.cand-list--dense .cand-item__meta::before { content: "·"; margin-right: 4px; }
+.cand-list--dense .cand-item__act { grid-column: 3; grid-row: 1 / 3; }
+.cand-list--dense .cand-item .btn { min-height: 32px; width: 100%; padding: 0; font-size: var(--text-fine); }
+
+/* ── ③ 매물 비교 ───────────────────────────────────────────────────── */
+.picker { position: relative; max-width: 28rem; margin-bottom: var(--space-4); }
+.picker .field__control { border-radius: var(--radius-pill); padding-left: var(--space-5); }
+.picker .field__control input { text-align: left; }
+.picker-list { margin-top: var(--space-2); background: var(--color-canvas-pure); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); box-shadow: var(--shadow-floating); overflow: hidden; }
+.picker-list li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 44px; padding: 0 var(--space-4); font-size: var(--text-body); }
+.picker-list li + li { border-top: 1px solid var(--color-divider-soft); }
+.picker-list li[aria-selected="true"] { background: var(--color-surface-soft); }
+.picker-list mark { background: none; color: var(--color-accent-muted); font-weight: var(--weight-strong); }
+.picker-list .fine { white-space: nowrap; }
+
+.tray { display: grid; grid-template-columns: 11rem repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin-bottom: 0; align-items: end; }
+.tray__lead { font-size: var(--text-caption); color: var(--color-body-muted); padding-bottom: var(--space-3); }
+.slot { display: grid; gap: var(--space-2); padding: var(--space-4); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); background: var(--color-canvas-pure); }
+.slot--empty { border-style: dashed; background: transparent; color: var(--color-body-muted); align-content: center; text-align: center; min-height: 8rem; }
+.slot__top { display: flex; justify-content: space-between; gap: var(--space-2); align-items: flex-start; }
+.slot__name { font-size: var(--text-body-lg); font-weight: var(--weight-strong); line-height: 1.3; }
+.slot__gu { font-size: var(--text-caption); color: var(--color-body-muted); }
+.slot__area { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.slot__fixed { font-size: var(--text-caption); font-weight: var(--weight-strong); color: var(--color-accent-muted); }
+.icon-btn { width: 44px; height: 44px; margin: -10px -10px 0 0; border: 0; background: transparent; border-radius: var(--radius-pill); display: grid; place-items: center; color: var(--color-body-muted); }
+.icon-btn:hover { background: var(--color-surface-soft); color: var(--color-body); }
+
+.compare-wrap { margin-top: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-canvas-pure); overflow-x: auto; }
+.compare-table { min-width: 56rem; table-layout: fixed; }
+.compare-table col.c-head { width: 11rem; }
+.compare-table th, .compare-table td { padding: var(--space-3) var(--space-4); text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-divider-soft); font-weight: var(--weight-body); }
+.compare-table thead th { background: var(--color-surface-muted); font-weight: var(--weight-strong); font-size: var(--text-caption); border-bottom: 1px solid var(--color-border); }
+.compare-table tbody th { font-size: var(--text-caption); font-weight: var(--weight-strong); color: var(--color-body-muted); }
+.compare-table tbody tr:last-child th, .compare-table tbody tr:last-child td { border-bottom: 0; }
+.cell-main { font-size: var(--text-body-lg); font-weight: var(--weight-strong); }
+.cell-sub { display: block; font-size: var(--text-fine); color: var(--color-body-muted); margin-top: 2px; }
+.cell-lines { display: grid; gap: 2px; font-size: var(--text-caption); }
+.cell-lines b { font-weight: var(--weight-strong); }
+.fixed-note { display: block; margin-top: var(--space-2); font-size: var(--text-fine); color: var(--color-accent-muted); font-weight: var(--weight-strong); }
+.delta { display: inline-flex; align-items: center; gap: 3px; font-weight: var(--weight-strong); white-space: nowrap; }
+.delta--up { color: var(--house-up); }
+.delta--down { color: var(--house-down); }
+.delta--flat { color: var(--color-body); }
+.legend { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; font-size: var(--text-caption); padding: var(--space-3) 0 0; }
+.legend .delta { font-weight: var(--weight-strong); }
+.note { font-size: var(--text-caption); color: var(--color-body-muted); margin-top: var(--space-4); }
+
+/* ── ④ 공부 레퍼런스 ───────────────────────────────────────────────── */
+.tabs { display: flex; gap: var(--space-2); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-4); overflow-x: auto; }
+.tab {
+  min-height: 44px; padding: 0 var(--space-5); border: 0; background: transparent; white-space: nowrap;
+  font-size: var(--text-body); font-weight: var(--weight-strong); color: var(--color-body-muted);
+  border-bottom: 3px solid transparent; margin-bottom: -1px;
+}
+.tab:hover { color: var(--color-body); }
+.tab[aria-selected="true"] { color: var(--color-body); border-bottom-color: var(--color-primary); }
+.rank-head, .rank-row { display: grid; grid-template-columns: 2.5rem 4.5rem 11rem minmax(0, 1fr) 7.5rem 14rem; gap: var(--space-4); align-items: center; }
+.rank-head { padding: 0 var(--space-4) var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); font-weight: var(--weight-strong); }
+.rank-row { padding: var(--space-2) var(--space-4); border-top: 1px solid var(--color-divider-soft); min-height: 3.5rem; }
+.rank-row:hover { background: var(--color-stripe-highlight); }
+.rank-row__no { font-size: var(--text-lead); font-weight: var(--weight-strong); text-align: center; }
+.rank-row__gu { font-weight: var(--weight-strong); }
+.rank-row__name { font-weight: var(--weight-strong); font-size: var(--text-body-lg); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.rank-row__meta { font-size: var(--text-caption); color: var(--color-body-muted); }
+.rank-row__val { text-align: right; }
+.rank-row__val b { display: block; font-size: var(--text-lead); font-weight: var(--weight-strong); }
+.rank-row__val span { font-size: var(--text-fine); color: var(--color-body-muted); }
+.rank-row__act { display: flex; gap: var(--space-2); justify-content: flex-start; flex-wrap: wrap; }
+.rank-row__act .btn { padding: 0 var(--space-3); min-height: 36px; }
+.rank-row--empty { background: var(--color-surface-muted); }
+.rank-row--empty .rank-row__name { color: var(--color-body-muted); font-weight: var(--weight-body); }
+.rank-row--skip { display: block; text-align: center; padding: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); min-height: 0; }
+.rank-foot { display: flex; gap: var(--space-4); flex-wrap: wrap; padding: var(--space-4) var(--space-4) 0; border-top: 1px solid var(--color-border); font-size: var(--text-caption); color: var(--color-body-muted); }
+.rank-foot strong { color: var(--color-body); font-weight: var(--weight-strong); }
+.inline-note { padding: var(--space-3) var(--space-4); background: var(--color-surface-soft); border-radius: var(--radius-sm); font-size: var(--text-caption); margin-bottom: var(--space-3); }
+
+/* ── 푸터 · 토스트 · 빈 상태 ──────────────────────────────────────── */
+.site-footer { border-top: 1px solid var(--color-border); padding: var(--space-8) 0 var(--space-10); background: var(--color-surface-muted); }
+.disclaimer { font-size: var(--text-body); font-weight: var(--weight-strong); }
+.site-footer .fine { margin-top: var(--space-2); }
+
+.toast { display: inline-flex; align-items: center; gap: var(--space-3); min-height: 44px; padding: 0 var(--space-5); border-radius: var(--radius-pill); background: var(--color-surface-dark-1); color: var(--color-on-dark); font-size: var(--text-caption); box-shadow: var(--shadow-floating); }
+.toast-host { position: fixed; left: 50%; bottom: var(--space-6); transform: translateX(-50%); z-index: 50; }
+.toast-host[hidden] { display: none; }
+.empty-state { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-8) var(--space-4); text-align: center; color: var(--color-body-muted); border: 1px dashed var(--color-border-strong); border-radius: var(--radius-md); }
+.empty-state strong { color: var(--color-body); font-size: var(--text-body-lg); }
+.skeleton { background: linear-gradient(90deg, var(--color-surface-muted), var(--color-stripe-highlight), var(--color-surface-muted)); background-size: 200% 100%; animation: house-sk 1.4s linear infinite; border-radius: var(--radius-xs); }
+@keyframes house-sk { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* 좁은 데스크톱 */
+@media (max-width: 1100px) {
+  .budget-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+  .result-cols { grid-template-columns: 1fr; }
+  .find-grid { grid-template-columns: 1fr; }
+  .rank-head { display: none; }
+  .rank-row { grid-template-columns: 3rem 1fr auto; }
+  .rank-row__gu { grid-column: 2; }
+  .rank-row__act { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+/* ── 모바일 (390 기준) ───────────────────────────────────────────── */
+@media (max-width: 720px) {
+  :root { --house-gutter: 1rem; }
+  html { scroll-padding-top: 96px; }
+  .site-header__bar { flex-wrap: wrap; gap: var(--space-2) var(--space-3); padding-top: var(--space-2); min-height: 0; }
+  .anchor-nav { order: 3; flex: 1 0 100%; margin: 0 calc(var(--house-gutter) * -1); padding: 0 var(--house-gutter); overflow-x: auto; scrollbar-width: none; }
+  .anchor-nav a { padding: 0 var(--space-3); white-space: nowrap; }
+  .header-tools { margin-left: auto; }
+  .asof-strip .wrap { flex-wrap: wrap; row-gap: 0; padding-top: 4px; padding-bottom: 4px; }
+  .asof-strip .dot { display: none; }
+  .section { padding: var(--space-6) 0 var(--space-8); }
+  .section__title { font-size: var(--text-tagline); }
+  .budget-form { grid-template-columns: 1fr; }
+  .form-actions { flex-wrap: wrap; }
+  .form-actions .fine { margin-left: 0; text-align: left; flex-basis: 100%; }
+  .result-hero__value { font-size: 3rem; }
+  .result-hero__value small { font-size: 1.375rem; }
+  .result-hero__note { margin-left: 0; text-align: left; max-width: none; }
+  .verdict th, .verdict td { padding: 0 var(--space-2); font-size: var(--text-caption); }
+  .result-cols { grid-template-columns: 1fr; }
+  .range-band { grid-template-columns: 1fr; gap: var(--space-4); padding: var(--space-4); }
+  .range-band__value { font-size: var(--text-tagline); }
+  .range-band__track { margin: 0 var(--space-4) var(--space-5); }
+  .flow-tail { margin-left: 24px; }
+  .map { min-height: 420px; }
+  .map-toolbar .spacer { display: none; }
+  .map__legend { display: none; }
+  .info-card { width: calc(100% - 2rem); }
+  .cand-list { max-height: none; }
+  .tray { grid-template-columns: 1fr; }
+  .tray__lead { padding-bottom: 0; }
+  .compare-table { min-width: 44rem; }
+  .compare-table col.c-head { width: 7.5rem; }
+  .compare-wrap { position: relative; }
+  .compare-table tbody th { position: sticky; left: 0; background: var(--color-canvas-pure); z-index: 1; }
+  .rank-row { grid-template-columns: 2.25rem 1fr auto; gap: var(--space-2) var(--space-3); }
+  .rank-row__gu, .rank-row__name, .rank-row__meta { grid-column: 2; }
+  .rank-row__val { grid-column: 3; grid-row: 1 / span 2; }
+  .rank-row__act { grid-column: 1 / -1; }
+  .rank-row__act .btn { flex: 1; }
+}

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   VITE_API_URL: z.string().trim().min(1, 'VITE_API_URL is required'),
+  VITE_KAKAO_MAP_JS_KEY: z.string().trim().optional(),
   MODE: z.string().optional(),
   DEV: z.boolean().optional(),
   PROD: z.boolean().optional(),
@@ -9,6 +10,7 @@ const envSchema = z.object({
 
 export type AppEnv = {
   apiUrl: string;
+  kakaoMapJsKey?: string;
   mode: string;
   isDev: boolean;
   isProd: boolean;
@@ -19,6 +21,7 @@ let cachedEnv: AppEnv | null = null;
 
 type EnvSource = Partial<{
   VITE_API_URL: string;
+  VITE_KAKAO_MAP_JS_KEY: string;
   MODE: string;
   DEV: boolean;
   PROD: boolean;
@@ -34,6 +37,9 @@ export function parseAppEnv(source: EnvSource): AppEnv {
 
   return {
     apiUrl: parsed.VITE_API_URL.replace(/\/+$/, ''),
+    ...(parsed.VITE_KAKAO_MAP_JS_KEY
+      ? { kakaoMapJsKey: parsed.VITE_KAKAO_MAP_JS_KEY }
+      : {}),
     mode,
     isDev: parsed.DEV ?? mode === 'development',
     isProd: parsed.PROD ?? mode === 'production',

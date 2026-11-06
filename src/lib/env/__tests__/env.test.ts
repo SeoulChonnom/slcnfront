@@ -2,6 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { parseAppEnv } from '@/lib/env/env';
 
 describe('parseAppEnv', () => {
+  it('accepts an optional Kakao key and treats whitespace as no key', () => {
+    expect(
+      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' test-key ' })
+        .kakaoMapJsKey
+    ).toBe('test-key');
+    expect(
+      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' ' })
+        .kakaoMapJsKey
+    ).toBeUndefined();
+  });
   it('parses the required app env values', () => {
     expect(
       parseAppEnv({

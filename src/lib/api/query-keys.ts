@@ -1,4 +1,11 @@
 import type {
+  AreaBucket,
+  CompareItem,
+  ComplexesParams,
+  RankingType,
+  SummaryParams,
+} from '@/domains/house/types';
+import type {
   ComplexNameScope,
   InspectionAreaListParams,
   InspectionVisitListParams,
@@ -91,4 +98,22 @@ export const shoesQueryKeys = {
   catalog: () => [...shoesQueryKeys.all, 'catalog'] as const,
   detail: (brand: string, shoesName: string) =>
     [...shoesQueryKeys.all, 'detail', brand, shoesName] as const,
+};
+
+export const houseQueryKeys = {
+  all: ['house'] as const,
+  policy: () => [...houseQueryKeys.all, 'budget-policy'] as const,
+  meta: () => [...houseQueryKeys.all, 'meta'] as const,
+  complexes: (params: ComplexesParams | null) =>
+    [...houseQueryKeys.all, 'complexes', params] as const,
+  summary: (params: SummaryParams | null) =>
+    [...houseQueryKeys.all, 'summary', params] as const,
+  search: (keyword: string) =>
+    [...houseQueryKeys.all, 'search', keyword] as const,
+  detail: (id: string | null, area: AreaBucket) =>
+    [...houseQueryKeys.all, 'detail', id, area] as const,
+  compare: (items: CompareItem[]) =>
+    [...houseQueryKeys.all, 'compare', items] as const,
+  rankings: (type: RankingType, area: AreaBucket) =>
+    [...houseQueryKeys.all, 'rankings', type, area] as const,
 };

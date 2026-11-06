@@ -11,6 +11,10 @@ type PageLoader = () => Promise<PageModule>;
 
 const PAGE_LOADERS = {
   main: {
+    house: () =>
+      import('@/pages/main/HouseFinderPage').then((module) => ({
+        default: module.HouseFinderPage,
+      })),
     home: () =>
       import('@/pages/main/HomePage').then((module) => ({
         default: module.HomePage,
@@ -101,6 +105,10 @@ const PAGE_LOADERS = {
       })),
   },
   mobile: {
+    house: () =>
+      import('@/pages/mobile/HouseFinderPage').then((module) => ({
+        default: module.HouseFinderPage,
+      })),
     home: () =>
       import('@/pages/mobile/HomePage').then((module) => ({
         default: module.HomePage,
