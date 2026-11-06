@@ -81,12 +81,14 @@ const incompleteSummarySchema = z.object({
   draftPropertyCount: z.number().int(),
   visitMissingFields: z.array(z.string()).default([]),
   draftVisitCount: z.number().int(),
+  /** Only area rows fill it; other summaries send 0 (api.md). Defaults to 0 when absent. */
+  plannedVisitCount: z.number().int().default(0),
 });
 
 const viewedPropertyBriefSchema = z.object({
   propertyId: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
 });
 
@@ -94,7 +96,7 @@ const matchedPropertySchema = z.object({
   propertyId: z.string(),
   visitId: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
 });
 
@@ -103,7 +105,7 @@ const areaViewedPropertySchema = z.object({
   visitId: z.string(),
   visitedAt: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   interestLevel: nullableNumber,
   status: inspectionStatusSchema,
 });
@@ -115,12 +117,19 @@ const inspectionVisitSummarySchema = z.object({
   oneLineReview: nullableString,
   revisitIntent: revisitIntentSchema.nullish().transform((v) => v ?? null),
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   tags: z.array(z.string()).default([]),
   propertyCount: nullableNumber,
   incompleteSummary: incompleteSummarySchema
     .nullish()
     .transform((v) => v ?? null),
   cover: fileBoxItemSchema.nullish().transform((v) => v ?? null),
+});
+
+/** The earliest planned (not yet completed) visit of an area row — wire id is `inspectionVisitId`. */
+const plannedVisitSchema = z.object({
+  inspectionVisitId: z.string(),
+  visitedAt: z.string(),
 });
 
 const inspectionAreaSchema = z.object({
@@ -134,6 +143,7 @@ const inspectionAreaSchema = z.object({
   latestVisit: inspectionVisitSummarySchema
     .nullish()
     .transform((v) => v ?? null),
+  plannedVisit: plannedVisitSchema.nullish().transform((v) => v ?? null),
   topProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
   incompleteSummary: incompleteSummarySchema,
   thumbnails: z.array(fileBoxItemSchema).default([]),
@@ -183,6 +193,14 @@ const propertyAnswerSchema = z.object({
   ...categorySnapshotShape,
 });
 
+/** api.md §8-2 — saved property location. Raw UTM-K is never sent. */
+const propertyLocationSchema = z.object({
+  bdMgtSn: z.string(),
+  roadAddress: nullableString,
+  latitude: z.number(),
+  longitude: z.number(),
+});
+
 const viewedPropertyDetailSchema = z.object({
   propertyId: z.string(),
   inspectionVisitId: z.string(),
@@ -190,7 +208,7 @@ const viewedPropertyDetailSchema = z.object({
   areaName: z.string(),
   visitedAt: z.string(),
   complexName: z.string(),
-  name: z.string(),
+  name: nullableString,
   memo: nullableString,
   oneLineReview: nullableString,
   pros: nullableString,
@@ -205,6 +223,7 @@ const viewedPropertyDetailSchema = z.object({
   incompleteSummary: incompleteSummarySchema,
   prevProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
   nextProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
+  location: propertyLocationSchema.nullish().transform((v) => v ?? null),
 });
 
 const inspectionVisitDetailSchema = z.object({
@@ -217,6 +236,7 @@ const inspectionVisitDetailSchema = z.object({
   pros: nullableString,
   cons: nullableString,
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   tags: z.array(z.string()).default([]),
   properties: z.array(viewedPropertyDetailSchema).default([]),
   cover: fileBoxItemSchema.nullish().transform((v) => v ?? null),
@@ -231,6 +251,7 @@ const inspectionVisitListItemSchema = z.object({
   oneLineReview: nullableString,
   revisitIntent: revisitIntentSchema.nullish().transform((v) => v ?? null),
   status: inspectionStatusSchema,
+  completedAt: nullableString,
   propertyCount: z.number().int(),
   topInterestProperty: viewedPropertyBriefSchema
     .nullish()

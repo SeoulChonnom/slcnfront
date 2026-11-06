@@ -15,6 +15,8 @@ import '@/styles/inspection-area-detail.css';
 import '@/styles/inspection-property-detail.css';
 import '@/styles/inspection-register.css';
 import '@/styles/inspection-questions.css';
+import '@/styles/geo-address.css';
+import '@/styles/geo-map.css';
 
 const container = document.getElementById('root');
 

@@ -92,3 +92,9 @@ export const shoesQueryKeys = {
   detail: (brand: string, shoesName: string) =>
     [...shoesQueryKeys.all, 'detail', brand, shoesName] as const,
 };
+
+export const geoQueryKeys = {
+  all: ['geo'] as const,
+  addressSearch: (keyword: string) =>
+    [...geoQueryKeys.all, 'addresses', keyword] as const,
+};

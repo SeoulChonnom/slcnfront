@@ -17,6 +17,7 @@ import {
   formatVisitedAtDate,
   formatVisitedAtTime,
 } from '@/domains/inspection/utils/inspection-format';
+import { getVisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -30,6 +31,7 @@ export type RailVisit = {
   visitedAt: string;
   revisitIntent: RevisitIntent | null;
   status: InspectionStatus;
+  completedAt: string | null;
   propertyCount: number | null;
 };
 
@@ -43,24 +45,47 @@ type VisitRailProps = {
   onSelect: (visitId: string) => void;
 };
 
-function getOrdinalSuffix(
-  index: number,
+type RailLabel = { text: string; planned: boolean };
+
+/**
+ * Planned visits (never completed) get no ordinal — just "계획". Visits that
+ * were completed at least once are numbered among themselves, counting down
+ * from `totalVisitCount` (the backend counts only those) in newest-first order,
+ * so extra pages loaded later continue the sequence correctly.
+ */
+function buildRailLabels(
+  visits: RailVisit[],
   totalVisitCount: number,
-  loadedCount: number,
   hasMoreVisits: boolean
-): string | null {
-  if (totalVisitCount <= 1) {
-    return '가장 최근';
-  }
-  if (index === 0) {
-    return '가장 최근';
-  }
-  const isOldestLoaded = index === loadedCount - 1;
-  const allVisitsLoaded = !hasMoreVisits && loadedCount >= totalVisitCount;
-  if (isOldestLoaded && allVisitsLoaded) {
-    return '처음';
-  }
-  return null;
+): RailLabel[] {
+  const isPlanned = visits.map((visit) => getVisitPhase(visit) === 'PLANNED');
+  const lastNumberedIndex = isPlanned.lastIndexOf(false);
+  const allLoaded = !hasMoreVisits;
+  let numberedBefore = 0;
+
+  return visits.map((_, index) => {
+    if (isPlanned[index]) {
+      return { text: '계획', planned: true };
+    }
+    const ordinal = totalVisitCount - numberedBefore;
+    const isLatest = numberedBefore === 0;
+    numberedBefore += 1;
+
+    let suffix: string | null = null;
+    if (isLatest) {
+      suffix = '가장 최근';
+    } else if (
+      totalVisitCount > 1 &&
+      index === lastNumberedIndex &&
+      allLoaded
+    ) {
+      suffix = '처음';
+    }
+    return {
+      text: `${ordinal}차${suffix ? ` · ${suffix}` : ''}`,
+      planned: false,
+    };
+  });
 }
 
 function formatPropertyCountLabel(propertyCount: number | null): string {
@@ -100,6 +125,7 @@ function VisitRailLoadMore({
         visitedAt: item.visitedAt,
         revisitIntent: item.revisitIntent,
         status: item.status,
+        completedAt: item.completedAt,
         propertyCount: item.propertyCount,
       })),
       data.hasNext
@@ -134,6 +160,11 @@ export function VisitRail({
   const allVisits = useMemo(
     () => [...visits, ...extraPages],
     [visits, extraPages]
+  );
+
+  const labels = useMemo(
+    () => buildRailLabels(allVisits, totalVisitCount, canLoadMore),
+    [allVisits, totalVisitCount, canLoadMore]
   );
 
   const selectedIndex = allVisits.findIndex(
@@ -196,14 +227,6 @@ export function VisitRail({
       >
         {allVisits.map((visit, index) => {
           const isSelected = visit.visitId === selectedVisitId;
-          const ordinal = totalVisitCount - index;
-          const suffix = getOrdinalSuffix(
-            index,
-            totalVisitCount,
-            allVisits.length,
-            canLoadMore
-          );
-
           return (
             <button
               key={visit.visitId}
@@ -223,7 +246,7 @@ export function VisitRail({
               onClick={() => onSelect(visit.visitId)}
             >
               <span className='slcn-inspection-area-detail-rail__ord'>
-                {ordinal}차{suffix ? ` · ${suffix}` : ''}
+                {labels[index].text}
               </span>
               <span className='slcn-inspection-area-detail-rail__date'>
                 {formatVisitedAtDate(visit.visitedAt)}

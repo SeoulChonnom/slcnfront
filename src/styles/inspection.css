@@ -145,6 +145,12 @@
   white-space: nowrap;
 }
 
+.slcn-inspection-draft-badge--planned {
+  border-style: solid;
+  border-color: var(--color-primary);
+  color: var(--color-accent-muted);
+}
+
 .slcn-inspection-draft-badge__reason {
   margin: 0;
   font-size: var(--text-fine);

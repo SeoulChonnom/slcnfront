@@ -108,9 +108,11 @@ function property(
       draftPropertyCount: 0,
       visitMissingFields: [],
       draftVisitCount: 0,
+      plannedVisitCount: 0,
     },
     prevProperty: null,
     nextProperty: null,
+    location: null,
     ...overrides,
   };
 }
@@ -226,6 +228,35 @@ describe('InspectionPropertyDetailSection', () => {
     const images = Array.from(document.querySelectorAll('img'));
     const uncaptioned = images.find((img) => img.getAttribute('alt') === '');
     expect(uncaptioned).toBeTruthy();
+  });
+
+  it('shows the road address as one line when the property has a location', () => {
+    useInspectionPropertyMock.mockReturnValue({
+      data: property({
+        location: {
+          bdMgtSn: 'B1',
+          roadAddress: '서울특별시 성동구 용답토방길 135',
+          latitude: 37.54,
+          longitude: 127.05,
+        },
+      }),
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    useInspectionAreaPropertiesMock.mockReturnValue({
+      data: [],
+      isPending: false,
+      isError: false,
+    });
+    useDeleteInspectionPropertyMock.mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+    });
+
+    renderAt();
+
+    expect(screen.getByText('서울특별시 성동구 용답토방길 135')).toBeTruthy();
   });
 
   it('hides the lineage strip when only the current property matches (no other visit)', () => {

@@ -24,6 +24,7 @@ const baseIncompleteSummary = {
   draftPropertyCount: 0,
   visitMissingFields: [],
   draftVisitCount: 0,
+  plannedVisitCount: 0,
 };
 
 function area(overrides: Partial<InspectionArea>): InspectionArea {
@@ -41,11 +42,13 @@ function area(overrides: Partial<InspectionArea>): InspectionArea {
       oneLineReview: '직주근접과 분위기는 좋지만 가격이 부담된다.',
       revisitIntent: 'YES',
       status: 'COMPLETED',
+      completedAt: '2026-09-17T18:30',
       tags: ['서울숲', '한강', '직주근접', '가격부담'],
       propertyCount: 4,
       incompleteSummary: baseIncompleteSummary,
       cover: null,
     },
+    plannedVisit: null,
     topProperty: {
       propertyId: 'prop-1',
       complexName: '트리마제',
@@ -118,6 +121,30 @@ describe('InspectionAreaListSection', () => {
     expect(screen.queryByRole('link', { name: '질문 관리' })).toBeNull();
   });
 
+  it('shows "동·호수 미정" for the top property when its name is null', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              plannedVisit: null,
+              topProperty: {
+                propertyId: 'prop-1',
+                complexName: '트리마제',
+                name: null,
+                interestLevel: 5,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('동·호수 미정')).toBeTruthy();
+  });
+
   it('renders the header summary sentence from `totals`, not the filtered items', () => {
     useInspectionAreaListMock.mockReturnValue(mockQueryResult());
 
@@ -157,7 +184,67 @@ describe('InspectionAreaListSection', () => {
     expect(screen.getByText('101동 1203호 / 84A')).toBeTruthy();
   });
 
-  it('shows a "작성 중" badge and the incomplete reason for a DRAFT latest visit', () => {
+  it('renders a plan-only area without 최근 임장 artifacts and shows the planned date', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              visitCount: 0,
+              firstVisitedAt: null,
+              lastVisitedAt: null,
+              latestVisit: null,
+              totalPropertyCount: 0,
+              plannedVisit: {
+                visitId: 'visit-9',
+                visitedAt: '2099-01-02T10:00',
+              },
+              incompleteSummary: {
+                ...baseIncompleteSummary,
+                plannedVisitCount: 1,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('예정 01.02')).toBeTruthy();
+    expect(screen.queryByText(/^최근 임장 \d/)).toBeNull();
+    expect(
+      document.querySelector('.slcn-inspection-area-row__visits-last')
+    ).toBeNull();
+    expect(screen.getByText('임장 기록이 아직 없습니다')).toBeTruthy();
+  });
+
+  it('labels an overdue plan 미완료 and appends 외 N건 for extra plans', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              plannedVisit: {
+                visitId: 'visit-9',
+                visitedAt: '2000-01-02T10:00',
+              },
+              incompleteSummary: {
+                ...baseIncompleteSummary,
+                plannedVisitCount: 3,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('미완료 01.02 외 2건')).toBeTruthy();
+  });
+
+  it('shows a "계획" badge and the incomplete reason for a never-completed DRAFT latest visit', () => {
     useInspectionAreaListMock.mockReturnValue(
       mockQueryResult({
         data: listResult({
@@ -169,6 +256,7 @@ describe('InspectionAreaListSection', () => {
                 oneLineReview: null,
                 revisitIntent: null,
                 status: 'DRAFT',
+                completedAt: null,
                 tags: ['학군'],
                 propertyCount: 2,
                 incompleteSummary: {
@@ -189,7 +277,7 @@ describe('InspectionAreaListSection', () => {
 
     renderWithProviders(<InspectionAreaListSection device='main' />);
 
-    expect(screen.getByText('작성 중')).toBeTruthy();
+    expect(screen.getByText('계획')).toBeTruthy();
     expect(screen.getByText('한줄평을 아직 쓰지 않았습니다.')).toBeTruthy();
     // The reason text sits next to a `<strong>` count, so the default
     // text matcher (which reads only an element's own direct text nodes)
@@ -201,6 +289,36 @@ describe('InspectionAreaListSection', () => {
       )
     ).toBeTruthy();
     expect(screen.getByText('미정')).toBeTruthy();
+  });
+
+  it('shows a "수정 중" badge for a DRAFT latest visit that was completed once', () => {
+    useInspectionAreaListMock.mockReturnValue(
+      mockQueryResult({
+        data: listResult({
+          items: [
+            area({
+              latestVisit: {
+                visitId: 'visit-2',
+                visitedAt: '2026-09-20T13:00',
+                oneLineReview: null,
+                revisitIntent: null,
+                status: 'DRAFT',
+                completedAt: '2026-09-20T18:00',
+                tags: [],
+                propertyCount: 2,
+                incompleteSummary: baseIncompleteSummary,
+                cover: null,
+              },
+            }),
+          ],
+        }),
+      })
+    );
+
+    renderWithProviders(<InspectionAreaListSection device='main' />);
+
+    expect(screen.getByText('수정 중')).toBeTruthy();
+    expect(screen.queryByText('계획')).toBeNull();
   });
 
   it('shows the loading skeleton (same grid, no spinner) while pending', () => {
@@ -329,12 +447,12 @@ describe('InspectionAreaListSection', () => {
     vi.useRealTimers();
   });
 
-  it('hides the top "임장 기록하기" link visually on mobile via CSS, but keeps it in the DOM', () => {
+  it('hides the top "임장 계획하기" link visually on mobile via CSS, but keeps it in the DOM', () => {
     useInspectionAreaListMock.mockReturnValue(mockQueryResult());
 
     renderWithProviders(<InspectionAreaListSection device='mobile' />);
 
-    expect(screen.getByRole('link', { name: '+ 임장 기록하기' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: '+ 임장 계획하기' })).toBeTruthy();
   });
 
   it('omits the property-detail thumbnails/complex line and shows "아직 없음" when there is no property yet', () => {
@@ -346,6 +464,7 @@ describe('InspectionAreaListSection', () => {
               areaId: 'area-2',
               name: '광교',
               totalPropertyCount: 0,
+              plannedVisit: null,
               topProperty: null,
             }),
           ],

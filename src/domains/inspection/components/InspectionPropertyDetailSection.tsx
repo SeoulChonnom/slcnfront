@@ -17,7 +17,10 @@ import {
   useDeleteInspectionProperty,
   useInspectionProperty,
 } from '@/domains/inspection/hooks/inspection-queries';
-import { formatVisitedAtDate } from '@/domains/inspection/utils/inspection-format';
+import {
+  formatPropertyName,
+  formatVisitedAtDate,
+} from '@/domains/inspection/utils/inspection-format';
 import {
   buildDeviceInspectionAreaDetailPath,
   buildDeviceInspectionPropertyDetailPath,
@@ -86,7 +89,7 @@ export function InspectionPropertyDetailSection({
     );
   }
 
-  const propertyLabel = `${data.complexName} ${data.name}`.trim();
+  const propertyLabel = `${data.complexName} ${formatPropertyName(data.name)}`;
   const areaVisitDetailPath = `${buildDeviceInspectionAreaDetailPath(device, areaId)}?visit=${encodeURIComponent(data.visitId)}`;
   const pros = toListItems(data.pros);
   const cons = toListItems(data.cons);
@@ -111,8 +114,13 @@ export function InspectionPropertyDetailSection({
             {data.complexName}
           </p>
           <h1 className='slcn-inspection-property-detail__title'>
-            {data.name}
+            {formatPropertyName(data.name)}
           </h1>
+          {data.location?.roadAddress ? (
+            <p className='slcn-inspection-property-detail__address'>
+              {data.location.roadAddress}
+            </p>
+          ) : null}
           <div className='slcn-inspection-property-detail__rating'>
             <InterestStars level={data.interestLevel} />
             {interestSummary ? (
@@ -146,14 +154,17 @@ export function InspectionPropertyDetailSection({
         </div>
       </header>
 
-      <PropertyLineageStrip
-        device={device}
-        areaId={areaId}
-        areaName={data.areaName}
-        complexName={data.complexName}
-        name={data.name}
-        currentPropertyId={propertyId}
-      />
+      {/* 동·호수가 미정이면 이름 기준 연결을 할 수 없어 묶음 띠를 숨긴다. */}
+      {data.name?.trim() ? (
+        <PropertyLineageStrip
+          device={device}
+          areaId={areaId}
+          areaName={data.areaName}
+          complexName={data.complexName}
+          name={data.name}
+          currentPropertyId={propertyId}
+        />
+      ) : null}
 
       {data.memo ? (
         <p className='slcn-inspection-property-detail__prose'>{data.memo}</p>
@@ -242,7 +253,7 @@ export function InspectionPropertyDetailSection({
               data.prevProperty.propertyId
             )}
           >
-            ← 이전 매물 · {data.prevProperty.name}
+            ← 이전 매물 · {formatPropertyName(data.prevProperty.name)}
           </Link>
         ) : (
           <Link to={areaVisitDetailPath}>← 이 임장의 매물 목록</Link>
@@ -255,7 +266,7 @@ export function InspectionPropertyDetailSection({
               data.nextProperty.propertyId
             )}
           >
-            다음 매물 · {data.nextProperty.name} →
+            다음 매물 · {formatPropertyName(data.nextProperty.name)} →
           </Link>
         ) : null}
       </nav>

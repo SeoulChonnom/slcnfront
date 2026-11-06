@@ -1,3 +1,5 @@
+import type { CoordKey } from '@/domains/geo/api/geo-schemas';
+
 // ── Shared enums ──────────────────────────────────────────────────────────────
 
 export type RevisitIntent = 'YES' | 'MAYBE' | 'NO';
@@ -64,13 +66,16 @@ export type IncompleteSummary = {
   missingFields: string[];
   draftPropertyCount: number;
   visitMissingFields: string[];
+  /** 수정 중인 임장 수(계획 제외). */
   draftVisitCount: number;
+  /** 계획 임장 수 — 지역 행에서만 채워지고 나머지는 0. */
+  plannedVisitCount: number;
 };
 
 export type ViewedPropertyBrief = {
   propertyId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 };
 
@@ -79,7 +84,7 @@ export type MatchedProperty = {
   propertyId: string;
   visitId: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
 };
 
@@ -89,7 +94,7 @@ export type AreaViewedProperty = {
   visitId: string;
   visitedAt: string;
   complexName: string;
-  name: string;
+  name: string | null;
   interestLevel: number | null;
   status: InspectionStatus;
 };
@@ -107,6 +112,8 @@ export type InspectionVisitSummary = {
   oneLineReview: string | null;
   revisitIntent: RevisitIntent | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   tags: string[];
   /** `null` when this summary came from an area row's `latestVisit` (area detail's `visits[]` always fills it). */
   propertyCount: number | null;
@@ -130,6 +137,12 @@ type InspectionAreaTotals = {
   propertyCount: number;
 };
 
+/** Normalized from the wire's `inspectionVisitId` — see fe_implementation_decisions.md §3-①. */
+export type PlannedVisit = {
+  visitId: string;
+  visitedAt: string;
+};
+
 export type InspectionArea = {
   areaId: string;
   name: string;
@@ -139,6 +152,8 @@ export type InspectionArea = {
   lastVisitedAt: string | null;
   totalPropertyCount: number;
   latestVisit: InspectionVisitSummary | null;
+  /** 가장 이른 계획 임장. 없으면 `null`. */
+  plannedVisit: PlannedVisit | null;
   topProperty: ViewedPropertyBrief | null;
   incompleteSummary: IncompleteSummary;
   thumbnails: FileBoxItem[];
@@ -198,6 +213,25 @@ type InspectionAreaBrief = {
   name: string;
 };
 
+/** Saved location as the server returns it (WGS84 degrees). */
+type PropertyLocation = {
+  bdMgtSn: string;
+  roadAddress: string | null;
+  latitude: number;
+  longitude: number;
+};
+
+/**
+ * Location as sent on POST/PUT. `coordKey` is required only when the
+ * building differs from the saved one; the same `bdMgtSn` keeps the saved
+ * coordinates without a lookup. Coordinates are never sent.
+ */
+export type PropertyLocationInput = {
+  bdMgtSn: string;
+  roadAddress: string;
+  coordKey?: CoordKey;
+};
+
 export type ViewedPropertyDetail = {
   propertyId: string;
   /** Normalized from the wire's `inspectionVisitId` — see fe_implementation_decisions.md §3-①. */
@@ -206,7 +240,7 @@ export type ViewedPropertyDetail = {
   areaName: string;
   visitedAt: string;
   complexName: string;
-  name: string;
+  name: string | null;
   memo: string | null;
   oneLineReview: string | null;
   pros: string | null;
@@ -221,6 +255,7 @@ export type ViewedPropertyDetail = {
   incompleteSummary: IncompleteSummary;
   prevProperty: ViewedPropertyBrief | null;
   nextProperty: ViewedPropertyBrief | null;
+  location: PropertyLocation | null;
 };
 
 export type InspectionVisitDetail = {
@@ -234,6 +269,8 @@ export type InspectionVisitDetail = {
   pros: string | null;
   cons: string | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   tags: string[];
   properties: ViewedPropertyDetail[];
   cover: FileBoxItem | null;
@@ -249,6 +286,8 @@ export type InspectionVisitListItem = {
   oneLineReview: string | null;
   revisitIntent: RevisitIntent | null;
   status: InspectionStatus;
+  /** First completion time (latch — never cleared). `null` = never completed → "계획". */
+  completedAt: string | null;
   propertyCount: number;
   topInterestProperty: ViewedPropertyBrief | null;
   tags: string[];
@@ -372,7 +411,8 @@ export type InspectionVisitUdo = InspectionVisitFields & {
 
 type ViewedPropertyFields = {
   complexName: string;
-  name: string;
+  /** 동·호수. 계획 단계에서는 생략할 수 있고, 생략하면 `null`로 저장된다(api.md §6). */
+  name?: string;
   memo?: string;
   oneLineReview?: string;
   pros?: string;
@@ -383,10 +423,17 @@ type ViewedPropertyFields = {
 
 export type ViewedPropertyCdo = ViewedPropertyFields & {
   files?: InspectionFileBoxItemCdo[];
+  /** Optional on create — omitted means "register without a location". */
+  location?: PropertyLocationInput | null;
 };
 
 export type ViewedPropertyUdo = ViewedPropertyFields & {
   files?: InspectionFileBoxItemUdo[];
+  /**
+   * REQUIRED key (D9): PUT is a full replace, so omitting the location
+   * silently clears it. Send the confirmed one to keep it, `null` to clear.
+   */
+  location: PropertyLocationInput | null;
 };
 
 /**

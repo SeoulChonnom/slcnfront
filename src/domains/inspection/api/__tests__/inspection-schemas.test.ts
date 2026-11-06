@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  parseAreaViewedPropertyListResponse,
   parseInspectionAreaDetailResponse,
   parseInspectionAreaListResponse,
   parseInspectionVisitDetailResponse,
@@ -450,5 +451,230 @@ describe('parseViewedPropertyDetailResponse', () => {
 
     expect(dto.answers[0]?.textValue).toBe('밝다');
     expect(dto.answers[1]?.selectedCodes).toEqual(['SOUTH']);
+  });
+});
+
+describe('null property name (동·호수 미정)', () => {
+  const incompleteSummary = {
+    unansweredRequiredCount: 0,
+    unansweredRequiredQuestions: [],
+    missingFields: ['name'],
+    draftPropertyCount: 1,
+    visitMissingFields: [],
+    draftVisitCount: 0,
+  };
+  const brief = {
+    propertyId: 'PROP-09',
+    complexName: '트리마제',
+    name: null,
+    interestLevel: null,
+  };
+
+  it('accepts name: null in brief, matched, area-viewed and detail schemas', () => {
+    const list = parseInspectionAreaListResponse({
+      items: [
+        {
+          areaId: 'AREA-01',
+          name: '성수동',
+          description: null,
+          visitCount: 1,
+          firstVisitedAt: null,
+          lastVisitedAt: null,
+          totalPropertyCount: 1,
+          latestVisit: null,
+          topProperty: brief,
+          incompleteSummary,
+          thumbnails: [],
+          totalImageCount: 0,
+          matchedProperty: { ...brief, visitId: 'VISIT-01' },
+        },
+      ],
+      totalCount: 1,
+      hasNext: false,
+      revisitIntentCounts: { total: 1, YES: 0, MAYBE: 0, NO: 0 },
+      totals: { areaCount: 1, visitCount: 1, propertyCount: 1 },
+    });
+
+    expect(list.items[0]?.topProperty?.name).toBeNull();
+    expect(list.items[0]?.matchedProperty?.name).toBeNull();
+
+    const areaProps = parseAreaViewedPropertyListResponse([
+      {
+        propertyId: 'PROP-09',
+        visitId: 'VISIT-01',
+        visitedAt: '2026-09-17T14:00',
+        complexName: '트리마제',
+        name: null,
+        interestLevel: null,
+        status: 'DRAFT',
+      },
+    ]);
+
+    expect(areaProps[0]?.name).toBeNull();
+
+    const detail = parseViewedPropertyDetailResponse(
+      {
+        propertyId: 'PROP-09',
+        inspectionVisitId: 'VISIT-01',
+        areaId: 'AREA-01',
+        areaName: '성수동',
+        visitedAt: '2026-09-17T14:00',
+        complexName: '트리마제',
+        name: null,
+        memo: null,
+        oneLineReview: null,
+        pros: null,
+        cons: null,
+        interestLevel: null,
+        status: 'DRAFT',
+        sortOrder: 1,
+        tags: [],
+        cover: null,
+        photos: [],
+        answers: [],
+        incompleteSummary,
+        prevProperty: brief,
+        nextProperty: null,
+      },
+      'detail'
+    );
+
+    expect(detail.name).toBeNull();
+    expect(detail.prevProperty?.name).toBeNull();
+  });
+});
+
+describe('completedAt', () => {
+  const detailPayload = (completedAt?: string | null) => ({
+    inspectionVisitId: 'VISIT-03',
+    area: { areaId: 'AREA-01', name: '성수동' },
+    visitedAt: '2026-09-17T14:00',
+    memo: null,
+    revisitIntent: 'YES',
+    oneLineReview: null,
+    pros: null,
+    cons: null,
+    status: 'DRAFT',
+    ...(completedAt === undefined ? {} : { completedAt }),
+    tags: [],
+    properties: [],
+    cover: null,
+    photos: [],
+    incompleteSummary: {
+      unansweredRequiredCount: 0,
+      unansweredRequiredQuestions: [],
+      missingFields: [],
+      draftPropertyCount: 0,
+      visitMissingFields: [],
+      draftVisitCount: 0,
+    },
+  });
+
+  it.each(['2026-09-17T18:30', '2026-09-23T09:28:52'])(
+    'keeps a visit detail completedAt of %s as-is',
+    (completedAt) => {
+      const dto = parseInspectionVisitDetailResponse(
+        detailPayload(completedAt),
+        'detail'
+      );
+      expect(dto.completedAt).toBe(completedAt);
+    }
+  );
+
+  it('normalizes null and missing completedAt to null', () => {
+    expect(
+      parseInspectionVisitDetailResponse(detailPayload(null), 'detail')
+        .completedAt
+    ).toBeNull();
+    expect(
+      parseInspectionVisitDetailResponse(detailPayload(), 'detail').completedAt
+    ).toBeNull();
+  });
+
+  it('parses completedAt on visit list items', () => {
+    const result = parseInspectionVisitListResponse({
+      items: [
+        {
+          inspectionVisitId: 'VISIT-09',
+          area: { areaId: 'AREA-06', name: '분당' },
+          visitedAt: '2026-09-20T15:00',
+          oneLineReview: null,
+          revisitIntent: null,
+          status: 'COMPLETED',
+          completedAt: '2026-09-23T09:28:52',
+          propertyCount: 0,
+          topInterestProperty: null,
+          tags: [],
+          cover: null,
+          incompleteSummary: detailPayload().incompleteSummary,
+        },
+      ],
+      totalCount: 1,
+      hasNext: false,
+    });
+    expect(result.items[0]?.completedAt).toBe('2026-09-23T09:28:52');
+  });
+});
+
+describe('plannedVisit / plannedVisitCount on area rows', () => {
+  const baseRow = {
+    areaId: 'AREA-09',
+    name: '송파',
+    description: null,
+    visitCount: 0,
+    firstVisitedAt: null,
+    lastVisitedAt: null,
+    totalPropertyCount: 0,
+    latestVisit: null,
+    incompleteSummary: {
+      unansweredRequiredCount: 0,
+      unansweredRequiredQuestions: [],
+      missingFields: [],
+      draftPropertyCount: 0,
+      visitMissingFields: [],
+      draftVisitCount: 0,
+    },
+    thumbnails: [],
+    totalImageCount: 0,
+  };
+  const wrap = (row: object) => ({
+    items: [row],
+    totalCount: 1,
+    hasNext: false,
+    revisitIntentCounts: { total: 1, YES: 0, MAYBE: 0, NO: 0 },
+    totals: { areaCount: 1, visitCount: 0, propertyCount: 0 },
+  });
+
+  it('keeps plannedVisit and plannedVisitCount from the wire', () => {
+    const result = parseInspectionAreaListResponse(
+      wrap({
+        ...baseRow,
+        plannedVisit: {
+          inspectionVisitId: 'VISIT-20',
+          visitedAt: '2026-10-12T14:00',
+        },
+        incompleteSummary: {
+          ...baseRow.incompleteSummary,
+          plannedVisitCount: 2,
+        },
+      })
+    );
+
+    expect(result.items[0]?.plannedVisit).toEqual({
+      inspectionVisitId: 'VISIT-20',
+      visitedAt: '2026-10-12T14:00',
+    });
+    expect(result.items[0]?.incompleteSummary.plannedVisitCount).toBe(2);
+  });
+
+  it('normalizes a missing or null plannedVisit to null and a missing count to 0', () => {
+    const result = parseInspectionAreaListResponse(
+      wrap({ ...baseRow, plannedVisit: null })
+    );
+    const missing = parseInspectionAreaListResponse(wrap(baseRow));
+
+    expect(result.items[0]?.plannedVisit).toBeNull();
+    expect(missing.items[0]?.plannedVisit).toBeNull();
+    expect(missing.items[0]?.incompleteSummary.plannedVisitCount).toBe(0);
   });
 });

@@ -12,6 +12,7 @@ describe('parseAppEnv', () => {
       })
     ).toEqual({
       apiUrl: 'http://localhost:8080',
+      kakaoMapJsKey: null,
       mode: 'development',
       isDev: true,
       isProd: false,
@@ -32,10 +33,22 @@ describe('parseAppEnv', () => {
       })
     ).toEqual({
       apiUrl: 'http://localhost:8080',
+      kakaoMapJsKey: null,
       mode: 'production',
       isDev: false,
       isProd: true,
       isTest: false,
     });
+  });
+
+  it('trims the optional Kakao map key and treats blank as null', () => {
+    expect(
+      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' abc ' })
+        .kakaoMapJsKey
+    ).toBe('abc');
+    expect(
+      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: '  ' })
+        .kakaoMapJsKey
+    ).toBeNull();
   });
 });
