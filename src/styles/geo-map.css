@@ -103,6 +103,11 @@
   background: var(--color-surface-muted);
 }
 
+/* Kakao sizes its SVG inside a zero-width overlay; the global cap hides it. */
+.slcn-route-map__canvas svg {
+  max-width: none;
+}
+
 .slcn-route-map__attribution {
   font-size: var(--text-caption);
   color: var(--color-ink-muted);
