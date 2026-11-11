@@ -44,8 +44,8 @@ export function AreaListNoResults({
         ) : null}
         <LinkButton to={buildDeviceInspectionRegisterPath(device)}>
           {keyword
-            ? `'${keyword}' 지역 새로 임장 기록하기`
-            : '새로 임장 기록하기'}
+            ? `'${keyword}' 지역 새로 임장 계획하기`
+            : '새로 임장 계획하기'}
         </LinkButton>
       </div>
     </Card>

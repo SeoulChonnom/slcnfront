@@ -4,7 +4,7 @@ import { loadKakaoMaps } from '@/lib/kakao/kakao-loader';
 import type { KakaoMap, KakaoMaps } from '@/lib/kakao/kakao-maps';
 
 export function useKakaoMap(
-  appKey: string | undefined,
+  appKey: string | null | undefined,
   position: MapPosition,
   onPositionChange: (position: MapPosition) => void
 ) {

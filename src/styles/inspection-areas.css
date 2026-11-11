@@ -47,6 +47,8 @@
 
 .slcn-inspection-area-list__toolbar {
   display: grid;
+  /* 암묵적 auto 트랙은 칩 행의 max-content까지 늘어나므로 0 하한을 준다. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-bottom: var(--space-6);
 }
@@ -430,7 +432,7 @@
 }
 
 /* ── Mobile (≤833px) — collapse to a 2-column rail + stacked body,
-   hide the top "임장 기록하기" button (a bottom FAB owns that action once
+   hide the top "임장 계획하기" button (a bottom FAB owns that action once
    the FAB is added), single-row horizontal-scroll filter chips. ───────── */
 
 @media (max-width: 833px) {

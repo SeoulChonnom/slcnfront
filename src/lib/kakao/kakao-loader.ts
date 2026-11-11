@@ -12,7 +12,6 @@ export function loadKakaoMaps(appKey: string): Promise<KakaoMaps> {
     function fail() {
       window.clearTimeout(timeout);
       script.remove();
-      pending = undefined;
       reject(new Error('지도를 불러오지 못했어요.'));
     }
 
@@ -23,6 +22,10 @@ export function loadKakaoMaps(appKey: string): Promise<KakaoMaps> {
         return;
       }
       maps.load(() => {
+        if (!maps.Map || !maps.Polyline || !maps.MarkerClusterer) {
+          fail();
+          return;
+        }
         window.clearTimeout(timeout);
         resolve(maps);
       });
@@ -43,6 +46,9 @@ export function loadKakaoMaps(appKey: string): Promise<KakaoMaps> {
     script.onload = ready;
     script.onerror = fail;
     document.head.append(script);
+  }).catch((error: unknown) => {
+    pending = undefined;
+    throw error;
   });
 
   return pending;

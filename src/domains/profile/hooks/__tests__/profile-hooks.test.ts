@@ -119,6 +119,33 @@ describe('profile hooks', () => {
     });
   });
 
+  it('waits for the access token before requesting the profile after a reload', async () => {
+    useAuthStore.setState({
+      accessToken: null,
+      userInfo: { name: '기존 이름', userName: 'string', roleList: ['user'] },
+    });
+    getProfile.mockResolvedValueOnce(originalProfile);
+    const { result } = renderHook(() => useProfile(), {
+      wrapper: createWrapper(),
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(getProfile).not.toHaveBeenCalled();
+    expect(result.current.fetchStatus).toBe('idle');
+
+    act(() => {
+      useAuthStore.getState().setSession({
+        accessToken: 'restored-token',
+        userInfo: { name: '기존 이름', userName: 'string', roleList: ['user'] },
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(originalProfile);
+    });
+    expect(getProfile).toHaveBeenCalledTimes(1);
+  });
+
   it('isolates cached profiles by authenticated username across logout and login', async () => {
     const client = createTestQueryClient();
     client.setQueryDefaults(profileQueryKeys.all, { staleTime: 60_000 });

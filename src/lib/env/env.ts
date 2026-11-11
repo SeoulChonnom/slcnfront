@@ -10,7 +10,8 @@ const envSchema = z.object({
 
 export type AppEnv = {
   apiUrl: string;
-  kakaoMapJsKey?: string;
+  /** Optional Kakao Maps JS key; `null` means the map is simply not shown. */
+  kakaoMapJsKey: string | null;
   mode: string;
   isDev: boolean;
   isProd: boolean;
@@ -37,9 +38,7 @@ export function parseAppEnv(source: EnvSource): AppEnv {
 
   return {
     apiUrl: parsed.VITE_API_URL.replace(/\/+$/, ''),
-    ...(parsed.VITE_KAKAO_MAP_JS_KEY
-      ? { kakaoMapJsKey: parsed.VITE_KAKAO_MAP_JS_KEY }
-      : {}),
+    kakaoMapJsKey: parsed.VITE_KAKAO_MAP_JS_KEY || null,
     mode,
     isDev: parsed.DEV ?? mode === 'development',
     isProd: parsed.PROD ?? mode === 'production',

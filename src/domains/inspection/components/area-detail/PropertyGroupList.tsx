@@ -3,12 +3,15 @@ import { AddPropertyForm } from '@/domains/inspection/components/AddPropertyForm
 import { PropertyRow } from '@/domains/inspection/components/area-detail/PropertyRow';
 import type { ViewedPropertyDetail } from '@/domains/inspection/types';
 import { PROPERTY_EDIT_FROM_AREA_SEARCH } from '@/domains/inspection/utils/property-edit-return';
+import type { VisitPhase } from '@/domains/inspection/utils/visit-phase';
 
 type PropertyGroupListProps = {
   device: DeviceType;
   areaId: string;
   visitId: string;
   properties: ViewedPropertyDetail[];
+  /** Property draft badges only show while the parent visit is being revised. */
+  visitPhase: VisitPhase;
 };
 
 type ComplexGroup = {
@@ -17,11 +20,13 @@ type ComplexGroup = {
 };
 
 /**
- * §1.1 / §1.4: `complexName` is not an entity — it only exists as a display
- * grouping over `ViewedProperty` rows, in server sort order (the property
- * list is already `sortOrder` ascending within a visit), never re-sorted
- * alphabetically. The heading itself is never a link — there is no page for
- * a complex name to go to (screen_design.md §1.1).
+ * §1.1 / §1.4 + FD1: `complexName` is not an entity — it only exists as a
+ * display grouping over `ViewedProperty` rows, in the API array order (never
+ * re-sorted). Only CONSECUTIVE rows with the same name share a group, so
+ * A, B, A renders three groups; that keeps the list in step with the route
+ * map's numbering (which also merges only consecutive same-address stops).
+ * The heading itself is never a link — there is no page for a complex name
+ * to go to (screen_design.md §1.1).
  */
 function groupByComplexName(
   properties: ViewedPropertyDetail[]
@@ -29,11 +34,9 @@ function groupByComplexName(
   const groups: ComplexGroup[] = [];
 
   for (const property of properties) {
-    const existing = groups.find(
-      (group) => group.complexName === property.complexName
-    );
-    if (existing) {
-      existing.properties.push(property);
+    const last = groups.at(-1);
+    if (last && last.complexName === property.complexName) {
+      last.properties.push(property);
     } else {
       groups.push({
         complexName: property.complexName,
@@ -50,6 +53,7 @@ export function PropertyGroupList({
   areaId,
   visitId,
   properties,
+  visitPhase,
 }: PropertyGroupListProps) {
   const addPropertyForm = (
     <div className='slcn-inspection-area-detail-properties__add'>
@@ -82,7 +86,7 @@ export function PropertyGroupList({
   }
 
   const groups = groupByComplexName(properties);
-  const complexCount = groups.length;
+  const complexCount = new Set(properties.map((p) => p.complexName)).size;
 
   return (
     <div className='slcn-inspection-area-detail-properties'>
@@ -97,7 +101,7 @@ export function PropertyGroupList({
 
       {groups.map((group) => (
         <div
-          key={group.complexName}
+          key={group.properties[0].propertyId}
           className='slcn-inspection-area-detail-complex'
         >
           <div className='slcn-inspection-area-detail-complex__head'>
@@ -115,6 +119,7 @@ export function PropertyGroupList({
                 device={device}
                 areaId={areaId}
                 property={property}
+                visitPhase={visitPhase}
               />
             ))}
           </div>

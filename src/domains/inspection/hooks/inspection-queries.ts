@@ -9,6 +9,7 @@ import type {
   InspectionQuestionPolicyUdo,
   InspectionStatus,
   InspectionVisitCdo,
+  InspectionVisitDetail,
   InspectionVisitListParams,
   InspectionVisitUdo,
   OrderItem,
@@ -228,12 +229,56 @@ export function useDeleteInspectionVisit() {
   });
 }
 
+/**
+ * Optimistic: the visit cache reflects the new order immediately (the server
+ * accepts partial requests and keeps omitted rows, api.md §6), rolls back on
+ * error, and refetches when settled so the server order is the final word.
+ */
 export function useReorderInspectionVisitProperties(visitId: string) {
+  const queryClient = useQueryClient();
   const invalidate = useInvalidateInspection();
+  const visitKey = inspectionQueryKeys.visit(visitId);
+
   return useMutation({
     mutationFn: (items: OrderItem[]) =>
       inspectionApi.reorderVisitProperties(visitId, items),
-    onSuccess: () => invalidate(),
+    onMutate: async (items) => {
+      await queryClient.cancelQueries({ queryKey: visitKey });
+      const previous =
+        queryClient.getQueryData<InspectionVisitDetail>(visitKey);
+
+      if (previous) {
+        const nextOrder = new Map(
+          items.map((item) => [item.id, item.sortOrder])
+        );
+        // Only the rows named in the request move: they are re-dealt, ordered
+        // by their new sortOrder, into the slots they already occupy. Every
+        // other row keeps its array position.
+        const moved = previous.properties
+          .filter((property) => nextOrder.has(property.propertyId))
+          .map((property) => ({
+            ...property,
+            sortOrder: nextOrder.get(property.propertyId) ?? property.sortOrder,
+          }))
+          .sort((a, b) => a.sortOrder - b.sortOrder);
+        let cursor = 0;
+        const properties = previous.properties.map((property) =>
+          nextOrder.has(property.propertyId) ? moved[cursor++] : property
+        );
+        queryClient.setQueryData<InspectionVisitDetail>(visitKey, {
+          ...previous,
+          properties,
+        });
+      }
+
+      return { previous };
+    },
+    onError: (_error, _items, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(visitKey, context.previous);
+      }
+    },
+    onSettled: () => invalidate(),
   });
 }
 

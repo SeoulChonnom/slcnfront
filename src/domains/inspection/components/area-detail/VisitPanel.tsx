@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { DeviceType } from '@/app/router/route-constants';
 import { Button, LinkButton } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { VisitRouteSection } from '@/domains/geo/components/VisitRouteSection';
 import { PropertyGroupList } from '@/domains/inspection/components/area-detail/PropertyGroupList';
 import { VisitGallery } from '@/domains/inspection/components/area-detail/VisitGallery';
 import { VisitProsCons } from '@/domains/inspection/components/area-detail/VisitProsCons';
 import { formatVisitDateTimeLine } from '@/domains/inspection/components/area-detail/visit-datetime';
-import { DraftBadge } from '@/domains/inspection/components/DraftBadge';
+import { RecommendOrderPanel } from '@/domains/inspection/components/RecommendOrderPanel';
 import { RevisitIntentMark } from '@/domains/inspection/components/RevisitIntentMark';
 import { TagChips } from '@/domains/inspection/components/TagChips';
+import { VisitPhaseBadge } from '@/domains/inspection/components/VisitPhaseBadge';
 import { useDeleteInspectionVisit } from '@/domains/inspection/hooks/inspection-queries';
 import type { InspectionVisitDetail } from '@/domains/inspection/types';
+import { formatPropertyName } from '@/domains/inspection/utils/inspection-format';
+import { getVisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { buildDeviceInspectionVisitEditPath } from '@/lib/routing/route-builders';
 
 type VisitPanelProps = {
@@ -31,6 +35,16 @@ export function VisitPanel({
 }: VisitPanelProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const deleteVisit = useDeleteInspectionVisit();
+  const phase = getVisitPhase(visit);
+  const routeProperties = useMemo(
+    () =>
+      visit.properties.map((property) => ({
+        propertyId: property.propertyId,
+        title: `${property.complexName} · ${formatPropertyName(property.name)}`,
+        location: property.location,
+      })),
+    [visit.properties]
+  );
 
   const handleConfirmDelete = async () => {
     await deleteVisit.mutateAsync(visit.visitId);
@@ -50,7 +64,7 @@ export function VisitPanel({
         <span className='slcn-inspection-area-detail-panel__datetime'>
           {formatVisitDateTimeLine(visit.visitedAt)}
         </span>
-        {visit.status === 'DRAFT' ? <DraftBadge /> : null}
+        <VisitPhaseBadge phase={phase} />
         <span className='slcn-inspection-area-detail-panel__actions'>
           <LinkButton
             to={buildDeviceInspectionVisitEditPath(
@@ -104,11 +118,28 @@ export function VisitPanel({
 
       <VisitGallery photos={visit.photos} />
 
+      {visit.properties.length > 0 ? (
+        <VisitRouteSection
+          visitId={visit.visitId}
+          isCompleted={phase === 'COMPLETED'}
+          properties={routeProperties}
+        />
+      ) : null}
+
+      {visit.properties.length > 0 ? (
+        <RecommendOrderPanel
+          visitId={visit.visitId}
+          phase={phase}
+          properties={visit.properties}
+        />
+      ) : null}
+
       <PropertyGroupList
         device={device}
         areaId={areaId}
         visitId={visit.visitId}
         properties={visit.properties}
+        visitPhase={phase}
       />
 
       <ConfirmDialog

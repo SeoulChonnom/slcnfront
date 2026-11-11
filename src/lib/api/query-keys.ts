@@ -117,3 +117,9 @@ export const houseQueryKeys = {
   rankings: (type: RankingType, area: AreaBucket) =>
     [...houseQueryKeys.all, 'rankings', type, area] as const,
 };
+
+export const geoQueryKeys = {
+  all: ['geo'] as const,
+  addressSearch: (keyword: string) =>
+    [...geoQueryKeys.all, 'addresses', keyword] as const,
+};

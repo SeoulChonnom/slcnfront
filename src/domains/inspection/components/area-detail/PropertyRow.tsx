@@ -11,12 +11,16 @@ import { InterestStars } from '@/domains/inspection/components/InterestStars';
 import { TagChips } from '@/domains/inspection/components/TagChips';
 import { useInspectionAreaProperties } from '@/domains/inspection/hooks/inspection-queries';
 import type { ViewedPropertyDetail } from '@/domains/inspection/types';
+import { formatPropertyName } from '@/domains/inspection/utils/inspection-format';
+import type { VisitPhase } from '@/domains/inspection/utils/visit-phase';
 import { buildDeviceInspectionPropertyDetailPath } from '@/lib/routing/route-builders';
 
 type PropertyRowProps = {
   device: DeviceType;
   areaId: string;
   property: ViewedPropertyDetail;
+  /** FD2: the "작성 중" badge is hidden unless the parent visit is `REVISING`. */
+  visitPhase: VisitPhase;
 };
 
 /**
@@ -35,7 +39,8 @@ function PropertyInterestDelta({
 }) {
   const linkedQuery = useInspectionAreaProperties(areaId, {
     complexName: property.complexName,
-    name: property.name,
+    // 이름이 비면 쿼리가 비활성화되어 연결 비교를 건너뛴다.
+    name: property.name ?? '',
   });
 
   const entries = linkedQuery.data;
@@ -96,12 +101,19 @@ function buildDraftReason(
     }`;
   }
   if (incompleteSummary.missingFields.length > 0) {
-    return `${incompleteSummary.missingFields.join(', ')} 미입력`;
+    return `${incompleteSummary.missingFields
+      .map((field) => (field === 'name' ? '동·호수' : field))
+      .join(', ')} 미입력`;
   }
   return undefined;
 }
 
-export function PropertyRow({ device, areaId, property }: PropertyRowProps) {
+export function PropertyRow({
+  device,
+  areaId,
+  property,
+  visitPhase,
+}: PropertyRowProps) {
   return (
     <Link
       to={buildDeviceInspectionPropertyDetailPath(
@@ -113,7 +125,7 @@ export function PropertyRow({ device, areaId, property }: PropertyRowProps) {
     >
       <span className='slcn-inspection-area-detail-prop__body'>
         <span className='slcn-inspection-area-detail-prop__name'>
-          {property.name}
+          {formatPropertyName(property.name)}
         </span>
         {property.oneLineReview ? (
           <span className='slcn-inspection-area-detail-prop__line'>
@@ -122,7 +134,7 @@ export function PropertyRow({ device, areaId, property }: PropertyRowProps) {
         ) : null}
         <span className='slcn-inspection-area-detail-prop__meta'>
           <TagChips tags={property.tags} />
-          {property.status === 'DRAFT' ? (
+          {property.status === 'DRAFT' && visitPhase === 'REVISING' ? (
             <DraftBadge reason={buildDraftReason(property.incompleteSummary)} />
           ) : null}
         </span>

@@ -2,16 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { parseAppEnv } from '@/lib/env/env';
 
 describe('parseAppEnv', () => {
-  it('accepts an optional Kakao key and treats whitespace as no key', () => {
-    expect(
-      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' test-key ' })
-        .kakaoMapJsKey
-    ).toBe('test-key');
-    expect(
-      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' ' })
-        .kakaoMapJsKey
-    ).toBeUndefined();
-  });
   it('parses the required app env values', () => {
     expect(
       parseAppEnv({
@@ -22,6 +12,7 @@ describe('parseAppEnv', () => {
       })
     ).toEqual({
       apiUrl: 'http://localhost:8080',
+      kakaoMapJsKey: null,
       mode: 'development',
       isDev: true,
       isProd: false,
@@ -42,10 +33,28 @@ describe('parseAppEnv', () => {
       })
     ).toEqual({
       apiUrl: 'http://localhost:8080',
+      kakaoMapJsKey: null,
       mode: 'production',
       isDev: false,
       isProd: true,
       isTest: false,
     });
   });
+
+  it('trims the optional Kakao map key', () => {
+    expect(
+      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' abc ' })
+        .kakaoMapJsKey
+    ).toBe('abc');
+  });
+
+  it.each([undefined, '', '  \t'])(
+    'treats an absent or blank Kakao key (%j) as null',
+    (key) => {
+      expect(
+        parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: key })
+          .kakaoMapJsKey
+      ).toBeNull();
+    }
+  );
 });

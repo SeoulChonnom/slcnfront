@@ -2,7 +2,7 @@ import type { IncompleteSummary } from '@/domains/inspection/types';
 
 const PROPERTY_FIELD_LABELS: Record<string, string> = {
   complexName: '단지명',
-  name: '매물명',
+  name: '동·호수',
   interestLevel: '관심도',
 };
 

@@ -1,5 +1,6 @@
 type KakaoLatLng = { getLat(): number; getLng(): number };
 type KakaoBounds = {
+  extend(position: KakaoLatLng): void;
   getSouthWest(): KakaoLatLng;
   getNorthEast(): KakaoLatLng;
 };
@@ -9,6 +10,13 @@ export type KakaoMap = {
   getLevel(): number;
   setLevel(level: number): void;
   getBounds(): KakaoBounds;
+  setBounds(
+    bounds: KakaoBounds,
+    paddingTop?: number,
+    paddingRight?: number,
+    paddingBottom?: number,
+    paddingLeft?: number
+  ): void;
   relayout(): void;
 };
 export type KakaoOverlay = { setMap(map: KakaoMap | null): void };
@@ -22,15 +30,25 @@ export type KakaoMaps = {
   load(callback: () => void): void;
   Map: new (
     container: HTMLElement,
-    options: { center: KakaoLatLng; level: number }
+    options: { center: KakaoLatLng; level?: number }
   ) => KakaoMap;
   LatLng: new (lat: number, lng: number) => KakaoLatLng;
+  LatLngBounds: new () => KakaoBounds;
   CustomOverlay: new (options: {
     map?: KakaoMap;
     position: KakaoLatLng;
-    content: HTMLElement;
+    content: HTMLElement | string;
+    xAnchor?: number;
+    yAnchor?: number;
     clickable?: boolean;
     zIndex?: number;
+  }) => KakaoOverlay;
+  Polyline: new (options: {
+    path: KakaoLatLng[];
+    strokeWeight?: number;
+    strokeColor?: string;
+    strokeOpacity?: number;
+    strokeStyle?: 'solid' | 'shortdash' | 'dash' | 'longdash';
   }) => KakaoOverlay;
   Marker: new (options: {
     position: KakaoLatLng;

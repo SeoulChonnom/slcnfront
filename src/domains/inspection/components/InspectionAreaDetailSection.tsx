@@ -97,6 +97,7 @@ export function InspectionAreaDetailSection({
     visitedAt: visit.visitedAt,
     revisitIntent: visit.revisitIntent,
     status: visit.status,
+    completedAt: visit.completedAt,
     propertyCount: visit.propertyCount,
   }));
 
@@ -157,7 +158,7 @@ export function InspectionAreaDetailSection({
             device={device}
             areaId={areaId}
             visit={selectedVisit}
-            isOnlyVisit={area.visitCount <= 1}
+            isOnlyVisit={visits.length <= 1 && !hasMoreVisits}
             onDeleted={handleVisitDeleted}
           />
         </>
@@ -173,7 +174,7 @@ export function InspectionAreaDetailSection({
             첫 임장을 기록하면 회차별로 쌓입니다.
           </p>
           <LinkButton to={buildDeviceInspectionRegisterPath(device)}>
-            <PlusIcon /> 이 지역 임장 기록하기
+            <PlusIcon /> 이 지역 임장 계획하기
           </LinkButton>
         </div>
       )}
