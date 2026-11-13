@@ -1,0 +1,156 @@
+/* 내집찾기 모바일(390) 전용 추가 스타일. house.css 뒤에 링크한다. 새 색은 만들지 않는다. */
+:root { --m-nav-h: 72px; }
+html { scroll-padding-top: 56px; }
+body { padding-bottom: calc(var(--m-nav-h) + 28px + env(safe-area-inset-bottom)); overflow-x: hidden; }
+main, .wrap { min-width: 0; }
+
+/* ── 헤더: 로고 + 짧은 제목, 평형, 기준일. 스크롤과 함께 올라간다 ───── */
+.m-header { position: static; }
+.m-header__bar { display: flex; align-items: center; gap: var(--space-3); padding-top: var(--space-1); min-height: 56px; flex-wrap: nowrap; }
+.m-title { font-size: var(--text-lead); font-weight: var(--weight-strong); letter-spacing: -0.01em; margin-right: auto; }
+.m-copy { padding: 0 var(--space-4); }
+.m-header__area { display: flex; align-items: center; gap: var(--space-3); padding-bottom: var(--space-2); }
+.m-header__lbl { font-size: var(--text-caption); font-weight: var(--weight-strong); }
+.m-header__hint { margin-left: auto; text-align: right; }
+.m-header .seg__btn { min-width: 52px; }
+
+/* 앵커 탭: 화면 상단에 고정, 가로 스크롤 */
+.m-tabs { position: sticky; top: 0; z-index: 25; background: var(--color-canvas); border-bottom: 1px solid var(--color-border); }
+.m-tabs .anchor-nav { order: 0; margin: 0; padding: 0 var(--space-3); gap: 0; overflow-x: auto; scrollbar-width: none; flex: none; }
+.m-tabs .anchor-nav::-webkit-scrollbar { display: none; }
+.m-tabs .anchor-nav a { border-radius: 0; position: relative; padding: 0 var(--space-4); white-space: nowrap; }
+.m-tabs .anchor-nav a[aria-current="true"] { background: transparent; color: var(--color-accent-muted); }
+.m-tabs .anchor-nav a[aria-current="true"]::after { content: ""; position: absolute; left: var(--space-4); right: var(--space-4); bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--color-primary); }
+
+/* ── ① 내 예산 ─────────────────────────────────────────────────── */
+#budget .section__head { margin-bottom: var(--space-4); gap: var(--space-1); }
+#budget .section__desc { flex-basis: 100%; }
+.budget-form { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.budget-form .field--wide { grid-column: 1 / -1; }
+.budget-form .field__control { padding: 0 var(--space-3); }
+.budget-form .check { min-height: 44px; }
+.m-result { margin-top: var(--space-8); gap: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--color-border); }
+.m-result .result-hero { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+.m-result .result-hero__value { font-size: 4rem; }
+.m-result .result-hero__value small { font-size: 1.75rem; }
+.m-sub-note { margin: -4px 0 var(--space-2); }
+.verdict th { width: auto; }
+.verdict td { white-space: nowrap; }
+.funds__row { padding: 4px var(--space-2); }
+
+/* 탐색 범위 띠 → 집 찾기 */
+.m-band { display: grid; grid-template-columns: 1fr; gap: var(--space-3); margin-top: var(--space-6); padding: var(--space-4) var(--space-4) var(--space-4); color: var(--color-on-primary); text-decoration: none; }
+.m-band__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+.m-band .range-band__value { font-size: var(--text-tagline); }
+.m-band .range-band__track { margin: var(--space-1) 28px 30px; }
+.m-band .range-band__to { min-height: 28px; justify-content: flex-end; }
+.m-band .range-band__to .ico { transform: rotate(-90deg); }
+.flow-tail { margin-left: 28px; }
+
+/* ── ② 집 찾기: 전폭 지도 + 후보 바텀시트 ─────────────────────── */
+.m-find { padding-top: 0; }
+.m-toolbar { margin-bottom: var(--space-3); }
+.m-stage { margin: 0; }
+.m-map { height: 60vh; min-height: 420px; border-radius: 0; border-left: 0; border-right: 0; }
+.m-map .mk--price.mk--selected { flex-direction: column; z-index: 3; }
+.m-map .mk--price.mk--selected .mk__dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 35%, transparent), var(--shadow-floating); }
+.m-map .mk--price .mk__dot { font-size: var(--text-body); }
+.m-map .map__ctrl { top: var(--space-3); right: var(--space-3); }
+.m-map .map__layer { left: var(--space-3); top: var(--space-3); }
+.m-map .map__attr { bottom: auto; top: 56px; right: auto; left: var(--space-3); }
+.m-map .mk--nodeal { width: 44px; height: 44px; align-items: center; justify-content: center; }
+.m-info[hidden] { display: none; }
+.m-info { left: var(--space-3); right: var(--space-3); bottom: var(--space-4); width: auto; gap: var(--space-2); padding: var(--space-3) var(--space-4); }
+.m-info__head { display: flex; align-items: flex-start; justify-content: space-between; }
+.m-info__head .icon-btn { margin: -8px -12px 0 0; }
+.m-info__price { display: flex; align-items: flex-end; gap: var(--space-4); }
+.m-info__side { display: grid; gap: 0; font-size: var(--text-caption); padding-bottom: 3px; }
+.m-info__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+
+.m-legend { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-2) var(--space-4); min-height: 36px; font-size: var(--text-fine); background: var(--color-surface-muted); border-bottom: 1px solid var(--color-border); overflow: hidden; white-space: nowrap; }
+.m-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 1.5px solid var(--color-ink); background: var(--color-canvas-pure); }
+.m-legend i.is-sel { background: var(--color-primary); }
+.m-legend i.is-dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--color-icon-soft); }
+
+/* 바텀시트(접힌 상태): 손잡이 + 헤더 + 3개 항목이 보이고 4번째가 걸친다 */
+.m-sheet { position: relative; z-index: 2; margin-top: -1px; background: var(--color-canvas-pure); border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--color-border-strong); border-bottom: 0; box-shadow: 0 -8px 24px rgba(27,27,27,.08); }
+.m-sheet__grip { display: grid; place-items: center; width: 100%; height: 44px; border: 0; background: transparent; }
+.m-sheet__grip span { width: 40px; height: 4px; border-radius: 4px; background: var(--color-border-strong); }
+.m-sheet__head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-3); padding: 0 var(--space-4) var(--space-3); border-bottom: 1px solid var(--color-border); margin-top: -8px; }
+.m-sheet__more { text-align: right; white-space: nowrap; }
+.m-cand-list { max-height: 15.5rem; overflow: hidden; -webkit-mask-image: linear-gradient(#000 82%, transparent); mask-image: linear-gradient(#000 82%, transparent); }
+.m-sheet.is-open .m-cand-list { max-height: none; -webkit-mask-image: none; mask-image: none; }
+.m-sheet.is-open .m-sheet__more { visibility: hidden; }
+.m-cand { grid-template-columns: minmax(0, 1fr) auto 44px; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); min-height: 64px; }
+.m-cand__main { min-width: 0; }
+.m-cand__gu { font-size: var(--text-fine); font-weight: var(--weight-body); color: var(--color-body-muted); margin-left: 2px; }
+.m-cand .cand-item__name { font-size: var(--text-body-lg); line-height: 1.25; }
+.m-cand .cand-item__meta { grid-column: auto; font-size: var(--text-fine); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-cand__price { text-align: right; }
+.m-cand .cand-item__price { font-size: var(--text-body-lg); line-height: 1.25; }
+.m-cand .cand-item__period { font-size: var(--text-fine); }
+.m-add { margin: 0; border: 1px solid var(--color-border-strong); }
+.m-add.is-added { background: var(--color-surface-soft); border-color: var(--color-primary); color: var(--color-accent-muted); }
+
+/* ── ③ 매물 비교: 지표별 세로 블록 (3개 단지를 같은 지표 안에서 위아래로 비교) */
+#compare .section__head { gap: var(--space-1); }
+.picker { max-width: none; }
+.m-tray { grid-template-columns: 1fr; gap: var(--space-2); margin-top: var(--space-4); }
+.m-tray .tray__lead { padding: 0 0 var(--space-1); }
+.m-tray .tray__lead strong { color: var(--color-body); }
+.m-tray .slot { grid-template-columns: minmax(0, 1fr) auto 44px; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); }
+.m-tray .icon-btn { margin: 0; }
+.mx-wrap { margin-top: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-canvas-pure); overflow: hidden; }
+.mx { padding: var(--space-3) var(--space-4) var(--space-3); border-top: 1px solid var(--color-divider-soft); }
+.mx:first-child { border-top: 0; }
+.mx__title { font-size: var(--text-caption); font-weight: var(--weight-strong); display: flex; flex-direction: column; margin-bottom: var(--space-1); }
+.mx__title .fine { font-weight: var(--weight-body); }
+.mx__rows { display: grid; }
+.mx__row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-3); padding: 6px 0; align-items: start; font-size: var(--text-body); }
+.mx__row + .mx__row { border-top: 1px dashed var(--color-divider-soft); }
+.mx__who { font-size: var(--text-fine); font-weight: var(--weight-strong); color: var(--color-accent-muted); padding-top: 3px; }
+.mx__val { min-width: 0; }
+.mx__val .cell-main { font-size: var(--text-body-lg); }
+.mx__val .cell-lines { font-size: var(--text-caption); }
+
+/* ── ④ 공부 레퍼런스 ───────────────────────────────────────────── */
+#study .section__head { gap: var(--space-1); }
+.m-ranktabs { margin: 0 calc(var(--house-gutter) * -1) var(--space-2); padding: 0 var(--house-gutter); scrollbar-width: none; }
+.m-ranktabs::-webkit-scrollbar { display: none; }
+.m-rank { grid-template-columns: 2rem minmax(0, 1fr) auto; grid-template-areas: "no id val" "no meta act"; gap: 0 var(--space-3); padding: var(--space-3) 0 var(--space-2); min-height: 0; align-items: start; }
+.m-rank .rank-row__no { grid-area: no; font-size: var(--text-body-lg); text-align: left; padding-top: 2px; color: var(--color-body-muted); }
+.m-rank__id { grid-area: id; display: grid; min-width: 0; }
+.m-rank__gu { font-size: var(--text-fine); color: var(--color-body-muted); font-weight: var(--weight-strong); }
+.m-rank .rank-row__name { grid-column: auto; font-size: var(--text-body-lg); }
+.m-rank .rank-row__val { grid-area: val; grid-column: auto; grid-row: auto; }
+.m-rank .rank-row__val b { font-size: var(--text-lead); }
+.m-rank__meta { grid-area: meta; grid-column: auto; align-self: center; font-size: var(--text-fine); }
+.m-rank__act { grid-area: act; grid-column: auto; gap: 0; flex-wrap: nowrap; }
+.m-rank__act .btn { flex: none; min-height: 44px; padding: 0 var(--space-2); font-size: var(--text-fine); border: 0; color: var(--color-accent-muted); background: transparent; }
+.m-rank__act .btn[disabled] { color: var(--color-body-disabled); background: transparent; }
+.m-rank__act .btn.is-added { background: var(--color-surface-soft); }
+.m-rank.rank-row--empty { padding-left: var(--space-3); padding-right: var(--space-3); border-radius: var(--radius-sm); margin-top: var(--space-2); }
+.m-skip { text-align: center; padding: var(--space-2); font-size: var(--text-fine); color: var(--color-body-muted); border-top: 1px solid var(--color-divider-soft); }
+.rank-foot { padding: var(--space-3) 0 0; flex-direction: column; gap: var(--space-1); }
+
+/* ── 푸터 · 앱 하단 내비(Seoul Glass 간략 재현) · 토스트 ─────────────── */
+.m-footer { padding: var(--space-6) 0 var(--space-6); }
+.m-bottomnav {
+  position: fixed; z-index: 40; left: var(--space-4); right: var(--space-4); max-width: 28rem; margin-inline: auto;
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  border: 1px solid color-mix(in srgb, var(--color-canvas-pure) 55%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-canvas) 62%, transparent);
+  -webkit-backdrop-filter: blur(9px) saturate(1.7); backdrop-filter: blur(9px) saturate(1.7);
+  padding: 0.5625rem 0.5rem;
+  box-shadow: inset 0 1px 1px color-mix(in srgb, var(--color-canvas-pure) 85%, transparent), 0 8px 24px color-mix(in srgb, var(--color-icon-muted) 20%, transparent);
+}
+.m-bottomnav ul { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.25rem; }
+.m-bottomnav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 48px; color: var(--color-body-muted); text-decoration: none; font-size: var(--text-fine); font-weight: var(--weight-strong); }
+.m-bottomnav .ico { width: 22px; height: 22px; }
+.m-bottomnav ul { gap: 0; }
+.m-bottomnav a { font-size: var(--text-fine); }
+.m-tray .slot__area { flex-direction: column; align-items: flex-end; gap: 2px; }
+.m-tray .seg__btn { min-width: 44px; padding: 0 var(--space-3); }
+.toast-host { bottom: calc(var(--m-nav-h) + 24px); max-width: calc(100vw - 2rem); }
+.toast { white-space: normal; }

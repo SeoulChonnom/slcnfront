@@ -11,11 +11,13 @@ import { formatScheduleTime } from '@/domains/home/utils/home-dates';
 import { buildOptionalAssetImageUrl } from '@/lib/api/asset-url';
 import {
   buildDeviceCalendarMonthPath,
+  buildDeviceHousePath,
   buildDeviceShoesCatalogPath,
   buildDeviceTravelRegisterPath,
   buildDeviceTripListPath,
 } from '@/lib/routing/route-builders';
 import { cn } from '@/lib/utils/cn';
+import '@/domains/house/styles/house-entry.css';
 
 type HomeHubPageProps = {
   device: DeviceType;
@@ -283,33 +285,53 @@ export function HomeHubPage({ device }: HomeHubPageProps) {
             )}
           </section>
 
-          <section
-            className='slcn-home__day-outs'
-            aria-labelledby='home-day-outs'
-          >
-            <div className='slcn-home__secondary-heading'>
-              <h2 id='home-day-outs'>나들이</h2>
-              <Link to={buildDeviceTripListPath(device)}>
-                나들이 기록으로 가기
-              </Link>
-            </div>
-            {dayOutSource.status === 'loading' ? (
-              <p className='slcn-home__secondary-empty' role='status'>
-                나들이 기록을 불러오는 중
-              </p>
-            ) : dayOutSource.isError ? (
-              <SourceFailure source={dayOutSource}>
-                나들이 기록을 불러오지 못했어요.
-              </SourceFailure>
-            ) : (
+          <div className='slcn-home__side'>
+            <section
+              className='slcn-home__day-outs'
+              aria-labelledby='home-day-outs'
+            >
+              <div className='slcn-home__secondary-heading'>
+                <h2 id='home-day-outs'>나들이</h2>
+                <Link to={buildDeviceTripListPath(device)}>
+                  나들이 기록으로 가기
+                </Link>
+              </div>
+              {dayOutSource.status === 'loading' ? (
+                <p className='slcn-home__secondary-empty' role='status'>
+                  나들이 기록을 불러오는 중
+                </p>
+              ) : dayOutSource.isError ? (
+                <SourceFailure source={dayOutSource}>
+                  나들이 기록을 불러오지 못했어요.
+                </SourceFailure>
+              ) : (
+                <p className='slcn-home__secondary-empty'>
+                  {dayOutSource.data.length > 0
+                    ? `남긴 나들이 ${dayOutSource.data.length}개`
+                    : '아직 남긴 나들이가 없어요.'}
+                </p>
+              )}
+            </section>
+            <section className='slcn-home__house' aria-labelledby='home-house'>
+              <div className='slcn-home__secondary-heading'>
+                <h2 id='home-house'>내집찾기</h2>
+                <Link to={buildDeviceHousePath(device)}>내집찾기 열기</Link>
+              </div>
               <p className='slcn-home__secondary-empty'>
-                {dayOutSource.data.length > 0
-                  ? `남긴 나들이 ${dayOutSource.data.length}개`
-                  : '아직 남긴 나들이가 없어요.'}
+                예산으로 살 수 있는 서울 아파트를 지도에서 찾아요
               </p>
-            )}
-          </section>
+            </section>
+          </div>
         </div>
+      ) : null}
+
+      {isFullError ? (
+        <Link
+          className='slcn-home__house-recovery'
+          to={buildDeviceHousePath(device)}
+        >
+          내집찾기 열기
+        </Link>
       ) : null}
 
       <nav className='slcn-home__more' aria-label='더보기'>

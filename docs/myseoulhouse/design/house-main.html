@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내집찾기 · 데스크톱 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<!--
+THESIS: 자금 계획서가 끝나는 자리에서 탐색 범위 띠가 지도로 흘러내리는 한 장의 세로 문서. 지도 앱식 전면 지도, KPI 카드 대시보드를 거부한다.
+OWN-WORLD: Seoul Quiet Editorial 그대로. 따뜻한 종이 canvas #FFF8F8, 잉크 #1B1B1B, 서울 핑크 #FE9FC8는 탐색 범위 띠·선택 상태에만, #A34F6D는 텍스트 강조, 헤어라인 구분, 평평한 콘텐츠 면, Pretendard, 숫자는 tabular-nums.
+STORY: 두 사람이 현금·소득·금리를 넣어 매수 가능 예산과 자금 구성을 이해하고, 범위 띠를 따라 지도에서 구→동→단지로 좁히고, 최대 3개를 담아 비교하고, 랭킹으로 시장을 공부한다.
+FIRST VIEWPORT: 1440 기준 평평한 헤더(앵커 4, 평형 토글, 링크 복사, 기준일). 좌 5/12 입력, 우 7/12 결과(매수 가능 예산 대형 숫자, 대출 한도 3종 중 최솟값 강조, 자금 구성 식). 첫 화면 하단에 탐색 범위 띠와 지도 윗가장자리가 보인다.
+FORM: 자금 계획서에서 지도로, 내 후보 순위 3위, seed 8299b2f9.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-up" viewBox="0 0 16 16"><path d="M8 3l6 10H2z"/></symbol>
+<symbol id="i-dn" viewBox="0 0 16 16"><path d="M8 13L2 3h12z"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href="#budget" aria-label="SLCN"><img src="../../../src/assets/img/SLCN.webp" alt="SLCN"></a>
+    <nav class="anchor-nav" aria-label="내집찾기 섹션">
+      <a href="#budget" aria-current="true">내 예산</a><a href="#find">집 찾기</a><a href="#compare">매물 비교</a><a href="#study">공부 레퍼런스</a>
+    </nav>
+    <div class="header-tools">
+      <div class="seg" role="group" aria-label="평형"><button class="seg__btn" type="button" aria-pressed="true" data-area="59">59㎡</button><button class="seg__btn" type="button" aria-pressed="false" data-area="84">84㎡</button></div>
+      <button class="btn btn--outline" type="button" id="copy"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg>링크 복사</button>
+    </div>
+  </div>
+  <div class="asof-strip"><div class="wrap"><span>데이터 기준일 <strong class="num">2026-10-20</strong></span><span class="dot"></span><span>정책 기준일 <strong class="num">2025-10-16</strong></span></div></div>
+</header>
+
+<main>
+<section class="section" id="budget" aria-labelledby="h-budget" style="padding-bottom:0">
+ <div class="wrap">
+  <div class="section__head"><h2 class="section__title" id="h-budget">내 예산</h2><p class="section__desc">브라우저에서만 계산해요. 입력값은 서버와 링크로 보내지 않습니다.</p></div>
+  <div class="budget-grid">
+   <form class="budget-form" onsubmit="return false" aria-label="예산 입력">
+     <div class="field"><label class="field__label" for="cash">보유현금</label><div class="field__control"><input id="cash" inputmode="numeric" value="20,000"><span class="field__unit">만원</span></div></div>
+     <div class="field"><label class="field__label" for="inc">부부합산 연소득</label><div class="field__control"><input id="inc" inputmode="numeric" value="10,000"><span class="field__unit">만원</span></div></div>
+     <div class="field"><label class="field__label" for="rate">예상 대출금리</label><div class="field__control"><input id="rate" inputmode="decimal" value="5.0"><span class="field__unit">%</span></div></div>
+     <div class="field"><label class="field__label" for="debt">기존대출 월 상환</label><div class="field__control"><input id="debt" inputmode="numeric" value="0"><span class="field__unit">만원/월</span></div></div>
+     <div class="field"><label class="field__label" for="rsv">안전여유금</label><div class="field__control"><input id="rsv" inputmode="numeric" placeholder="2,000 (기본값)"><span class="field__unit">만원</span></div></div>
+     <div class="field" style="justify-content:flex-end"><label class="check"><input type="checkbox" checked>생애최초 주택 구매</label></div>
+     <div class="form-actions"><button class="btn btn--outline" type="reset">입력값 지우기</button><span class="fine">이 브라우저 세션에만 저장돼요</span></div>
+   </form>
+
+   <div class="budget-result" aria-live="polite">
+     <div class="result-hero">
+       <div><span class="result-hero__label">매수 가능 예산</span><div class="result-hero__value num">5.73<small>억</small></div></div>
+       <p class="result-hero__note">대출 한도 세 가지 중 가장 낮은 값(LTV)이 적용됐어요.</p>
+     </div>
+     <div class="result-cols"><div>
+       <h3 class="sub-title">대출 한도 판정 <span class="fine">가장 낮은 항목이 예상대출이에요</span></h3>
+       <table class="verdict"><caption class="sr-only">대출 한도 판정</caption>
+        <thead class="sr-only"><tr><th>항목</th><th>기준</th><th>금액</th></tr></thead>
+        <tbody>
+         <tr><th scope="row">DSR 한도<span class="rule">연소득 대비 상환 40%</span></th><td class="num">4.54억</td></tr>
+         <tr class="is-min"><th scope="row">LTV 한도 <span class="tag">최솟값 · 적용</span><span class="rule">생애최초 70%</span></th><td class="num">4.01억</td></tr>
+         <tr><th scope="row">주택가격별 상품 상한<span class="rule">15억 이하 6억</span></th><td class="num">6.00억</td></tr>
+         <tr class="is-final"><th scope="row">적용 예상대출<span class="rule">LTV 기준</span></th><td class="num">4.01억</td></tr>
+        </tbody></table>
+     </div><div>
+       <h3 class="sub-title">매수 자금 구성</h3>
+       <div class="funds">
+         <div class="funds__row"><span class="funds__op"></span><span class="funds__name">보유현금</span><span class="funds__val num">2.00억</span></div>
+         <div class="funds__row"><span class="funds__op">+</span><span class="funds__name">예상대출</span><span class="funds__val num">4.01억</span></div>
+         <div class="funds__row"><span class="funds__op">=</span><span class="funds__name">합계</span><span class="funds__val num">6.01억</span></div>
+         <div class="funds__row"><span class="funds__op">−</span>
+           <details><summary><span class="funds__name">부대비용 <span class="num">798만</span></span><svg class="ico" aria-hidden="true"><use href="#i-chev"/></svg><span class="fine">취득세·중개·등기 펼쳐 보기</span></summary>
+             <dl class="funds__breakdown num"><div><dt>취득세 (생애최초 감면 반영)</dt><dd>430만</dd></div><div><dt>중개보수</dt><dd>253만</dd></div><div><dt>등기비용</dt><dd>115만</dd></div></dl></details>
+         </div>
+         <div class="funds__row"><span class="funds__op">−</span><span class="funds__name">안전여유금 <span class="fine">기본값</span></span><span class="funds__val num">2,000만</span></div>
+         <div class="funds__row funds__row--total"><span class="funds__op">=</span><span class="funds__name">매수 가능 예산</span><span class="funds__val num">5.73억</span></div>
+       </div>
+     </div>
+     </div>
+     <p class="rate-note">DSR 산정금리 <strong class="num">8.0%</strong> = 입력 5.0% + 스트레스 3.0%p · 정책 기준일 <span class="num">2025-10-16</span></p>
+   </div>
+  </div>
+
+  <div class="range-band" role="group" aria-label="탐색 범위">
+    <div><div class="range-band__label">탐색 범위</div><div class="range-band__value num">4.59억 ~ 5.73억</div></div>
+    <div class="range-band__track" aria-hidden="true"><div class="range-band__fill"></div><span class="range-band__tick range-band__tick--lo num">4.59억 · 예산의 80%</span><span class="range-band__tick range-band__tick--hi num">5.73억</span></div>
+    <div class="range-band__to">지도 가격 필터로 적용 중 <svg class="ico" aria-hidden="true"><use href="#i-chev"/></svg></div>
+  </div>
+  <div class="flow-tail" aria-hidden="true"></div>
+ </div>
+</section>
+
+<section class="section" id="find" aria-labelledby="h-find" style="border-top:0;padding-top:0">
+ <div class="wrap">
+  <h2 class="sr-only" id="h-find">집 찾기</h2>
+  <div class="map-toolbar">
+    <span class="chip chip--filter num">가격 4.59억 ~ 5.73억 <span class="chip__src">내 예산에서</span></span>
+    <span class="chip num" data-area-label>59㎡</span>
+    <span class="fine spacer">단지 라벨을 누르면 정보 카드가 열려요</span>
+  </div>
+  <div class="find-grid">
+   <div class="map" role="region" aria-label="지도 (시안용 일러스트)">
+     <svg class="map__svg" viewBox="0 0 870 640" preserveAspectRatio="none" aria-hidden="true">
+       <rect class="map__block" x="-10" y="-10" width="74" height="44" rx="3"/><rect class="map__block" x="-10" y="46" width="74" height="52" rx="3"/><rect class="map__block" x="-10" y="110" width="74" height="60" rx="3"/><rect class="map__block" x="-10" y="182" width="74" height="44" rx="3"/><rect class="map__block" x="-10" y="238" width="74" height="44" rx="3"/><rect class="map__block" x="-10" y="366" width="74" height="44" rx="3"/><rect class="map__block" x="-10" y="422" width="74" height="52" rx="3"/><rect class="map__block" x="-10" y="486" width="74" height="60" rx="3"/><rect class="map__block" x="-10" y="558" width="74" height="44" rx="3"/><rect class="map__block" x="-10" y="614" width="74" height="60" rx="3"/><rect class="map__block" x="76" y="-10" width="66" height="44" rx="3"/><rect class="map__block" x="76" y="46" width="66" height="44" rx="3"/><rect class="map__block" x="76" y="102" width="66" height="52" rx="3"/><rect class="map__block" x="76" y="166" width="66" height="52" rx="3"/><rect class="map__block" x="76" y="230" width="66" height="44" rx="3"/><rect class="map__block" x="76" y="534" width="66" height="44" rx="3"/><rect class="map__block" x="76" y="590" width="66" height="60" rx="3"/><rect class="map__block" x="154" y="-10" width="58" height="44" rx="3"/><rect class="map__block" x="154" y="46" width="58" height="60" rx="3"/><rect class="map__block" x="154" y="118" width="58" height="60" rx="3"/><rect class="map__block" x="154" y="190" width="58" height="60" rx="3"/><rect class="map__block" x="154" y="262" width="58" height="44" rx="3"/><rect class="map__block" x="154" y="526" width="58" height="44" rx="3"/><rect class="map__block" x="154" y="582" width="58" height="44" rx="3"/><rect class="map__block" x="154" y="638" width="58" height="44" rx="3"/><rect class="map__block" x="224" y="-10" width="66" height="52" rx="3"/><rect class="map__block" x="224" y="54" width="66" height="52" rx="3"/><rect class="map__block" x="224" y="118" width="66" height="44" rx="3"/><rect class="map__block" x="224" y="174" width="66" height="60" rx="3"/><rect class="map__block" x="224" y="246" width="66" height="44" rx="3"/><rect class="map__block" x="224" y="582" width="66" height="44" rx="3"/><rect class="map__block" x="224" y="638" width="66" height="44" rx="3"/><rect class="map__block" x="380" y="-10" width="82" height="52" rx="3"/><rect class="map__block" x="380" y="54" width="82" height="52" rx="3"/><rect class="map__block" x="380" y="118" width="82" height="60" rx="3"/><rect class="map__block" x="380" y="190" width="82" height="52" rx="3"/><rect class="map__block" x="380" y="254" width="82" height="52" rx="3"/><rect class="map__block" x="380" y="382" width="82" height="44" rx="3"/><rect class="map__block" x="380" y="438" width="82" height="44" rx="3"/><rect class="map__block" x="380" y="494" width="82" height="60" rx="3"/><rect class="map__block" x="380" y="566" width="82" height="44" rx="3"/><rect class="map__block" x="380" y="622" width="82" height="44" rx="3"/><rect class="map__block" x="474" y="-10" width="74" height="60" rx="3"/><rect class="map__block" x="474" y="62" width="74" height="52" rx="3"/><rect class="map__block" x="474" y="126" width="74" height="52" rx="3"/><rect class="map__block" x="474" y="190" width="74" height="60" rx="3"/><rect class="map__block" x="474" y="262" width="74" height="52" rx="3"/><rect class="map__block" x="474" y="390" width="74" height="60" rx="3"/><rect class="map__block" x="474" y="462" width="74" height="44" rx="3"/><rect class="map__block" x="474" y="518" width="74" height="44" rx="3"/><rect class="map__block" x="474" y="574" width="74" height="60" rx="3"/><rect class="map__block" x="740" y="-10" width="58" height="44" rx="3"/><rect class="map__block" x="740" y="46" width="58" height="60" rx="3"/><rect class="map__block" x="740" y="118" width="58" height="60" rx="3"/><rect class="map__block" x="740" y="190" width="58" height="52" rx="3"/><rect class="map__block" x="740" y="254" width="58" height="60" rx="3"/><rect class="map__block" x="740" y="398" width="58" height="60" rx="3"/><rect class="map__block" x="740" y="470" width="58" height="52" rx="3"/><rect class="map__block" x="740" y="534" width="58" height="52" rx="3"/><rect class="map__block" x="740" y="598" width="58" height="60" rx="3"/><rect class="map__block" x="810" y="-10" width="82" height="60" rx="3"/><rect class="map__block" x="810" y="62" width="82" height="52" rx="3"/><rect class="map__block" x="810" y="126" width="82" height="44" rx="3"/><rect class="map__block" x="810" y="182" width="82" height="52" rx="3"/><rect class="map__block" x="810" y="246" width="82" height="52" rx="3"/><rect class="map__block" x="810" y="366" width="82" height="60" rx="3"/><rect class="map__block" x="810" y="438" width="82" height="44" rx="3"/><rect class="map__block" x="810" y="494" width="82" height="52" rx="3"/><rect class="map__block" x="810" y="558" width="82" height="44" rx="3"/><rect class="map__block" x="810" y="614" width="82" height="44" rx="3"/>
+       <path class="map__park" d="M95 395 L235 385 L240 515 L100 520Z"/>
+       <path class="map__road--main" d="M0 330 C200 322 420 340 870 318"/>
+       <path class="map__road--main" d="M305 0 C300 200 312 420 306 640"/>
+       <path class="map__road--core" d="M0 330 C200 322 420 340 870 318"/>
+       <path class="map__road--core" d="M305 0 C300 200 312 420 306 640"/>
+       <path class="map__river" stroke-width="30" d="M640 -10 C600 150 665 300 625 450 S600 590 618 650"/>
+     </svg>
+     <div class="map__layer">단지 <span>· 강북구 미아동 일대</span></div>
+     <div class="map__hint">축소하면 동·구 묶음으로 보여요</div>
+     <div class="map__ctrl"><button type="button" aria-label="확대"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></button><button type="button" aria-label="축소"><svg class="ico" aria-hidden="true"><use href="#i-minus"/></svg></button></div>
+     <button class="mk mk--price mk--compact mk--selected" style="left:40%;top:42%" type="button" aria-label="미아한빛 강북구 미아동 최근 실거래가 5.68억" aria-pressed="true"><span class="mk__dot num">5.7억</span></button><button class="mk mk--price mk--compact" style="left:30%;top:70%" type="button" aria-label="길음숲 성북구 길음동 최근 실거래가 5.41억"><span class="mk__dot num">5.4억</span></button><button class="mk mk--price mk--compact" style="left:22%;top:22%" type="button" aria-label="수유별빛 강북구 수유동 최근 실거래가 5.31억"><span class="mk__dot num">5.3억</span></button><button class="mk mk--price mk--compact" style="left:36%;top:15%" type="button" aria-label="수유푸른 강북구 수유동 최근 실거래가 5.22억"><span class="mk__dot num">5.2억</span></button><button class="mk mk--price mk--compact" style="left:54%;top:72%" type="button" aria-label="돈암샘터 성북구 돈암동 최근 실거래가 5.04억"><span class="mk__dot num">5.0억</span></button><button class="mk mk--price mk--compact" style="left:91%;top:46%" type="button" aria-label="월계해오름 노원구 월계동 최근 실거래가 4.97억"><span class="mk__dot num">5.0억</span></button><button class="mk mk--price mk--compact" style="left:13%;top:50%" type="button" aria-label="삼양하늘 강북구 삼양동 최근 실거래가 4.88억"><span class="mk__dot num">4.9억</span></button><button class="mk mk--price mk--compact" style="left:42%;top:85%" type="button" aria-label="길음마을 성북구 길음동 최근 실거래가 4.81억"><span class="mk__dot num">4.8억</span></button><button class="mk mk--price mk--compact" style="left:73%;top:68%" type="button" aria-label="장위마루 성북구 장위동 최근 실거래가 4.74억"><span class="mk__dot num">4.7억</span></button><button class="mk mk--price mk--compact" style="left:10%;top:34%" type="button" aria-label="우이솔 강북구 우이동 최근 실거래가 4.66억"><span class="mk__dot num">4.7억</span></button><button class="mk mk--price mk--compact" style="left:62%;top:88%" type="button" aria-label="번동은행나무 강북구 번동 최근 실거래가 4.63억"><span class="mk__dot num">4.6억</span></button><button class="mk mk--price mk--compact" style="left:19%;top:82%" type="button" aria-label="정릉솔 성북구 정릉동 최근 실거래가 4.60억"><span class="mk__dot num">4.6억</span></button><button class="mk mk--price mk--compact mk--nodeal" style="left:30%;top:47%" type="button" aria-label="미아푸른마을 강북구 미아동 최근 6개월 거래 없음"><span class="mk__dot"></span></button><div class="info-card" style="left:46%;top:19%" role="dialog" aria-label="미아한빛 단지 정보">
+       <div class="info-card__head"><div><div class="info-card__title">미아한빛</div><div class="fine">강북구 미아동</div></div><button class="icon-btn" type="button" aria-label="정보 카드 닫기"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+       <div><div class="info-card__price num">5.68억 <span class="fine">59㎡</span></div><div class="fine num">최근 3개월 · 5건</div></div>
+       <dl class="info-card__facts num"><div><dt>연식</dt><dd>2004년 · 22년차</dd></div><div><dt>세대수</dt><dd>612세대</dd></div></dl>
+       <button class="btn btn--sm btn--outline is-added" type="button" aria-pressed="true">비교함에 담겼어요</button>
+     </div>
+     <div class="map__legend"><span><i></i>최근 실거래가 (억)</span><span><i class="is-nodeal"></i>거래 없음</span><span><i class="is-sel"></i>선택한 단지</span></div>
+     <div class="map__attr">카카오맵 자리 · 시안용 일러스트</div>
+   </div>
+   <aside class="cand-panel" aria-label="후보 리스트">
+     <div class="cand-head"><div class="cand-head__count num">12개 후보</div><div class="cand-head__sub">현재 지도 영역 · 최근 실거래가 내림차순</div></div>
+     <ul class="cand-list cand-list--dense"><li class="cand-item is-active"><div class="cand-item__id"><span class="cand-item__name">미아한빛</span><span class="cand-item__gu">강북구 미아동</span></div><div class="cand-item__price num">5.68억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 5건</span><span class="cand-item__meta">2004년 · 612세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm is-added" type="button" data-add="미아한빛" aria-pressed="true">담김</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">길음숲</span><span class="cand-item__gu">성북구 길음동</span></div><div class="cand-item__price num">5.41억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 3건</span><span class="cand-item__meta">2009년 · 380세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="길음숲">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">수유별빛</span><span class="cand-item__gu">강북구 수유동</span></div><div class="cand-item__price num">5.31억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 4건</span><span class="cand-item__meta">2006년 · 720세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="수유별빛">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">수유푸른</span><span class="cand-item__gu">강북구 수유동</span></div><div class="cand-item__price num">5.22억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 4건</span><span class="cand-item__meta">1998년 · 1,024세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="수유푸른">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">돈암샘터</span><span class="cand-item__gu">성북구 돈암동</span></div><div class="cand-item__price num">5.04억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 5건</span><span class="cand-item__meta">2003년 · 456세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="돈암샘터">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">월계해오름</span><span class="cand-item__gu">노원구 월계동</span></div><div class="cand-item__price num">4.97억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 6개월 · 2건</span> <span class="badge">표본 적음</span><span class="cand-item__meta">2001년 · 540세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="월계해오름">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">삼양하늘</span><span class="cand-item__gu">강북구 삼양동</span></div><div class="cand-item__price num">4.88억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 4건</span><span class="cand-item__meta">1999년 · 410세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="삼양하늘">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">길음마을</span><span class="cand-item__gu">성북구 길음동</span></div><div class="cand-item__price num">4.81억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 8건</span><span class="cand-item__meta">2002년 · 1,180세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="길음마을">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">장위마루</span><span class="cand-item__gu">성북구 장위동</span></div><div class="cand-item__price num">4.74억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 6건</span><span class="cand-item__meta">2012년 · 868세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="장위마루">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">우이솔</span><span class="cand-item__gu">강북구 우이동</span></div><div class="cand-item__price num">4.66억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 3건</span><span class="cand-item__meta">1997년 · 330세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="우이솔">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">번동은행나무</span><span class="cand-item__gu">강북구 번동</span></div><div class="cand-item__price num">4.63억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 7건</span><span class="cand-item__meta">1996년 · 1,310세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="번동은행나무">비교 담기</button></div></li><li class="cand-item"><div class="cand-item__id"><span class="cand-item__name">정릉솔</span><span class="cand-item__gu">성북구 정릉동</span></div><div class="cand-item__price num">4.60억</div><div class="cand-item__sub num"><span class="cand-item__period">최근 3개월 · 4건</span><span class="cand-item__meta">2000년 · 290세대</span></div><div class="cand-item__act"><button class="btn btn--outline btn--sm" type="button" data-add="정릉솔">비교 담기</button></div></li></ul>
+   </aside>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="compare" aria-labelledby="h-compare">
+ <div class="wrap">
+  <div class="section__head"><h2 class="section__title" id="h-compare">매물 비교</h2><p class="section__desc">최대 3개 · 담을 때의 평형으로 고정돼요 · 링크 복사로 공유할 수 있어요</p></div>
+  <div class="picker">
+    <label class="sr-only" for="q">단지 검색</label>
+    <div class="field__control"><svg class="ico" aria-hidden="true" style="margin-right:8px;color:var(--color-body-muted)"><use href="#i-search"/></svg><input id="q" role="combobox" aria-expanded="true" aria-controls="pl" value="미아" placeholder="단지명 2글자 이상"></div>
+    <ul class="picker-list" id="pl" role="listbox"><li role="option" aria-selected="true"><span><mark>미아</mark>한빛</span><span class="fine">강북구 미아동</span></li><li role="option"><span><mark>미아</mark>푸른마을</span><span class="fine">강북구 미아동</span></li><li role="option"><span>길<mark>미아</mark>래</span><span class="fine">성북구 길음동</span></li></ul>
+  </div>
+  <div class="tray" aria-label="비교함">
+   <p class="tray__lead">비교함 3/3<br>같은 단지의 59㎡와 84㎡를 각각 담을 수 있어요.</p>
+   <div class="slot"><div class="slot__top"><div><div class="slot__name">미아한빛</div><div class="slot__gu">강북구 미아동</div></div><button class="icon-btn" aria-label="미아한빛 59㎡ 빼기"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div><div class="slot__area"><span class="slot__fixed">59㎡ 고정</span><div class="seg seg--sm" role="group" aria-label="평형 전환"><button class="seg__btn" aria-pressed="true">59</button><button class="seg__btn" aria-pressed="false">84</button></div></div></div>
+   <div class="slot"><div class="slot__top"><div><div class="slot__name">미아한빛</div><div class="slot__gu">강북구 미아동</div></div><button class="icon-btn" aria-label="미아한빛 84㎡ 빼기"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div><div class="slot__area"><span class="slot__fixed">84㎡ 고정</span><div class="seg seg--sm" role="group" aria-label="평형 전환"><button class="seg__btn" aria-pressed="false">59</button><button class="seg__btn" aria-pressed="true">84</button></div></div></div>
+   <div class="slot"><div class="slot__top"><div><div class="slot__name">길음숲</div><div class="slot__gu">성북구 길음동</div></div><button class="icon-btn" aria-label="길음숲 59㎡ 빼기"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div><div class="slot__area"><span class="slot__fixed">59㎡ 고정</span><div class="seg seg--sm" role="group" aria-label="평형 전환"><button class="seg__btn" aria-pressed="true">59</button><button class="seg__btn" aria-pressed="false">84</button></div></div></div>
+  </div>
+  <div class="compare-wrap">
+  <table class="compare-table"><caption class="sr-only">단지 9개 지표 비교</caption>
+   <colgroup><col class="c-head"><col><col><col></colgroup>
+   <thead><tr><th scope="col">지표</th><th scope="col">미아한빛 · 59㎡</th><th scope="col">미아한빛 · 84㎡</th><th scope="col">길음숲 · 59㎡</th></tr></thead>
+   <tbody>
+    <tr><th scope="row">최근 실거래가</th><td><span class="cell-main num">5.68억</span><span class="cell-sub">최근 3개월 · 5건</span></td><td><span class="cell-main num">6.82억</span><span class="cell-sub">최근 3개월 · 4건</span></td><td><span class="cell-main num">5.41억</span><span class="cell-sub">최근 3개월 · 3건</span></td></tr>
+    <tr><th scope="row">세대수</th><td class="num">612세대</td><td class="num">612세대</td><td class="num">380세대</td></tr>
+    <tr><th scope="row">연식</th><td class="num">2004년 · 22년차</td><td class="num">2004년 · 22년차</td><td class="num">2009년 · 17년차</td></tr>
+    <tr><th scope="row">평형</th><td class="num">59.8㎡ 평균 · 59 구간</td><td class="num">84.9㎡ 평균 · 84 구간</td><td class="num">59.4㎡ 평균 · 59 구간</td></tr>
+    <tr><th scope="row">용적률</th><td class="num">248.31% <span class="cell-sub">총괄표제부</span></td><td class="num">248.31% <span class="cell-sub">총괄표제부</span></td><td class="num">231.07% <span class="cell-sub">표제부</span></td></tr>
+    <tr><th scope="row">교육·통학 참고<span class="cell-sub">직선거리 · 학교 배정 보장 아님</span></th>
+      <td><div class="cell-lines num"><span>초 <b>한빛초</b> · 약 412m</span><span>중 <b>미아중</b> · 약 780m</span><span>고 <b>북서울고</b> · 약 1,130m</span></div></td>
+      <td><div class="cell-lines num"><span>초 <b>한빛초</b> · 약 412m</span><span>중 <b>미아중</b> · 약 780m</span><span>고 <b>북서울고</b> · 약 1,130m</span></div></td>
+      <td><div class="cell-lines num"><span>초 <b>길음초</b> · 약 604m</span><span>중 <b>숲정중</b> · 약 910m</span><span>고 <b>정릉고</b> · 약 1,420m</span></div></td></tr>
+    <tr><th scope="row">호재·정비사업</th><td>직접 연관 사업 없음</td><td>직접 연관 사업 없음</td><td><b>가상재개발</b> · 관리처분 · 약 320m</td></tr>
+    <tr><th scope="row">1년 실거래 변동</th>
+      <td><span class="cell-main num">5.41억 → 5.68억</span><br><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>+4.99% · +2,700만</span><span class="cell-sub num">표본 5건 → 5건</span></td>
+      <td><span class="cell-main num">6.40억 → 6.82억</span><br><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>+6.56% · +4,200만</span><span class="cell-sub num">표본 4건 → 4건</span></td>
+      <td><span class="cell-main num">5.62억 → 5.41억</span><br><span class="delta delta--down"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-dn"/></svg>-3.74% · -2,100만</span><span class="cell-sub num">표본 2건 → 3건 <span class="badge">낮은 표본</span></span></td></tr>
+    <tr><th scope="row">3년 실거래 변동</th>
+      <td><span class="cell-main num">4.80억 → 5.68억</span><br><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>+18.33% · +8,800만</span><span class="cell-sub num">표본 3건 → 5건</span></td>
+      <td><span class="cell-main num">5.90억 → 6.82억</span><br><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>+15.59% · +9,200만</span><span class="cell-sub num">표본 3건 → 4건</span></td>
+      <td><span class="cell-main num">4.95억 → 5.41억</span><br><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>+9.29% · +4,600만</span><span class="cell-sub num">표본 3건 → 3건</span></td></tr>
+   </tbody></table></div>
+  <div class="legend" aria-label="범례"><span>범례</span><span class="delta delta--up"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-up"/></svg>상승 파랑</span><span class="delta delta--down"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-dn"/></svg>하락 빨강</span><span class="fine">국내 금융 관례(상승 빨강)와 반대예요. 부호와 화살표를 함께 확인하세요.</span></div>
+  <p class="note">온라인 비교는 손품 단계입니다. 현장 확인 후 매수 준비가 끝난 단계에서 중개사무소에 연락하세요.</p>
+ </div>
+</section>
+
+<section class="section" id="study" aria-labelledby="h-study">
+ <div class="wrap">
+  <div class="section__head"><h2 class="section__title" id="h-study">공부 레퍼런스</h2><p class="section__desc"><span data-area-label>59㎡</span> 기준 · 상단 평형 토글과 함께 바뀌어요</p></div>
+  <div class="tabs" role="tablist" aria-label="랭킹 종류">
+   <button class="tab" role="tab" aria-selected="true" id="t1">구별 대장</button><button class="tab" role="tab" aria-selected="false" id="t2">1년 상승 TOP</button><button class="tab" role="tab" aria-selected="false" id="t3">1년 하락 TOP</button><button class="tab" role="tab" aria-selected="false" id="t4">거래 활발 TOP</button>
+  </div>
+  <div role="tabpanel" aria-labelledby="t1" id="p1">
+   <div class="rank-head" aria-hidden="true"><span>순위</span><span>구</span><span>단지</span><span>연식 · 평형 · 세대수</span><span style="text-align:right">값</span><span></span></div>
+   <ul class="rank-list"><li class="rank-row"><div class="rank-row__no num">1</div><div class="rank-row__gu">서초구</div><div class="rank-row__name">반포언덕</div><div class="rank-row__meta num">2011년 · 59㎡ · 1,420세대</div><div class="rank-row__val"><b class="num">19.84억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="반포언덕">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">2</div><div class="rank-row__gu">강남구</div><div class="rank-row__name">압구정숲</div><div class="rank-row__meta num">2003년 · 59㎡ · 960세대</div><div class="rank-row__val"><b class="num">18.62억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="압구정숲">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">3</div><div class="rank-row__gu">용산구</div><div class="rank-row__name">한남달빛</div><div class="rank-row__meta num">2015년 · 59㎡ · 410세대</div><div class="rank-row__val"><b class="num">16.90억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="한남달빛">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">4</div><div class="rank-row__gu">성동구</div><div class="rank-row__name">성수강변</div><div class="rank-row__meta num">2018년 · 59㎡ · 1,102세대</div><div class="rank-row__val"><b class="num">14.37억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="성수강변">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">5</div><div class="rank-row__gu">송파구</div><div class="rank-row__name">잠실호수</div><div class="rank-row__meta num">2008년 · 59㎡ · 2,230세대</div><div class="rank-row__val"><b class="num">13.95억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="잠실호수">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">6</div><div class="rank-row__gu">종로구</div><div class="rank-row__name">경희궁뜰 <span class="badge">표본 적음</span></div><div class="rank-row__meta num">2012년 · 59㎡ · 128세대</div><div class="rank-row__val"><b class="num">11.20억</b><span>최근 12개월 평균 · 1건</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="경희궁뜰">비교 담기</button></div></li><li class="rank-row"><div class="rank-row__no num">7</div><div class="rank-row__gu">마포구</div><div class="rank-row__name">상암하늘</div><div class="rank-row__meta num">2014년 · 59㎡ · 740세대</div><div class="rank-row__val"><b class="num">10.84억</b><span>최근 12개월 평균</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" type="button">지도에서 위치 보기</button><button class="btn btn--outline btn--sm" type="button" data-add="상암하늘">비교 담기</button></div></li><li class="rank-row rank-row--skip" aria-hidden="true">· · ·  8~24위 17개 구 생략 (시안)  · · ·</li><li class="rank-row rank-row--empty"><div class="rank-row__no num">25</div><div class="rank-row__gu">도봉구</div><div class="rank-row__name">최근 12개월 거래 없음</div><div class="rank-row__meta">단지 없음 · 지도 마커 없음</div><div class="rank-row__val"><b>-</b><span>최근 12개월</span></div><div class="rank-row__act"><button class="btn btn--outline btn--sm" disabled>지도에서 위치 보기</button><button class="btn btn--outline btn--sm" disabled>비교 담기</button><span class="fine" style="width:100%;text-align:right">위치 정보 없음</span></div></li></ul>
+   <div class="rank-foot"><span>집계 기간 <strong class="num">2025-10-21 ~ 2026-10-20</strong></span><span>통계 계산일 <strong class="num">2026-10-20</strong></span></div>
+  </div>
+  <div role="tabpanel" aria-labelledby="t2" id="p2" hidden><div class="empty-state"><strong>1년 상승 TOP</strong>시안에서는 구별 대장 탭만 펼쳐 둡니다. 다른 탭은 house-states.html에서 확인하세요.</div></div>
+  <div role="tabpanel" aria-labelledby="t3" id="p3" hidden><div class="empty-state"><strong>1년 하락 TOP</strong>시안에서는 구별 대장 탭만 펼쳐 둡니다.</div></div>
+  <div role="tabpanel" aria-labelledby="t4" id="p4" hidden><div class="empty-state"><strong>거래 활발 TOP</strong>시안에서는 구별 대장 탭만 펼쳐 둡니다.</div></div>
+ </div>
+</section>
+</main>
+
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer">참고용이며 투자·대출 조언이 아닙니다. 정확한 한도는 금융기관에 문의하세요.</p>
+  <p class="fine">데이터 기준일 2026-10-20 · 정책 기준일 2025-10-16 · 시안용 예시 데이터 (단지명·가격은 가상 값이에요)</p>
+</div></footer>
+
+<div class="toast-host" id="toast" hidden><div class="toast" role="status">예산 입력값은 링크에 포함되지 않습니다</div></div>
+
+<script>
+document.querySelectorAll('[data-area]').forEach(function(b){b.addEventListener('click',function(){
+  document.querySelectorAll('[data-area]').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+  document.querySelectorAll('[data-area-label]').forEach(function(l){l.textContent=b.dataset.area+'㎡'+(l.classList.contains('chip')?'':'')});
+})});
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){
+  document.querySelectorAll('.tab').forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);document.getElementById('p'+x.id.slice(1)).hidden=!on});
+})});
+document.querySelectorAll('.slot .seg').forEach(function(g){g.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  g.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});g.parentNode.querySelector('.slot__fixed').textContent=b.textContent+'㎡ 고정'})});
+document.querySelectorAll('[data-add]').forEach(function(b){b.addEventListener('click',function(){b.classList.toggle('is-added');b.textContent=b.classList.contains('is-added')?'담음':'비교 담기'})});
+document.getElementById('copy').addEventListener('click',function(){var t=document.getElementById('toast');t.hidden=false;setTimeout(function(){t.hidden=true},2400)});
+</script>
+</body>
+</html>

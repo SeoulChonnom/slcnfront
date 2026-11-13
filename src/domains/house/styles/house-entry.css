@@ -1,0 +1,24 @@
+.slcn-home__side {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+
+.slcn-home__house {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-hairline);
+}
+
+.slcn-home__house .slcn-home__secondary-empty {
+  max-width: 34ch;
+  margin-top: 0;
+}
+
+.slcn-home__house-recovery {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-accent-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}

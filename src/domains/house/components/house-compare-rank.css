@@ -1,0 +1,535 @@
+.slcn-house .house-picker {
+  max-width: 32rem;
+  margin-bottom: 24px;
+}
+.slcn-house .house-picker input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-canvas-pure);
+  color: var(--color-body);
+  font: inherit;
+}
+.slcn-house .house-picker__results {
+  margin-top: 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-canvas-pure);
+}
+.slcn-house .house-picker__results [role="listbox"] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.slcn-house .house-picker__results button[role="option"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+.slcn-house .house-picker__results button[role="option"]:hover,
+.slcn-house .house-picker__results button[aria-selected="true"] {
+  background: var(--color-surface-soft);
+}
+.slcn-house
+  .house-picker__results
+  [role="presentation"]
+  + [role="presentation"] {
+  border-top: 1px solid var(--color-divider-soft);
+}
+.slcn-house .house-picker__results :where(button) span {
+  font-size: 12px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-picker__results p {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.slcn-house .house-tray {
+  display: grid;
+  grid-template-columns: 11rem repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+.slcn-house .house-tray__lead {
+  margin: 0;
+  padding-bottom: 12px;
+  color: var(--color-body-muted);
+  font-size: 13px;
+}
+.slcn-house .house-compare-slot {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  min-width: 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  background: var(--color-canvas-pure);
+}
+.slcn-house .house-compare-slot__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.slcn-house .house-compare-slot__top strong {
+  font-size: var(--text-body-lg);
+  line-height: 1.3;
+}
+.slcn-house .house-compare-slot__remove {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: -10px -10px 0 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--color-body-muted);
+  background: transparent;
+  font-size: 24px;
+}
+.slcn-house .house-compare-slot__remove:hover {
+  background: var(--color-surface-soft);
+}
+.slcn-house .house-compare-slot__area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-muted);
+}
+.slcn-house .house-compare-area {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--color-surface-muted);
+}
+.slcn-house .house-compare-area button {
+  min-width: 44px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-body-muted);
+  font: inherit;
+}
+.slcn-house .house-compare-area button[aria-pressed="true"] {
+  background: var(--color-canvas-pure);
+  color: var(--color-body);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+}
+.slcn-house .house-compare-slot--empty {
+  min-height: 128px;
+  align-content: center;
+  text-align: center;
+  border-style: dashed;
+  color: var(--color-body-muted);
+  background: transparent;
+  font-size: 13px;
+}
+.slcn-house .house-compare-wrap {
+  margin-top: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-canvas-pure);
+}
+.slcn-house .house-compare-table {
+  width: 100%;
+  min-width: 56rem;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.slcn-house .house-compare-table th:first-child {
+  width: 11rem;
+}
+.slcn-house .house-compare-table th,
+.slcn-house .house-compare-table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-divider-soft);
+  font-weight: 400;
+}
+.slcn-house .house-compare-table thead th {
+  background: var(--color-surface-muted);
+  border-bottom-color: var(--color-border);
+  font-size: 13px;
+  font-weight: 600;
+}
+.slcn-house .house-compare-table tbody th {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-compare-table tbody tr:last-child th,
+.slcn-house .house-compare-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.slcn-house .house-compare-who {
+  display: none;
+}
+.slcn-house .house-cell-main {
+  display: block;
+  font-size: var(--text-body-lg);
+  font-weight: 600;
+}
+.slcn-house .house-cell-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-cell-lines {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.slcn-house .house-cell-change {
+  display: block;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.slcn-house .house-change-up {
+  color: var(--house-up);
+}
+.slcn-house .house-change-down {
+  color: var(--house-down);
+}
+.slcn-house .house-change-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-top: 12px;
+  font-size: 13px;
+}
+.slcn-house .house-compare-note {
+  margin-top: 16px;
+}
+.slcn-house .house-compare-empty,
+.slcn-house .house-ranking-empty {
+  margin: 16px 0;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-body-muted);
+  border-radius: 12px;
+  background: var(--color-surface-muted);
+}
+.slcn-house .house-ranking-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+}
+.slcn-house .house-ranking-tabs button {
+  min-height: 44px;
+  padding: 0 20px;
+  flex-shrink: 0;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--color-body-muted);
+  font: inherit;
+  font-weight: 600;
+}
+.slcn-house .house-ranking-tabs button[aria-selected="true"] {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-body);
+}
+.slcn-house .house-ranking-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-variant-numeric: tabular-nums;
+}
+.slcn-house .house-ranking-head,
+.slcn-house .house-ranking-row {
+  display: grid;
+  grid-template-columns: 2.5rem 4.5rem 11rem minmax(0, 1fr) 8rem 15rem;
+  align-items: center;
+  gap: 16px;
+}
+.slcn-house .house-ranking-head {
+  padding: 0 16px 8px;
+  font-size: 12px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-ranking-head > :nth-child(5) {
+  text-align: right;
+}
+.slcn-house .house-ranking-row {
+  padding: 8px 16px;
+  min-height: 56px;
+  border-top: 1px solid var(--color-divider-soft);
+}
+.slcn-house .house-ranking-row:hover {
+  background: var(--color-surface-soft);
+}
+.slcn-house .house-ranking-row__number {
+  font-size: var(--text-lead);
+  font-weight: 600;
+  text-align: center;
+}
+.slcn-house .house-ranking-row__district {
+  font-weight: 600;
+}
+.slcn-house .house-ranking-row__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-body-lg);
+  font-weight: 600;
+}
+.slcn-house .house-ranking-row__meta {
+  font-size: 13px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-ranking-row__value {
+  text-align: right;
+}
+.slcn-house .house-ranking-row__value strong {
+  display: block;
+  font-size: var(--text-lead);
+  font-weight: 600;
+}
+.slcn-house .house-ranking-row__value > span {
+  display: block;
+  font-size: 12px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-ranking-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.slcn-house .house-ranking-row__actions .house-button {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+.slcn-house .house-ranking-row__actions > span {
+  flex-basis: 100%;
+}
+.slcn-house .house-ranking-row--empty {
+  background: var(--color-surface-muted);
+}
+.slcn-house .house-ranking-row--empty .house-ranking-row__name {
+  color: var(--color-body-muted);
+  font-weight: 400;
+}
+.slcn-house .house-ranking-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 16px 16px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 13px;
+  color: var(--color-body-muted);
+}
+.slcn-house .house-ranking-foot strong {
+  color: var(--color-body);
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .slcn-house .house-ranking-head {
+    display: none;
+  }
+  .slcn-house .house-ranking-row {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+  .slcn-house .house-ranking-row__number {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    align-self: start;
+  }
+  .slcn-house .house-ranking-row__district,
+  .slcn-house .house-ranking-row__name,
+  .slcn-house .house-ranking-row__meta {
+    grid-column: 2;
+  }
+  .slcn-house .house-ranking-row__value {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+  .slcn-house .house-ranking-row__actions {
+    grid-column: 2 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .slcn-house .house-tray {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .slcn-house .house-tray__lead {
+    padding-bottom: 4px;
+  }
+  .slcn-house .house-compare-slot {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .slcn-house .house-compare-slot__top {
+    align-items: center;
+  }
+  .slcn-house .house-compare-slot__top strong {
+    font-size: 15px;
+  }
+  .slcn-house .house-compare-slot__remove {
+    margin: 0;
+  }
+  .slcn-house .house-compare-slot__area {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .slcn-house .house-compare-area button {
+    min-height: 38px;
+  }
+  .slcn-house .house-compare-slot--empty {
+    display: block;
+    min-height: 44px;
+    padding: 12px;
+  }
+  .slcn-house .house-compare-wrap {
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .slcn-house .house-compare-table {
+    display: block;
+    min-width: 0;
+  }
+  .slcn-house .house-compare-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .slcn-house .house-compare-table tbody {
+    display: block;
+  }
+  .slcn-house .house-compare-table tr {
+    display: block;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-divider-soft);
+  }
+  .slcn-house .house-compare-table tr:last-child {
+    border-bottom: 0;
+  }
+  .slcn-house .house-compare-table tbody th {
+    display: block;
+    width: auto;
+    padding: 0 0 4px;
+    border: 0;
+    color: var(--color-body);
+  }
+  .slcn-house .house-compare-table td {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 12px;
+    padding: 6px 0;
+    border: 0;
+    font-size: 15px;
+  }
+  .slcn-house .house-compare-table td + td {
+    border-top: 1px dashed var(--color-divider-soft);
+  }
+  .slcn-house .house-compare-who {
+    display: block;
+    padding-top: 3px;
+    color: var(--color-accent-muted);
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .slcn-house .house-compare-table td > div {
+    min-width: 0;
+  }
+  .slcn-house .house-change-legend {
+    gap: 8px 12px;
+  }
+  .slcn-house .house-ranking-tabs {
+    margin: 0 calc(var(--house-gutter) * -1) 8px;
+    padding: 0 var(--house-gutter);
+  }
+  .slcn-house .house-ranking-tabs button {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  .slcn-house .house-ranking-row {
+    padding: 12px 0;
+    grid-template-columns: 1.5rem minmax(0, 1fr) minmax(0, auto);
+    gap: 2px 8px;
+  }
+  .slcn-house .house-ranking-row__number {
+    text-align: left;
+    font-size: var(--text-body-lg);
+    color: var(--color-body-muted);
+  }
+  .slcn-house .house-ranking-row__district {
+    font-size: 12px;
+    color: var(--color-body-muted);
+  }
+  .slcn-house .house-ranking-row__name {
+    font-size: 16px;
+  }
+  .slcn-house .house-ranking-row__meta {
+    font-size: 12px;
+  }
+  .slcn-house .house-ranking-row__value strong {
+    font-size: 18px;
+  }
+  .slcn-house .house-ranking-row__value > span {
+    max-width: 100px;
+  }
+  .slcn-house .house-ranking-row__actions {
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  .slcn-house .house-ranking-row__actions .house-button {
+    min-height: 44px;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: var(--color-accent-muted);
+  }
+  .slcn-house .house-ranking-row__actions .house-button:disabled {
+    color: var(--color-body-muted);
+  }
+  .slcn-house .house-ranking-row--empty {
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 8px;
+  }
+  .slcn-house .house-ranking-foot {
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0 0;
+  }
+}

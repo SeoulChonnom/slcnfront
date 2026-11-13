@@ -11,6 +11,12 @@
         ],
         "createdAt": "2026-08-24T21:08:34.120Z",
         "reason": "Approved Memory Chronicle body copy uses the DESIGN.md 17px body step."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "4rem",
+        "createdAt": "2026-11-05T05:26:50.180Z",
+        "reason": "Agent: docs/myseoulhouse/design/house.css result-hero__value and house-mobile.css explicitly specify 4rem for the budget total."
       }
     ]
   }

@@ -1696,7 +1696,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 /* Discarding throws the restored draft away, so it must not read as the
    equal twin of the action that keeps it. */
 .slcn-trip-register-wizard__draft-actions
-.slcn-trip-register-wizard__draft-discard {
+  .slcn-trip-register-wizard__draft-discard {
   color: var(--color-body-muted);
   font-weight: var(--weight-body);
 }
@@ -1817,7 +1817,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
 /* Wrong answer: the shackle takes the strain and settles back. It does not
    shake — the lock simply did not turn. */
 .slcn-trip-quiz-modal__lock[data-unlocked="false"]
-.slcn-trip-quiz-modal__lock-shackle {
+  .slcn-trip-quiz-modal__lock-shackle {
   animation: slcn-lock-resist var(--duration-page) var(--easing-standard) both;
 }
 
@@ -2327,7 +2327,7 @@ which lands their still-clickable numbers near 1.5:1. Keep them
    dropzone rule touches it, so :where() keeps the specificity at two classes
    and later label overrides (the register wizard's) never descend from it. */
 .slcn-file-dropzone:where(:has(> .slcn-file-dropzone__input:focus-visible))
-.slcn-file-dropzone__label {
+  .slcn-file-dropzone__label {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }

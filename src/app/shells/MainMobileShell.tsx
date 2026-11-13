@@ -38,6 +38,7 @@ function getMainMobileTitle(pathname: string) {
 
 export function MainMobileShell({ children, className }: MainMobileShellProps) {
   const { pathname } = useLocation();
+  const isHouseRoute = /^\/mobile\/house\/?$/.test(pathname);
   const profile = useProfile();
   const profileImageUrl = buildOptionalAssetImageUrl(
     profile.data?.profileImage?.fileId,
@@ -46,22 +47,24 @@ export function MainMobileShell({ children, className }: MainMobileShellProps) {
 
   return (
     <div className={cn('slcn-shell-mobile', className)}>
-      <MobileTopBar
-        title={getMainMobileTitle(pathname)}
-        trailing={
-          <Link
-            to={buildDeviceProfilePath('mobile')}
-            className='slcn-mobile-topbar__profile-link'
-            aria-label='내 프로필'
-          >
-            <ProfileAvatar
-              imageUrl={profileImageUrl}
-              loading={profile.isLoading}
-              alt=''
-            />
-          </Link>
-        }
-      />
+      {!isHouseRoute && (
+        <MobileTopBar
+          title={getMainMobileTitle(pathname)}
+          trailing={
+            <Link
+              to={buildDeviceProfilePath('mobile')}
+              className='slcn-mobile-topbar__profile-link'
+              aria-label='내 프로필'
+            >
+              <ProfileAvatar
+                imageUrl={profileImageUrl}
+                loading={profile.isLoading}
+                alt=''
+              />
+            </Link>
+          }
+        />
+      )}
       <main className='slcn-shell-mobile__main'>{children ?? <Outlet />}</main>
       <MobileBottomNav device='mobile' />
       <div className='slcn-shell-mobile__bottom-spacer' aria-hidden='true' />

@@ -255,7 +255,7 @@ slcn-travel-day-editor
 
 /* Hide native calendar picker icon in webkit */
 .slcn-travel-register-form__date-control
-input[type="date"]::-webkit-calendar-picker-indicator {
+  input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   position: absolute;
   right: 0;

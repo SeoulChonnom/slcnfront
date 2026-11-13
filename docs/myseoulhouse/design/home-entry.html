@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>홈 진입점 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  
+  --color-primary: #fe9fc8;
+  --color-primary-focus: #ff7fb8;
+  --color-primary-on-dark: #fe9fc8;
+
+  --color-ink: #1b1b1b;
+  --color-body: #1b1b1b;
+  --color-body-muted: #6f666a;
+  
+  --color-accent-muted: #a34f6d;
+  
+  --color-focus-ring: var(--color-accent-muted);
+  --color-body-on-dark: #ffffff;
+  --color-body-muted-on-dark: #d8ced2;
+
+  --color-canvas: #fff8f8;
+  --color-canvas-pure: #ffffff;
+  --color-surface-pearl: #ffffff;
+  --color-surface-soft: #ffe8ef;
+  --color-surface-muted: #f8eef1;
+
+  --color-surface-dark-1: #1b1b1b;
+  --color-surface-dark-2: #242124;
+  --color-surface-dark-3: #2b2629;
+
+  --color-divider-soft: rgba(27, 27, 27, 0.08);
+  --color-hairline: rgba(27, 27, 27, 0.12);
+  --color-overlay: rgba(27, 27, 27, 0.42);
+  --color-focus-halo: rgb(254 159 200 / 20%);
+
+  --color-on-primary: #1b1b1b;
+  --color-on-dark: #ffffff;
+
+  
+  --color-stripe-highlight: #fcf4f6;
+  --color-border: #efe0e5;
+  --color-border-strong: #ead9df;
+  --color-icon-soft: #d8a9bc;
+  --color-icon-muted: #c58ea3;
+
+  
+  --color-surface-disabled: var(--color-surface-muted);
+  --color-body-disabled: #9c9295;
+
+  
+  --color-weekend-sun: var(--color-error);
+  --color-weekend-sat: #2f66b4;
+
+  
+  --color-shadow-warm: rgb(150 110 130 / 18%);
+  --color-shadow-warm-strong: rgb(150 80 110 / 35%);
+
+  
+  --color-overlay-soft: rgb(70 40 55 / 28%);
+
+  
+  --color-cast: rgb(0 0 0 / 20%);
+
+  
+  --color-cast-scrim: rgb(27 27 27 / 78%);
+  
+  --color-cast-soft: rgb(27 27 27 / 7%);
+  
+  --color-cast-lifted: rgb(27 27 27 / 10%);
+  
+  --color-cast-glass: rgb(80 47 59 / 32%);
+
+  
+  --color-brand-pink: #fe9fc8;
+  --color-brand-pink-strong: #ff7fb8;
+  --color-brand-pink-soft: #ffe8ef;
+  --color-surface: #ffffff;
+  --color-ink-muted: #6f666a;
+  --color-ink-soft: #6f666a;
+
+  
+  --color-success: #15794f;
+  --color-success-on: #ffffff;
+  --color-success-surface: #eaf6f0;
+  --color-error: #c53030;
+  --color-error-on: #ffffff;
+  --color-error-surface: #fff1f1;
+  --color-warning: #955b0a;
+  --color-warning-on: #ffffff;
+  --color-warning-surface: #fbefe0;
+
+  
+  --color-error-border: #f2caca;
+  --color-success-border: #bfe5cf;
+  --color-warning-border: #e8d08a;
+
+  
+  --font-stack:
+    Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+  --font-display: var(--font-stack);
+  --font-body: var(--font-stack);
+  --font-caption: var(--font-stack);
+
+  
+  --weight-body: 400;
+  --weight-strong: 600;
+
+  
+  --text-display-xl: 2.5rem; 
+  --text-display-lg: 2.125rem; 
+  --text-display-md: 1.75rem; 
+  --text-display-sm: 1.5rem; 
+  --text-tagline: 1.3125rem; 
+  --text-lead: 1.125rem; 
+  --text-body-lg: 1rem; 
+  --text-body: 0.9375rem; 
+  --text-caption: 0.875rem; 
+  --text-nav: 0.8125rem; 
+  --text-fine: 0.75rem; 
+
+  
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-section: 5rem;
+  --space-section-lg: 7rem;
+
+  
+  --shadow-floating: 0 8px 30px rgba(27, 27, 27, 0.08);
+  --shadow-image: 3px 5px 30px rgba(27, 27, 27, 0.18);
+  --shadow-modal: 0 24px 80px rgba(27, 27, 27, 0.16);
+  --elevation-hairline: 0 0 0 1px rgba(27, 27, 27, 0.08);
+
+  
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+  
+  --radius-sm-inner: calc(var(--radius-sm) - 1px);
+  --radius-full: 9999px;
+
+  
+  --duration-fast: 160ms;
+  --duration-default: 240ms;
+  --duration-page: 360ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --press-scale: 0.96;
+
+  
+  color-scheme: light;
+}
+
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  
+  --color-canvas: #1b1b1b;
+  --color-canvas-pure: #242124;
+  --color-surface-pearl: #242124;
+  --color-surface-soft: #2b2629;
+  --color-surface-muted: #211d20;
+  --color-surface: #242124;
+
+  
+  --color-ink: #ffffff;
+  --color-body: #ffffff;
+  --color-body-muted: #d8ced2;
+  --color-ink-muted: #d8ced2;
+  --color-ink-soft: #d8ced2;
+  --color-on-dark: #ffffff;
+
+  
+  --color-accent-muted: #fe9fc8;
+  --color-focus-ring: #fe9fc8;
+
+  
+  --color-divider-soft: rgba(255, 255, 255, 0.09);
+  --color-hairline: rgba(255, 255, 255, 0.14);
+  --color-border: #3a3438;
+  --color-border-strong: #4a4247;
+  --color-stripe-highlight: #262023;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-overlay-soft: rgba(0, 0, 0, 0.45);
+
+  
+  --color-icon-soft: #8a6a76;
+  --color-icon-muted: #a3808e;
+
+  --color-surface-disabled: #2b2629;
+  --color-body-disabled: #7d7378;
+
+  
+  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-image: 3px 5px 30px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.6);
+  --elevation-hairline: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --color-shadow-warm: rgb(0 0 0 / 45%);
+  --color-shadow-warm-strong: rgb(0 0 0 / 60%);
+  
+  --color-cast-lifted: rgb(0 0 0 / 55%);
+
+  
+  --color-error: #ff6b6b;
+  --color-error-on: #1b1b1b;
+  --color-error-surface: color-mix(in srgb, #ff6b6b 14%, transparent);
+  --color-error-border: color-mix(in srgb, #ff6b6b 32%, transparent);
+  --color-success: #34d399;
+  --color-success-on: #1b1b1b;
+  --color-success-surface: color-mix(in srgb, #34d399 14%, transparent);
+  --color-success-border: color-mix(in srgb, #34d399 32%, transparent);
+  --color-warning: #f2a93b;
+  --color-warning-on: #1b1b1b;
+  --color-warning-surface: color-mix(in srgb, #f2a93b 14%, transparent);
+  --color-warning-border: color-mix(in srgb, #f2a93b 32%, transparent);
+
+  
+  --color-weekend-sat: #7aa9e8;
+
+  
+  --color-brand-pink-soft: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    transparent
+  );
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--color-canvas);color:var(--color-body);font-family:var(--font-stack);font-size:var(--text-body);line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+h1,h2,p,ol,ul{margin:0}
+.slcn-num{font-variant-numeric:tabular-nums}
+a:focus-visible,button:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+::selection{background:var(--color-primary);color:var(--color-on-primary)}
+.sheet{padding:2.5rem 1.5rem 3rem;max-width:106rem;margin:0 auto}
+.sheet__label{font-size:var(--text-nav);color:var(--color-body-muted);margin-bottom:var(--space-3)}
+.sheet__row{display:flex;gap:3rem;align-items:flex-start;flex-wrap:wrap}
+.frame{border:1px solid var(--color-border);background:var(--color-canvas);overflow:hidden;flex:none}
+.frame--desktop{width:1440px}
+.frame--mobile{width:390px;position:relative}
+.sheet__note{margin-top:2rem;font-size:var(--text-nav);color:var(--color-body-muted)}
+/* shell */
+.d-header{display:flex;align-items:center;gap:var(--space-8);height:4rem;padding:0 1.25rem;border-bottom:1px solid var(--color-hairline)}
+.d-header img{height:1.75rem;width:auto}
+.d-header nav{display:flex;gap:var(--space-5)}
+.d-header nav a{display:inline-flex;align-items:center;min-height:2.75rem;color:var(--color-body-muted);font-size:var(--text-caption);font-weight:var(--weight-strong)}
+.d-header nav a[aria-current]{color:var(--color-ink);box-shadow:inset 0 -2px var(--color-primary)}
+.d-main{max-width:77.5rem;margin:0 auto;padding:2rem 1.25rem 3rem}
+.m-top{display:flex;align-items:center;height:3.25rem;padding:0 var(--space-4)}
+.m-top img{height:1.5rem}
+.m-main{padding:var(--space-2) var(--space-4) calc(4.25rem + 1rem)}
+.m-nav{z-index:2}
+.m-nav{position:absolute;left:var(--space-3);right:var(--space-3);bottom:var(--space-3);display:flex;justify-content:space-around;height:3.5rem;border-radius:var(--radius-xl);background:color-mix(in srgb,var(--color-canvas-pure) 72%,transparent);backdrop-filter:blur(16px);border:1px solid var(--color-border);box-shadow:var(--shadow-floating)}
+.m-nav a{display:flex;align-items:center;padding:0 var(--space-2);font-size:var(--text-fine);color:var(--color-body-muted);font-weight:var(--weight-strong)}
+.m-nav a[aria-current]{color:var(--color-ink)}
+.m-clip{}
+.d-clip{}
+.ellipsis{padding:var(--space-3) 0;color:var(--color-body-muted);font-size:var(--text-fine)}
+/* home (copied from components-common/pc/mobile) */
+.slcn-home{display:grid;gap:var(--space-8);width:100%;color:var(--color-body)}
+.slcn-home__intro{display:flex;align-items:end;justify-content:space-between;gap:var(--space-4)}
+.slcn-home__title{color:var(--color-ink);font-size:clamp(2rem,4vw,3.5rem);font-weight:var(--weight-strong);letter-spacing:-.035em;line-height:1.08;text-wrap:balance}
+.slcn-home__dday{margin:var(--space-3) 0 0;color:var(--color-body-muted);font-size:var(--text-caption)}
+.slcn-home__dday strong{color:var(--color-ink);font-weight:var(--weight-strong)}
+.slcn-home__recent-link{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--space-8);align-items:end}
+.slcn-home__recent-media{display:block;aspect-ratio:2/1;background:var(--color-surface-muted);overflow:hidden}
+.slcn-home__recent-no-cover{display:flex;height:100%;align-items:flex-end;padding:var(--space-4);color:var(--color-body-muted);font-size:var(--text-nav)}
+.slcn-home__recent-copy{display:grid;gap:var(--space-2)}
+.slcn-home__recent-meta{color:var(--color-body-muted);font-size:var(--text-caption)}
+.slcn-home__recent-title{color:var(--color-ink);font-size:var(--text-display-lg);font-weight:var(--weight-strong);letter-spacing:-.03em;line-height:1.15}
+.slcn-home__recent-review{font-size:var(--text-body-lg);max-width:36ch}
+.slcn-home__retrieval{padding-top:var(--space-6);border-top:1px solid var(--color-hairline)}
+.slcn-home__retrieval-heading h2{color:var(--color-ink);font-size:1.25rem;font-weight:var(--weight-strong);letter-spacing:-.02em}
+.slcn-home__years{display:flex;gap:var(--space-2);margin-top:var(--space-4);overflow-x:auto}
+.slcn-home__year{flex:0 0 auto;min-width:2.75rem;min-height:2.75rem;padding:0 var(--space-3);border:0;border-bottom:2px solid transparent;background:transparent;color:var(--color-body-muted);font-size:var(--text-caption);font-weight:var(--weight-strong);white-space:nowrap}
+.slcn-home__year--active{border-bottom-color:var(--color-primary);color:var(--color-ink)}
+.slcn-home-archive{display:grid;margin:var(--space-2) 0 0;padding:0;border-top:1px solid var(--color-hairline);list-style:none}
+.slcn-home-archive__row{border-bottom:1px solid var(--color-hairline)}
+.slcn-home-archive__link{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:var(--space-5);align-items:center;min-height:4.5rem;padding:var(--space-2) 0}
+.slcn-home-archive__date{color:var(--color-body-muted);font-size:var(--text-caption)}
+.slcn-home-archive__copy{display:grid;gap:.1875rem;min-width:0}
+.slcn-home-archive__title{color:var(--color-ink);font-size:1.0625rem;font-weight:var(--weight-strong)}
+.slcn-home-archive__meta,.slcn-home-archive__review{color:var(--color-body-muted);font-size:var(--text-nav)}
+.slcn-home-archive__review{color:var(--color-body)}
+.slcn-home__secondary{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(14rem,.75fr);gap:var(--space-section);padding-top:var(--space-6);border-top:1px solid var(--color-hairline)}
+.slcn-home__secondary-heading{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4)}
+.slcn-home__secondary-heading h2{color:var(--color-ink);font-size:var(--text-body-lg);font-weight:var(--weight-strong)}
+.slcn-home__secondary-heading a{min-height:2.75rem;color:var(--color-accent-muted);font-size:var(--text-nav);font-weight:var(--weight-strong);line-height:2.75rem;text-decoration:underline;text-decoration-color:var(--color-primary);text-decoration-thickness:1px;text-underline-offset:.25em;white-space:nowrap}
+.slcn-home__schedule-list{display:grid;gap:var(--space-2);margin:var(--space-4) 0 0;padding:0;list-style:none}
+.slcn-home__schedule-link{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:var(--space-4);align-items:center;min-height:3.5rem;border-bottom:1px solid var(--color-hairline)}
+.slcn-home__schedule-time{color:var(--color-body-muted);font-size:var(--text-nav)}
+.slcn-home__schedule-copy{display:grid;gap:.125rem}
+.slcn-home__schedule-copy strong{color:var(--color-ink);font-size:var(--text-body);font-weight:var(--weight-strong)}
+.slcn-home__schedule-copy span{color:var(--color-body-muted);font-size:var(--text-nav)}
+.slcn-home__secondary-empty{margin:var(--space-4) 0 0;color:var(--color-body-muted);font-size:var(--text-caption);line-height:1.6}
+.slcn-home__more{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--space-3) var(--space-6);padding-top:var(--space-4);border-top:1px solid var(--color-hairline)}
+.slcn-home__more-label{color:var(--color-body-muted);font-size:var(--text-nav);font-weight:var(--weight-strong)}
+.slcn-home__more-links{display:flex;gap:var(--space-4)}
+.slcn-home__more-links a{display:inline-flex;align-items:center;min-height:2.75rem;color:var(--color-body-muted);font-size:var(--text-nav);text-decoration:underline;text-decoration-color:var(--color-border-strong);text-underline-offset:.25em}
+.slcn-home--main{gap:var(--space-6)}
+.slcn-home--main .slcn-home__retrieval{padding-top:var(--space-4)}
+/* NEW: 내집찾기 entry reuses the secondary grammar; stacked under 나들이 in the side column */
+.slcn-home__side{display:grid;align-content:start;gap:var(--space-4)}
+.slcn-home__house{padding-top:var(--space-2);border-top:1px solid var(--color-hairline)}
+.slcn-home__house .slcn-home__secondary-empty{margin-top:0;max-width:34ch}
+.slcn-home__day-outs .slcn-home__secondary-empty{margin-top:0}
+/* mobile */
+.slcn-home--mobile{gap:var(--space-3)}
+.slcn-home--mobile .slcn-home__title{font-size:var(--text-display-md)}
+.slcn-home--mobile .slcn-home__recent-link{grid-template-columns:minmax(0,1fr);gap:var(--space-3);align-items:start}
+.slcn-home--mobile .slcn-home__recent-media{aspect-ratio:5/2}
+.slcn-home--mobile .slcn-home__recent-title{font-size:var(--text-display-md)}
+.slcn-home--mobile .slcn-home__recent-review{font-size:var(--text-body)}
+.slcn-home--mobile .slcn-home__retrieval{padding-top:var(--space-2)}
+.slcn-home--mobile .slcn-home-archive__link{grid-template-columns:4.5rem minmax(0,1fr);gap:var(--space-3);min-height:4.25rem}
+.slcn-home--mobile .slcn-home-archive__title{font-size:var(--text-body)}
+.slcn-home--mobile .slcn-home__secondary{grid-template-columns:minmax(0,1fr);gap:var(--space-4)}
+.slcn-home--mobile .slcn-home__secondary-heading a{font-size:var(--text-fine)}
+@media (prefers-reduced-motion:no-preference){a{transition:color var(--duration-fast) var(--easing-standard)}a:hover{color:var(--color-accent-muted)}}
+</style>
+</head>
+<body>
+<!--
+THESIS: 자금 계획서에서 지도로: 홈에서는 기존 보조 영역 문법만 빌려 조용히 한 줄로 진입한다.
+OWN-WORLD: Seoul Quiet Editorial. 따뜻한 종이 canvas, 잉크, 서울 핑크는 밑줄에만, 헤어라인 구분.
+STORY: 여행 기록을 찾는 홈의 흐름을 끊지 않고, 나들이 아래에서 내집찾기로 들어간다.
+FIRST VIEWPORT: 여행 연대기가 주인공, 내집찾기는 보조 영역 하단의 한 줄 진입점.
+FORM: 나들이 섹션 아래 같은 헤딩+링크+한 줄 문법.
+FINISH: unreviewed and undocumented is unfinished.
+-->
+<main class="sheet">
+<div class="sheet__row">
+ <div><p class="sheet__label">데스크톱 1440 · /main</p>
+ <div class="frame frame--desktop"><header class="d-header"><img src="../../../src/assets/img/SLCN.webp" alt="SLCN"><nav aria-label="주요 메뉴"><a href="#" aria-current="page">홈</a><a href="#">여행</a><a href="#">나들이</a><a href="#">임장</a><a href="#">달력</a></nav></header>
+ <div class="d-main d-clip">
+<section class="slcn-home slcn-home--main">
+  <header class="slcn-home__intro"><div><h1 class="slcn-home__title">지난 여행</h1><p class="slcn-home__dday">만난 지 <strong class="slcn-num">712</strong>일째</p></div></header>
+  <section class="slcn-home__recent-memory"><a href="#" class="slcn-home__recent-link">
+    <span class="slcn-home__recent-media"><span class="slcn-home__recent-no-cover"><span>2025.11.01 – 11.03</span></span></span>
+    <span class="slcn-home__recent-copy"><span class="slcn-home__recent-meta">경북 경주 · 2박 3일</span><span class="slcn-home__recent-title">경주 단풍길</span><span class="slcn-home__recent-review">황리단길을 지나 대릉원까지 천천히 걸었다</span></span></a></section>
+  <div class="slcn-home__retrieval">
+    <div class="slcn-home__retrieval-heading"><h2>여행 기록 찾기</h2></div>
+    <nav class="slcn-home__years" aria-label="여행 연도"><button class="slcn-home__year slcn-home__year--active">전체</button><button class="slcn-home__year">2025년</button><button class="slcn-home__year">2024년</button></nav>
+    <ol class="slcn-home-archive"><li class="slcn-home-archive__row"><a href="#" class="slcn-home-archive__link slcn-home-archive__link--no-cover"><span class="slcn-home-archive__date">2025.09.12 – 09.14</span><span class="slcn-home-archive__copy"><span class="slcn-home-archive__title">제주 동쪽 느린 산책</span><span class="slcn-home-archive__meta">제주 · 2박 3일</span><span class="slcn-home-archive__review">오름보다 카페에서 더 오래 앉아 있었다</span></span></a></li><li class="slcn-home-archive__row"><a href="#" class="slcn-home-archive__link slcn-home-archive__link--no-cover"><span class="slcn-home-archive__date">2025.05.03 – 05.05</span><span class="slcn-home-archive__copy"><span class="slcn-home-archive__title">남해 바다 드라이브</span><span class="slcn-home-archive__meta">경남 남해 · 2박 3일</span><span class="slcn-home-archive__review">비가 와서 오히려 조용했던 바다</span></span></a></li></ol>
+  </div>
+  
+<div class="slcn-home__secondary">
+  <section class="slcn-home__schedule" aria-labelledby="main-sch">
+    <div class="slcn-home__secondary-heading"><h2 id="main-sch">다음 일정</h2><a href="#">달력 보기</a></div>
+    <ol class="slcn-home__schedule-list">
+      <li><a href="#" class="slcn-home__schedule-link"><time class="slcn-home__schedule-time">11월 2일</time><span class="slcn-home__schedule-copy"><strong>강릉 기차 예매</strong><span>오전 9:00</span></span></a></li>
+    </ol>
+  </section>
+  <div class="slcn-home__side">
+    <section class="slcn-home__day-outs" aria-labelledby="main-do">
+      <div class="slcn-home__secondary-heading"><h2 id="main-do">나들이</h2><a href="#">나들이 기록으로 가기</a></div>
+      <p class="slcn-home__secondary-empty">남긴 나들이 7개</p>
+    </section>
+    <section class="slcn-home__house" aria-labelledby="main-house">
+      <div class="slcn-home__secondary-heading"><h2 id="main-house">내집찾기</h2><a href="#house">내집찾기 열기</a></div>
+      <p class="slcn-home__secondary-empty">예산으로 살 수 있는 서울 아파트를 지도에서 찾아요</p>
+    </section>
+  </div>
+</div>
+  <nav class="slcn-home__more" aria-label="더보기"><span class="slcn-home__more-label">더보기</span><div class="slcn-home__more-links"><a href="#">신발 기록</a><a href="#">Choi's Film Art</a></div></nav>
+</section></div></div></div>
+ <div><p class="sheet__label">모바일 390 · /mobile</p>
+ <div class="frame frame--mobile"><div class="m-top"><img src="../../../src/assets/img/SLCN.webp" alt="SLCN"></div>
+ <div class="m-main m-clip">
+<section class="slcn-home slcn-home--mobile">
+  <header class="slcn-home__intro"><div><h1 class="slcn-home__title">지난 여행</h1><p class="slcn-home__dday">만난 지 <strong class="slcn-num">712</strong>일째</p></div></header>
+  <section class="slcn-home__recent-memory"><a href="#" class="slcn-home__recent-link">
+    <span class="slcn-home__recent-media"><span class="slcn-home__recent-no-cover"><span>2025.11.01 – 11.03</span></span></span>
+    <span class="slcn-home__recent-copy"><span class="slcn-home__recent-meta">경북 경주 · 2박 3일</span><span class="slcn-home__recent-title">경주 단풍길</span><span class="slcn-home__recent-review">황리단길을 지나 대릉원까지 천천히 걸었다</span></span></a></section>
+  <div class="slcn-home__retrieval">
+    <div class="slcn-home__retrieval-heading"><h2>여행 기록 찾기</h2></div>
+    <nav class="slcn-home__years" aria-label="여행 연도"><button class="slcn-home__year slcn-home__year--active">전체</button><button class="slcn-home__year">2025년</button><button class="slcn-home__year">2024년</button></nav>
+    <ol class="slcn-home-archive"><li class="slcn-home-archive__row"><a href="#" class="slcn-home-archive__link slcn-home-archive__link--no-cover"><span class="slcn-home-archive__date">2025.09.12 – 09.14</span><span class="slcn-home-archive__copy"><span class="slcn-home-archive__title">제주 동쪽 느린 산책</span><span class="slcn-home-archive__meta">제주 · 2박 3일</span><span class="slcn-home-archive__review">오름보다 카페에서 더 오래 앉아 있었다</span></span></a></li><li class="slcn-home-archive__row"><a href="#" class="slcn-home-archive__link slcn-home-archive__link--no-cover"><span class="slcn-home-archive__date">2025.05.03 – 05.05</span><span class="slcn-home-archive__copy"><span class="slcn-home-archive__title">남해 바다 드라이브</span><span class="slcn-home-archive__meta">경남 남해 · 2박 3일</span><span class="slcn-home-archive__review">비가 와서 오히려 조용했던 바다</span></span></a></li></ol>
+  </div>
+  
+<div class="slcn-home__secondary">
+  <section class="slcn-home__schedule" aria-labelledby="mobile-sch">
+    <div class="slcn-home__secondary-heading"><h2 id="mobile-sch">다음 일정</h2><a href="#">달력 보기</a></div>
+    <ol class="slcn-home__schedule-list">
+      <li><a href="#" class="slcn-home__schedule-link"><time class="slcn-home__schedule-time">11월 2일</time><span class="slcn-home__schedule-copy"><strong>강릉 기차 예매</strong><span>오전 9:00</span></span></a></li>
+    </ol>
+  </section>
+  <div class="slcn-home__side">
+    <section class="slcn-home__day-outs" aria-labelledby="mobile-do">
+      <div class="slcn-home__secondary-heading"><h2 id="mobile-do">나들이</h2><a href="#">나들이 기록으로 가기</a></div>
+      <p class="slcn-home__secondary-empty">남긴 나들이 7개</p>
+    </section>
+    <section class="slcn-home__house" aria-labelledby="mobile-house">
+      <div class="slcn-home__secondary-heading"><h2 id="mobile-house">내집찾기</h2><a href="#house">내집찾기 열기</a></div>
+      <p class="slcn-home__secondary-empty">예산으로 살 수 있는 서울 아파트를 지도에서 찾아요</p>
+    </section>
+  </div>
+</div>
+  <nav class="slcn-home__more" aria-label="더보기"><span class="slcn-home__more-label">더보기</span><div class="slcn-home__more-links"><a href="#">신발 기록</a><a href="#">Choi's Film Art</a></div></nav>
+</section></div>
+ <nav class="m-nav" aria-label="하단 메뉴"><a href="#" aria-current="page">홈</a><a href="#">나들이</a><a href="#">여행</a><a href="#">임장</a><a href="#">달력</a><a href="#">신발</a></nav></div></div>
+</div>
+<p class="sheet__note" id="house">시안용 예시 데이터. 여행 기록·일정은 가짜 예시이고, 내집찾기 영역만 새로 더해진 부분입니다.</p>
+</main>
+</body></html>

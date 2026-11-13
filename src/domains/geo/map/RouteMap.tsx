@@ -4,10 +4,11 @@ import type {
   RouteSegment,
   RouteStop,
 } from '@/domains/geo/utils/route-geometry';
+import type { KakaoMap, KakaoMaps, KakaoOverlay } from '@/lib/kakao/kakao-maps';
 
 type RouteMapProps = {
   /** From `useKakaoMaps()` once its status is `ready`. */
-  maps: typeof kakao.maps;
+  maps: KakaoMaps;
   stops: RouteStop[];
   segments: RouteSegment[];
   /** FC6: current position. Drawn distinctly with a dashed straight leg to stop 1. */
@@ -32,7 +33,7 @@ function markerElement(text: string, className: string) {
  */
 export function RouteMap({ maps, stops, segments, origin }: RouteMapProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const mapRef = useRef<kakao.maps.Map | null>(null);
+  const mapRef = useRef<KakaoMap | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -48,12 +49,12 @@ export function RouteMap({ maps, stops, segments, origin }: RouteMapProps) {
       });
     }
     const map = mapRef.current;
-    const created: { setMap: (target: kakao.maps.Map | null) => void }[] = [];
+    const created: KakaoOverlay[] = [];
     const bounds = new maps.LatLngBounds();
     const toLatLng = (point: GeoPoint) =>
       new maps.LatLng(point.latitude, point.longitude);
 
-    function add(object: { setMap: (target: kakao.maps.Map | null) => void }) {
+    function add(object: KakaoOverlay) {
       object.setMap(map);
       created.push(object);
     }

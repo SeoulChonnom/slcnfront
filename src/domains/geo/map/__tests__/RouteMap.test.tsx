@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { RouteMap } from '@/domains/geo/map/RouteMap';
 import { buildSegments, buildStops } from '@/domains/geo/utils/route-geometry';
+import type { KakaoMaps } from '@/lib/kakao/kakao-maps';
 
 function fakeMaps() {
   const overlays: HTMLElement[] = [];
@@ -31,7 +32,7 @@ function fakeMaps() {
   };
 
   return {
-    maps: maps as unknown as typeof kakao.maps,
+    maps: maps as unknown as KakaoMaps,
     overlays,
     polylines,
     setBounds,

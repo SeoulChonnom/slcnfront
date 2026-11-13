@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { loadKakaoMaps } from '@/domains/geo/map/kakao-loader';
 import { getAppEnv } from '@/lib/env/env';
+import type { KakaoMaps } from '@/lib/kakao/kakao-maps';
 
 export type KakaoMapsState =
   | { status: 'unavailable' }
   | { status: 'loading' }
-  | { status: 'ready'; maps: typeof kakao.maps };
+  | { status: 'ready'; maps: KakaoMaps };
 
 /**
  * Tells the parent whether a map can be shown. Without a key (or when the SDK

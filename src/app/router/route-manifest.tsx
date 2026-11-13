@@ -6,6 +6,7 @@ export type DeviceShellKey = 'main' | 'detail';
 
 export type RoutePageKey =
   | 'home'
+  | 'house'
   | 'tripList'
   | 'tripRegister'
   | 'tripDetail'
@@ -40,6 +41,7 @@ export type BaseRouteDefinition = Omit<DeviceProtectedRouteDefinition, 'shell'>;
 
 export const BASE_PROTECTED_ROUTES: BaseRouteDefinition[] = [
   { index: true, page: 'home' },
+  { path: 'house', page: 'house' },
   { path: 'map', page: 'tripList' },
   { path: 'map/register', page: 'tripRegister' },
   { path: 'map/:id', page: 'tripDetail' },

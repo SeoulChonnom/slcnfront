@@ -41,14 +41,20 @@ describe('parseAppEnv', () => {
     });
   });
 
-  it('trims the optional Kakao map key and treats blank as null', () => {
+  it('trims the optional Kakao map key', () => {
     expect(
       parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: ' abc ' })
         .kakaoMapJsKey
     ).toBe('abc');
-    expect(
-      parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: '  ' })
-        .kakaoMapJsKey
-    ).toBeNull();
   });
+
+  it.each([undefined, '', '  \t'])(
+    'treats an absent or blank Kakao key (%j) as null',
+    (key) => {
+      expect(
+        parseAppEnv({ VITE_API_URL: '/api', VITE_KAKAO_MAP_JS_KEY: key })
+          .kakaoMapJsKey
+      ).toBeNull();
+    }
+  );
 });
