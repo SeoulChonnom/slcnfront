@@ -3056,6 +3056,297 @@
           }
         ]
       }
+    },
+    "/geo/addresses": {
+      "get": {
+        "tags": [
+          "geo-resource"
+        ],
+        "operationId": "searchAddresses",
+        "summary": "Search road-name addresses",
+        "description": "USER role required. Proxies address search without storing results. keyword is trimmed; no common data envelope.",
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressSearchResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED, INVALID_ADDRESS_KEYWORD or ADDRESS_COORDINATE_NOT_FOUND as applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ACCESS_ROLE_DENIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "ADDRESS_LOOKUP_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "ADDRESS_LOOKUP_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/geo/current-location": {
+      "post": {
+        "tags": [
+          "geo-resource"
+        ],
+        "operationId": "resolveCurrentLocation",
+        "summary": "Resolve an address coordinate key without storing a location",
+        "description": "Optional preview. No GPS access; the server returns WGS84 coordinates and does not persist the result. USER role required.",
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrentLocationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoPoint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED, INVALID_REQUEST_BODY or ADDRESS_COORDINATE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ACCESS_ROLE_DENIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "ADDRESS_LOOKUP_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "ADDRESS_LOOKUP_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inspection-visits/{visitId}/walking-route": {
+      "post": {
+        "tags": [
+          "inspection-visit-resource"
+        ],
+        "operationId": "getInspectionVisitWalkingRoute",
+        "summary": "Calculate walking route in stored visit property order",
+        "description": "Explicit user request only; no request body. USER role required. Skips unlocated properties, merges consecutive equal coordinates, preserves return visits. Fewer than two stops returns zero totals and empty arrays. More than seven stops are split server-side; any failed segment fails the whole operation. No server persistence/cache. Response has no common data envelope or revision.",
+        "security": [
+          {
+            "X-AUTH-TOKEN": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "visitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalkingRoute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INSPECTION_VISIT_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ACCESS_ROLE_DENIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "WALKING_ROUTE_QUOTA_EXCEEDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "WALKING_ROUTE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "WALKING_ROUTE_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionMapError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3891,7 +4182,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "interestLevel": {
             "type": "integer",
@@ -3921,7 +4215,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "memo": {
             "type": "string"
@@ -3979,8 +4276,21 @@
           },
           "nextProperty": {
             "$ref": "#/components/schemas/ViewedPropertyBriefRdo"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertyLocationRdo"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
-        }
+        },
+        "required": [
+          "location"
+        ]
       },
       "ViewedPropertyUdo": {
         "type": "object",
@@ -3989,7 +4299,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "memo": {
             "type": "string"
@@ -4018,6 +4331,17 @@
             "items": {
               "$ref": "#/components/schemas/FileBoxItemUdo"
             }
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertyLocationInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Omitted or null clears location. The FE always includes this key on PUT to preserve the existing location unless explicitly cleared."
           }
         }
       },
@@ -4339,7 +4663,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "interestLevel": {
             "type": "integer",
@@ -4868,7 +5195,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "memo": {
             "type": "string"
@@ -4897,6 +5227,17 @@
             "items": {
               "$ref": "#/components/schemas/FileBoxItemCdo"
             }
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertyLocationInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Omitted or null clears location. The FE always includes this key on PUT to preserve the existing location unless explicitly cleared."
           }
         }
       },
@@ -5519,7 +5860,10 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "interestLevel": {
             "type": "integer",
@@ -5552,6 +5896,340 @@
             "format": "date-time"
           }
         }
+      },
+      "CoordKey": {
+        "type": "object",
+        "properties": {
+          "admCd": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rnMgtSn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "udrtYn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "buldMnnm": {
+            "type": "string",
+            "minLength": 1
+          },
+          "buldSlno": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "admCd",
+          "rnMgtSn",
+          "udrtYn",
+          "buldMnnm",
+          "buldSlno"
+        ]
+      },
+      "PropertyLocationRdo": {
+        "type": "object",
+        "properties": {
+          "bdMgtSn": {
+            "type": "string"
+          },
+          "roadAddress": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "WGS84 latitude in degrees"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "WGS84 longitude in degrees"
+          }
+        },
+        "required": [
+          "bdMgtSn",
+          "roadAddress",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "PropertyLocationInput": {
+        "type": "object",
+        "properties": {
+          "bdMgtSn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 26
+          },
+          "roadAddress": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          },
+          "coordKey": {
+            "$ref": "#/components/schemas/CoordKey"
+          }
+        },
+        "required": [
+          "bdMgtSn"
+        ],
+        "description": "Coordinates are resolved by the server. coordKey is required for a new or changed building; omitted for preserving the existing bdMgtSn. Client latitude/longitude are not accepted."
+      },
+      "AddressSearchItem": {
+        "type": "object",
+        "properties": {
+          "roadAddress": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "jibunAddress": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "buildingName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bdMgtSn": {
+            "type": "string"
+          },
+          "zipNo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coordKey": {
+            "$ref": "#/components/schemas/CoordKey"
+          }
+        },
+        "required": [
+          "roadAddress",
+          "jibunAddress",
+          "buildingName",
+          "bdMgtSn",
+          "zipNo",
+          "coordKey"
+        ]
+      },
+      "AddressSearchResult": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressSearchItem"
+            }
+          }
+        },
+        "required": [
+          "totalCount",
+          "items"
+        ]
+      },
+      "GeoPoint": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "WGS84 latitude in degrees"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "WGS84 longitude in degrees"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
+      "CurrentLocationInput": {
+        "type": "object",
+        "properties": {
+          "coordKey": {
+            "$ref": "#/components/schemas/CoordKey"
+          }
+        },
+        "required": [
+          "coordKey"
+        ]
+      },
+      "WalkingRouteStop": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "propertyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "WGS84 latitude in degrees"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "WGS84 longitude in degrees"
+          }
+        },
+        "required": [
+          "index",
+          "propertyIds",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "WalkingRouteLeg": {
+        "type": "object",
+        "properties": {
+          "fromStopIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "toStopIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "distance": {
+            "type": "number",
+            "minimum": 0,
+            "description": "metres"
+          },
+          "time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "seconds"
+          },
+          "path": {
+            "type": "array",
+            "description": "WGS84 [longitude, latitude] tuples. May be empty; FE must not substitute straight lines as walking geometry. A leg can span several stops.",
+            "items": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number",
+                  "format": "double",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "WGS84 longitude in degrees"
+                },
+                {
+                  "type": "number",
+                  "format": "double",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "WGS84 latitude in degrees"
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        },
+        "required": [
+          "fromStopIndex",
+          "toStopIndex",
+          "distance",
+          "time",
+          "path"
+        ]
+      },
+      "WalkingRoute": {
+        "type": "object",
+        "properties": {
+          "totalDistance": {
+            "type": "number",
+            "minimum": 0,
+            "description": "metres"
+          },
+          "totalTime": {
+            "type": "number",
+            "minimum": 0,
+            "description": "seconds"
+          },
+          "stops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalkingRouteStop"
+            }
+          },
+          "legs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalkingRouteLeg"
+            }
+          }
+        },
+        "required": [
+          "totalDistance",
+          "totalTime",
+          "stops",
+          "legs"
+        ]
+      },
+      "InspectionMapError": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "code"
+        ]
       }
     },
     "securitySchemes": {

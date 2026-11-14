@@ -406,102 +406,101 @@ describe('InspectionPropertyEditSection location', () => {
     expect(updateMutateAsync.mock.calls[0][0].location).toBeNull();
   });
 
-  it('on a location error reverts to the confirmed location, resends once, and explains', async () => {
+  it('retains the failed address and other edits without resending with the old location', async () => {
     mockProperty(savedLocation);
     mockSearch();
-    updateMutateAsync
-      .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
-      .mockResolvedValue({ ...property(), location: savedLocation });
+    updateMutateAsync.mockRejectedValue(
+      httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND')
+    );
     const { user } = renderEdit();
 
+    await user.type(screen.getByLabelText('메모'), '보존할 메모');
     await user.click(screen.getByRole('button', { name: '변경' }));
     await pickCandidate(user);
-
-    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
-    expect(updateMutateAsync.mock.calls[0][0].location.bdMgtSn).toBe('B-NEW');
-    expect(updateMutateAsync.mock.calls[1][0].location).toEqual({
-      bdMgtSn: 'B-SAVED',
-      roadAddress: '서울특별시 성동구 용답토방길 135',
-    });
 
     const message = await screen.findByText(/주소는 저장하지 못했습니다/);
     expect(message.textContent).toContain(
       '가까운 다른 건물을 고르거나 위치 없이 두세요'
     );
-    // The form shows the confirmed address again.
-    expect(screen.getByText('서울특별시 성동구 용답토방길 135')).toBeTruthy();
+    expect(updateMutateAsync).toHaveBeenCalledTimes(1);
+    expect(updateMutateAsync.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        memo: '보존할 메모',
+        location: {
+          bdMgtSn: 'B-NEW',
+          roadAddress: candidate.roadAddress,
+          coordKey: candidate.coordKey,
+        },
+      })
+    );
+    expect(screen.getByText(candidate.roadAddress)).toBeTruthy();
+    expect((screen.getByLabelText('메모') as HTMLTextAreaElement).value).toBe(
+      '보존할 메모'
+    );
   });
 
-  it('does not autosave again after the resend, so the notice stays', async () => {
+  it('does not automatically retry a failed location save after the autosave delay', async () => {
     mockProperty(savedLocation);
     mockSearch();
-    updateMutateAsync
-      .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
-      .mockResolvedValue({ ...property(), location: savedLocation });
+    updateMutateAsync.mockRejectedValue(
+      httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND')
+    );
     const { user } = renderEdit();
 
     await user.click(screen.getByRole('button', { name: '변경' }));
     await pickCandidate(user);
     await screen.findByText(/주소는 저장하지 못했습니다/);
-
     await wait(AUTOSAVE_DELAY_MS + 300);
 
-    expect(updateMutateAsync).toHaveBeenCalledTimes(2);
-    expect(screen.getByText(/주소는 저장하지 못했습니다/)).toBeTruthy();
+    expect(updateMutateAsync).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(candidate.roadAddress)).toBeTruthy();
   });
 
-  it('keeps the notice when a later edit saves without a new address', async () => {
+  it('retries the chosen address and retained edits only when the user saves again', async () => {
     mockProperty(savedLocation);
     mockSearch();
     updateMutateAsync
       .mockRejectedValueOnce(httpError(400, 'ADDRESS_COORDINATE_NOT_FOUND'))
-      .mockResolvedValue({ ...property(), location: savedLocation });
+      .mockResolvedValue({
+        ...property(),
+        location: { ...savedLocation, bdMgtSn: 'B-NEW' },
+      });
     const { user } = renderEdit();
-
+    await user.type(screen.getByLabelText('메모'), '보존할 메모');
     await user.click(screen.getByRole('button', { name: '변경' }));
     await pickCandidate(user);
     await screen.findByText(/주소는 저장하지 못했습니다/);
+    await user.click(screen.getByRole('button', { name: '작성 중으로 저장' }));
 
-    await user.type(screen.getByLabelText('한줄평'), '다른 수정');
-    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(3), {
-      timeout: 3000,
-    });
-
-    expect(updateMutateAsync.mock.calls[2][0].oneLineReview).toBe('다른 수정');
-    expect(screen.getByText(/주소는 저장하지 못했습니다/)).toBeTruthy();
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    expect(updateMutateAsync.mock.calls[1][0]).toEqual(
+      expect.objectContaining({
+        memo: '보존할 메모',
+        location: {
+          bdMgtSn: 'B-NEW',
+          roadAddress: candidate.roadAddress,
+          coordKey: candidate.coordKey,
+        },
+      })
+    );
+    await waitFor(() =>
+      expect(screen.queryByText(/주소는 저장하지 못했습니다/)).toBeNull()
+    );
   });
 
-  it('on 503 resends with the confirmed location and disables the address field', async () => {
-    mockProperty(null);
+  it('on 503 keeps the selection and lets the user explicitly clear it', async () => {
+    mockProperty(savedLocation);
     mockSearch();
     updateMutateAsync
       .mockRejectedValueOnce(httpError(503, 'ADDRESS_LOOKUP_UNAVAILABLE'))
       .mockResolvedValue({ ...property(), location: null });
     const { user } = renderEdit();
-
-    await pickCandidate(user);
-
-    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
-    expect(updateMutateAsync.mock.calls[1][0].location).toBeNull();
-    expect(await screen.findByText(/지금은 주소를 쓸 수 없어요/)).toBeTruthy();
-    expect((screen.getByLabelText('주소') as HTMLInputElement).disabled).toBe(
-      true
-    );
-  });
-
-  it('keeps "위치 지우기" enabled after a 503 disabled the address field', async () => {
-    mockProperty(savedLocation);
-    mockSearch();
-    updateMutateAsync
-      .mockRejectedValueOnce(httpError(503, 'ADDRESS_LOOKUP_UNAVAILABLE'))
-      .mockResolvedValue({ ...property(), location: savedLocation });
-    const { user } = renderEdit();
-
     await user.click(screen.getByRole('button', { name: '변경' }));
     await pickCandidate(user);
-    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
-    await screen.findByText(/지금은 주소를 쓸 수 없어요/);
 
+    await screen.findByText(/지금은 주소를 쓸 수 없어요/);
+    expect(updateMutateAsync).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(candidate.roadAddress)).toBeTruthy();
     expect(
       (screen.getByRole('button', { name: '변경' }) as HTMLButtonElement)
         .disabled
@@ -510,25 +509,36 @@ describe('InspectionPropertyEditSection location', () => {
       name: '위치 지우기',
     }) as HTMLButtonElement;
     expect(clear.disabled).toBe(false);
-
     await user.click(clear);
-    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(3), {
-      timeout: 1000,
-    });
-    expect(updateMutateAsync.mock.calls[2][0].location).toBeNull();
+    await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
+    expect(updateMutateAsync.mock.calls[1][0].location).toBeNull();
   });
 
-  it('falls back to the normal save error when the resend fails too', async () => {
-    mockProperty(null);
+  it('does not complete after a failed location PUT', async () => {
+    mockProperty(savedLocation);
     mockSearch();
-    updateMutateAsync
-      .mockRejectedValueOnce(httpError(502, 'ADDRESS_LOOKUP_FAILED'))
-      .mockRejectedValueOnce(httpError(500, 'INTERNAL'));
+    updateMutateAsync.mockRejectedValue(
+      httpError(502, 'ADDRESS_LOOKUP_FAILED')
+    );
     const { user } = renderEdit();
-
+    await user.type(screen.getByLabelText(/채광 상태는 어떤가/), '밝다');
+    await user.click(screen.getByRole('button', { name: '변경' }));
     await pickCandidate(user);
-
+    await screen.findByText(/주소는 저장하지 못했습니다/);
+    await user.click(screen.getByRole('button', { name: '매물 완료' }));
     await waitFor(() => expect(updateMutateAsync).toHaveBeenCalledTimes(2));
-    expect(await screen.findByText('서버: INTERNAL')).toBeTruthy();
+    expect(statusMutateAsync).not.toHaveBeenCalled();
+    expect(screen.getByText(candidate.roadAddress)).toBeTruthy();
+  });
+
+  it('round-trips a stored nullable road address without inventing an empty address', async () => {
+    mockProperty({ ...savedLocation, roadAddress: null });
+    const { user } = renderEdit();
+    await user.type(screen.getByLabelText('메모'), '메모');
+    await user.click(screen.getByRole('button', { name: '작성 중으로 저장' }));
+    expect(updateMutateAsync.mock.calls[0][0].location).toEqual({
+      bdMgtSn: 'B-SAVED',
+      roadAddress: null,
+    });
   });
 });

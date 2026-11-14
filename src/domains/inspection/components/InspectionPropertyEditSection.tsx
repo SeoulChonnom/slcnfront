@@ -80,8 +80,7 @@ type BasicFields = {
 };
 
 function toLocationInput(
-  location: { bdMgtSn: string; roadAddress: string | null } | null,
-  fallback?: PropertyLocationInput | null
+  location: { bdMgtSn: string; roadAddress: string | null } | null
 ): PropertyLocationInput | null {
   if (!location) {
     return null;
@@ -89,7 +88,7 @@ function toLocationInput(
 
   return {
     bdMgtSn: location.bdMgtSn,
-    roadAddress: location.roadAddress ?? fallback?.roadAddress ?? '',
+    roadAddress: location.roadAddress,
   };
 }
 
@@ -103,6 +102,14 @@ function isAnswerFilled(answer: PropertyAnswer): boolean {
  * opened from the register wizard.
  */
 export function InspectionPropertyEditSection({
+  ...props
+}: InspectionPropertyEditSectionProps) {
+  return (
+    <PropertyEditor key={`${props.visitId}:${props.propertyId}`} {...props} />
+  );
+}
+
+function PropertyEditor({
   device,
   areaId,
   visitId,
@@ -127,8 +134,6 @@ export function InspectionPropertyEditSection({
   const [locationError, setLocationError] = useState<string | null>(null);
   // 503 ADDRESS_LOOKUP_UNAVAILABLE — the address field stays off for this session.
   const [isAddressDisabled, setIsAddressDisabled] = useState(false);
-  // The location the server last returned; what a failed lookup reverts to.
-  const confirmedLocationRef = useRef<PropertyLocationInput | null>(null);
   // Set when a pick/clear should be saved right after the state commits.
   const flushAfterLocationChangeRef = useRef(false);
   const [completeError, setCompleteError] = useState<string | null>(null);
@@ -166,7 +171,6 @@ export function InspectionPropertyEditSection({
       tags: detail.tags,
       location: toLocationInput(detail.location),
     };
-    confirmedLocationRef.current = initialFields.location;
     const initialPhotos: LocalPhotoItem[] = detail.photos.map((photo) => ({
       key: photo.id,
       id: photo.id,
@@ -201,10 +205,8 @@ export function InspectionPropertyEditSection({
   }
 
   function adoptResponse(
-    response: Awaited<ReturnType<typeof updateMutation.mutateAsync>>,
-    sent: PropertyLocationInput | null
+    response: Awaited<ReturnType<typeof updateMutation.mutateAsync>>
   ) {
-    confirmedLocationRef.current = toLocationInput(response.location, sent);
     setPhotos((current) =>
       current.map((photo) => {
         const matched = response.photos.find(
@@ -227,7 +229,7 @@ export function InspectionPropertyEditSection({
       const response = await updateMutation.mutateAsync(
         buildUpdatePayload(next, nextPhotos, next.location)
       );
-      adoptResponse(response, next.location);
+      adoptResponse(response);
       // Only a newly picked address (it carries a coordKey) resolves an
       // earlier "주소는 저장하지 못했습니다"; other edits keep the notice.
       if (next.location?.coordKey) {
@@ -241,57 +243,20 @@ export function InspectionPropertyEditSection({
       });
 
       if (kind === 'location' || kind === 'unavailable') {
-        return resendWithConfirmedLocation(next, nextPhotos, error, kind);
+        setLocationError(
+          `주소는 저장하지 못했습니다. ${describeLocationError(error)}`
+        );
+        if (kind === 'unavailable') {
+          setIsAddressDisabled(true);
+        }
+        // A failed lookup rejects the entire PUT. Keep the user's selected
+        // address and all other edits; only an explicit clear may remove it.
+        return false;
       }
 
       setSaveError(
         error instanceof AppError
           ? error.message
-          : '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.'
-      );
-
-      return false;
-    }
-  }
-
-  // 06-fe-plan §4.1 ③: the server rejects the whole PUT when the address
-  // lookup fails. Put the last confirmed location back and send the same PUT
-  // once more (same bdMgtSn → no lookup) so the other edits are not lost.
-  async function resendWithConfirmedLocation(
-    next: BasicFields,
-    nextPhotos: LocalPhotoItem[],
-    cause: unknown,
-    kind: 'location' | 'unavailable'
-  ): Promise<boolean> {
-    const confirmed = confirmedLocationRef.current;
-
-    setFields((current) =>
-      current ? { ...current, location: confirmed } : current
-    );
-    setLocationError(
-      `주소는 저장하지 못했습니다. ${describeLocationError(cause)}`
-    );
-    if (kind === 'unavailable') {
-      setIsAddressDisabled(true);
-    }
-
-    try {
-      const response = await updateMutation.mutateAsync(
-        buildUpdatePayload(next, nextPhotos, confirmed)
-      );
-      adoptResponse(response, confirmed);
-      // The server now has the reverted form; without this the autosave
-      // would see the revert as a new change and PUT it again.
-      autosave.markClean({
-        fields: { ...next, location: confirmed },
-        photos: nextPhotos,
-      });
-
-      return true;
-    } catch (retryError) {
-      setSaveError(
-        retryError instanceof AppError
-          ? retryError.message
           : '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.'
       );
 
@@ -320,8 +285,7 @@ export function InspectionPropertyEditSection({
             ...current,
             location: {
               bdMgtSn: candidate.bdMgtSn,
-              roadAddress:
-                candidate.roadAddress ?? candidate.jibunAddress ?? '',
+              roadAddress: candidate.roadAddress,
               coordKey: candidate.coordKey,
             },
           }
@@ -491,10 +455,7 @@ export function InspectionPropertyEditSection({
   }
 
   async function handleSaveAsDraft() {
-    autosave.cancel();
-    if (fields) {
-      await save(fields, photos);
-    }
+    if (!(await autosave.flush())) return;
     await flushAnswers();
 
     if (detail?.status === 'COMPLETED') {
@@ -507,10 +468,7 @@ export function InspectionPropertyEditSection({
 
     // Send anything still waiting out the autosave delay first — the server
     // checks required answers when completing.
-    autosave.cancel();
-    if (fields) {
-      await save(fields, photos);
-    }
+    if (!(await autosave.flush())) return;
 
     try {
       await flushAnswers();

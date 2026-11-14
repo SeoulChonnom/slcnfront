@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
 import type { PropsWithChildren } from 'react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { QueryProvider } from '@/app/providers/QueryProvider';
 import {
   ADDRESS_SEARCH_DEBOUNCE_MS,
@@ -17,6 +17,8 @@ function wrapper({ children }: PropsWithChildren) {
   return <QueryProvider client={client}>{children}</QueryProvider>;
 }
 const client = createTestQueryClient();
+
+afterEach(() => client.clear());
 
 function captureKeywords() {
   const keywords: string[] = [];
@@ -59,5 +61,47 @@ describe('useAddressSearch', () => {
 
     await wait(ADDRESS_SEARCH_DEBOUNCE_MS + 150);
     expect(keywords).toEqual([]);
+  });
+
+  it('aborts an obsolete request when the keyword changes', async () => {
+    let previousSignal: AbortSignal | undefined;
+    server.use(
+      http.get(`${API}/geo/addresses`, async ({ request }) => {
+        if (new URL(request.url).searchParams.get('keyword') === '이전 주소') {
+          previousSignal = request.signal;
+          await new Promise<void>((resolve) =>
+            request.signal.addEventListener('abort', () => resolve(), {
+              once: true,
+            })
+          );
+        }
+        return HttpResponse.json({ totalCount: 0, items: [] });
+      })
+    );
+    const { rerender } = renderHook(
+      ({ keyword }) => useAddressSearch(keyword),
+      {
+        wrapper,
+        initialProps: { keyword: '이전 주소' },
+      }
+    );
+    await waitFor(() => expect(previousSignal).toBeDefined());
+    rerender({ keyword: '새 주소' });
+    await waitFor(() => expect(previousSignal?.aborted).toBe(true));
+  });
+
+  it('hides the previous result during the next keyword debounce', async () => {
+    captureKeywords();
+    const { result, rerender } = renderHook(
+      ({ keyword }) => useAddressSearch(keyword),
+      {
+        wrapper,
+        initialProps: { keyword: '처음 주소' },
+      }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    rerender({ keyword: '다음 주소' });
+    expect(result.current.isDebouncing).toBe(true);
+    expect(result.current.data).toBeUndefined();
   });
 });

@@ -228,7 +228,7 @@ type PropertyLocation = {
  */
 export type PropertyLocationInput = {
   bdMgtSn: string;
-  roadAddress: string;
+  roadAddress: string | null;
   coordKey?: CoordKey;
 };
 

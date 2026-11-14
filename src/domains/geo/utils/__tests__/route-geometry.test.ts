@@ -41,6 +41,22 @@ describe('buildStops', () => {
     expect(stops[1].propertyIds).toEqual(['b', 'c']);
   });
 
+  it('merges by coordinates, including different building IDs across an unlocated row', () => {
+    const stops = buildStops([
+      property('a', 'X'),
+      property('b', null),
+      property('c', 'Y'),
+    ]);
+    expect(stops).toHaveLength(1);
+    expect(stops[0].label).toBe('1·3');
+  });
+
+  it('keeps different coordinates separate even with the same building ID', () => {
+    expect(
+      buildStops([property('a', 'X'), property('b', 'X', 37.6)])
+    ).toHaveLength(2);
+  });
+
   it('does not merge A -> B -> A', () => {
     const stops = buildStops([
       property('a', 'X'),

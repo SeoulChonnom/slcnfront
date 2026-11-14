@@ -38,6 +38,22 @@ beforeEach(() => {
 });
 
 describe('VisitRouteSection without a Kakao key', () => {
+  it('keeps the unlocated row number and omits estimated time on selected visits', () => {
+    envState.key = null;
+    renderWithProviders(
+      <VisitRouteSection
+        visitId='v1'
+        properties={properties}
+        showEstimates={false}
+      />
+    );
+    expect(screen.getByText('단지 b').closest('li')?.textContent).toContain(
+      '2'
+    );
+    expect(screen.getByText(/직선 연결/)).toBeTruthy();
+    expect(screen.queryByText(/직선 기준 추정/)).toBeNull();
+    expect(screen.queryByText(/약 \d+분/)).toBeNull();
+  });
   it('never calls the loader and still renders the list fallback', () => {
     envState.key = null;
     renderWithProviders(

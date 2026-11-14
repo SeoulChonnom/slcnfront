@@ -26,6 +26,8 @@ export type ApiRequestOptions = {
   signal?: AbortSignal;
   auth?: boolean;
   responseType?: ResponseType;
+  /** Disable replay for explicitly requested external paid operations. */
+  retryAfterUnauthorized?: boolean;
 };
 
 /**

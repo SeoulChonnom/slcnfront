@@ -10,7 +10,7 @@ export const ADDRESS_SEARCH_MIN_LENGTH = 2;
  * Address candidates for `keyword`. The keyword is debounced (300ms) and
  * nothing is requested while the trimmed keyword is under 2 characters.
  */
-export function useAddressSearch(keyword: string, enabled = true) {
+export function useAddressSearch(keyword: string, enabled = true, page = 1) {
   const trimmed = keyword.trim();
   const [debounced, setDebounced] = useState('');
 
@@ -22,13 +22,21 @@ export function useAddressSearch(keyword: string, enabled = true) {
     return () => clearTimeout(timer);
   }, [trimmed]);
 
-  const active = enabled && debounced.length >= ADDRESS_SEARCH_MIN_LENGTH;
+  const isDebouncing = trimmed !== debounced;
+  const active =
+    enabled && !isDebouncing && trimmed.length >= ADDRESS_SEARCH_MIN_LENGTH;
 
-  return useQuery({
-    queryKey: geoQueryKeys.addressSearch(debounced),
-    queryFn: () => searchAddresses({ keyword: debounced }),
+  const query = useQuery({
+    queryKey: geoQueryKeys.addressSearch(trimmed, page, 10),
+    queryFn: ({ signal }) =>
+      searchAddresses({ keyword: trimmed, page, size: 10 }, signal),
     enabled: active,
     retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     staleTime: 60_000,
   });
+
+  return { ...query, isDebouncing };
 }

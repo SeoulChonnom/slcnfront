@@ -17,27 +17,34 @@ export type AddressSearchParams = {
   size?: number;
 };
 
-function createGeoApi(client: ApiClientLike = apiClient) {
+export function createGeoApi(client: ApiClientLike = apiClient) {
   return {
     /** api.md §8-2 — 행안부 도로명주소 검색 프록시. 아무것도 저장하지 않는다. */
     async searchAddresses(
-      params: AddressSearchParams
+      params: AddressSearchParams,
+      signal?: AbortSignal
     ): Promise<AddressSearchResult> {
       const response = await client.get<unknown>({
         path: '/geo/addresses',
         query: {
-          keyword: params.keyword,
-          page: params.page,
-          size: params.size,
+          keyword: params.keyword.trim(),
+          page: params.page ?? 1,
+          size: params.size ?? 10,
         },
+        signal,
       });
       return parseAddressSearchResponse(response);
     },
 
     /** api.md §8-3 — 외부 유료 호출. 버튼을 눌렀을 때만 부르고 서버는 저장하지 않는다. */
-    async fetchWalkingRoute(visitId: string): Promise<WalkingRoute> {
+    async fetchWalkingRoute(
+      visitId: string,
+      signal?: AbortSignal
+    ): Promise<WalkingRoute> {
       const response = await client.post<unknown>({
         path: `/inspection-visits/${encodeURIComponent(visitId)}/walking-route`,
+        signal,
+        retryAfterUnauthorized: false,
       });
       return parseWalkingRouteResponse(response);
     },
@@ -59,12 +66,15 @@ function createGeoApi(client: ApiClientLike = apiClient) {
 
 const geoApi = createGeoApi();
 
-export function searchAddresses(params: AddressSearchParams) {
-  return geoApi.searchAddresses(params);
+export function searchAddresses(
+  params: AddressSearchParams,
+  signal?: AbortSignal
+) {
+  return geoApi.searchAddresses(params, signal);
 }
 
-export function fetchWalkingRoute(visitId: string) {
-  return geoApi.fetchWalkingRoute(visitId);
+export function fetchWalkingRoute(visitId: string, signal?: AbortSignal) {
+  return geoApi.fetchWalkingRoute(visitId, signal);
 }
 
 export function fetchCurrentLocation(coordKey: CoordKey) {

@@ -86,7 +86,7 @@ describe('RegisterStepProperties draft badge', () => {
       <RegisterStepProperties device='main' visitId='visit-1' />
     );
 
-    expect(await screen.findByText(/트리마제/)).toBeTruthy();
+    await waitFor(() => expect(rowOrder()).toEqual(['트리마제']));
     expect(screen.queryByText('작성 중')).toBeNull();
   });
 

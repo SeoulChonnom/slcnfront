@@ -33,6 +33,7 @@ function createdProperty() {
     interestLevel: null,
     status: 'DRAFT',
     sortOrder: 1,
+    location: null,
     incompleteSummary: {
       unansweredRequiredCount: 0,
       draftPropertyCount: 0,

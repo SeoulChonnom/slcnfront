@@ -120,6 +120,6 @@ export const houseQueryKeys = {
 
 export const geoQueryKeys = {
   all: ['geo'] as const,
-  addressSearch: (keyword: string) =>
-    [...geoQueryKeys.all, 'addresses', keyword] as const,
+  addressSearch: (keyword: string, page = 1, size = 10) =>
+    [...geoQueryKeys.all, 'addresses', keyword, page, size] as const,
 };

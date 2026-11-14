@@ -70,7 +70,7 @@ export function AddPropertyForm({
     setLocationFailure(null);
     setLocation({
       bdMgtSn: candidate.bdMgtSn,
-      roadAddress: candidate.roadAddress ?? candidate.jibunAddress ?? '',
+      roadAddress: candidate.roadAddress,
       coordKey: candidate.coordKey,
     });
     if (!newComplexName.trim() && candidate.buildingName) {
