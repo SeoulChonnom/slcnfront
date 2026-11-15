@@ -2,6 +2,7 @@ import { type RenderOptions, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { PropsWithChildren, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { AccessTokenRefreshBootstrap } from '@/app/providers/AccessTokenRefreshBootstrap';
 import { AuthBootstrap } from '@/app/providers/AuthBootstrap';
 import { QueryProvider } from '@/app/providers/QueryProvider';
 import { SessionRestoreBootstrap } from '@/app/providers/SessionRestoreBootstrap';
@@ -22,6 +23,7 @@ export function renderWithAppProviders(
     return (
       <QueryProvider client={queryClient}>
         <ThemeProvider>
+          <AccessTokenRefreshBootstrap />
           <AuthBootstrap />
           <SessionRestoreBootstrap />
           <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>

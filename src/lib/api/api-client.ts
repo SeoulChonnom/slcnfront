@@ -11,11 +11,35 @@ type JsonBody = Record<string, unknown> | unknown[];
 type ApiMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 type ResponseType = 'blob' | 'json' | 'text' | 'void';
 
+/**
+ * Reissues the access token from the refresh-token cookie. Resolves to the
+ * new token, or `null` when the session cannot be renewed.
+ */
+type AccessTokenRefresher = () => Promise<string | null>;
+
 type ApiClientConfig = {
   fetchFn?: typeof fetch;
   getAccessToken?: () => string | null;
   getBaseUrl?: () => string;
+  refreshAccessToken?: AccessTokenRefresher;
 };
+
+/*
+ * The auth domain registers its refresher at app start instead of being
+ * imported here: auth-api itself is built on this client, so a direct import
+ * would be a cycle.
+ */
+let registeredAccessTokenRefresher: AccessTokenRefresher | null = null;
+
+export function setAccessTokenRefresher(
+  refresher: AccessTokenRefresher | null
+) {
+  registeredAccessTokenRefresher = refresher;
+}
+
+function refreshWithRegisteredRefresher() {
+  return registeredAccessTokenRefresher?.() ?? Promise.resolve(null);
+}
 
 export type ApiRequestOptions = {
   path: string;
@@ -152,6 +176,36 @@ async function parseResponse<T>(
   return text as T;
 }
 
+function buildRequestBody(
+  body: ApiRequestOptions['body'],
+  headers: Headers
+): BodyInit | undefined {
+  if (body === undefined) {
+    return undefined;
+  }
+
+  if (isFormData(body)) {
+    return body;
+  }
+
+  headers.set('Content-Type', 'application/json');
+
+  return JSON.stringify(body);
+}
+
+async function toHttpError(response: Response) {
+  const parsedError = await parseError(response);
+
+  return new AppError({
+    code: 'HTTP_ERROR',
+    message: parsedError.message,
+    status: response.status,
+    apiCode: parsedError.apiCode,
+    fieldErrors: parsedError.fieldErrors,
+    details: parsedError.details,
+  });
+}
+
 export function createApiClient(config: ApiClientConfig = {}) {
   // Resolve `fetch` per call, not once at module load: msw (tests) patches
   // `globalThis.fetch` after this module was imported.
@@ -159,39 +213,23 @@ export function createApiClient(config: ApiClientConfig = {}) {
     config.fetchFn ?? ((...args) => globalThis.fetch(...args));
   const resolveAccessToken = config.getAccessToken ?? getAccessToken;
   const getBaseUrl = config.getBaseUrl ?? (() => getAppEnv().apiUrl);
+  const refreshAccessToken =
+    config.refreshAccessToken ?? refreshWithRegisteredRefresher;
 
-  async function request<T = unknown>({
-    path,
-    method = 'GET',
-    query,
-    headers,
-    body,
-    signal,
-    auth = true,
-    responseType = 'json',
-  }: ApiRequestOptions) {
+  async function send(
+    { path, method = 'GET', query, headers, body, signal }: ApiRequestOptions,
+    accessToken: string | null
+  ) {
     const requestHeaders = new Headers(headers);
-    const accessToken = auth ? resolveAccessToken() : null;
 
     if (accessToken) {
       requestHeaders.set('X-AUTH-TOKEN', accessToken);
     }
 
-    let requestBody: BodyInit | undefined;
-
-    if (body !== undefined) {
-      if (isFormData(body)) {
-        requestBody = body;
-      } else {
-        requestHeaders.set('Content-Type', 'application/json');
-        requestBody = JSON.stringify(body);
-      }
-    }
-
-    let response: Response;
+    const requestBody = buildRequestBody(body, requestHeaders);
 
     try {
-      response = await fetchFn(buildUrl(path, query, getBaseUrl()), {
+      return await fetchFn(buildUrl(path, query, getBaseUrl()), {
         method,
         headers: requestHeaders,
         body: requestBody,
@@ -205,18 +243,46 @@ export function createApiClient(config: ApiClientConfig = {}) {
         details: error,
       });
     }
+  }
+
+  /*
+   * An access token that expired while the page stayed open comes back as
+   * 401. Another request may already have renewed it; otherwise reissue it
+   * from the refresh-token cookie. Either way the request is retried once.
+   */
+  async function renewAccessToken(expiredToken: string) {
+    const currentToken = resolveAccessToken();
+
+    if (!currentToken) {
+      return null;
+    }
+
+    if (currentToken !== expiredToken) {
+      return currentToken;
+    }
+
+    return refreshAccessToken();
+  }
+
+  async function request<T = unknown>(options: ApiRequestOptions) {
+    const { auth = true, responseType = 'json' } = options;
+    const accessToken = auth ? resolveAccessToken() : null;
+    let response = await send(options, accessToken);
+
+    if (
+      response.status === 401 &&
+      accessToken &&
+      options.retryAfterUnauthorized !== false
+    ) {
+      const renewedToken = await renewAccessToken(accessToken);
+
+      if (renewedToken) {
+        response = await send(options, renewedToken);
+      }
+    }
 
     if (!response.ok) {
-      const parsedError = await parseError(response);
-
-      throw new AppError({
-        code: 'HTTP_ERROR',
-        message: parsedError.message,
-        status: response.status,
-        apiCode: parsedError.apiCode,
-        fieldErrors: parsedError.fieldErrors,
-        details: parsedError.details,
-      });
+      throw await toHttpError(response);
     }
 
     return parseResponse<T>(response, responseType);
