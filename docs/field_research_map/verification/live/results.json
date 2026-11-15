@@ -1,0 +1,212 @@
+{
+  "date": "2026-11-15",
+  "result": "PASS",
+  "application": {
+    "branch": "feat/inspection-visit-map",
+    "commit": "b72da4a",
+    "origin": "http://localhost:5173",
+    "backend": "real localhost:8080",
+    "source": "exact committed PR snapshot without pending user auth work",
+    "authentication": "development account via actual UI login; HTTP 200",
+    "mocksUsed": false,
+    "authStoreBypassUsed": false
+  },
+  "addressSearch": {
+    "addressSearchStatus": 200,
+    "totalCount": 2,
+    "itemFields": [
+      "roadAddress",
+      "jibunAddress",
+      "buildingName",
+      "bdMgtSn",
+      "zipNo",
+      "coordKey"
+    ],
+    "firstPublicAddress": "서울특별시 중구 세종대로 110 (태평로1가)",
+    "coordKeyFields": [
+      "admCd",
+      "rnMgtSn",
+      "udrtYn",
+      "buldMnnm",
+      "buldSlno"
+    ],
+    "optionCount": 2
+  },
+  "propertyCreation": [
+    {
+      "propertyCreateStatus": 200,
+      "responseFields": [
+        "propertyId",
+        "inspectionVisitId",
+        "areaId",
+        "areaName",
+        "visitedAt",
+        "complexName",
+        "name",
+        "memo",
+        "oneLineReview",
+        "pros",
+        "cons",
+        "interestLevel",
+        "status",
+        "sortOrder",
+        "location",
+        "tags",
+        "cover",
+        "photos",
+        "answers",
+        "incompleteSummary",
+        "prevProperty",
+        "nextProperty"
+      ],
+      "sentLocationFields": [
+        "bdMgtSn",
+        "roadAddress",
+        "coordKey"
+      ],
+      "savedLocationFields": [
+        "bdMgtSn",
+        "roadAddress",
+        "latitude",
+        "longitude"
+      ],
+      "coordinatesFinite": true,
+      "publicAddress": "서울특별시 중구 세종대로 110 (태평로1가)"
+    },
+    {
+      "addressSearchStatus": 200,
+      "propertyCreateStatus": 200,
+      "publicAddress": "서울특별시 중구 세종대로 99 (정동)",
+      "coordinatesFinite": true
+    }
+  ],
+  "locationRoundtrip": {
+    "target": "exact committed PR application at localhost:5173; real backend",
+    "refreshedDetailStatus": 200,
+    "memoOnlyPut": {
+      "status": 200,
+      "locationUnchanged": true,
+      "sentLocationFields": [
+        "bdMgtSn",
+        "roadAddress"
+      ],
+      "sentCoordinates": false
+    },
+    "explicitClear": {
+      "status": 200,
+      "persistedAfterReload": true
+    },
+    "reassign": {
+      "status": 200,
+      "persistedAfterReload": true,
+      "publicAddress": "서울특별시 중구 세종대로 110 (태평로1가)"
+    }
+  },
+  "walkingRoute": {
+    "target": "exact committed PR application; live backend",
+    "automaticPostsBeforeUserClick": 0,
+    "totalWalkingPostCount": 1,
+    "status": 200,
+    "responseFields": [
+      "totalDistance",
+      "totalTime",
+      "stops",
+      "legs"
+    ],
+    "requestHadBody": false,
+    "code": null,
+    "title": null,
+    "stops": 2,
+    "legs": 1,
+    "totalDistance": 234,
+    "totalTime": 243,
+    "validPathPoints": true,
+    "renderedSummary": "실제 도보 약 5분 · 234m",
+    "notices": [],
+    "sdkReady": true
+  },
+  "renderedScreens": {
+    "backend": "real localhost:8080",
+    "frontend": "exact committed PR snapshot at localhost:5173",
+    "screens": [
+      {
+        "device": "desktop-walking",
+        "viewport": 1440,
+        "scrollWidth": 1440,
+        "koreanFontReady": true,
+        "sdkReady": true,
+        "mapTileCount": 16,
+        "screenshot": "desktop-walking-result-1440.png"
+      },
+      {
+        "device": "mobile-straight",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "koreanFontReady": true,
+        "sdkReady": true,
+        "mapTileCount": 7,
+        "screenshot": "mobile-390.png"
+      },
+      {
+        "device": "main-editor",
+        "viewport": 1440,
+        "scrollWidth": 1440,
+        "koreanFontReady": true,
+        "sdkReady": false,
+        "mapTileCount": 0,
+        "screenshot": "desktop-edit-1440.png"
+      },
+      {
+        "device": "mobile-editor",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "koreanFontReady": true,
+        "sdkReady": false,
+        "mapTileCount": 0,
+        "screenshot": "mobile-edit-390.png"
+      }
+    ],
+    "walkingPostsAfterMobileNavigation": 1
+  },
+  "screenshots": [
+    "desktop-walking-result-1440.png",
+    "desktop-walking-section-1440.png",
+    "mobile-390.png",
+    "desktop-edit-1440.png",
+    "mobile-edit-390.png"
+  ],
+  "cleanup": {
+    "removedOnlyTestCreatedRecords": true,
+    "visitDeleteStatus": 204,
+    "areaDeleteStatus": 204,
+    "matchingTestAreas": 0,
+    "visit": {
+      "found": false,
+      "status": 400,
+      "code": "INSPECTION_VISIT_NOT_FOUND"
+    },
+    "properties": [
+      {
+        "found": false,
+        "status": 400,
+        "code": "VIEWED_PROPERTY_NOT_FOUND"
+      },
+      {
+        "found": false,
+        "status": 400,
+        "code": "VIEWED_PROPERTY_NOT_FOUND"
+      }
+    ]
+  },
+  "productFindings": [],
+  "harnessAdjustments": [
+    "The initial localhost:5174 login returned HTTP 403; final tests used localhost:5173 and login returned HTTP 200.",
+    "Temporary snapshot Vite fs.allow included shared node_modules for actual Pretendard font loading. No repository source changes were needed.",
+    "A mobile locator crop was excluded because fixed bottom navigation obscured rows. The full mobile capture was reviewed and retained; no records were recreated or walking calls repeated."
+  ],
+  "limitations": [
+    "Exactly one small real walking query was issued. Quota exhaustion, provider outages and other paid error scenarios were not induced. Existing unit/mock coverage exercises those cases.",
+    "Production deployment and strict simultaneous edits from another user were not tested."
+  ],
+  "sensitiveDataPolicy": "No access tokens, JavaScript key values, full SDK request URLs or preexisting private records included. Exact disposable record IDs are retained only in local intermediate files and excluded from this aggregate report."
+}
