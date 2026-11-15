@@ -1,3 +1,4 @@
+import { useIsMutating, useQueryClient } from '@tanstack/react-query';
 import { useId, useMemo, useState } from 'react';
 import {
   buildWalkingRouteKey,
@@ -16,9 +17,11 @@ import {
   secondsToWalkMinutes,
   toWalkingRouteDisplay,
 } from '@/domains/geo/utils/walking-route';
+import { inspectionQueryKeys } from '@/lib/api/query-keys';
 
 type VisitRouteProperty = {
   propertyId: string;
+  sortOrder?: number;
   /** Row label shown in the list, e.g. "트리마제 · 101동 1203호". */
   title: string;
   location: (GeoPoint & { bdMgtSn: string }) | null;
@@ -32,6 +35,8 @@ type VisitRouteSectionProps = {
   properties: VisitRouteProperty[];
   origin?: GeoPoint | null;
   defaultOpen?: boolean;
+  /** The selected-visit screen does not show guessed walking times. */
+  showEstimates?: boolean;
 };
 
 const FAILURE_MESSAGES: Record<WalkingRouteFailure, string> = {
@@ -39,6 +44,9 @@ const FAILURE_MESSAGES: Record<WalkingRouteFailure, string> = {
   failed: '잠시 후 다시 시도해 주세요',
   unavailable: '지금은 도보 경로를 볼 수 없어요',
   other: '잠시 후 다시 시도해 주세요',
+  stale:
+    '방문 순서와 경로가 일치하지 않거나 경로가 비어 있어요. 최신 목록에서 다시 시도해 주세요',
+  insufficient: '경로를 그릴 지점이 2곳 이상 필요해요',
 };
 
 function formatDistance(meters: number) {
@@ -57,13 +65,22 @@ export function VisitRouteSection({
   properties,
   origin = null,
   defaultOpen = true,
+  showEstimates = true,
 }: VisitRouteSectionProps) {
   const bodyId = useId();
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const kakaoMaps = useKakaoMaps();
   const stops = useMemo(() => buildStops(properties), [properties]);
+  const kakaoMaps = useKakaoMaps(isOpen && stops.length > 0);
   const straightSegments = useMemo(() => buildSegments(stops), [stops]);
-  const walking = useWalkingRoute(visitId, properties);
+  const client = useQueryClient();
+  const isSaving = useIsMutating() > 0;
+  const walking = useWalkingRoute(visitId, properties, {
+    enabled: isOpen,
+    isSaving,
+    onStale: () => {
+      void client.invalidateQueries({ queryKey: inspectionQueryKeys.all });
+    },
+  });
   const key = buildWalkingRouteKey(visitId, properties);
   // Which key the user chose to view the real route for; a new key resets it.
   const [routeViewKey, setRouteViewKey] = useState<string | null>(null);
@@ -73,7 +90,6 @@ export function VisitRouteSection({
   );
   const showingRoute =
     routeDisplay !== null && routeViewKey === key && !walking.isPending;
-  const isEmptyRoute = walking.route !== null && routeDisplay === null;
 
   const shownStops = showingRoute ? routeDisplay.stops : stops;
   const segments = showingRoute ? routeDisplay.segments : straightSegments;
@@ -84,6 +100,20 @@ export function VisitRouteSection({
 
   const titleById = new Map(properties.map((p) => [p.propertyId, p.title]));
   const unlocatedCount = properties.filter((p) => !p.location).length;
+  const listEntries = [
+    ...shownStops.map((stop) => ({ number: stop.numbers[0], stop, title: '' })),
+    ...properties.flatMap((property, index) =>
+      property.location
+        ? []
+        : [
+            {
+              number: index + 1,
+              stop: null,
+              title: property.title,
+            },
+          ]
+    ),
+  ].sort((a, b) => a.number - b.number);
   const totalMeters = segments.reduce((sum, s) => sum + s.meters, 0);
   const canRequestRoute = stops.length >= 2;
 
@@ -113,8 +143,9 @@ export function VisitRouteSection({
           </span>
         ) : segments.length > 0 ? (
           <span className='slcn-visit-route__total'>
-            총 {formatDistance(totalMeters)} · 약{' '}
-            {estimateWalkMinutes(totalMeters)}분 (직선 기준 추정)
+            {showEstimates
+              ? `총 ${formatDistance(totalMeters)} · 약 ${estimateWalkMinutes(totalMeters)}분 (직선 기준 추정)`
+              : `직선 연결 · ${formatDistance(totalMeters)}`}
           </span>
         ) : null}
         <button
@@ -134,7 +165,8 @@ export function VisitRouteSection({
             <button
               type='button'
               className='slcn-visit-route__route-button'
-              disabled={walking.isPending || walking.unavailable}
+              disabled={walking.isPending || walking.unavailable || isSaving}
+              aria-busy={walking.isPending || undefined}
               onClick={handleRouteButton}
             >
               {walking.isPending
@@ -148,13 +180,11 @@ export function VisitRouteSection({
                 {FAILURE_MESSAGES.unavailable}
               </p>
             ) : walking.failure ? (
-              <p className='slcn-visit-route__notice' role='alert'>
+              <p
+                className='slcn-visit-route__notice'
+                role={walking.failure === 'insufficient' ? 'status' : 'alert'}
+              >
                 {FAILURE_MESSAGES[walking.failure]}
-              </p>
-            ) : null}
-            {isEmptyRoute ? (
-              <p className='slcn-visit-route__notice' role='status'>
-                경로를 그릴 지점이 2곳 이상 필요해요
               </p>
             ) : null}
             {showingRoute && isCompleted ? (
@@ -163,6 +193,14 @@ export function VisitRouteSection({
               </p>
             ) : null}
           </div>
+        ) : null}
+
+        {stops.length > 0 && kakaoMaps.status !== 'ready' ? (
+          <p className='slcn-visit-route__notice' role='status'>
+            {kakaoMaps.status === 'loading'
+              ? '지도를 불러오는 중이에요. 방문 순서는 목록에서 확인할 수 있어요.'
+              : '지도를 표시할 수 없어 방문 순서를 목록으로 보여드려요.'}
+          </p>
         ) : null}
 
         {isOpen && kakaoMaps.status === 'ready' && shownStops.length > 0 ? (
@@ -174,9 +212,23 @@ export function VisitRouteSection({
           />
         ) : null}
 
-        {shownStops.length > 0 ? (
+        {listEntries.length > 0 ? (
           <ol className='slcn-visit-route__list'>
-            {shownStops.map((stop, index) => {
+            {listEntries.map((entry) => {
+              const { stop } = entry;
+              if (!stop)
+                return (
+                  <li key={`unlocated:${entry.number}`}>
+                    <span className='slcn-visit-route__number'>
+                      {entry.number}
+                    </span>
+                    <span className='slcn-visit-route__name'>
+                      {entry.title}
+                    </span>
+                    <span className='slcn-visit-route__leg'>위치 미지정</span>
+                  </li>
+                );
+              const index = shownStops.indexOf(stop);
               const next = segments.find((segment) => segment.from === stop);
               const reachesFurther =
                 next !== undefined && next.to !== shownStops[index + 1];
@@ -185,7 +237,7 @@ export function VisitRouteSection({
                 .join(' / ');
 
               return (
-                <li key={`${index}:${stop.propertyIds.join(',')}`}>
+                <li key={`stop:${stop.numbers.join(',')}`}>
                   <span className='slcn-visit-route__number'>{stop.label}</span>
                   <span className='slcn-visit-route__name'>{title}</span>
                   {next ? (
@@ -193,18 +245,22 @@ export function VisitRouteSection({
                       {reachesFurther
                         ? `${next.to.label}번 지점까지`
                         : '다음까지'}{' '}
-                      {formatDistance(next.meters)} · 약 {next.walkMinutes}분
+                      {formatDistance(next.meters)}
+                      {showingRoute || showEstimates
+                        ? ` · 약 ${next.walkMinutes}분`
+                        : ' (직선)'}
                     </span>
                   ) : null}
                 </li>
               );
             })}
           </ol>
-        ) : (
+        ) : null}
+        {shownStops.length === 0 ? (
           <p className='slcn-visit-route__empty'>
             위치가 저장된 매물이 아직 없어요.
           </p>
-        )}
+        ) : null}
 
         {unlocatedCount > 0 ? (
           <p className='slcn-visit-route__unlocated'>

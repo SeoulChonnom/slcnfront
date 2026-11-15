@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type {
   GeoPoint,
   RouteSegment,
@@ -34,6 +34,7 @@ function markerElement(text: string, className: string) {
 export function RouteMap({ maps, stops, segments, origin }: RouteMapProps) {
   const containerRef = useRef<HTMLElement>(null);
   const mapRef = useRef<KakaoMap | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -42,86 +43,130 @@ export function RouteMap({ maps, stops, segments, origin }: RouteMapProps) {
       return;
     }
 
-    if (!mapRef.current) {
-      mapRef.current = new maps.Map(container, {
-        center: new maps.LatLng(first.latitude, first.longitude),
-        level: 4,
-      });
-    }
-    const map = mapRef.current;
     const created: KakaoOverlay[] = [];
-    const bounds = new maps.LatLngBounds();
-    const toLatLng = (point: GeoPoint) =>
-      new maps.LatLng(point.latitude, point.longitude);
+    let observer: ResizeObserver | undefined;
+    try {
+      if (!mapRef.current) {
+        mapRef.current = new maps.Map(container, {
+          center: new maps.LatLng(first.latitude, first.longitude),
+          level: 4,
+        });
+      }
+      const map = mapRef.current;
+      const bounds = new maps.LatLngBounds();
+      const toLatLng = (point: GeoPoint) =>
+        new maps.LatLng(point.latitude, point.longitude);
 
-    function add(object: KakaoOverlay) {
-      object.setMap(map);
-      created.push(object);
-    }
+      function add(object: KakaoOverlay) {
+        object.setMap(map);
+        created.push(object);
+      }
 
-    for (const segment of segments) {
-      add(
-        new maps.Polyline({
-          path: (segment.path ?? [segment.from, segment.to]).map(toLatLng),
-          strokeWeight: 4,
-          strokeColor: LINE_COLOR,
-          strokeOpacity: 0.85,
-          strokeStyle: 'solid',
-        })
-      );
-    }
-
-    for (const stop of stops) {
-      const position = toLatLng(stop);
-      bounds.extend(position);
-      add(
-        new maps.CustomOverlay({
-          position,
-          content: markerElement(stop.label, 'slcn-route-map__marker'),
-          yAnchor: 1,
-          zIndex: 2,
-        })
-      );
-    }
-
-    if (origin) {
-      const position = toLatLng(origin);
-      bounds.extend(position);
-      add(
-        new maps.CustomOverlay({
-          position,
-          content: markerElement(
-            '출발',
-            'slcn-route-map__marker slcn-route-map__marker--origin'
-          ),
-          yAnchor: 1,
-          zIndex: 3,
-        })
-      );
-      if (stops[0]) {
+      for (const segment of segments) {
+        segment.path?.forEach((point) => {
+          bounds.extend(toLatLng(point));
+        });
         add(
           new maps.Polyline({
-            path: [position, toLatLng(stops[0])],
-            strokeWeight: 3,
+            path: (segment.path ?? [segment.from, segment.to]).map(toLatLng),
+            strokeWeight: 4,
             strokeColor: LINE_COLOR,
-            strokeOpacity: 0.7,
-            strokeStyle: 'shortdash',
+            strokeOpacity: 0.85,
+            strokeStyle: 'solid',
           })
         );
       }
-    }
 
-    map.relayout();
-    if (stops.length + (origin ? 1 : 0) > 1) {
-      map.setBounds(bounds, 48, 48, 48, 48);
+      // Revisited coordinates remain separate route stops and line segments.
+      // Only their visual overlays share a label, so a later marker cannot
+      // cover the earlier visit's numbers at exactly the same position.
+      const markersByPosition = new Map<
+        string,
+        { stop: RouteStop; labels: string[] }
+      >();
+      for (const stop of stops) {
+        const key = `${stop.latitude},${stop.longitude}`;
+        const marker = markersByPosition.get(key);
+        if (marker) marker.labels.push(stop.label);
+        else markersByPosition.set(key, { stop, labels: [stop.label] });
+      }
+      for (const { stop, labels } of markersByPosition.values()) {
+        const position = toLatLng(stop);
+        bounds.extend(position);
+        add(
+          new maps.CustomOverlay({
+            position,
+            content: markerElement(
+              labels.join(' / '),
+              'slcn-route-map__marker'
+            ),
+            yAnchor: 1,
+            zIndex: 2,
+          })
+        );
+      }
+
+      if (origin) {
+        const position = toLatLng(origin);
+        bounds.extend(position);
+        add(
+          new maps.CustomOverlay({
+            position,
+            content: markerElement(
+              '출발',
+              'slcn-route-map__marker slcn-route-map__marker--origin'
+            ),
+            yAnchor: 1,
+            zIndex: 3,
+          })
+        );
+        if (stops[0]) {
+          add(
+            new maps.Polyline({
+              path: [position, toLatLng(stops[0])],
+              strokeWeight: 3,
+              strokeColor: LINE_COLOR,
+              strokeOpacity: 0.7,
+              strokeStyle: 'shortdash',
+            })
+          );
+        }
+      }
+
+      const fit = () => {
+        map.relayout();
+        if (stops.length + (origin ? 1 : 0) > 1) {
+          map.setBounds(bounds, 48, 48, 48, 48);
+        } else {
+          map.setCenter(toLatLng(first));
+        }
+      };
+      fit();
+      if (typeof ResizeObserver !== 'undefined') {
+        observer = new ResizeObserver(fit);
+        observer.observe(container);
+      }
+    } catch {
+      setFailed(true);
+      for (const object of created) object.setMap(null);
+      mapRef.current = null;
     }
 
     return () => {
+      observer?.disconnect();
       for (const object of created) {
         object.setMap(null);
       }
     };
   }, [maps, stops, segments, origin]);
+
+  if (failed) {
+    return (
+      <p className='slcn-visit-route__notice' role='status'>
+        지도를 표시하지 못했어요. 방문 순서는 목록에서 확인해 주세요.
+      </p>
+    );
+  }
 
   return (
     <figure className='slcn-route-map'>

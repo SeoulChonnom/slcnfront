@@ -197,8 +197,8 @@ const propertyAnswerSchema = z.object({
 const propertyLocationSchema = z.object({
   bdMgtSn: z.string(),
   roadAddress: nullableString,
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
 });
 
 const viewedPropertyDetailSchema = z.object({
@@ -223,7 +223,9 @@ const viewedPropertyDetailSchema = z.object({
   incompleteSummary: incompleteSummarySchema,
   prevProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
   nextProperty: viewedPropertyBriefSchema.nullish().transform((v) => v ?? null),
-  location: propertyLocationSchema.nullish().transform((v) => v ?? null),
+  // Missing is unknown, not a deliberate clear. Reject it before a later PUT
+  // can turn an unparsed location into deletion of the stored building.
+  location: propertyLocationSchema.nullable(),
 });
 
 const inspectionVisitDetailSchema = z.object({

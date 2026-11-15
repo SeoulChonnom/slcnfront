@@ -40,6 +40,27 @@ function fakeMaps() {
 }
 
 describe('RouteMap', () => {
+  it('keeps all visit numbers visible at revisited coordinates without removing route legs', () => {
+    const { maps, overlays, polylines } = fakeMaps();
+    const a = { bdMgtSn: 'X', latitude: 37.5, longitude: 127 };
+    const b = { bdMgtSn: 'Y', latitude: 37.51, longitude: 127 };
+    const stops = buildStops([
+      { propertyId: 'a1', location: a },
+      { propertyId: 'missing', location: null },
+      { propertyId: 'a3', location: a },
+      { propertyId: 'b4', location: b },
+      { propertyId: 'a5', location: a },
+    ]);
+    const segments = buildSegments(stops);
+    render(<RouteMap maps={maps} stops={stops} segments={segments} />);
+    expect(overlays.map((element) => element.textContent)).toEqual([
+      '1·3 / 5',
+      '4',
+    ]);
+    expect(stops.map((stop) => stop.label)).toEqual(['1·3', '4', '5']);
+    expect(segments).toHaveLength(2);
+    expect(polylines).toHaveLength(2);
+  });
   it('draws numbered markers, straight lines and the origin leg, with attribution', () => {
     const { maps, overlays, polylines, setBounds } = fakeMaps();
     const stops = buildStops([

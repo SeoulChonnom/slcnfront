@@ -146,4 +146,83 @@ describe('AddressSearchField', () => {
     renderField({ error: '주소는 저장하지 못했습니다.' });
     expect(screen.getByText('주소는 저장하지 못했습니다.')).toBeTruthy();
   });
+
+  it('pages through results using totalCount and retains keyboard selection', async () => {
+    const requestedPages: string[] = [];
+    server.use(
+      http.get(`${API}/geo/addresses`, ({ request }) => {
+        const page = new URL(request.url).searchParams.get('page') ?? '1';
+        requestedPages.push(page);
+        return HttpResponse.json({
+          totalCount: 11,
+          items: [{ ...candidate, roadAddress: `페이지 ${page} 주소` }],
+        });
+      })
+    );
+    const { user, onSelect } = renderField();
+    await user.type(screen.getByRole('combobox'), '페이지 주소');
+    expect(await screen.findByText('페이지 1 주소')).toBeTruthy();
+    expect(
+      (screen.getByRole('button', { name: '이전' }) as HTMLButtonElement)
+        .disabled
+    ).toBe(true);
+    await user.click(screen.getByRole('button', { name: '다음' }));
+    expect(await screen.findByText('페이지 2 주소')).toBeTruthy();
+    expect(requestedPages).toEqual(['1', '2']);
+    expect(
+      (screen.getByRole('button', { name: '다음' }) as HTMLButtonElement)
+        .disabled
+    ).toBe(true);
+    screen.getByRole('combobox').focus();
+    await user.keyboard('{ArrowDown}{Enter}');
+    expect(onSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ roadAddress: '페이지 2 주소' })
+    );
+  });
+
+  it('hides stale options immediately when the keyword changes', async () => {
+    server.use(
+      http.get(`${API}/geo/addresses`, () =>
+        HttpResponse.json({ totalCount: 1, items: [candidate] })
+      )
+    );
+    const { user } = renderField();
+    await user.type(screen.getByRole('combobox'), '성수동');
+    expect(await screen.findByRole('option')).toBeTruthy();
+    await user.clear(screen.getByRole('combobox'));
+    expect(screen.queryByRole('option')).toBeNull();
+    await user.type(screen.getByRole('combobox'), '다음 검색');
+    expect(screen.queryByRole('option')).toBeNull();
+  });
+
+  it('shows a recoverable lookup error and retries only on the explicit button', async () => {
+    let count = 0;
+    server.use(
+      http.get(`${API}/geo/addresses`, () => {
+        count += 1;
+        return count === 1
+          ? HttpResponse.json(
+              { title: '조회 실패', code: 'ADDRESS_LOOKUP_FAILED' },
+              { status: 502 }
+            )
+          : HttpResponse.json({ totalCount: 1, items: [candidate] });
+      })
+    );
+    const { user } = renderField();
+    await user.type(screen.getByRole('combobox'), '다시 검색');
+    expect(
+      await screen.findByText(
+        '주소를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'
+      )
+    ).toBeTruthy();
+    expect(count).toBe(1);
+    expect((screen.getByRole('combobox') as HTMLInputElement).value).toBe(
+      '다시 검색'
+    );
+    await user.click(
+      screen.getByRole('button', { name: '주소 검색 다시 시도' })
+    );
+    expect(await screen.findByRole('option')).toBeTruthy();
+    expect(count).toBe(2);
+  });
 });

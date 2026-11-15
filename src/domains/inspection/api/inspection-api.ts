@@ -52,6 +52,7 @@ import type {
   InspectionVisitUdo,
   OrderItem,
   PropertyAnswerPayload,
+  PropertyLocationInput,
   ReviewSuggestion,
   ReviewSuggestionRequest,
   TagScope,
@@ -66,7 +67,33 @@ type ApiClientLike = Pick<
   'get' | 'post' | 'put' | 'patch' | 'delete'
 >;
 
-function createInspectionApi(client: ApiClientLike = apiClient) {
+function serializePropertyLocation(
+  location: PropertyLocationInput | null
+): PropertyLocationInput | null {
+  if (location === undefined) {
+    throw new TypeError('Property updates require an explicit location.');
+  }
+  if (location === null) {
+    return null;
+  }
+  return {
+    bdMgtSn: location.bdMgtSn,
+    roadAddress: location.roadAddress,
+    ...(location.coordKey
+      ? {
+          coordKey: {
+            admCd: location.coordKey.admCd,
+            rnMgtSn: location.coordKey.rnMgtSn,
+            udrtYn: location.coordKey.udrtYn,
+            buldMnnm: location.coordKey.buldMnnm,
+            buldSlno: location.coordKey.buldSlno,
+          },
+        }
+      : {}),
+  };
+}
+
+export function createInspectionApi(client: ApiClientLike = apiClient) {
   return {
     // ── Areas ───────────────────────────────────────────────────────────────
 
@@ -184,7 +211,12 @@ function createInspectionApi(client: ApiClientLike = apiClient) {
     ): Promise<ViewedPropertyDetail> {
       const response = await client.post<unknown>({
         path: `/inspection-visits/${encodeURIComponent(visitId)}/properties`,
-        body: payload,
+        body: {
+          ...payload,
+          ...(payload.location !== undefined
+            ? { location: serializePropertyLocation(payload.location) }
+            : {}),
+        },
       });
       return mapViewedPropertyDetailDto(
         parseViewedPropertyDetailResponse(response, 'create')
@@ -198,7 +230,10 @@ function createInspectionApi(client: ApiClientLike = apiClient) {
     ): Promise<ViewedPropertyDetail> {
       const response = await client.put<unknown>({
         path: `/inspection-visits/${encodeURIComponent(visitId)}/properties/${encodeURIComponent(propertyId)}`,
-        body: payload,
+        body: {
+          ...payload,
+          location: serializePropertyLocation(payload.location),
+        },
       });
       return mapViewedPropertyDetailDto(
         parseViewedPropertyDetailResponse(response, 'update')

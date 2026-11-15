@@ -55,7 +55,10 @@ describe('toWalkingRouteDisplay', () => {
           toStopIndex: 2,
           distance: 2000,
           time: 1201,
-          path: [[127.1, 37.6]],
+          path: [
+            [127.1, 37.6],
+            [127.2, 37.7],
+          ],
         },
       ]),
       ownStops
@@ -75,7 +78,7 @@ describe('toWalkingRouteDisplay', () => {
     expect(display?.totalSeconds).toBe(1801);
   });
 
-  it('draws a multi-stop leg with empty path straight through its stops', () => {
+  it('rejects an empty path instead of substituting a straight walking route', () => {
     const display = toWalkingRouteDisplay(
       route([
         {
@@ -89,24 +92,92 @@ describe('toWalkingRouteDisplay', () => {
       ownStops
     );
 
-    expect(display?.segments).toHaveLength(1);
-    expect(display?.segments[0].path).toEqual([
-      { latitude: 37.5, longitude: 127.0 },
-      { latitude: 37.6, longitude: 127.1 },
-      { latitude: 37.7, longitude: 127.2 },
-    ]);
-    expect(display?.segments[0].to.label).toBe('4');
+    expect(display).toBeNull();
   });
 
-  it('falls back to response stops with index + 1 labels when they do not match', () => {
+  it('rejects a route for a different set of stop IDs or coordinates', () => {
+    const candidate = route([
+      {
+        fromStopIndex: 0,
+        toStopIndex: 2,
+        distance: 3000,
+        time: 1800,
+        path: [
+          [127, 37.5],
+          [127.2, 37.7],
+        ],
+      },
+    ]);
+    expect(
+      toWalkingRouteDisplay(candidate, buildStops(props.slice(0, 2)))
+    ).toBeNull();
+    expect(
+      toWalkingRouteDisplay(
+        {
+          ...candidate,
+          stops: candidate.stops.map((s, i) =>
+            i === 0 ? { ...s, latitude: 37.51 } : s
+          ),
+        },
+        ownStops
+      )
+    ).toBeNull();
+  });
+
+  it('keeps a valid leg spanning several stops without fabricating segments', () => {
     const display = toWalkingRouteDisplay(
       route([
-        { fromStopIndex: 0, toStopIndex: 1, distance: 1, time: 60, path: [] },
+        {
+          fromStopIndex: 0,
+          toStopIndex: 2,
+          distance: 3000,
+          time: 1800,
+          path: [
+            [127, 37.5],
+            [127.15, 37.65],
+            [127.2, 37.7],
+          ],
+        },
       ]),
-      buildStops(props.slice(0, 2))
+      ownStops
     );
+    expect(display?.segments).toHaveLength(1);
+    expect(display?.segments[0].to.label).toBe('4');
+    expect(display?.segments[0].path?.[1]).toEqual({
+      latitude: 37.65,
+      longitude: 127.15,
+    });
+  });
 
-    expect(display?.stops.map((s) => s.label)).toEqual(['1', '2', '3']);
+  it.each([
+    [[127, 37.5]],
+    [
+      [127, 37.5],
+      [127, 37.5],
+    ],
+    [
+      [127, 37.5],
+      [Infinity, 37.7],
+    ],
+    [
+      [127, 37.5],
+      [127.2, 100],
+    ],
+  ])('rejects geometry that cannot form a valid line', (...path) => {
+    expect(
+      toWalkingRouteDisplay(
+        route([
+          {
+            fromStopIndex: 0,
+            toStopIndex: 2,
+            distance: 3,
+            time: 60,
+            path: path as unknown as [number, number][],
+          },
+        ]),
+        ownStops
+      )
+    ).toBeNull();
   });
 
   it('returns null for an empty route', () => {

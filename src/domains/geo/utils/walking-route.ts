@@ -1,6 +1,5 @@
 import type { WalkingRoute } from '@/domains/geo/api/geo-schemas';
 import type {
-  GeoPoint,
   RouteSegment,
   RouteStop,
 } from '@/domains/geo/utils/route-geometry';
@@ -12,86 +11,91 @@ export type WalkingRouteDisplay = {
   totalSeconds: number;
 };
 
-const stopKey = (propertyIds: string[]) => propertyIds.join(',');
-
 /** Whole minutes, rounded up; 0 only for a zero duration. */
 export function secondsToWalkMinutes(seconds: number) {
   return seconds <= 0 ? 0 : Math.ceil(seconds / 60);
 }
 
-/**
- * Walking route -> what `RouteMap` and the list draw. Our own `buildStops`
- * stops are reused (so labels like "2·3" stay) when every response stop maps
- * onto one by `propertyIds`; otherwise the response geometry is used with
- * index + 1 labels. An empty route (`stops: []`) yields `null`.
- */
+/** Only geometry for this exact visit input may be displayed as a walking route. */
 export function toWalkingRouteDisplay(
   route: WalkingRoute,
   ownStops: RouteStop[]
 ): WalkingRouteDisplay | null {
-  if (route.stops.length === 0) {
+  if (
+    ownStops.length < 2 ||
+    route.stops.length !== ownStops.length ||
+    route.legs.length === 0
+  )
     return null;
-  }
+  if (
+    !Number.isFinite(route.totalDistance) ||
+    route.totalDistance < 0 ||
+    !Number.isFinite(route.totalTime) ||
+    route.totalTime < 0
+  )
+    return null;
 
-  const ownByKey = new Map(
-    ownStops.map((stop) => [stopKey(stop.propertyIds), stop])
-  );
-  const matched = route.stops.map((stop) =>
-    ownByKey.get(stopKey(stop.propertyIds))
-  );
-  const allMatched = matched.every((stop) => stop !== undefined);
-
-  const stops: RouteStop[] = route.stops.map((stop, position) => {
-    const own = matched[position];
-    if (allMatched && own) {
-      return own;
-    }
-
-    return {
-      bdMgtSn: '',
-      latitude: stop.latitude,
-      longitude: stop.longitude,
-      propertyIds: stop.propertyIds,
-      numbers: [stop.index + 1],
-      label: String(stop.index + 1),
-    };
+  const matches = route.stops.every((stop, index) => {
+    const own = ownStops[index];
+    return (
+      stop.index === index &&
+      stop.latitude === own.latitude &&
+      stop.longitude === own.longitude &&
+      stop.propertyIds.length === own.propertyIds.length &&
+      stop.propertyIds.every((id, position) => id === own.propertyIds[position])
+    );
   });
-  const byIndex = new Map(
-    route.stops.map((stop, position) => [stop.index, stops[position]])
-  );
+  if (!matches) return null;
 
   const segments: RouteSegment[] = [];
+  let nextIndex = 0;
   for (const leg of route.legs) {
-    const from = byIndex.get(leg.fromStopIndex);
-    const to = byIndex.get(leg.toStopIndex);
-    if (!from || !to) {
-      continue;
-    }
-
-    let path: GeoPoint[];
-    if (leg.path.length > 0) {
-      path = leg.path.map(([longitude, latitude]) => ({ latitude, longitude }));
-    } else {
-      path = route.stops
-        .filter(
-          (stop) =>
-            stop.index >= leg.fromStopIndex && stop.index <= leg.toStopIndex
-        )
-        .sort((a, b) => a.index - b.index)
-        .map(({ latitude, longitude }) => ({ latitude, longitude }));
-    }
+    // A single leg may span several stops, but all legs must join in order.
+    if (
+      leg.fromStopIndex !== nextIndex ||
+      leg.toStopIndex <= leg.fromStopIndex ||
+      leg.toStopIndex >= ownStops.length ||
+      leg.path.length < 2 ||
+      !Number.isFinite(leg.distance) ||
+      leg.distance < 0 ||
+      !Number.isFinite(leg.time) ||
+      leg.time < 0
+    )
+      return null;
+    if (
+      !leg.path.every(
+        ([longitude, latitude]) =>
+          Number.isFinite(latitude) &&
+          Number.isFinite(longitude) &&
+          latitude >= -90 &&
+          latitude <= 90 &&
+          longitude >= -180 &&
+          longitude <= 180
+      )
+    )
+      return null;
+    const first = leg.path[0];
+    if (
+      !leg.path.some(
+        ([longitude, latitude]) =>
+          longitude !== first[0] || latitude !== first[1]
+      )
+    )
+      return null;
 
     segments.push({
-      from,
-      to,
+      from: ownStops[leg.fromStopIndex],
+      to: ownStops[leg.toStopIndex],
       meters: leg.distance,
       walkMinutes: secondsToWalkMinutes(leg.time),
-      path,
+      path: leg.path.map(([longitude, latitude]) => ({ latitude, longitude })),
     });
+    nextIndex = leg.toStopIndex;
   }
+  if (nextIndex !== ownStops.length - 1) return null;
 
   return {
-    stops,
+    stops: ownStops,
     segments,
     totalMeters: route.totalDistance,
     totalSeconds: route.totalTime,

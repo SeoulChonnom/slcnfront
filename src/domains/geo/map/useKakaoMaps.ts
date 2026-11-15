@@ -13,14 +13,14 @@ export type KakaoMapsState =
  * fails to load) the status is `unavailable` and the parent keeps its list.
  * The loader is never touched when there is no key.
  */
-export function useKakaoMaps(): KakaoMapsState {
+export function useKakaoMaps(enabled = true): KakaoMapsState {
   const key = getAppEnv().kakaoMapJsKey;
   const [state, setState] = useState<KakaoMapsState>(
     key ? { status: 'loading' } : { status: 'unavailable' }
   );
 
   useEffect(() => {
-    if (!key) {
+    if (!key || !enabled) {
       return;
     }
 
@@ -41,7 +41,7 @@ export function useKakaoMaps(): KakaoMapsState {
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, enabled]);
 
   return state;
 }

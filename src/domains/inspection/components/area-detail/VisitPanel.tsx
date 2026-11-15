@@ -40,6 +40,7 @@ export function VisitPanel({
     () =>
       visit.properties.map((property) => ({
         propertyId: property.propertyId,
+        sortOrder: property.sortOrder,
         title: `${property.complexName} · ${formatPropertyName(property.name)}`,
         location: property.location,
       })),
@@ -123,6 +124,7 @@ export function VisitPanel({
           visitId={visit.visitId}
           isCompleted={phase === 'COMPLETED'}
           properties={routeProperties}
+          showEstimates={false}
         />
       ) : null}
 

@@ -61,7 +61,7 @@ export function estimateWalkMinutes(straightMeters: number) {
 /**
  * Stops in array order. Properties without a location are skipped (they keep
  * their number but get no marker). Only CONSECUTIVE properties sharing a
- * `bdMgtSn` merge, so A -> B -> A stays three stops. Unlocated rows sitting
+ * coordinates merge, so A -> B -> A stays three stops. Unlocated rows sitting
  * between two same-address rows do not break a merge (they are skipped first).
  */
 export function buildStops(properties: LocatedProperty[]): RouteStop[] {
@@ -75,7 +75,11 @@ export function buildStops(properties: LocatedProperty[]): RouteStop[] {
 
     const number = index + 1;
     const last = stops.at(-1);
-    if (last && last.bdMgtSn === location.bdMgtSn) {
+    if (
+      last &&
+      last.latitude === location.latitude &&
+      last.longitude === location.longitude
+    ) {
       last.propertyIds.push(property.propertyId);
       last.numbers.push(number);
       last.label = last.numbers.join('·');

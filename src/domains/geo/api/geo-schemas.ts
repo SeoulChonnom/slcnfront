@@ -25,7 +25,7 @@ const addressCandidateSchema = z.object({
 });
 
 const addressSearchSchema = z.object({
-  totalCount: z.number().int(),
+  totalCount: z.number().int().nonnegative(),
   items: z.array(addressCandidateSchema).default([]),
 });
 
@@ -39,30 +39,32 @@ export function parseAddressSearchResponse(
   return parseOrThrow(addressSearchSchema, payload, 'Address search');
 }
 
-const lngLatSchema = z.tuple([z.number(), z.number()]);
+const latitudeSchema = z.number().min(-90).max(90);
+const longitudeSchema = z.number().min(-180).max(180);
+const lngLatSchema = z.tuple([longitudeSchema, latitudeSchema]);
 
 const walkingRouteSchema = z.object({
   /** meters */
-  totalDistance: z.number(),
+  totalDistance: z.number().nonnegative(),
   /** seconds */
-  totalTime: z.number(),
+  totalTime: z.number().nonnegative(),
   stops: z
     .array(
       z.object({
-        index: z.number().int(),
+        index: z.number().int().nonnegative(),
         propertyIds: z.array(z.string()),
-        latitude: z.number(),
-        longitude: z.number(),
+        latitude: latitudeSchema,
+        longitude: longitudeSchema,
       })
     )
     .default([]),
   legs: z
     .array(
       z.object({
-        fromStopIndex: z.number().int(),
-        toStopIndex: z.number().int(),
-        distance: z.number(),
-        time: z.number(),
+        fromStopIndex: z.number().int().nonnegative(),
+        toStopIndex: z.number().int().nonnegative(),
+        distance: z.number().nonnegative(),
+        time: z.number().nonnegative(),
         /** `[longitude, latitude]` pairs (GeoJSON order). May be empty. */
         path: z.array(lngLatSchema).default([]),
       })
@@ -77,8 +79,8 @@ export function parseWalkingRouteResponse(payload: unknown): WalkingRoute {
 }
 
 const geoPointSchema = z.object({
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: latitudeSchema,
+  longitude: longitudeSchema,
 });
 
 export type GeoPointResponse = z.infer<typeof geoPointSchema>;
