@@ -65,6 +65,17 @@ function mapFileBoxItem(dto: {
   };
 }
 
+/** Detail responses may separate COVER from photos; editors replace the entire file group. */
+function mapDetailPhotos(
+  dto: Pick<ViewedPropertyDetailDto, 'cover' | 'photos'>
+): FileBoxItem[] {
+  const photos = dto.cover
+    ? [dto.cover, ...dto.photos.filter((photo) => photo.id !== dto.cover?.id)]
+    : dto.photos;
+
+  return photos.map(mapFileBoxItem);
+}
+
 function mapIncompleteSummary(dto: {
   unansweredRequiredCount: number;
   unansweredRequiredQuestions: {
@@ -251,7 +262,7 @@ export function mapViewedPropertyDetailDto(
     sortOrder: dto.sortOrder,
     tags: dto.tags,
     cover: dto.cover ? mapFileBoxItem(dto.cover) : null,
-    photos: dto.photos.map(mapFileBoxItem),
+    photos: mapDetailPhotos(dto),
     answers: dto.answers.map(mapPropertyAnswerDto),
     incompleteSummary: mapIncompleteSummary(dto.incompleteSummary),
     prevProperty: dto.prevProperty
@@ -309,7 +320,7 @@ export function mapInspectionVisitDetailDto(
     tags: dto.tags,
     properties: dto.properties.map(mapViewedPropertyDetailDto),
     cover: dto.cover ? mapFileBoxItem(dto.cover) : null,
-    photos: dto.photos.map(mapFileBoxItem),
+    photos: mapDetailPhotos(dto),
     incompleteSummary: mapIncompleteSummary(dto.incompleteSummary),
   };
 }

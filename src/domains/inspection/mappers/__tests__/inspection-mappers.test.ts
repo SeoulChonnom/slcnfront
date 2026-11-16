@@ -5,6 +5,7 @@ import type {
   InspectionVisitListItemDto,
   ViewedPropertyDetailDto,
 } from '@/domains/inspection/api/inspection-schemas';
+import { buildVisitFilesPayload } from '@/domains/inspection/hooks/useInspectionRegisterWizard';
 import {
   buildPropertyAnswerPayload,
   computeRevisitIntentCounts,
@@ -13,6 +14,7 @@ import {
   mapInspectionVisitListItemDto,
   mapViewedPropertyDetailDto,
 } from '@/domains/inspection/mappers/inspection-mappers';
+import type { FileBoxItem } from '@/domains/inspection/types';
 
 const baseIncompleteSummary = {
   unansweredRequiredCount: 0,
@@ -23,6 +25,117 @@ const baseIncompleteSummary = {
   draftVisitCount: 0,
   plannedVisitCount: 0,
 };
+
+describe('detail photos preserve the cover across replacement saves', () => {
+  const photo = (id: string, role: FileBoxItem['role']): FileBoxItem => ({
+    id,
+    fileAssetId: `asset-${id}`,
+    targetType: 'VIEWED_PROPERTY',
+    targetId: 'prop-1',
+    role,
+    caption: id,
+    sortOrder: role === 'COVER' ? 1 : 2,
+  });
+  const cover = photo('cover', 'COVER');
+  const gallery = photo('gallery', 'GALLERY');
+  const propertyDto: ViewedPropertyDetailDto = {
+    propertyId: 'prop-1',
+    inspectionVisitId: 'visit-1',
+    areaId: 'area-1',
+    areaName: '성수동',
+    visitedAt: '2026-09-17T14:00',
+    complexName: '검증단지',
+    name: '101호',
+    memo: null,
+    oneLineReview: null,
+    pros: null,
+    cons: null,
+    interestLevel: 3,
+    status: 'DRAFT',
+    sortOrder: 1,
+    tags: [],
+    cover,
+    photos: [gallery],
+    answers: [],
+    incompleteSummary: baseIncompleteSummary,
+    prevProperty: null,
+    nextProperty: null,
+    location: null,
+  };
+  const visitDto: InspectionVisitDetailDto = {
+    inspectionVisitId: 'visit-1',
+    area: { areaId: 'area-1', name: '성수동' },
+    visitedAt: '2026-09-17T14:00',
+    memo: null,
+    revisitIntent: null,
+    oneLineReview: null,
+    pros: null,
+    cons: null,
+    status: 'DRAFT',
+    completedAt: null,
+    tags: [],
+    properties: [propertyDto],
+    cover,
+    photos: [gallery],
+    incompleteSummary: baseIncompleteSummary,
+  };
+
+  it.each(['property', 'visit'] as const)(
+    'keeps every image over repeated %s save/reload cycles',
+    (kind) => {
+      let wire = { cover: propertyDto.cover, photos: propertyDto.photos };
+      for (let cycle = 0; cycle < 3; cycle += 1) {
+        const detail =
+          kind === 'property'
+            ? mapViewedPropertyDetailDto({ ...propertyDto, ...wire })
+            : mapInspectionVisitDetailDto({ ...visitDto, ...wire });
+        const files = buildVisitFilesPayload(
+          detail.photos.map((item) => ({
+            key: item.id,
+            id: item.id,
+            fileAssetId: item.fileAssetId,
+            caption: item.caption ?? '',
+          }))
+        );
+        expect(files.map((item) => item.id)).toEqual(['cover', 'gallery']);
+        expect(files.map((item) => item.role)).toEqual(['COVER', 'GALLERY']);
+        // The server splits COVER and GALLERY in its response after replacing files.
+        const saved = files.map((item) => {
+          if (!item.id || !item.role)
+            throw new Error('Missing saved photo identity');
+          return {
+            ...photo(item.id, item.role),
+            caption: item.caption ?? null,
+          };
+        });
+        wire = {
+          cover: saved.find((item) => item.role === 'COVER') ?? null,
+          photos: saved.filter((item) => item.role === 'GALLERY'),
+        };
+      }
+    }
+  );
+
+  it('includes cover-only responses and does not duplicate a cover already in photos', () => {
+    for (const photos of [[], [cover], [cover, gallery], [gallery, cover]]) {
+      const expected = photos.includes(gallery) ? [cover, gallery] : [cover];
+      expect(
+        mapViewedPropertyDetailDto({ ...propertyDto, photos }).photos
+      ).toEqual(expected);
+      expect(
+        mapInspectionVisitDetailDto({ ...visitDto, photos }).photos
+      ).toEqual(expected);
+    }
+  });
+
+  it('preserves the gallery order when there is no cover', () => {
+    expect(
+      mapViewedPropertyDetailDto({ ...propertyDto, cover: null }).photos
+    ).toEqual([gallery]);
+    const detail = mapInspectionVisitDetailDto(visitDto);
+    expect(detail.properties[0].photos).toEqual([cover, gallery]);
+  });
+});
 
 describe('§3-① visitId normalization', () => {
   it('mapViewedPropertyDetailDto renames the wire `inspectionVisitId` to `visitId`', () => {

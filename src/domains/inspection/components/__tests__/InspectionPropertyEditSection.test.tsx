@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
 import { useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -171,6 +171,34 @@ describe('InspectionPropertyEditSection autosave', () => {
 
     expect(updateMutateAsync).not.toHaveBeenCalled();
     expect(answersMutateAsync).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { isComposing: true, keyCode: 13 },
+    // Safari can end composition before dispatching the confirming keydown.
+    { isComposing: false, keyCode: 229 },
+  ])('adds a Korean tag only after composition finishes (%o)', async (ime) => {
+    const { user } = renderEdit();
+    const input = screen.getByPlaceholderText('태그를 입력하고 Enter');
+
+    fireEvent.compositionStart(input);
+    fireEvent.change(input, { target: { value: '소음' } });
+    fireEvent.keyDown(input, { key: 'Enter', ...ime });
+    expect(screen.queryByRole('button', { name: '소음 ×' })).toBeNull();
+    expect((input as HTMLInputElement).value).toBe('소음');
+
+    fireEvent.compositionEnd(input, { data: '음' });
+    fireEvent.change(input, { target: { value: '소음' } });
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+
+    expect(screen.getAllByRole('button', { name: '소음 ×' })).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: '음 ×' })).toBeNull();
+    expect((input as HTMLInputElement).value).toBe('');
+    await user.click(screen.getByRole('button', { name: '작성 중으로 저장' }));
+    expect(updateMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ tags: ['소음'] })
+    );
   });
 
   it('saves a field edit once, 2 seconds after typing stops', async () => {

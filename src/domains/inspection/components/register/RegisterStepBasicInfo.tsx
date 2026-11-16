@@ -235,6 +235,12 @@ export function RegisterStepBasicInfo(props: RegisterStepBasicInfoProps) {
             placeholder='태그를 입력하고 Enter'
             onChange={(event) => setTagInput(event.target.value)}
             onKeyDown={(event) => {
+              if (
+                event.nativeEvent.isComposing ||
+                event.nativeEvent.keyCode === 229
+              ) {
+                return;
+              }
               if (event.key === 'Enter') {
                 event.preventDefault();
                 addTag(tagInput);

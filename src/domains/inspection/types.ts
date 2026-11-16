@@ -250,6 +250,7 @@ export type ViewedPropertyDetail = {
   sortOrder: number;
   tags: string[];
   cover: FileBoxItem | null;
+  /** All detail images, including the cover once, first in display/save order. */
   photos: FileBoxItem[];
   answers: PropertyAnswer[];
   incompleteSummary: IncompleteSummary;
@@ -274,6 +275,7 @@ export type InspectionVisitDetail = {
   tags: string[];
   properties: ViewedPropertyDetail[];
   cover: FileBoxItem | null;
+  /** All detail images, including the cover once, first in display/save order. */
   photos: FileBoxItem[];
   incompleteSummary: IncompleteSummary;
 };
